@@ -1,0 +1,702 @@
+<!-- buscar.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Appunture - Buscar Sintomas</title>
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary-blue: #007aff;
+        --primary-purple: #5856d6;
+        --color-gray-50: #fafafa;
+        --color-gray-100: #f5f5f5;
+        --color-gray-200: #e5e5e5;
+        --color-gray-300: #d4d4d4;
+        --color-gray-600: #525252;
+        --color-gray-800: #262626;
+        --accent-red: #ff3b30;
+        --accent-green: #34c759;
+        --text-primary: var(--color-gray-800);
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          sans-serif;
+        background: var(--color-gray-50);
+        color: var(--text-primary);
+        line-height: 1.6;
+      }
+
+      .container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Header */
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--color-gray-200);
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 100;
+        height: 70px;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: var(--color-gray-800);
+        text-decoration: none;
+      }
+
+      .app-icon {
+        width: 32px;
+        height: 32px;
+        margin-right: 0.5rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: var(--color-gray-600);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+      }
+
+      .nav-links a:hover {
+        color: var(--primary-blue);
+      }
+
+      .mobile-menu-toggle {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        gap: 4px;
+      }
+
+      .mobile-menu-toggle span {
+        width: 24px;
+        height: 2px;
+        background: var(--color-gray-600);
+        transition: all 0.3s ease;
+      }
+
+      /* Mobile Navigation */
+      .mobile-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 200;
+      }
+
+      .mobile-nav.active {
+        display: flex;
+      }
+
+      .mobile-nav-content {
+        background: white;
+        width: 280px;
+        height: 100%;
+        padding: 2rem;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+
+      .mobile-nav.active .mobile-nav-content {
+        transform: translateX(0);
+      }
+
+      .mobile-nav-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--color-gray-200);
+      }
+
+      .mobile-nav-close {
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.5rem;
+      }
+
+      .mobile-nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .mobile-nav-links a {
+        color: var(--color-gray-600);
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--color-gray-100);
+        transition: color 0.2s ease;
+      }
+
+      .mobile-nav-links a:hover {
+        color: var(--primary-blue);
+      }
+
+      /* Main Content */
+      main {
+        flex: 1;
+        padding: 100px 2rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--color-gray-800);
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .subtitle {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--color-gray-800);
+        margin-bottom: 1.5rem;
+      }
+
+      .text-muted {
+        color: var(--color-gray-600);
+        text-align: center;
+        max-width: 600px;
+        margin: 0 auto 2rem;
+      }
+
+      /* Search Container */
+      .search-container {
+        position: relative;
+        max-width: 600px;
+        margin: 0 auto 2rem;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--color-gray-600);
+        font-size: 1.2rem;
+      }
+
+      .search-container input {
+        width: 100%;
+        padding: 1rem 1rem 1rem 3rem;
+        border: 1px solid var(--color-gray-300);
+        border-radius: 12px;
+        font-size: 1rem;
+        background: white;
+        transition: all 0.2s ease;
+      }
+
+      .search-container input:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+      }
+
+      /* Grid Layouts */
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .grid-4 {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+      }
+
+      /* Cards */
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--color-gray-200);
+        transition: all 0.2s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-compact {
+        background: var(--color-gray-100);
+        border-radius: 20px;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
+      }
+
+      /* Buttons */
+      .btn {
+        background: linear-gradient(
+          135deg,
+          var(--primary-blue) 0%,
+          var(--primary-purple) 100%
+        );
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn-lg {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+      }
+
+      .btn-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+      }
+
+      .btn-secondary {
+        background: var(--color-gray-200);
+        color: var(--color-gray-800);
+      }
+
+      .btn-secondary:hover {
+        background: var(--color-gray-300);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: var(--primary-blue);
+        border: 1px solid var(--primary-blue);
+      }
+
+      .btn-outline:hover {
+        background: var(--primary-blue);
+        color: white;
+      }
+
+      /* Footer */
+      .footer {
+        background: white;
+        border-top: 1px solid var(--color-gray-200);
+        padding: 1.5rem 2rem;
+        text-align: center;
+        color: var(--color-gray-600);
+        font-size: 0.9rem;
+        margin-top: auto;
+      }
+
+      /* Button Group */
+      .button-group {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      /* Results Section */
+      #searchResults {
+        margin-top: 3rem;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+
+        .mobile-menu-toggle {
+          display: flex;
+        }
+
+        .header {
+          padding: 1rem;
+        }
+
+        main {
+          padding: 90px 1rem 1rem;
+        }
+
+        .title {
+          font-size: 2rem;
+        }
+
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+
+        .button-group {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .button-group .btn {
+          width: 100%;
+          max-width: 300px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .title {
+          font-size: 1.75rem;
+        }
+
+        .card {
+          padding: 1rem;
+        }
+
+        .search-container input {
+          padding: 0.875rem 0.875rem 0.875rem 2.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div class="logo logo-with-icon">
+          <svg
+            class="app-icon"
+            viewBox="0 0 500 500"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient
+                id="logoGradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop
+                  offset="0%"
+                  style="stop-color: #007aff; stop-opacity: 1"
+                />
+                <stop
+                  offset="100%"
+                  style="stop-color: #5856d6; stop-opacity: 1"
+                />
+              </linearGradient>
+            </defs>
+            <path
+              fill="url(#logoGradient)"
+              d="m407.5 81.1c-1.1 0.6-11.9 11-24 23.1l-22 22c-9.3-7.4-15.1-11.6-19-14.2-3.9-2.6-11.7-7.1-17.5-10-5.8-2.9-15.7-7-22-9.1-6.3-2.1-15.1-4.5-19.5-5.4-4.4-0.9-13.9-2.1-21-2.6-8.5-0.7-17.5-0.6-26 0-7.1 0.6-17.5 2-23 3.2-5.5 1.2-15.1 3.9-21.3 6-6.1 2.2-15.4 6-20.4 8.5-5.1 2.6-12.7 6.9-16.8 9.7-4.1 2.7-10.6 7.5-14.4 10.6-3.8 3.1-10.7 9.7-15.3 14.6-4.7 4.9-11.5 13.5-15.3 19-3.7 5.5-8.7 13.8-11 18.5-2.4 4.7-5.7 12.3-7.6 17-1.8 4.7-4.4 13-5.8 18.5-1.4 5.5-3.1 14.7-3.7 20.5-0.7 6.5-0.9 17.3-0.6 28.5 0.5 12.7 1.2 20.7 2.7 27 1.1 4.9 3.4 13.3 5.1 18.5 1.8 5.2 5.1 13.5 7.4 18.5 2.3 5 6.8 13.3 10 18.5 3.3 5.2 8.8 13 12.2 17.3l6.3 7.7c-5 5.9-15.2 17.1-25.7 28.6-10.6 11.5-19.3 21.7-19.3 22.7 0 0.9 0.4 1.7 1 1.7 0.6 0 9.9-7.7 20.8-17.2 10.8-9.4 22.3-19.5 25.5-22.5l5.7-5.3c11.2 9 17.9 13.9 22 16.7 4.1 2.8 12 7.4 17.5 10.1 5.5 2.8 15.4 6.9 22 9.1 6.6 2.3 16.5 5.2 22 6.3 8.6 1.9 13.2 2.2 33 2.2 21.7 0 23.7-0.1 35-2.8 6.6-1.6 15.8-4.2 20.5-5.8 4.7-1.6 13.2-5.3 19-8.2 5.8-2.9 13.9-7.5 18-10.3 4.1-2.7 10.9-7.7 15-11 4.1-3.3 10.8-9.6 14.9-13.9 4-4.4 10.6-12.4 14.5-17.9 3.9-5.5 9.6-14.9 12.7-21 3-6 7.2-16 9.2-22 2-6 4.6-15.1 5.7-20 1.5-6.4 2.2-14.3 2.7-27.5 0.4-11.7 0.2-22.2-0.6-28.5-0.6-5.5-2.3-14.5-3.7-20-1.4-5.5-4.4-14.7-6.7-20.5-2.4-5.8-6.8-15-9.9-20.5-3.1-5.5-9-14.5-13.2-20l-7.6-10c45.8-45.8 46-46 46-50.3 0-3.5-0.5-4.6-3-6.7-1.6-1.4-4.2-2.5-5.7-2.5-1.6 0-3.7 0.6-4.8 1.1z"
+            />
+            <path
+              fill="#fbfbfb"
+              d="m242.8 101.8c-2.6 0.3-9.8 1.1-16 1.8-6.2 0.8-14.9 2.5-19.3 3.8-4.4 1.3-12.1 4-17 6.1-4.9 2-13.1 6.1-18 9-4.9 2.9-12.6 8.2-17 11.7-4.4 3.6-11.5 10.3-15.9 14.9-4.3 4.6-10.5 12.5-13.8 17.4-3.3 4.9-7.8 12.6-10 17-2.2 4.4-5.5 12.5-7.4 18-1.8 5.5-4.1 13.6-5 18-0.9 4.6-1.8 15.4-2.1 25.5-0.5 13.7-0.2 19.8 1.1 28 1 5.8 2.7 13.9 3.8 18 1.1 4.1 3.9 11.8 6 17 2.2 5.2 5.9 12.6 8.1 16.5 2.3 3.9 7.5 11.5 11.7 16.9l7.5 9.9c15.4-16.1 28.9-30.2 39.9-41.8 11.1-11.5 23.2-24.1 26.9-28l6.8-7c-3.5-6.2-5.1-10.5-5.8-13.5-0.7-3-1.3-8-1.3-11 0-3 0.7-8.2 1.5-11.5 0.9-3.3 2.8-8 4.2-10.5 1.5-2.5 4.7-6.5 7.3-9 2.5-2.5 7-5.9 10-7.6 3-1.7 7.5-3.7 10-4.4 2.6-0.7 8.2-1 13.5-0.8 7.5 0.3 10.1 0.8 15.2 3.3l6.2 3 74.6-74.6c-5.4-4.7-10.1-8.2-14-10.9-3.9-2.6-11-6.8-16-9.3-5-2.4-13.7-6.1-19.5-8.2-5.8-2-15.7-4.5-22-5.5-6.3-1-15.6-2-20.5-2.2-4.9-0.2-11.1-0.2-13.7 0zm81.5 87.5l-37.2 37.2c2.9 4.6 4.5 8.7 5.3 12 0.9 3.3 1.6 8.4 1.6 11.2 0 2.9-0.5 7.7-1.1 10.5-0.6 2.9-2.5 7.9-4.3 11.2-1.7 3.2-5.3 8-8.1 10.5-2.7 2.6-7 5.9-9.5 7.4-2.5 1.4-7.2 3.3-10.5 4.2-3.3 0.8-8.2 1.5-11 1.5-2.7 0-7-0.5-9.5-1.1-2.5-0.5-6.9-2.2-9.8-3.7l-5.3-2.7c-8.8 8.5-16.8 16.2-23.4 22.5-6.6 6.3-17 16.2-23 22-6.1 5.8-15.2 14.4-20.3 19.2l-9.2 8.8c7.4 6.4 13.3 10.7 18 13.8 4.7 3.1 13 7.7 18.5 10.3 5.5 2.7 14.1 6.1 19 7.8 4.9 1.6 13.3 3.7 18.5 4.7 6.9 1.3 14.4 1.8 27.5 1.8 13.1 0 20.4-0.4 27-1.7 5-1 13.3-3.1 18.5-4.8 5.2-1.7 13.1-4.8 17.5-6.8 4.4-2.1 11.1-5.7 15-8.1 3.9-2.3 10.6-7.1 15-10.5 4.4-3.4 11.5-10 15.8-14.6 4.4-4.6 11-13.1 14.9-18.9 3.9-5.8 8.7-14.1 10.8-18.5 2.1-4.4 5.2-12.3 6.9-17.5 1.7-5.2 4-14.7 5.1-21 1.4-8 2-16 2-26.3 0-10.2-0.6-18.3-2-26.5-1.2-6.4-3.4-15.5-4.9-20.2-1.6-4.7-4.7-12.3-6.9-17-2.2-4.7-6.7-12.6-9.9-17.5-3.3-4.9-7.4-10.7-9.1-12.8-1.8-2-3.5-3.7-4-3.7-0.4 0-17.5 16.8-37.9 37.2z"
+            />
+          </svg>
+          Appunture
+        </div>
+        <nav class="nav-links">
+          <a href="userHome.html">Home</a>
+          <a href="userBodyMap.html">Mapa</a>
+          <a href="userSearch.html">Buscar Sintomas</a>
+          <a href="userAllPoints.html">Todos os Pontos</a>
+          <a href="userFavorites.html">Favoritos</a>
+          <a href="userChatBot.html">Chatbot</a>
+          <a href="userLogin.html">Login</a>
+        </nav>
+        <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </header>
+
+      <!-- Mobile Navigation -->
+      <div class="mobile-nav" id="mobileNav" onclick="closeMobileMenu(event)">
+        <div class="mobile-nav-content">
+          <div class="mobile-nav-header">
+            <div class="logo logo-with-icon">
+              <svg
+                class="app-icon app-icon-sm"
+                viewBox="0 0 500 500"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <linearGradient
+                    id="mobileLogoGradient"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="100%"
+                  >
+                    <stop
+                      offset="0%"
+                      style="stop-color: #007aff; stop-opacity: 1"
+                    />
+                    <stop
+                      offset="100%"
+                      style="stop-color: #5856d6; stop-opacity: 1"
+                    />
+                  </linearGradient>
+                </defs>
+                <path
+                  fill="url(#mobileLogoGradient)"
+                  d="m407.5 81.1c-1.1 0.6-11.9 11-24 23.1l-22 22c-9.3-7.4-15.1-11.6-19-14.2-3.9-2.6-11.7-7.1-17.5-10-5.8-2.9-15.7-7-22-9.1-6.3-2.1-15.1-4.5-19.5-5.4-4.4-0.9-13.9-2.1-21-2.6-8.5-0.7-17.5-0.6-26 0-7.1 0.6-17.5 2-23 3.2-5.5 1.2-15.1 3.9-21.3 6-6.1 2.2-15.4 6-20.4 8.5-5.1 2.6-12.7 6.9-16.8 9.7-4.1 2.7-10.6 7.5-14.4 10.6-3.8 3.1-10.7 9.7-15.3 14.6-4.7 4.9-11.5 13.5-15.3 19-3.7 5.5-8.7 13.8-11 18.5-2.4 4.7-5.7 12.3-7.6 17-1.8 4.7-4.4 13-5.8 18.5-1.4 5.5-3.1 14.7-3.7 20.5-0.7 6.5-0.9 17.3-0.6 28.5 0.5 12.7 1.2 20.7 2.7 27 1.1 4.9 3.4 13.3 5.1 18.5 1.8 5.2 5.1 13.5 7.4 18.5 2.3 5 6.8 13.3 10 18.5 3.3 5.2 8.8 13 12.2 17.3l6.3 7.7c-5 5.9-15.2 17.1-25.7 28.6-10.6 11.5-19.3 21.7-19.3 22.7 0 0.9 0.4 1.7 1 1.7 0.6 0 9.9-7.7 20.8-17.2 10.8-9.4 22.3-19.5 25.5-22.5l5.7-5.3c11.2 9 17.9 13.9 22 16.7 4.1 2.8 12 7.4 17.5 10.1 5.5 2.8 15.4 6.9 22 9.1 6.6 2.3 16.5 5.2 22 6.3 8.6 1.9 13.2 2.2 33 2.2 21.7 0 23.7-0.1 35-2.8 6.6-1.6 15.8-4.2 20.5-5.8 4.7-1.6 13.2-5.3 19-8.2 5.8-2.9 13.9-7.5 18-10.3 4.1-2.7 10.9-7.7 15-11 4.1-3.3 10.8-9.6 14.9-13.9 4-4.4 10.6-12.4 14.5-17.9 3.9-5.5 9.6-14.9 12.7-21 3-6 7.2-16 9.2-22 2-6 4.6-15.1 5.7-20 1.5-6.4 2.2-14.3 2.7-27.5 0.4-11.7 0.2-22.2-0.6-28.5-0.6-5.5-2.3-14.5-3.7-20-1.4-5.5-4.4-14.7-6.7-20.5-2.4-5.8-6.8-15-9.9-20.5-3.1-5.5-9-14.5-13.2-20l-7.6-10c45.8-45.8 46-46 46-50.3 0-3.5-0.5-4.6-3-6.7-1.6-1.4-4.2-2.5-5.7-2.5-1.6 0-3.7 0.6-4.8 1.1z"
+                />
+                <path
+                  fill="#fbfbfb"
+                  d="m242.8 101.8c-2.6 0.3-9.8 1.1-16 1.8-6.2 0.8-14.9 2.5-19.3 3.8-4.4 1.3-12.1 4-17 6.1-4.9 2-13.1 6.1-18 9-4.9 2.9-12.6 8.2-17 11.7-4.4 3.6-11.5 10.3-15.9 14.9-4.3 4.6-10.5 12.5-13.8 17.4-3.3 4.9-7.8 12.6-10 17-2.2 4.4-5.5 12.5-7.4 18-1.8 5.5-4.1 13.6-5 18-0.9 4.6-1.8 15.4-2.1 25.5-0.5 13.7-0.2 19.8 1.1 28 1 5.8 2.7 13.9 3.8 18 1.1 4.1 3.9 11.8 6 17 2.2 5.2 5.9 12.6 8.1 16.5 2.3 3.9 7.5 11.5 11.7 16.9l7.5 9.9c15.4-16.1 28.9-30.2 39.9-41.8 11.1-11.5 23.2-24.1 26.9-28l6.8-7c-3.5-6.2-5.1-10.5-5.8-13.5-0.7-3-1.3-8-1.3-11 0-3 0.7-8.2 1.5-11.5 0.9-3.3 2.8-8 4.2-10.5 1.5-2.5 4.7-6.5 7.3-9 2.5-2.5 7-5.9 10-7.6 3-1.7 7.5-3.7 10-4.4 2.6-0.7 8.2-1 13.5-0.8 7.5 0.3 10.1 0.8 15.2 3.3l6.2 3 74.6-74.6c-5.4-4.7-10.1-8.2-14-10.9-3.9-2.6-11-6.8-16-9.3-5-2.4-13.7-6.1-19.5-8.2-5.8-2-15.7-4.5-22-5.5-6.3-1-15.6-2-20.5-2.2-4.9-0.2-11.1-0.2-13.7 0zm81.5 87.5l-37.2 37.2c2.9 4.6 4.5 8.7 5.3 12 0.9 3.3 1.6 8.4 1.6 11.2 0 2.9-0.5 7.7-1.1 10.5-0.6 2.9-2.5 7.9-4.3 11.2-1.7 3.2-5.3 8-8.1 10.5-2.7 2.6-7 5.9-9.5 7.4-2.5 1.4-7.2 3.3-10.5 4.2-3.3 0.8-8.2 1.5-11 1.5-2.7 0-7-0.5-9.5-1.1-2.5-0.5-6.9-2.2-9.8-3.7l-5.3-2.7c-8.8 8.5-16.8 16.2-23.4 22.5-6.6 6.3-17 16.2-23 22-6.1 5.8-15.2 14.4-20.3 19.2l-9.2 8.8c7.4 6.4 13.3 10.7 18 13.8 4.7 3.1 13 7.7 18.5 10.3 5.5 2.7 14.1 6.1 19 7.8 4.9 1.6 13.3 3.7 18.5 4.7 6.9 1.3 14.4 1.8 27.5 1.8 13.1 0 20.4-0.4 27-1.7 5-1 13.3-3.1 18.5-4.8 5.2-1.7 13.1-4.8 17.5-6.8 4.4-2.1 11.1-5.7 15-8.1 3.9-2.3 10.6-7.1 15-10.5 4.4-3.4 11.5-10 15.8-14.6 4.4-4.6 11-13.1 14.9-18.9 3.9-5.8 8.7-14.1 10.8-18.5 2.1-4.4 5.2-12.3 6.9-17.5 1.7-5.2 4-14.7 5.1-21 1.4-8 2-16 2-26.3 0-10.2-0.6-18.3-2-26.5-1.2-6.4-3.4-15.5-4.9-20.2-1.6-4.7-4.7-12.3-6.9-17-2.2-4.7-6.7-12.6-9.9-17.5-3.3-4.9-7.4-10.7-9.1-12.8-1.8-2-3.5-3.7-4-3.7-0.4 0-17.5 16.8-37.9 37.2z"
+                />
+              </svg>
+              Appunture
+            </div>
+            <div class="mobile-nav-close" onclick="closeMobileMenu()">
+              &times;
+            </div>
+          </div>
+          <nav class="mobile-nav-links">
+            <a href="userHome.html" onclick="closeMobileMenu()">Home</a>
+            <a href="userBodyMap.html" onclick="closeMobileMenu()">Mapa</a>
+            <a href="userSearch.html" onclick="closeMobileMenu()"
+              >Buscar Sintomas</a
+            >
+            <a href="userAllPoints.html" onclick="closeMobileMenu()"
+              >Todos os Pontos</a
+            >
+            <a href="userFavorites.html" onclick="closeMobileMenu()"
+              >Favoritos</a
+            >
+            <a href="userChatBot.html" onclick="closeMobileMenu()">Chatbot</a>
+            <a href="userLogin.html" onclick="closeMobileMenu()">Login</a>
+          </nav>
+        </div>
+      </div>
+      <main>
+        <h1 class="title">Buscar por Sintomas</h1>
+        <p class="text-muted" style="margin-bottom: 2rem; font-size: 1.1rem">
+          Digite seus sintomas em linguagem natural e encontre os pontos de
+          acupuntura mais adequados.
+        </p>
+
+        <div class="search-container">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            placeholder="Ex: dor de cabeça, insônia, ansiedade..."
+            id="symptomInput"
+          />
+        </div>
+
+        <div class="button-group">
+          <button class="btn" onclick="addSymptom()">Adicionar Sintoma</button>
+          <button class="btn btn-secondary" onclick="clearSymptoms()">
+            Limpar Tudo
+          </button>
+        </div>
+
+        <div id="symptomTags" class="grid-4" style="margin-bottom: 2rem">
+          <!-- Exemplo estático de tags -->
+          <div
+            class="card card-compact"
+            style="
+              text-align: center;
+              background: var(--color-gray-100);
+              color: var(--text-primary);
+            "
+          >
+            lombalgia
+            <button
+              onclick="removeSymptom(this)"
+              style="
+                margin-left: 0.5rem;
+                background: none;
+                border: none;
+                color: var(--accent-red);
+                cursor: pointer;
+              "
+            >
+              ×
+            </button>
+          </div>
+          <div
+            class="card card-compact"
+            style="
+              text-align: center;
+              background: var(--color-gray-100);
+              color: var(--text-primary);
+            "
+          >
+            insônia
+            <button
+              onclick="removeSymptom(this)"
+              style="
+                margin-left: 0.5rem;
+                background: none;
+                border: none;
+                color: var(--accent-red);
+                cursor: pointer;
+              "
+            >
+              ×
+            </button>
+          </div>
+        </div>
+
+        <button
+          class="btn btn-lg"
+          style="width: 100%; margin-bottom: 2rem"
+          onclick="searchPoints()"
+        >
+          Buscar Pontos Recomendados
+        </button>
+
+        <!-- Resultados -->
+        <div id="searchResults">
+          <h2 class="subtitle">Pontos Recomendados</h2>
+          <div class="grid-2">
+            <div class="card">
+              <h3 style="color: var(--primary-blue); margin-bottom: 0.5rem">
+                IG4 – Hegu
+              </h3>
+              <p style="margin-bottom: 1rem">
+                Alivia dor de cabeça, tensão facial e auxilia no equilíbrio
+                geral.
+              </p>
+              <div style="display: flex; gap: 0.5rem">
+                <a href="userPointsDetails.html?point=IG4" class="btn btn-sm"
+                  >Ver Detalhes</a
+                >
+                <button
+                  class="btn btn-sm btn-outline"
+                  onclick="toggleFavorite('IG4')"
+                >
+                  ♡ Favoritar
+                </button>
+              </div>
+            </div>
+            <div class="card">
+              <h3 style="color: var(--primary-blue); margin-bottom: 0.5rem">
+                B23 – Shenshu
+              </h3>
+              <p style="margin-bottom: 1rem">
+                Fortalece os rins e alivia lombalgia.
+              </p>
+              <div style="display: flex; gap: 0.5rem">
+                <a href="userPointsDetails.html?point=B23" class="btn btn-sm"
+                  >Ver Detalhes</a
+                >
+                <button
+                  class="btn btn-sm btn-outline"
+                  onclick="toggleFavorite('B23')"
+                >
+                  ♡ Favoritar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <footer class="footer">
+        © 2025 Appunture. Todos os direitos reservados.
+      </footer>
+    </div>
+    <script src="../mobile-menu.js"></script>
+    <script>
+      function addSymptom() {
+        const input = document.getElementById("symptomInput");
+        const symptom = input.value.trim();
+        if (symptom) {
+          const tagsContainer = document.getElementById("symptomTags");
+          const tagElement = document.createElement("div");
+          tagElement.className = "card card-compact";
+          tagElement.style.textAlign = "center";
+          tagElement.style.background = "var(--color-gray-100)";
+          tagElement.style.color = "var(--text-primary)";
+          tagElement.innerHTML = `
+            ${symptom}
+            <button onclick="removeSymptom(this)" style="margin-left: 0.5rem; background: none; border: none; color: var(--accent-red); cursor: pointer;">×</button>
+          `;
+          tagsContainer.appendChild(tagElement);
+          input.value = "";
+        }
+      }
+
+      function removeSymptom(button) {
+        button.parentElement.remove();
+      }
+
+      function clearSymptoms() {
+        document.getElementById("symptomTags").innerHTML = "";
+      }
+
+      function searchPoints() {
+        // Aqui seria a lógica de busca real
+        alert("Buscando pontos baseados nos sintomas...");
+      }
+
+      function toggleFavorite(pointId) {
+        // Aqui seria a lógica de favoritos
+        alert(`Alternando favorito para ${pointId}`);
+      }
+
+      // Permitir adicionar sintoma com Enter
+      document
+        .getElementById("symptomInput")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            addSymptom();
+          }
+        });
+    </script>
+  </body>
+</html>

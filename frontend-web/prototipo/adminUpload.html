@@ -1,0 +1,71 @@
+<!-- admin_upload.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Appunture Admin - Upload Imagens</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <div class="admin-container">
+      <header class="admin-nav">
+        <div class="logo">Appunture Admin</div>
+        <nav>
+          <a href="adminDashboard.html">Dashboard</a>
+          <a href="adminPoints.html">Pontos</a>
+          <a href="adminSymptons.html">Sintomas</a>
+          <a href="adminUsers.html">Usuários</a>
+          <a href="adminUpload.html">Upload Imagens</a>
+        </nav>
+        <button
+          class="admin-mobile-menu-toggle"
+          onclick="toggleAdminMobileMenu()"
+          aria-label="Toggle menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </header>
+      <!-- Admin Mobile Navigation Overlay -->
+      <div class="admin-mobile-nav-overlay" id="adminMobileNav">
+        <nav class="admin-mobile-nav">
+          <a href="adminDashboard.html">Dashboard</a>
+          <a href="adminPoints.html">Pontos</a>
+          <a href="adminSymptons.html">Sintomas</a>
+          <a href="adminUsers.html">Usuários</a>
+          <a href="adminUpload.html">Upload Imagens</a>
+        </nav>
+      </div>
+      <div class="admin-main container">
+        <aside class="admin-sidebar">
+          <a href="adminDashboard.html" class="sidebar-link">Dashboard</a>
+          <a href="adminPoints.html" class="sidebar-link">Pontos</a>
+          <a href="adminSymptons.html" class="sidebar-link">Sintomas</a>
+          <a href="adminUsers.html" class="sidebar-link">Usuários</a>
+          <a href="adminUpload.html" class="sidebar-link active"
+            >Upload Imagens</a
+          >
+        </aside>
+        <section class="admin-content">
+          <h1 class="title">Upload de Imagens / Mapas</h1>
+          <div class="card" style="max-width: 500px; padding: 20px">
+            <div class="form-group">
+              <label for="file-upload">Selecione imagem (SVG, PNG, JPG):</label>
+              <div class="custom-file-input">
+                <button class="btn">Escolher Arquivo</button>
+                <input type="file" id="file-upload" accept=".svg, .png, .jpg" />
+              </div>
+            </div>
+            <button class="btn">Fazer Upload</button>
+          </div>
+        </section>
+      </div>
+      <footer class="footer">
+        © 2025 Appunture Admin. Todos os direitos reservados.
+      </footer>
+    </div>
+    <script src="../mobile-menu.js"></script>
+  </body>
+</html>

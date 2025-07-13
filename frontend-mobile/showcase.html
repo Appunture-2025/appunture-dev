@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appunture - Showcase Design</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">Appunture</div>
+        <nav class="nav-links">
+          <a href="user/userHome.html">Home</a>
+          <a href="user/userBodyMap.html">Mapa</a>
+          <a href="user/userSearch.html">Buscar</a>
+          <a href="user/userAllPoints.html">Pontos</a>
+          <a href="user/userFavorites.html">Favoritos</a>
+          <a href="user/userChatBot.html">Chatbot</a>
+        </nav>
+        <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </header>
+
+      <!-- Mobile Navigation -->
+      <div class="mobile-nav" id="mobileNav" onclick="closeMobileMenu(event)">
+        <div class="mobile-nav-content">
+          <div class="mobile-nav-header">
+            <div class="logo">Appunture</div>
+            <div class="mobile-nav-close" onclick="closeMobileMenu()">
+              &times;
+            </div>
+          </div>
+          <nav class="mobile-nav-links">
+            <a href="user/userHome.html" onclick="closeMobileMenu()">Home</a>
+            <a href="user/userBodyMap.html" onclick="closeMobileMenu()">Mapa</a>
+            <a href="user/userSearch.html" onclick="closeMobileMenu()"
+              >Buscar</a
+            >
+            <a href="user/userAllPoints.html" onclick="closeMobileMenu()"
+              >Pontos</a
+            >
+            <a href="user/userFavorites.html" onclick="closeMobileMenu()"
+              >Favoritos</a
+            >
+            <a href="user/userChatBot.html" onclick="closeMobileMenu()"
+              >Chatbot</a
+            >
+          </nav>
+        </div>
+      </div>
+
+      <main>
+        <!-- Hero Section -->
+        <div class="card card-feature text-center" style="margin-bottom: 3rem">
+          <h1 style="color: white; font-size: 3.5rem; margin-bottom: 1rem">
+            🎨 Design System Showcase
+          </h1>
+          <p
+            style="
+              color: rgba(255, 255, 255, 0.9);
+              font-size: 1.3rem;
+              margin-bottom: 2rem;
+            "
+          >
+            Explore as melhorias visuais e funcionais do Appunture
+          </p>
+          <div
+            style="
+              display: flex;
+              gap: 1rem;
+              justify-content: center;
+              flex-wrap: wrap;
+            "
+          >
+            <a href="user/userHome.html" class="btn btn-secondary"
+              >🏠 Ver Homepage</a
+            >
+            <a href="user/userBodyMap.html" class="btn btn-secondary"
+              >🗺️ Mapa Interativo</a
+            >
+            <a href="admin/adminDashboard.html" class="btn btn-secondary"
+              >⚙️ Admin Dashboard</a
+            >
+          </div>
+        </div>
+
+        <!-- Color Palette -->
+        <div class="card">
+          <h2 class="subtitle">🎨 Paleta de Cores Atualizada</h2>
+          <div class="grid-4" style="margin-top: 1.5rem">
+            <div style="text-align: center">
+              <div
+                style="
+                  width: 60px;
+                  height: 60px;
+                  background: var(--primary-blue);
+                  border-radius: var(--radius-lg);
+                  margin: 0 auto 0.5rem;
+                  box-shadow: var(--shadow-md);
+                "
+              ></div>
+              <p style="font-weight: 600; margin: 0; font-size: 0.9rem">
+                Primary Blue
+              </p>
+              <p
+                style="
+                  color: var(--text-secondary);
+                  margin: 0;
+                  font-size: 0.8rem;
+                "
+              >
+                #2563eb
+              </p>
+            </div>
+            <div style="text-align: center">
+              <div
+                style="
+                  width: 60px;
+                  height: 60px;
+                  background: var(--secondary-green);
+                  border-radius: var(--radius-lg);
+                  margin: 0 auto 0.5rem;
+                  box-shadow: var(--shadow-md);
+                "
+              ></div>
+              <p style="font-weight: 600; margin: 0; font-size: 0.9rem">
+                Secondary Green
+              </p>
+              <p
+                style="
+                  color: var(--text-secondary);
+                  margin: 0;
+                  font-size: 0.8rem;
+                "
+              >
+                #10b981
+              </p>
+            </div>
+            <div style="text-align: center">
+              <div
+                style="
+                  width: 60px;
+                  height: 60px;
+                  background: var(--accent-orange);
+                  border-radius: var(--radius-lg);
+                  margin: 0 auto 0.5rem;
+                  box-shadow: var(--shadow-md);
+                "
+              ></div>
+              <p style="font-weight: 600; margin: 0; font-size: 0.9rem">
+                Accent Orange
+              </p>
+              <p
+                style="
+                  color: var(--text-secondary);
+                  margin: 0;
+                  font-size: 0.8rem;
+                "
+              >
+                #f59e0b
+              </p>
+            </div>
+            <div style="text-align: center">
+              <div
+                style="
+                  width: 60px;
+                  height: 60px;
+                  background: var(--accent-purple);
+                  border-radius: var(--radius-lg);
+                  margin: 0 auto 0.5rem;
+                  box-shadow: var(--shadow-md);
+                "
+              ></div>
+              <p style="font-weight: 600; margin: 0; font-size: 0.9rem">
+                Accent Purple
+              </p>
+              <p
+                style="
+                  color: var(--text-secondary);
+                  margin: 0;
+                  font-size: 0.8rem;
+                "
+              >
+                #8b5cf6
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typography -->
+        <div class="card">
+          <h2 class="subtitle">✍️ Tipografia Melhorada</h2>
+          <div style="margin-top: 1.5rem">
+            <h1 class="title" style="margin-bottom: 1rem">
+              Título Principal (Inter 700)
+            </h1>
+            <h2 class="subtitle" style="margin-bottom: 1rem">
+              Subtítulo (Inter 600)
+            </h2>
+            <p style="margin-bottom: 1rem; font-size: 1.1rem">
+              Parágrafo principal com boa legibilidade e espaçamento otimizado
+              para leitura prolongada.
+            </p>
+            <p class="text-muted">
+              Texto secundário com cor mais suave para informações de apoio.
+            </p>
+          </div>
+        </div>
+
+        <!-- Button Styles -->
+        <div class="card">
+          <h2 class="subtitle">🔘 Estilos de Botões</h2>
+          <div
+            style="
+              display: flex;
+              flex-wrap: wrap;
+              gap: 1rem;
+              margin-top: 1.5rem;
+              align-items: center;
+            "
+          >
+            <button class="btn">Botão Principal</button>
+            <button class="btn btn-secondary">Botão Secundário</button>
+            <button class="btn btn-outline">Botão Outline</button>
+            <button class="btn btn-success">Botão Sucesso</button>
+            <button class="btn btn-sm">Pequeno</button>
+            <button class="btn btn-lg">Grande</button>
+          </div>
+        </div>
+
+        <!-- Cards Showcase -->
+        <div class="card">
+          <h2 class="subtitle">📋 Cartões e Componentes</h2>
+          <div class="grid-2" style="margin-top: 1.5rem">
+            <div class="card card-compact">
+              <h4 style="margin-bottom: 0.5rem">Card Compacto</h4>
+              <p class="text-muted">
+                Versão com menos padding para informações condensadas.
+              </p>
+            </div>
+            <div class="card">
+              <h4 style="margin-bottom: 0.5rem">Card Padrão</h4>
+              <p class="text-muted">
+                Design principal com sombras suaves e bordas arredondadas.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Badges -->
+        <div class="card">
+          <h2 class="subtitle">🏷️ Badges e Status</h2>
+          <div
+            style="
+              display: flex;
+              flex-wrap: wrap;
+              gap: 1rem;
+              margin-top: 1.5rem;
+              align-items: center;
+            "
+          >
+            <span class="badge badge-success">Ativo</span>
+            <span class="badge badge-warning">Pendente</span>
+            <span class="badge badge-info">Informativo</span>
+          </div>
+        </div>
+
+        <!-- Interactive Elements -->
+        <div class="card">
+          <h2 class="subtitle">⚡ Elementos Interativos</h2>
+          <div style="margin-top: 1.5rem">
+            <div class="form-group">
+              <label for="demo-input">Campo de Entrada</label>
+              <input
+                type="text"
+                id="demo-input"
+                placeholder="Digite aqui..."
+                style="margin-bottom: 1rem"
+              />
+            </div>
+            <div class="search-container">
+              <input type="text" placeholder="Buscar com ícone..." />
+              <span class="search-icon">🔍</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SVG Showcase -->
+        <div class="card">
+          <h2 class="subtitle">🗺️ Mapa Corporal SVG Interativo</h2>
+          <p class="text-muted" style="margin-bottom: 1.5rem">
+            SVG personalizado com pontos de acupuntura interativos, animações
+            suaves e design responsivo.
+          </p>
+          <div class="text-center">
+            <a href="user/userBodyMap.html" class="btn">Ver Mapa Completo</a>
+          </div>
+        </div>
+
+        <!-- Features List -->
+        <div class="card" style="background: var(--gray-50)">
+          <h2 class="subtitle">✨ Principais Melhorias</h2>
+          <div class="grid-2" style="margin-top: 1.5rem">
+            <div>
+              <h4 style="color: var(--primary-blue); margin-bottom: 1rem">
+                🎨 Design & UX
+              </h4>
+              <ul style="list-style: none; padding: 0; margin: 0">
+                <li style="margin-bottom: 0.5rem">
+                  • Paleta de cores moderna e harmoniosa
+                </li>
+                <li style="margin-bottom: 0.5rem">
+                  • Tipografia Inter para melhor legibilidade
+                </li>
+                <li style="margin-bottom: 0.5rem">
+                  • Animações suaves e transições
+                </li>
+                <li style="margin-bottom: 0.5rem">
+                  • Design responsivo aprimorado
+                </li>
+                <li style="margin-bottom: 0.5rem">
+                  • Gradientes e sombras profissionais
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 style="color: var(--secondary-green); margin-bottom: 1rem">
+                🚀 Funcionalidades
+              </h4>
+              <ul style="list-style: none; padding: 0; margin: 0">
+                <li style="margin-bottom: 0.5rem">
+                  • SVG interativo do corpo humano
+                </li>
+                <li style="margin-bottom: 0.5rem">
+                  • Sistema de busca e filtros
+                </li>
+                <li style="margin-bottom: 0.5rem">• Menu mobile aprimorado</li>
+                <li style="margin-bottom: 0.5rem">
+                  • Dashboard administrativo moderno
+                </li>
+                <li style="margin-bottom: 0.5rem">
+                  • Componentes reutilizáveis
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="grid-3">
+          <a
+            href="user/userHome.html"
+            class="card text-center"
+            style="text-decoration: none; color: inherit"
+          >
+            <div style="font-size: 3rem; margin-bottom: 1rem">🏠</div>
+            <h3 style="margin-bottom: 0.5rem">Homepage do Usuário</h3>
+            <p class="text-muted">Interface principal redesenhada</p>
+          </a>
+
+          <a
+            href="user/userBodyMap.html"
+            class="card text-center"
+            style="text-decoration: none; color: inherit"
+          >
+            <div style="font-size: 3rem; margin-bottom: 1rem">🗺️</div>
+            <h3 style="margin-bottom: 0.5rem">Mapa Interativo</h3>
+            <p class="text-muted">SVG com pontos de acupuntura</p>
+          </a>
+
+          <a
+            href="admin/adminDashboard.html"
+            class="card text-center"
+            style="text-decoration: none; color: inherit"
+          >
+            <div style="font-size: 3rem; margin-bottom: 1rem">⚙️</div>
+            <h3 style="margin-bottom: 0.5rem">Admin Dashboard</h3>
+            <p class="text-muted">Painel administrativo moderno</p>
+          </a>
+        </div>
+      </main>
+
+      <footer class="footer">
+        © 2025 Appunture - Design System Showcase. Todos os direitos reservados.
+      </footer>
+    </div>
+
+    <script src="mobile-menu.js"></script>
+  </body>
+</html>
