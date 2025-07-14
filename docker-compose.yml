@@ -1,0 +1,51 @@
+
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./backend:/app
+      - ./backend/uploads:/app/uploads
+    depends_on:
+      - db
+
+  frontend-web:
+    build: 
+      context: ./frontend-web
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./frontend-web:/app
+
+  frontend-mobile:
+    build: 
+      context: ./frontend-mobile
+      dockerfile: Dockerfile
+    ports:
+      - "8081:80"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./frontend-mobile:/app
+
+  db:
+    image: postgres:14
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=appunture
+      - POSTGRES_PASSWORD=appunture
+      - POSTGRES_DB=appunture
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
