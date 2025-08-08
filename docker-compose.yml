@@ -1,36 +1,39 @@
-
 services:
-  backend:
-    build: 
-      context: ./backend
+  backend-java:
+    build:
+      context: ./backend-java
       dockerfile: Dockerfile
+    container_name: backend-java
     ports:
-      - "3000:3000"
+      - "8080:8080"
     environment:
-      - NODE_ENV=production
-    volumes:
-      - ./backend:/app
-      - ./backend/uploads:/app/uploads
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/appunture
+      - SPRING_DATASOURCE_USERNAME=appunture
+      - SPRING_DATASOURCE_PASSWORD=appunture
+      - SPRING_PROFILES_ACTIVE=dev
+      - APP_SECURITY_JWT_SECRET=CHANGEME_BASE64_SECRET
     depends_on:
       - db
+    volumes:
+      - ./backend-java/uploads:/app/uploads
 
   frontend-web:
-    build: 
+    build:
       context: ./frontend-web
       dockerfile: Dockerfile
     ports:
-      - "8080:80"
+      - "3000:80"
     environment:
       - NODE_ENV=production
     volumes:
       - ./frontend-web:/app
 
   frontend-mobile:
-    build: 
+    build:
       context: ./frontend-mobile
       dockerfile: Dockerfile
     ports:
-      - "8081:80"
+      - "3001:80"
     environment:
       - NODE_ENV=production
     volumes:
@@ -38,6 +41,7 @@ services:
 
   db:
     image: postgres:14
+    container_name: appunture-db
     ports:
       - "5432:5432"
     environment:
