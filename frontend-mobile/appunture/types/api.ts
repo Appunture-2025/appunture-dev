@@ -1,5 +1,6 @@
 // API Types
 export interface Point {
+  isFavorite: unknown;
   id: number;
   code: string;
   name: string;
