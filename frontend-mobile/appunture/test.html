@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appunture Test</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // Test if import.meta is the issue
+    console.log('Basic HTML loaded');
+    if (typeof importMeta !== 'undefined') {
+      console.log('import.meta is available');
+    } else {
+      console.log('import.meta is not available');
+    }
+  </script>
+</body>
+</html>
