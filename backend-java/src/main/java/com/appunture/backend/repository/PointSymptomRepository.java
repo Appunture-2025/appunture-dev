@@ -12,4 +12,7 @@ public interface PointSymptomRepository extends JpaRepository<PointSymptom, Long
     Optional<PointSymptom> findByPointIdAndSymptomId(Long pointId, Long symptomId);
     List<PointSymptom> findByPoint(Point point);
     List<PointSymptom> findBySymptom(Symptom symptom);
+    List<PointSymptom> findByPointId(Long pointId);
+    List<PointSymptom> findBySymptomId(Long symptomId);
+    boolean existsByPointIdAndSymptomId(Long pointId, Long symptomId);
 }

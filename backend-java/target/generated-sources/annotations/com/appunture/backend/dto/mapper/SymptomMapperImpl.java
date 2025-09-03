@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-09-02T10:41:20-0300",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.42.50.v20250729-0351, environment: Java 21.0.8 (Eclipse Adoptium)"
+    date = "2025-09-03T14:47:48+0000",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 11.0.14.1 (Microsoft)"
 )
 @Component
 public class SymptomMapperImpl implements SymptomMapper {
@@ -22,9 +22,9 @@ public class SymptomMapperImpl implements SymptomMapper {
 
         Symptom.SymptomBuilder symptom = Symptom.builder();
 
+        symptom.name( request.getName() );
         symptom.category( request.getCategory() );
         symptom.description( request.getDescription() );
-        symptom.name( request.getName() );
 
         return symptom.build();
     }
@@ -35,14 +35,14 @@ public class SymptomMapperImpl implements SymptomMapper {
             return;
         }
 
+        if ( request.getName() != null ) {
+            entity.setName( request.getName() );
+        }
         if ( request.getCategory() != null ) {
             entity.setCategory( request.getCategory() );
         }
         if ( request.getDescription() != null ) {
             entity.setDescription( request.getDescription() );
-        }
-        if ( request.getName() != null ) {
-            entity.setName( request.getName() );
         }
     }
 
@@ -54,10 +54,10 @@ public class SymptomMapperImpl implements SymptomMapper {
 
         SymptomResponse.SymptomResponseBuilder symptomResponse = SymptomResponse.builder();
 
-        symptomResponse.category( entity.getCategory() );
-        symptomResponse.description( entity.getDescription() );
         symptomResponse.id( entity.getId() );
         symptomResponse.name( entity.getName() );
+        symptomResponse.category( entity.getCategory() );
+        symptomResponse.description( entity.getDescription() );
 
         return symptomResponse.build();
     }

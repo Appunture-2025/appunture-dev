@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-09-02T10:41:19-0300",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.42.50.v20250729-0351, environment: Java 21.0.8 (Eclipse Adoptium)"
+    date = "2025-09-03T14:47:47+0000",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 11.0.14.1 (Microsoft)"
 )
 @Component
 public class PointMapperImpl implements PointMapper {
@@ -22,15 +22,15 @@ public class PointMapperImpl implements PointMapper {
 
         Point.PointBuilder point = Point.builder();
 
-        point.chineseName( request.getChineseName() );
         point.code( request.getCode() );
+        point.name( request.getName() );
+        point.chineseName( request.getChineseName() );
+        point.meridian( request.getMeridian() );
+        point.location( request.getLocation() );
+        point.indications( request.getIndications() );
         point.contraindications( request.getContraindications() );
         point.coordinatesJson( request.getCoordinatesJson() );
         point.imageUrl( request.getImageUrl() );
-        point.indications( request.getIndications() );
-        point.location( request.getLocation() );
-        point.meridian( request.getMeridian() );
-        point.name( request.getName() );
 
         return point.build();
     }
@@ -41,11 +41,23 @@ public class PointMapperImpl implements PointMapper {
             return;
         }
 
+        if ( request.getCode() != null ) {
+            entity.setCode( request.getCode() );
+        }
+        if ( request.getName() != null ) {
+            entity.setName( request.getName() );
+        }
         if ( request.getChineseName() != null ) {
             entity.setChineseName( request.getChineseName() );
         }
-        if ( request.getCode() != null ) {
-            entity.setCode( request.getCode() );
+        if ( request.getMeridian() != null ) {
+            entity.setMeridian( request.getMeridian() );
+        }
+        if ( request.getLocation() != null ) {
+            entity.setLocation( request.getLocation() );
+        }
+        if ( request.getIndications() != null ) {
+            entity.setIndications( request.getIndications() );
         }
         if ( request.getContraindications() != null ) {
             entity.setContraindications( request.getContraindications() );
@@ -55,18 +67,6 @@ public class PointMapperImpl implements PointMapper {
         }
         if ( request.getImageUrl() != null ) {
             entity.setImageUrl( request.getImageUrl() );
-        }
-        if ( request.getIndications() != null ) {
-            entity.setIndications( request.getIndications() );
-        }
-        if ( request.getLocation() != null ) {
-            entity.setLocation( request.getLocation() );
-        }
-        if ( request.getMeridian() != null ) {
-            entity.setMeridian( request.getMeridian() );
-        }
-        if ( request.getName() != null ) {
-            entity.setName( request.getName() );
         }
     }
 
@@ -78,16 +78,16 @@ public class PointMapperImpl implements PointMapper {
 
         PointResponse.PointResponseBuilder pointResponse = PointResponse.builder();
 
-        pointResponse.chineseName( point.getChineseName() );
+        pointResponse.id( point.getId() );
         pointResponse.code( point.getCode() );
+        pointResponse.name( point.getName() );
+        pointResponse.chineseName( point.getChineseName() );
+        pointResponse.meridian( point.getMeridian() );
+        pointResponse.location( point.getLocation() );
+        pointResponse.indications( point.getIndications() );
         pointResponse.contraindications( point.getContraindications() );
         pointResponse.coordinatesJson( point.getCoordinatesJson() );
-        pointResponse.id( point.getId() );
         pointResponse.imageUrl( point.getImageUrl() );
-        pointResponse.indications( point.getIndications() );
-        pointResponse.location( point.getLocation() );
-        pointResponse.meridian( point.getMeridian() );
-        pointResponse.name( point.getName() );
 
         return pointResponse.build();
     }
