@@ -8,7 +8,7 @@ import com.appunture.backend.entity.PointSymptom;
 import com.appunture.backend.repository.PointRepository;
 import com.appunture.backend.repository.PointSymptomRepository;
 import com.appunture.backend.dto.stats.MeridianStatResponse;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

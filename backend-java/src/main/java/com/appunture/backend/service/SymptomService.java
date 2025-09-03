@@ -4,7 +4,7 @@ import com.appunture.backend.entity.Symptom;
 import com.appunture.backend.entity.PointSymptom;
 import com.appunture.backend.repository.SymptomRepository;
 import com.appunture.backend.repository.PointSymptomRepository;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
