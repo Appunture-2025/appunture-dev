@@ -23,6 +23,10 @@ public class FileUploadService {
             "image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"
     );
 
+    private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList(
+            ".jpg", ".jpeg", ".png", ".gif", ".webp"
+    );
+
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
     /**
@@ -39,7 +43,11 @@ public class FileUploadService {
 
         // Gera um nome único para o arquivo
         String originalFilename = file.getOriginalFilename();
-        String extension = getFileExtension(originalFilename);
+        String extension = getFileExtension(originalFilename).toLowerCase();
+        // Sanitize and validate extension
+        if (!isValidExtension(extension)) {
+            throw new IllegalArgumentException("Invalid file extension");
+        }
         String fileName = UUID.randomUUID().toString() + extension;
 
         // Salva o arquivo
@@ -102,6 +110,21 @@ public class FileUploadService {
             return "";
         }
         return fileName.substring(fileName.lastIndexOf("."));
+    }
+
+    /**
+     * Verifica se a extensão é válida e segura
+     */
+    private boolean isValidExtension(String ext) {
+        if (ext == null || ext.isEmpty()) {
+            return false;
+        }
+        // Prevent path traversal and separators
+        if (ext.contains("/") || ext.contains("\\") || ext.contains("..")) {
+            return false;
+        }
+        // Check against whitelist
+        return ALLOWED_EXTENSIONS.contains(ext);
     }
 
     /**
