@@ -4,24 +4,26 @@ import com.appunture.backend.dto.point.PointRequest;
 import com.appunture.backend.dto.point.PointResponse;
 import com.appunture.backend.dto.mapper.PointMapper;
 import com.appunture.backend.entity.Point;
+import com.appunture.backend.entity.PointSymptom;
 import com.appunture.backend.repository.PointRepository;
+import com.appunture.backend.repository.PointSymptomRepository;
 import com.appunture.backend.dto.stats.MeridianStatResponse;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PointService {
 
     private final PointRepository pointRepository;
+    private final PointSymptomRepository pointSymptomRepository;
     private final PointMapper pointMapper;
-
-    public PointService(PointRepository pointRepository, PointMapper pointMapper) {
-        this.pointRepository = pointRepository;
-        this.pointMapper = pointMapper;
-    }
 
     @Transactional
     public PointResponse create(PointRequest request) {
@@ -78,5 +80,92 @@ public class PointService {
                 .map(e -> MeridianStatResponse.builder().meridian(e.getKey()).count(e.getValue()).build())
                 .sorted((a,b) -> a.getMeridian().compareTo(b.getMeridian()))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Lista pontos com paginação
+     */
+    @Transactional
+    public Page<PointResponse> listAllPaginated(Pageable pageable) {
+        Page<Point> pointsPage = pointRepository.findAll(pageable);
+        return pointsPage.map(pointMapper::toResponse);
+    }
+
+    /**
+     * Busca pontos por categoria/indicação
+     */
+    @Transactional
+    public List<PointResponse> findByIndication(String indication) {
+        return pointRepository.search(indication).stream()
+                .map(pointMapper::toResponse)
+                .toList();
+    }
+
+    /**
+     * Lista todos os meridianos únicos
+     */
+    @Transactional
+    public List<String> getAllMeridians() {
+        return pointRepository.findAll().stream()
+                .map(Point::getMeridian)
+                .distinct()
+                .sorted()
+                .toList();
+    }
+
+    /**
+     * Associa um sintoma a um ponto
+     */
+    @Transactional
+    public void associateSymptom(Long pointId, Long symptomId) {
+        Point point = getEntity(pointId);
+        // Verifica se a associação já existe
+        boolean exists = pointSymptomRepository.existsByPointIdAndSymptomId(pointId, symptomId);
+        if (exists) {
+            throw new IllegalArgumentException("Symptom already associated with this point");
+        }
+        
+        PointSymptom pointSymptom = PointSymptom.builder()
+                .point(point)
+                .symptom(null) // Será preenchido pelo repository através do symptomId
+                .build();
+        
+        pointSymptomRepository.save(pointSymptom);
+    }
+
+    /**
+     * Remove a associação entre um ponto e um sintoma
+     */
+    @Transactional
+    public void disassociateSymptom(Long pointId, Long symptomId) {
+        PointSymptom pointSymptom = pointSymptomRepository.findByPointIdAndSymptomId(pointId, symptomId)
+                .orElseThrow(() -> new IllegalArgumentException("Association not found"));
+        
+        pointSymptomRepository.delete(pointSymptom);
+    }
+
+    /**
+     * Lista todos os sintomas associados a um ponto
+     */
+    @Transactional
+    public List<Long> getAssociatedSymptoms(Long pointId) {
+        return pointSymptomRepository.findByPointId(pointId).stream()
+                .map(ps -> ps.getSymptom().getId())
+                .toList();
+    }
+
+    /**
+     * Conta total de pontos
+     */
+    @Transactional
+    public long countPoints() {
+        return pointRepository.count();
+    }
+
+    /**
+     * Verifica se um código de ponto já existe
+     */
+    public boolean existsByCode(String code) {
+        return pointRepository.findByCode(code).isPresent();
     }
 }

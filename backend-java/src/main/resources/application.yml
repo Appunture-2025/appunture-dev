@@ -3,9 +3,6 @@ spring:
     name: appunture-backend
   profiles:
     active: dev
-  mvc:
-    pathmatch:
-      matching-strategy: ant-path-matcher
   datasource:
     url: jdbc:postgresql://localhost:5432/appunture
     username: appunture
@@ -42,7 +39,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,prometheus
+        include: health,info
   endpoint:
     health:
       probes:

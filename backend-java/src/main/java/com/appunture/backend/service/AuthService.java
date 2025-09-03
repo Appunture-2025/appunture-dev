@@ -97,7 +97,9 @@ public class AuthService {
     }
 
     public AuthResponse refreshToken(String currentEmail) {
-        User user = userRepository.findByEmail(currentEmail).orElseThrow();
+        User user = userRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        
         String token = jwtTokenProvider.generateToken(user.getEmail());
         return AuthResponse.builder()
                 .token(token)
@@ -105,5 +107,60 @@ public class AuthService {
                 .name(user.getName())
                 .role(user.getRole())
                 .build();
+    }
+
+    /**
+     * Verifica se o token é válido
+     */
+    public boolean validateToken(String token) {
+        try {
+            return jwtTokenProvider.validateToken(token);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Extrai o email do token
+     */
+    public String getEmailFromToken(String token) {
+        return jwtTokenProvider.getEmailFromToken(token);
+    }
+
+    /**
+     * Verifica se o usuário existe e está ativo
+     */
+    public boolean isUserActive(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
+    /**
+     * Logout - Invalidar token (depende da implementação de blacklist se necessário)
+     */
+    public void logout(String token) {
+        // Aqui pode ser implementada uma blacklist de tokens se necessário
+        // Por enquanto, apenas validamos que o token existe
+        if (!validateToken(token)) {
+            throw new IllegalArgumentException("Invalid token");
+        }
+        // Token será invalidado naturalmente quando expirar
+    }
+
+    /**
+     * Altera a senha do usuário
+     */
+    @Transactional
+    public void changePassword(String email, String currentPassword, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Verifica se a senha atual está correta
+        if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
+            throw new BadCredentialsException("Current password is incorrect");
+        }
+
+        // Atualiza a senha
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 }
