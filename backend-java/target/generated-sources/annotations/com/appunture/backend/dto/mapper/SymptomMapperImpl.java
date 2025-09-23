@@ -3,7 +3,7 @@ package com.appunture.backend.dto.mapper;
 import com.appunture.backend.dto.symptom.SymptomRequest;
 import com.appunture.backend.dto.symptom.SymptomResponse;
 import com.appunture.backend.entity.Symptom;
-import javax.annotation.processing.Generated;
+import jakarta.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(

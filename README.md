@@ -22,7 +22,8 @@ Fornecer API e interfaces web/mobile para:
 ## Stack Backend Atual
 
 - Java 17, Spring Boot 3
-- Spring Security (JWT)
+- **Firebase Authentication** (substitui JWT local)
+- **Google Cloud Storage** (upload de arquivos)
 - Spring Data JPA + PostgreSQL
 - Flyway (migrations)
 - MapStruct (DTO mapping)
@@ -31,12 +32,14 @@ Fornecer API e interfaces web/mobile para:
 
 ## Principais Recursos Implementados
 
-- Registro, login, refresh token, perfil
-- Seed automático de usuário admin
-- CRUD de Points e Symptoms com DTOs
-- Estatística de meridianos
+- **Autenticação Firebase** (registro, login, verificação de email)
+- **Upload para Google Cloud Storage** (plano gratuito 5GB)
+- Sistema de favoritos e relacionamentos
+- CRUD completo de Points e Symptoms com DTOs
+- Estatísticas e dashboards administrativos
+- Busca avançada e filtros
 - Tratamento global de exceções
-- Testes unitários e de integração básicos
+- Testes unitários e de integração
 
 ## Executar com Docker
 

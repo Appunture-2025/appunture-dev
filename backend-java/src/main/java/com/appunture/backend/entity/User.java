@@ -34,6 +34,9 @@ public class User {
     @Column(nullable = false, length = 30)
     private String role; // e.g. ROLE_USER, ROLE_ADMIN
 
+    @Column(name = "firebase_uid", unique = true, length = 128)
+    private String firebaseUid; // UID do Firebase para integração
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

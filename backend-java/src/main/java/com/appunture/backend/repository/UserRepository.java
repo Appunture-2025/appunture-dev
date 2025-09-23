@@ -12,4 +12,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByRole(String role);
     long countByRole(String role);
     List<User> findByEmailContainingIgnoreCase(String email);
+    
+    // Métodos para integração com Firebase
+    Optional<User> findByFirebaseUid(String firebaseUid);
+    boolean existsByFirebaseUid(String firebaseUid);
 }

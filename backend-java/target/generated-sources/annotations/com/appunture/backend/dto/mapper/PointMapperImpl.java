@@ -3,7 +3,7 @@ package com.appunture.backend.dto.mapper;
 import com.appunture.backend.dto.point.PointRequest;
 import com.appunture.backend.dto.point.PointResponse;
 import com.appunture.backend.entity.Point;
-import javax.annotation.processing.Generated;
+import jakarta.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
