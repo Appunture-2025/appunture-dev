@@ -47,7 +47,8 @@
         </dependency>
 
         <!-- PostgreSQL removido - usando Firestore -->
-		<!-- Flyway removido - usando Firestore -->        <!-- JWT -->
+        <!-- Flyway removido - usando Firestore -->
+        <!-- JWT -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
