@@ -1,0 +1,27 @@
+# application-dev.yml - Configuração para desenvolvimento local
+spring:
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/appunture
+    username: appunture
+    password: password123
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+# Configurações Firebase - Para desenvolvimento local
+firebase:
+  project-id: appunture-tcc
+  service-account-key: ""  # Deixe vazio para usar ADC ou defina JSON completo
+  storage:
+    bucket: appunture-tcc.appspot.com
+
+app:
+  firebase:
+    enabled: false  # Desabilite para desenvolvimento sem Firebase
+
+logging:
+  level:
+    com.appunture.backend: DEBUG
+    org.springframework.security: DEBUG

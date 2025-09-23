@@ -146,6 +146,28 @@ public class UserService {
     }
 
     /**
+     * Busca um usuário por Firebase UID
+     */
+    public Optional<User> findByFirebaseUid(String firebaseUid) {
+        return userRepository.findByFirebaseUid(firebaseUid);
+    }
+
+    /**
+     * Verifica se um Firebase UID já está cadastrado
+     */
+    public boolean existsByFirebaseUid(String firebaseUid) {
+        return userRepository.existsByFirebaseUid(firebaseUid);
+    }
+
+    /**
+     * Salva um usuário
+     */
+    @Transactional
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    /**
      * Conta total de usuários
      */
     @Transactional(readOnly = true)
