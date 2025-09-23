@@ -174,7 +174,7 @@ public class FirestoreUserService {
 
         FirestoreUser user = userOpt.get();
         if (user.getFavoritePointIds() == null) {
-            user.setFavoritePointIds(List.of(pointId));
+            user.setFavoritePointIds(new java.util.ArrayList<>(List.of(pointId)));
         } else if (!user.getFavoritePointIds().contains(pointId)) {
             user.getFavoritePointIds().add(pointId);
         }
