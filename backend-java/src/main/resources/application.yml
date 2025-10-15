@@ -3,18 +3,19 @@ spring:
     name: appunture-backend
   profiles:
     active: dev
-  datasource:
-    url: jdbc:postgresql://localhost:5432/appunture
-    username: appunture
-    password: password123
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    open-in-view: false
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
+  # PostgreSQL/JPA removido - usando Firestore
+  # datasource:
+  #   url: jdbc:postgresql://localhost:5432/appunture
+  #   username: appunture
+  #   password: password123
+  #   driver-class-name: org.postgresql.Driver
+  # jpa:
+  #   hibernate:
+  #     ddl-auto: validate
+  #   open-in-view: false
+  # flyway:
+  #   enabled: true
+  #   baseline-on-migrate: true
   servlet:
     multipart:
       max-file-size: 10MB
