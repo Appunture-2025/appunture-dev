@@ -80,7 +80,8 @@ Este repositório agora contém uma análise completa e detalhada das lacunas en
 ## 📈 Estatísticas
 
 - **Total de Lacunas Identificadas:** 24 áreas principais
-- **Endpoints Não Utilizados:** ~40+ endpoints
+- **Endpoints Backend Disponíveis:** 85 endpoints
+- **Endpoints Não Utilizados/Integrados:** Aproximadamente 50-60 endpoints
 - **Funcionalidades Críticas Faltando:** 3
 - **Funcionalidades Importantes Faltando:** 11
 - **Tempo Estimado de Implementação:** 8-10 semanas
@@ -162,7 +163,7 @@ Leia o documento completo [`FRONTEND_MOBILE_GAP_ANALYSIS.md`](./FRONTEND_MOBILE_
 
 ---
 
-**Nota:** Esta análise foi gerada automaticamente através da análise de código do backend Java e frontend mobile. Todas as informações foram verificadas contra o código-fonte atual.
+**Nota:** Esta análise foi realizada através de revisão manual e sistemática do código-fonte do backend Java e frontend mobile. Todas as informações foram verificadas contra o código-fonte atual do repositório.
 
 **Data:** 15 de outubro de 2025  
 **Versão:** 1.0

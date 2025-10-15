@@ -914,6 +914,8 @@ Este documento identificou **24 áreas principais** de lacunas entre o backend J
 - 🔴 **Lacunas Importantes:** 11 (busca, sintomas, admin, CRUD, etc.)
 - 🟡 **Lacunas Moderadas:** 6 (stats, health, meridians, etc.)
 - 🟢 **Lacunas Menores:** 10 (notas, histórico, temas, i18n, etc.)
+- 📊 **Total de Endpoints Backend:** 85 endpoints disponíveis
+- ❌ **Endpoints Não Integrados:** Aproximadamente 50-60 endpoints
 
 **Próximos Passos:**
 1. Revisar e aprovar este documento com a equipe
@@ -927,6 +929,7 @@ Este é um projeto acadêmico (TCC), portanto pode-se focar nas funcionalidades 
 
 ---
 
-**Autor:** Sistema de Análise Automatizada  
+**Autor:** Análise Técnica de Código  
 **Data:** 15 de outubro de 2025  
-**Versão:** 1.0
+**Versão:** 1.0  
+**Método:** Revisão manual e sistemática do código-fonte Java e React Native
