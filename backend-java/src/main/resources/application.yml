@@ -39,14 +39,8 @@ firebase:
     bucket: ${FIREBASE_STORAGE_BUCKET:appunture-tcc.appspot.com}
 
 app:
-  security:
-    jwt-secret: CHANGEME_SUPER_SECRET_KEY  # Não usado com Firebase, mas mantido para compatibilidade
-    jwt-expiration-minutes: 60
   file-storage:
     local-path: ./uploads  # Fallback se Cloud Storage não estiver disponível
-  admin-seed:
-    email: admin@appunture.com
-    password: changeMeAdmin123
   firebase:
     enabled: ${FIREBASE_ENABLED:true}  # Permite desabilitar Firebase para desenvolvimento
 

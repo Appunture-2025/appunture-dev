@@ -163,7 +163,7 @@ export const useSyncStore = create<SyncStore>((set, get) => ({
   loadLastSync: async () => {
     try {
       const lastSync = await getLastSync();
-      set({ lastSync });
+      set({ lastSync: lastSync ?? undefined });
     } catch (error) {
       console.error("Load last sync error:", error);
     }

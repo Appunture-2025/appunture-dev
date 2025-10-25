@@ -6,6 +6,7 @@ import com.appunture.backend.service.FirestorePointService;
 import com.appunture.backend.service.FirestoreSymptomService;
 import com.appunture.backend.service.FirestoreUserService;
 import com.google.firebase.auth.FirebaseToken;
+import com.google.firebase.auth.UserRecord;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -203,11 +204,12 @@ public class FirestoreAdminController {
             log.debug("Criando usuário admin: {}", email);
             
             // Criar usuário no Firebase Auth
-            String firebaseUid = firebaseAuthService.createUser(email, password, name);
-            
+            UserRecord firebaseUser = firebaseAuthService.createUser(email, password, name);
+            String firebaseUid = firebaseUser.getUid();
+
             // Definir role como ADMIN
             firebaseAuthService.setUserRole(firebaseUid, "ADMIN");
-            
+
             // Criar no Firestore
             FirestoreUser newUser = userService.createUser(firebaseUid, email, name, "ADMIN");
             

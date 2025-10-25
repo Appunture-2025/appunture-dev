@@ -20,18 +20,21 @@ interface PointsState {
     offset?: number;
     meridian?: string;
   }) => Promise<void>;
-  loadPoint: (id: number) => Promise<void>;
+  loadPoint: (id: string) => Promise<void>;
   searchPoints: (query: string) => Promise<void>;
+  searchPointByCode: (code: string) => Promise<void>;
+  loadPointsByMeridian: (meridian: string) => Promise<void>;
+  loadPopularPoints: (limit?: number) => Promise<void>;
   loadMeridians: () => Promise<void>;
   loadFavorites: () => Promise<void>;
-  toggleFavorite: (pointId: number) => Promise<void>;
+  toggleFavorite: (pointId: string) => Promise<void>;
   clearSearch: () => void;
   setError: (error: string | null) => void;
   setLoading: (loading: boolean) => void;
 
   // Offline methods
   getLocalPoints: () => Promise<void>;
-  getLocalPoint: (id: number) => Promise<void>;
+  getLocalPoint: (id: string) => Promise<void>;
   syncPoints: () => Promise<void>;
 }
 
@@ -71,7 +74,7 @@ export const usePointsStore = create<PointsState>((set, get) => ({
     }
   },
 
-  loadPoint: async (id: number) => {
+  loadPoint: async (id: string) => {
     try {
       set({ loading: true, error: null });
 
@@ -108,31 +111,67 @@ export const usePointsStore = create<PointsState>((set, get) => ({
       });
     } catch (error: any) {
       console.error("Search points error:", error);
+      set({
+        error: error.message || "Failed to search points",
+        loading: false,
+      });
+    }
+  },
 
-      // Try to search locally
-      try {
-        const localPoints = await databaseService.searchPoints(query);
-        set({
-          searchResults: localPoints.map((p) => ({
-            id: p.id,
-            code: "", // LocalPoint doesn't have code
-            name: p.name,
-            chinese_name: p.chinese_name,
-            meridian: p.meridian,
-            location: p.location,
-            indications: p.indications,
-            contraindications: p.contraindications,
-            coordinates: p.coordinates ? JSON.parse(p.coordinates) : undefined,
-            image_url: p.image_path,
-          })),
-          loading: false,
-        });
-      } catch (localError) {
-        set({
-          error: error.message || "Failed to search points",
-          loading: false,
-        });
-      }
+  searchPointByCode: async (code: string) => {
+    try {
+      set({ loading: true, error: null });
+
+      const response = await apiService.getPointByCode(code);
+
+      set({
+        selectedPoint: response.point,
+        loading: false,
+      });
+    } catch (error: any) {
+      console.error("Search point by code error:", error);
+      set({
+        error: error.message || "Failed to find point",
+        loading: false,
+      });
+    }
+  },
+
+  loadPointsByMeridian: async (meridian: string) => {
+    try {
+      set({ loading: true, error: null });
+
+      const response = await apiService.getPointsByMeridian(meridian);
+
+      set({
+        points: response.points,
+        loading: false,
+      });
+    } catch (error: any) {
+      console.error("Load points by meridian error:", error);
+      set({
+        error: error.message || "Failed to load points",
+        loading: false,
+      });
+    }
+  },
+
+  loadPopularPoints: async (limit = 10) => {
+    try {
+      set({ loading: true, error: null });
+
+      const response = await apiService.getPopularPoints(limit);
+
+      set({
+        points: response.points,
+        loading: false,
+      });
+    } catch (error: any) {
+      console.error("Load popular points error:", error);
+      set({
+        error: error.message || "Failed to load popular points",
+        loading: false,
+      });
     }
   },
 
@@ -181,6 +220,7 @@ export const usePointsStore = create<PointsState>((set, get) => ({
             contraindications: p.contraindications,
             coordinates: p.coordinates ? JSON.parse(p.coordinates) : undefined,
             image_url: p.image_path,
+            isFavorite: true,
           })),
           loading: false,
         });
@@ -194,31 +234,24 @@ export const usePointsStore = create<PointsState>((set, get) => ({
     }
   },
 
-  toggleFavorite: async (pointId: number) => {
+  toggleFavorite: async (pointId: string) => {
     try {
       const { favorites } = get();
       const isFavorite = favorites.some((p) => p.id === pointId);
 
       if (isFavorite) {
         // Remove from favorites
-        try {
-          await apiService.removeFavorite(pointId);
-        } catch (apiError) {
-          // Remove locally
-          await databaseService.removeFavorite(pointId, 1);
-        }
+        await apiService.removeFavorite(pointId);
 
         set({
           favorites: favorites.filter((p) => p.id !== pointId),
+          points: get().points.map((p) =>
+            p.id === pointId ? { ...p, isFavorite: false } : p
+          ),
         });
       } else {
         // Add to favorites
-        try {
-          await apiService.addFavorite(pointId);
-        } catch (apiError) {
-          // Add locally
-          await databaseService.addFavorite(pointId, 1);
-        }
+        await apiService.addFavorite(pointId);
 
         // Find the point to add to favorites
         const point =
@@ -227,7 +260,10 @@ export const usePointsStore = create<PointsState>((set, get) => ({
 
         if (point) {
           set({
-            favorites: [...favorites, point],
+            favorites: [...favorites, { ...point, isFavorite: true }],
+            points: get().points.map((p) =>
+              p.id === pointId ? { ...p, isFavorite: true } : p
+            ),
           });
         }
       }
@@ -256,7 +292,7 @@ export const usePointsStore = create<PointsState>((set, get) => ({
 
       set({
         points: localPoints.map((p) => ({
-          id: p.id,
+          id: String(p.id), // Convert to string for Firestore compatibility
           code: "",
           name: p.name,
           chinese_name: p.chinese_name,
@@ -266,6 +302,7 @@ export const usePointsStore = create<PointsState>((set, get) => ({
           contraindications: p.contraindications,
           coordinates: p.coordinates ? JSON.parse(p.coordinates) : undefined,
           image_url: p.image_path,
+          isFavorite: false,
         })),
         loading: false,
       });
@@ -275,14 +312,20 @@ export const usePointsStore = create<PointsState>((set, get) => ({
     }
   },
 
-  getLocalPoint: async (id: number) => {
+  getLocalPoint: async (id: string) => {
     try {
-      const localPoint = await databaseService.getPointById(id);
+      // Try to parse as number for local DB
+      const numericId = parseInt(id, 10);
+      if (isNaN(numericId)) {
+        throw new Error("Invalid point ID");
+      }
+      
+      const localPoint = await databaseService.getPointById(numericId);
 
       if (localPoint) {
         set({
           selectedPoint: {
-            id: localPoint.id,
+            id: String(localPoint.id),
             code: "",
             name: localPoint.name,
             chinese_name: localPoint.chinese_name,
@@ -295,6 +338,7 @@ export const usePointsStore = create<PointsState>((set, get) => ({
               : undefined,
             image_url: localPoint.image_path,
             symptoms: [], // No symptoms data in local storage
+            isFavorite: false,
           },
           loading: false,
         });
