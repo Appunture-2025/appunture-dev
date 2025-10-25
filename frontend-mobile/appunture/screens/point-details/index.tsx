@@ -34,17 +34,16 @@ export default function PointDetailsScreen() {
 
   useEffect(() => {
     const rawId = Array.isArray(id) ? id[0] : id;
-    const numericId = rawId ? Number(rawId) : NaN;
 
-    if (Number.isNaN(numericId)) {
+    if (!rawId) {
       setPoint(null);
       setLoading(false);
       return;
     }
 
     const foundPoint =
-      points.find((p) => p.id === numericId) ||
-      favorites.find((p) => p.id === numericId);
+      points.find((p) => p.id === rawId) ||
+      favorites.find((p) => p.id === rawId);
 
     setPoint(foundPoint ?? null);
     setLoading(false);

@@ -210,7 +210,7 @@ export const usePointsStore = create<PointsState>((set, get) => ({
         const localFavorites = await databaseService.getFavorites(1); // Assuming user id 1
         set({
           favorites: localFavorites.map((p) => ({
-            id: p.id,
+            id: String(p.id),
             code: "",
             name: p.name,
             chinese_name: p.chinese_name,
