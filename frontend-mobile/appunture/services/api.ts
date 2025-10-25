@@ -1,4 +1,10 @@
-import axios, { AxiosInstance, AxiosError } from "axios";
+import axios, {
+  AxiosInstance,
+  AxiosError,
+  InternalAxiosRequestConfig,
+  AxiosResponse,
+  AxiosHeaders,
+} from "axios";
 import {
   Point,
   Symptom,
@@ -19,6 +25,7 @@ import {
 } from "../types/api";
 import { API_BASE_URL } from "../utils/constants";
 import { getStoredToken } from "./storage";
+import { firebaseAuth } from "./firebase";
 
 class ApiService {
   private client: AxiosInstance;
@@ -38,21 +45,40 @@ class ApiService {
   private setupInterceptors() {
     // Request interceptor to add auth token
     this.client.interceptors.request.use(
-      async (config) => {
-        const token = await getStoredToken();
+      async (config: InternalAxiosRequestConfig) => {
+        const currentUser = firebaseAuth.currentUser;
+        let token: string | null = null;
+
+        if (currentUser) {
+          try {
+            token = await currentUser.getIdToken();
+          } catch (error) {
+            console.warn("Failed to retrieve Firebase ID token", error);
+          }
+        }
+
+        if (!token) {
+          token = await getStoredToken();
+        }
+
         if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
+          config.headers = config.headers ?? new AxiosHeaders();
+          if (config.headers instanceof AxiosHeaders) {
+            config.headers.set("Authorization", `Bearer ${token}`);
+          } else {
+            (config.headers as Record<string, string>).Authorization = `Bearer ${token}`;
+          }
         }
         return config;
       },
-      (error) => {
+      (error: AxiosError) => {
         return Promise.reject(error);
       }
     );
 
     // Response interceptor to handle errors
     this.client.interceptors.response.use(
-      (response) => response,
+      (response: AxiosResponse) => response,
       (error: AxiosError) => {
         const apiError: ApiError = {
           error: "Network Error",
@@ -96,17 +122,29 @@ class ApiService {
     return response.data;
   }
 
-  async getProfile(): Promise<{ user: User }> {
-    const response = await this.client.get<{ user: User }>("/auth/profile");
-    return response.data;
+  async getProfile(): Promise<User> {
+    const response = await this.client.get<{ user?: User } | User>(
+      "/auth/profile"
+    );
+    const payload = response.data as { user?: User } | User;
+    return ("user" in payload && payload.user ? payload.user : payload) as User;
   }
 
-  async updateProfile(userData: UserProfile): Promise<{ user: User }> {
-    const response = await this.client.put<{ user: User }>(
+  async updateProfile(userData: UserProfile): Promise<User> {
+    const response = await this.client.put<{ user?: User } | User>(
       "/auth/profile",
       userData
     );
-    return response.data;
+    const payload = response.data as { user?: User } | User;
+    return ("user" in payload && payload.user ? payload.user : payload) as User;
+  }
+
+  async syncFirebaseUser(): Promise<User> {
+    const response = await this.client.post<{ user?: User } | User>(
+      "/auth/sync"
+    );
+    const payload = response.data as { user?: User } | User;
+    return ("user" in payload && payload.user ? payload.user : payload) as User;
   }
 
   // Points endpoints

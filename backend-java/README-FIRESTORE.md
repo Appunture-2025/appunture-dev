@@ -216,12 +216,18 @@ service firebase.storage {
 
 ### **APIs Disponíveis**
 - **Swagger UI**: http://localhost:8080/api/swagger-ui/index.html
-- **Health Check**: http://localhost:8080/api/health
-- **Auth**: `/api/auth/**`
-- **Points**: `/api/points/**`
-- **Symptoms**: `/api/symptoms/**`
-- **Storage**: `/api/storage/**`
-- **Admin**: `/api/admin/**`
+- **Health Check**: `GET /api/health`, `GET /api/health/detailed`
+- **Auth (Firebase ID Token obrigatório)**:
+  - `GET /api/auth/profile`
+  - `PUT /api/auth/profile`
+  - `POST /api/auth/sync`
+  - `GET /api/auth/me`
+  - `POST /api/auth/favorites/{pointId}`
+  - `DELETE /api/auth/favorites/{pointId}`
+- **Points**: CRUD em `/api/points/**` (leituras públicas autenticadas, criação/edição exclusivas ROLE_ADMIN)
+- **Symptoms**: CRUD em `/api/symptoms/**` (leituras públicas autenticadas, criação/edição exclusivas ROLE_ADMIN)
+- **Storage**: `/api/storage/**` (upload, signed URLs, metadados via Firebase Storage)
+- **Admin**: `/api/admin/**` (ROLE_ADMIN)
 
 ### **Variáveis de Ambiente**
 ```bash

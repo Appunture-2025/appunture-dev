@@ -62,8 +62,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Endpoints públicos
                         .requestMatchers("/api/public/**").permitAll()
-                        .requestMatchers("/api/auth/register").permitAll()
-                        .requestMatchers("/api/health").permitAll()
+                        .requestMatchers("/api/health/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
                         // Swagger/OpenAPI
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()

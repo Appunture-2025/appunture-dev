@@ -26,7 +26,7 @@ interface SettingsOption {
 
 export default function ProfileScreen() {
   const { user, logout } = useAuthStore();
-  const { isOnline, lastSyncTime } = useSyncStore();
+  const { isOnline, lastSync } = useSyncStore();
   const [notifications, setNotifications] = useState(true);
   const [offlineMode, setOfflineMode] = useState(false);
 
@@ -182,10 +182,10 @@ export default function ProfileScreen() {
           />
           <Text style={styles.syncText}>
             {isOnline ? "Online" : "Offline"}
-            {lastSyncTime && (
+            {lastSync && (
               <Text style={styles.lastSync}>
                 {" • Última sincronização: "}
-                {new Date(lastSyncTime).toLocaleString("pt-BR")}
+                {new Date(lastSync).toLocaleString("pt-BR")}
               </Text>
             )}
           </Text>

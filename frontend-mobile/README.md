@@ -45,17 +45,17 @@ start-dev.bat
 
 ### Backend API
 
-- **Framework:** Node.js + Express
-- **Banco:** PostgreSQL (produção) / SQLite (desenvolvimento)
-- **Autenticação:** JWT
-- **Porta:** 3000
+- **Framework:** Spring Boot 3 + Firebase Admin SDK
+- **Banco:** Google Firestore
+- **Autenticação:** Firebase ID Token (Bearer)
+- **Porta:** 8080 (`/api` como context-path)
 
-**Endpoints principais:**
+**Endpoints principais (ID Token obrigatório):**
 
 - `GET /api/points` - Lista pontos de acupuntura
 - `GET /api/symptoms` - Lista sintomas
-- `POST /api/auth/login` - Login de usuário
-- `POST /api/auth/register` - Registro de usuário
+- `GET /api/auth/me` - Retorna token + perfil Firestore
+- `POST /api/auth/sync` - Garante existência do usuário no Firestore
 
 ### Frontend Mobile
 
@@ -186,8 +186,8 @@ eas build --platform all
 ### Backend
 
 ```bash
-cd backend
-npm test
+cd backend-java
+mvn test
 ```
 
 ### Frontend Mobile
@@ -201,46 +201,44 @@ npm test
 
 A documentação completa da API está disponível em:
 
-- **Desenvolvimento:** http://localhost:3000/api/docs
-- **Postman Collection:** `backend/docs/postman_collection.json`
+- **Desenvolvimento:** http://localhost:8080/api/swagger-ui/index.html
+- **Coleção (em breve):** `backend-java/docs/postman_collection.json`
 
 ### Exemplos de Uso
 
 **Buscar pontos:**
 
-```javascript
+```http
 GET /api/points?search=dor%20de%20cabeça&limit=10
+Authorization: Bearer <firebase-id-token>
 ```
 
-**Login:**
+**Consultar perfil autenticado:**
 
-```javascript
-POST /api/auth/login
-{
-  "email": "usuario@email.com",
-  "password": "senha123"
-}
+```http
+GET /api/auth/me
+Authorization: Bearer <firebase-id-token>
 ```
 
 ## 🔧 Configuração
 
 ### Variáveis de Ambiente
 
-**Backend (.env):**
+**Backend Java (application.yml / variáveis de ambiente):**
 
 ```env
-PORT=3000
-DATABASE_URL=sqlite:./database/appunture.db
-JWT_SECRET=sua_chave_super_secreta
-NODE_ENV=development
+FIREBASE_PROJECT_ID=appunture-tcc
+FIREBASE_SERVICE_ACCOUNT_KEY=<json_em_base64>
+FIREBASE_ENABLED=true
+SERVER_PORT=8080
 ```
 
 **Frontend Mobile (constants.ts):**
 
 ```typescript
 export const API_BASE_URL = __DEV__
-  ? "http://localhost:3000/api"
-  : "https://api.appunture.com/api";
+   ? "http://localhost:8080/api"
+   : "https://api.appunture.com/api";
 ```
 
 ## 🐛 Troubleshooting
@@ -249,17 +247,14 @@ export const API_BASE_URL = __DEV__
 
 **Erro de conexão no mobile:**
 
-- Verifique se backend está rodando na porta 3000
+- Verifique se backend Java está rodando na porta 8080
 - Confirme que dispositivo está na mesma rede
 - Para Android, use IP da máquina em vez de localhost
 
-**Banco não inicializa:**
+**Firebase retorna "token inválido":**
 
-```bash
-cd backend
-rm -rf database/appunture.db
-npm run init-db
-```
+- Confirme se o usuário está autenticado no Firebase Auth
+- Gere um novo ID token com `await auth().currentUser?.getIdToken(true)` antes de chamar a API
 
 **Dependências faltando:**
 

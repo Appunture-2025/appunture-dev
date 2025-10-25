@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -23,26 +23,32 @@ const techniques = [
   "Acupressão",
 ];
 
-export interface PointsState {
-  points: Point[];
-  favoritePoints: Point[];
-  toggleFavorite: (id: string) => Promise<void>;
-}
-
 export default function PointDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const { points, favoritePoints, toggleFavorite } = usePointsStore();
-  const [point, setPoint] = useState<any>(null);
+  const { points, favorites, toggleFavorite } = usePointsStore();
+  const [point, setPoint] = useState<(Point & { function?: string }) | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (id) {
-      const foundPoint = points.find(p => p.id === id);
-      setPoint(foundPoint);
+    const rawId = Array.isArray(id) ? id[0] : id;
+    const numericId = rawId ? Number(rawId) : NaN;
+
+    if (Number.isNaN(numericId)) {
+      setPoint(null);
       setLoading(false);
+      return;
     }
-  }, [id, points]);
+
+    const foundPoint =
+      points.find((p) => p.id === numericId) ||
+      favorites.find((p) => p.id === numericId);
+
+    setPoint(foundPoint ?? null);
+    setLoading(false);
+  }, [id, points, favorites]);
 
   const handleToggleFavorite = async () => {
     if (!point) return;
@@ -54,7 +60,21 @@ export default function PointDetailsScreen() {
     }
   };
 
-  const isFavorite = favoritePoints.some(p => p.id === point?.id);
+  const isFavorite = favorites.some((p) => p.id === point?.id);
+  const indicationsList = useMemo(() => {
+    if (!point?.indications) {
+      return [] as string[];
+    }
+
+    if (Array.isArray(point.indications)) {
+      return point.indications;
+    }
+
+    return point.indications
+      .split(/\n|;|•|,/)
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }, [point?.indications]);
 
   if (loading) {
     return (
@@ -118,8 +138,8 @@ export default function PointDetailsScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Indicações</Text>
           <View style={styles.indicationsList}>
-            {point.indications?.length > 0 ? (
-              point.indications.map((indication: string, index: number) => (
+            {indicationsList.length > 0 ? (
+              indicationsList.map((indication, index) => (
                 <View key={index} style={styles.indicationItem}>
                   <Ionicons
                     name="medical"

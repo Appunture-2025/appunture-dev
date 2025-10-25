@@ -1,7 +1,33 @@
+import Constants from "expo-constants";
+
 // App Constants
-export const API_BASE_URL = __DEV__
-  ? "http://localhost:3000/api"
-  : "https://your-production-api.com/api";
+const extra = (Constants.expoConfig?.extra ?? Constants.manifestExtra ?? {}) as
+  | Record<string, unknown>
+  | undefined;
+
+const globalContext = globalThis as {
+  __DEV__?: boolean;
+  process?: { env?: Record<string, string | undefined> };
+};
+
+const envVars = globalContext.process?.env ?? {};
+const defaultDevBase = "http://localhost:3000";
+const defaultProdBase = "https://your-production-api.com";
+const isDevBuild =
+  typeof globalContext.__DEV__ === "boolean"
+    ? globalContext.__DEV__
+    : envVars.NODE_ENV !== "production";
+
+const rawApiBase =
+  (typeof extra?.apiBaseUrl === "string" && extra?.apiBaseUrl) ||
+  envVars.EXPO_PUBLIC_API_BASE_URL ||
+  (isDevBuild ? defaultDevBase : defaultProdBase);
+
+const normalisedBase = rawApiBase?.endsWith("/api")
+  ? rawApiBase
+  : `${rawApiBase?.replace(/\/$/, "")}/api`;
+
+export const API_BASE_URL = normalisedBase;
 
 export const COLORS = {
   primary: "#007aff",

@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: appunture-backend
+  profiles:
+    active: prod
+  # PostgreSQL/JPA removido - usando Firestore
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+logging:
+  level:
+    root: INFO
+    com.appunture.backend: INFO
+    com.google.cloud: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# Configurações Firebase para produção
+firebase:
+  project-id: ${GOOGLE_CLOUD_PROJECT}
+  service-account-key-path: ${GOOGLE_APPLICATION_CREDENTIALS}  # Usar ADC em produção
+  storage:
+    bucket: ${GOOGLE_CLOUD_PROJECT}.appspot.com
+
+app:
+  firebase:
+    enabled: true
+  cors:
+    allowed-origins:
+      - https://${GOOGLE_CLOUD_PROJECT}.web.app
+      - https://${GOOGLE_CLOUD_PROJECT}.firebaseapp.com
+      - https://your-custom-domain.com
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: when-authorized

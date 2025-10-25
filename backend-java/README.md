@@ -105,18 +105,23 @@ src/main/java/com/appunture/backend/
 
 ## 🌐 API Endpoints
 
-### 🔐 Autenticação
+### 🔐 Autenticação (Firebase ID Token obrigatório)
 ```
-POST /auth/register         # Registro de usuário
-POST /auth/login           # Login (Firebase)
-GET  /auth/profile         # Perfil do usuário
-PUT  /auth/profile         # Atualizar perfil
+GET    /auth/profile               # Perfil do usuário no Firestore
+PUT    /auth/profile               # Atualizar perfil
+POST   /auth/sync                  # Sincronizar usuário do Firebase Auth → Firestore
+GET    /auth/me                    # Dados do token + perfil
+POST   /auth/favorites/{pointId}   # Adicionar favorito
+DELETE /auth/favorites/{pointId}   # Remover favorito
 ```
 
 ### 🎯 Pontos de Acupuntura
 ```
 GET    /points             # Listar pontos
-GET    /points/{id}        # Buscar ponto
+GET    /points/{id}        # Buscar ponto por ID Firestore
+GET    /points/code/{code} # Buscar ponto por código (ex.: VG20)
+GET    /points/meridian/{meridian} # Pontos por meridiano
+GET    /points/symptom/{id}    # Pontos associados a um sintoma
 POST   /points             # Criar ponto (admin)
 PUT    /points/{id}        # Atualizar ponto (admin)
 DELETE /points/{id}        # Deletar ponto (admin)
@@ -126,8 +131,13 @@ GET    /points/popular     # Pontos populares
 
 ### 🩺 Sintomas
 ```
-GET    /symptoms           # Listar sintomas
-GET    /symptoms/{id}      # Buscar sintoma
+GET    /symptoms               # Listar sintomas
+GET    /symptoms/{id}          # Buscar sintoma
+GET    /symptoms/point/{id}    # Sintomas associados a um ponto
+GET    /symptoms/category/{c}  # Sintomas por categoria
+GET    /symptoms/tag/{tag}     # Sintomas por tag
+GET    /symptoms/severity      # Sintomas por faixa de severidade
+GET    /symptoms/popular       # Sintomas mais utilizados
 POST   /symptoms           # Criar sintoma (admin)
 PUT    /symptoms/{id}      # Atualizar sintoma (admin)
 DELETE /symptoms/{id}      # Deletar sintoma (admin)
@@ -137,9 +147,7 @@ GET    /symptoms/categories # Categorias de sintomas
 
 ### 👤 Favoritos
 ```
-GET    /points/favorites   # Pontos favoritos
-POST   /points/{id}/favorite   # Adicionar favorito
-DELETE /points/{id}/favorite   # Remover favorito
+Manuseados via /auth/favorites/**
 ```
 
 ### 👨‍💼 Administração

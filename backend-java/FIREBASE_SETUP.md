@@ -161,11 +161,13 @@ const downloadFile = async (url, localPath) => {
 
 ### Endpoints da API
 
-#### Autenticação
-- `POST /api/auth/register` - Registrar usuário
-- `POST /api/auth/verify-token` - Verificar token Firebase
-- `POST /api/auth/send-email-verification` - Enviar verificação de email
-- `POST /api/auth/send-password-reset` - Enviar reset de senha
+#### Autenticação (requer Firebase ID Token válido)
+- `GET /api/auth/profile` - Perfil do usuário autenticado (Firestore)
+- `PUT /api/auth/profile` - Atualizar dados do perfil (Firestore)
+- `POST /api/auth/sync` - Sincronizar usuário criado no Firebase Auth para o Firestore
+- `GET /api/auth/me` - Informações do token + perfil no Firestore
+- `POST /api/auth/favorites/{pointId}` - Adicionar ponto aos favoritos
+- `DELETE /api/auth/favorites/{pointId}` - Remover ponto dos favoritos
 
 #### Firebase Storage
 - `POST /api/storage/upload` - Upload de arquivo
@@ -211,8 +213,7 @@ firebase emulators:start
 
 ## Monitoramento
 
-- **Health Check**: `GET /api/actuator/health`
-- **Firebase Status**: `GET /api/auth/status`
+- **Health Check**: `GET /api/health`, `GET /api/health/detailed`
 - **Storage Status**: `GET /api/storage/status`
 
 ## Troubleshooting

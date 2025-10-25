@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -45,16 +44,15 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
                 FirebaseToken decodedToken = firebaseAuthService.verifyToken(token);
                 String uid = decodedToken.getUid();
                 String email = decodedToken.getEmail();
-                
+
                 // Extrair role dos custom claims
                 List<SimpleGrantedAuthority> authorities = extractAuthorities(decodedToken);
-                
-                UsernamePasswordAuthenticationToken authentication = 
-                    new UsernamePasswordAuthenticationToken(uid, null, authorities);
-                
-                // Adicionar informações extras ao contexto
+
+                UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(decodedToken, null, authorities);
+
                 authentication.setDetails(new FirebaseAuthDetails(uid, email, decodedToken.getClaims()));
-                
+
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 
                 log.debug("User authenticated: {} ({})", email, uid);
@@ -102,8 +100,7 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isPublicEndpoint(String uri) {
-        return uri.startsWith("/api/public") ||
-               uri.startsWith("/api/auth/register") ||
+    return uri.startsWith("/api/public") ||
                uri.startsWith("/api/health") ||
                uri.startsWith("/swagger-ui") ||
                uri.startsWith("/v3/api-docs") ||

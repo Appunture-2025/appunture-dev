@@ -70,10 +70,12 @@ types/
    npm install
    ```
 
-2. **Configurar backend**:
+2. **Configurar backend/Firebase**:
 
-   - Ajustar `API_BASE_URL` em `utils/constants.ts`
-   - Certificar que o backend está rodando
+   - Atualize os valores de `expo.extra` em `app.json` com as chaves do Firebase (`firebaseApiKey`, `firebaseProjectId`, etc.)
+   - Opcional: defina variáveis de ambiente `EXPO_PUBLIC_*` equivalentes se preferir não commitar as chaves sensíveis
+   - Ajuste `apiBaseUrl` para apontar para a API (o valor final usa automaticamente o sufixo `/api`)
+   - Certifique-se de que o backend esteja rodando e aceitando tokens do Firebase
 
 3. **Executar app**:
    ```bash

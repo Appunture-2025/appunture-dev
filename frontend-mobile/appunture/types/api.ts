@@ -1,6 +1,8 @@
+import type { User, LoginCredentials, RegisterData, UserProfile } from "./user";
+
 // API Types
 export interface Point {
-  isFavorite: unknown;
+  isFavorite: boolean;
   id: number;
   code: string;
   name: string;
@@ -23,15 +25,6 @@ export interface Symptom {
   name: string;
   description?: string;
   category?: string;
-  created_at?: string;
-}
-
-export interface User {
-  id: number;
-  email: string;
-  name: string;
-  profession?: string;
-  role: "user" | "admin";
   created_at?: string;
 }
 
@@ -128,20 +121,4 @@ export interface SymptomPoint {
   efficacy_score: number;
 }
 
-// Authentication Types
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-export interface RegisterData {
-  email: string;
-  password: string;
-  name: string;
-  profession?: string;
-}
-
-export interface UserProfile {
-  name: string;
-  profession?: string;
-}
+export type { User, LoginCredentials, RegisterData, UserProfile };

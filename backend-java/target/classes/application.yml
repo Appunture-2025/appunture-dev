@@ -3,18 +3,23 @@ spring:
     name: appunture-backend
   profiles:
     active: dev
-  datasource:
-    url: jdbc:postgresql://localhost:5432/appunture
-    username: appunture
-    password: password123
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    open-in-view: false
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
+  # PostgreSQL/JPA removido - usando Firestore
+  # datasource:
+  #   url: jdbc:postgresql://localhost:5432/appunture
+  #   username: appunture
+  #   password: password123
+  #   driver-class-name: org.postgresql.Driver
+  # jpa:
+  #   hibernate:
+  #     ddl-auto: validate
+  #   open-in-view: false
+  # flyway:
+  #   enabled: true
+  #   baseline-on-migrate: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 server:
   port: 8080
@@ -24,16 +29,20 @@ server:
 logging:
   level:
     root: INFO
+    com.appunture.backend: DEBUG
+
+# Configurações Firebase e Google Cloud (para TCC - Plano Gratuito)
+firebase:
+  project-id: ${FIREBASE_PROJECT_ID:appunture-tcc}
+  service-account-key: ${FIREBASE_SERVICE_ACCOUNT_KEY:}  # JSON em string base64 ou vazio para usar ADC
+  storage:
+    bucket: ${FIREBASE_STORAGE_BUCKET:appunture-tcc.appspot.com}
 
 app:
-  security:
-    jwt-secret: CHANGEME_SUPER_SECRET_KEY
-    jwt-expiration-minutes: 60
   file-storage:
-    local-path: ./uploads
-  admin-seed:
-    email: admin@appunture.com
-    password: changeMeAdmin123
+    local-path: ./uploads  # Fallback se Cloud Storage não estiver disponível
+  firebase:
+    enabled: ${FIREBASE_ENABLED:true}  # Permite desabilitar Firebase para desenvolvimento
 
 management:
   endpoints:

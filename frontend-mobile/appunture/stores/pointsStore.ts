@@ -124,6 +124,7 @@ export const usePointsStore = create<PointsState>((set, get) => ({
             contraindications: p.contraindications,
             coordinates: p.coordinates ? JSON.parse(p.coordinates) : undefined,
             image_url: p.image_path,
+            isFavorite: false,
           })),
           loading: false,
         });
@@ -181,6 +182,7 @@ export const usePointsStore = create<PointsState>((set, get) => ({
             contraindications: p.contraindications,
             coordinates: p.coordinates ? JSON.parse(p.coordinates) : undefined,
             image_url: p.image_path,
+            isFavorite: true,
           })),
           loading: false,
         });
@@ -210,6 +212,9 @@ export const usePointsStore = create<PointsState>((set, get) => ({
 
         set({
           favorites: favorites.filter((p) => p.id !== pointId),
+          points: get().points.map((p) =>
+            p.id === pointId ? { ...p, isFavorite: false } : p
+          ),
         });
       } else {
         // Add to favorites
@@ -227,7 +232,10 @@ export const usePointsStore = create<PointsState>((set, get) => ({
 
         if (point) {
           set({
-            favorites: [...favorites, point],
+            favorites: [...favorites, { ...point, isFavorite: true }],
+            points: get().points.map((p) =>
+              p.id === pointId ? { ...p, isFavorite: true } : p
+            ),
           });
         }
       }
@@ -266,6 +274,7 @@ export const usePointsStore = create<PointsState>((set, get) => ({
           contraindications: p.contraindications,
           coordinates: p.coordinates ? JSON.parse(p.coordinates) : undefined,
           image_url: p.image_path,
+          isFavorite: false,
         })),
         loading: false,
       });
@@ -295,6 +304,7 @@ export const usePointsStore = create<PointsState>((set, get) => ({
               : undefined,
             image_url: localPoint.image_path,
             symptoms: [], // No symptoms data in local storage
+            isFavorite: false,
           },
           loading: false,
         });
