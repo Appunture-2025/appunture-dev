@@ -145,11 +145,35 @@ As Fases 4-5 podem ser deixadas como **"melhorias futuras"** ou **"trabalhos fut
 ## 🛠️ Próximos Passos
 
 1. ✅ Revisar documento de análise com a equipe
-2. ⬜ Decidir quais funcionalidades são essenciais para o TCC
-3. ⬜ Criar issues/tasks para cada funcionalidade
-4. ⬜ Começar implementação pela Fase 1
+2. ✅ Decidir quais funcionalidades são essenciais para o TCC
+3. ✅ Criar issues/tasks para cada funcionalidade
+4. 🔄 **EM ANDAMENTO**: Começar implementação pela Fase 1
 5. ⬜ Implementar incrementalmente com testes
 6. ⬜ Documentar durante o desenvolvimento
+
+## 📝 Log de Implementação
+
+### 🔄 EM ANDAMENTO (Fase 1 + Fase 2)
+
+**Data de Início**: 25 de outubro de 2025
+
+**Objetivo**: Implementar funcionalidades críticas e importantes (Fases 1-2)
+
+#### ✅ Descobertas Iniciais:
+- Firebase Auth já está integrado no código (authStore.ts, services/firebase.ts)
+- Estrutura básica já existe, precisa de correções e complementos
+- Principais problemas identificados:
+  1. Endpoints da API incorretos (ex: `/favorites` → `/auth/favorites/{pointId}`)
+  2. Tipos incompatíveis (id: number → string, image_url → imageUrls[])
+  3. Funcionalidades faltantes (sintomas, coordenadas, etc)
+
+#### 🔄 Tarefas em Execução:
+- [ ] Corrigir endpoints da API (api.ts)
+- [ ] Atualizar tipos de dados (types/api.ts)
+- [ ] Implementar sistema de sintomas completo
+- [ ] Adicionar coordenadas no mapa corporal
+- [ ] Implementar múltiplas imagens por ponto
+- [ ] Adicionar navegação por meridiano
 
 ## 📞 Dúvidas?
 
