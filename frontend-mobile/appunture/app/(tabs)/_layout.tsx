@@ -49,6 +49,15 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="meridians"
+        options={{
+          title: "Meridianos",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="git-network-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="chatbot"
         options={{
           title: "Assistente",
