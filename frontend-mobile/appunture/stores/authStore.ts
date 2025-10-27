@@ -7,6 +7,9 @@ import {
   updateProfile as updateFirebaseProfile,
   User as FirebaseUser,
   onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithCredential,
+  OAuthProvider,
 } from "firebase/auth";
 import { User, AuthState, LoginCredentials, RegisterData } from "../types/user";
 import { apiService } from "../services/api";
@@ -23,6 +26,8 @@ import {
 interface AuthStore extends AuthState {
   // Actions
   login: (credentials: LoginCredentials) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
+  loginWithApple: () => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => Promise<void>;
   loadStoredAuth: () => Promise<void>;
@@ -73,6 +78,72 @@ export const useAuthStore = create<AuthStore>()(
             isAuthenticated: true,
             isLoading: false,
           });
+        } catch (error) {
+          set({ isLoading: false });
+          throw error;
+        }
+      },
+
+      loginWithGoogle: async () => {
+        try {
+          set({ isLoading: true });
+
+          // For web, use signInWithPopup
+          // For mobile, we need Google Sign-In library
+          // This is a placeholder implementation
+          // In production, use @react-native-google-signin/google-signin for mobile
+          
+          throw new Error(
+            "Google Sign-In requer configuração adicional. " +
+            "Para React Native, instale @react-native-google-signin/google-signin. " +
+            "Para web, use signInWithPopup do Firebase Auth."
+          );
+
+          // Example web implementation:
+          // const provider = new GoogleAuthProvider();
+          // const result = await signInWithPopup(firebaseAuth, provider);
+          // const idToken = await result.user.getIdToken(true);
+          // await storeToken(idToken);
+          // const profile = await apiService.syncFirebaseUser();
+          // await storeUserData(profile);
+          // set({ user: profile, token: idToken, isAuthenticated: true, isLoading: false });
+        } catch (error) {
+          set({ isLoading: false });
+          throw error;
+        }
+      },
+
+      loginWithApple: async () => {
+        try {
+          set({ isLoading: true });
+
+          // For iOS, use Apple Sign-In
+          // This is a placeholder implementation
+          // In production, use expo-apple-authentication or native modules
+          
+          throw new Error(
+            "Apple Sign-In requer configuração adicional. " +
+            "Para iOS, use expo-apple-authentication. " +
+            "Disponível apenas em dispositivos Apple."
+          );
+
+          // Example iOS implementation:
+          // const credential = await AppleAuthentication.signInAsync({
+          //   requestedScopes: [
+          //     AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          //     AppleAuthentication.AppleAuthenticationScope.EMAIL,
+          //   ],
+          // });
+          // const provider = new OAuthProvider('apple.com');
+          // const oauthCredential = provider.credential({
+          //   idToken: credential.identityToken!,
+          // });
+          // const result = await signInWithCredential(firebaseAuth, oauthCredential);
+          // const idToken = await result.user.getIdToken(true);
+          // await storeToken(idToken);
+          // const profile = await apiService.syncFirebaseUser();
+          // await storeUserData(profile);
+          // set({ user: profile, token: idToken, isAuthenticated: true, isLoading: false });
         } catch (error) {
           set({ isLoading: false });
           throw error;

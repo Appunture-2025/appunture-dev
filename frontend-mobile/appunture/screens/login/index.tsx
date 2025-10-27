@@ -18,7 +18,7 @@ import { styles } from "./styles";
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { login, isLoading } = useAuthStore();
+  const { login, loginWithGoogle, loginWithApple, isLoading } = useAuthStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -42,6 +42,40 @@ export default function LoginScreen() {
         "Erro",
         error.message || "Erro ao fazer login. Tente novamente."
       );
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await loginWithGoogle();
+      router.replace("/(tabs)");
+    } catch (error: any) {
+      // Don't show alert for "not implemented" errors
+      if (!error.message?.includes("configuração adicional")) {
+        Alert.alert(
+          "Erro",
+          error.message || "Erro ao fazer login com Google. Tente novamente."
+        );
+      } else {
+        Alert.alert("Em desenvolvimento", error.message);
+      }
+    }
+  };
+
+  const handleAppleLogin = async () => {
+    try {
+      await loginWithApple();
+      router.replace("/(tabs)");
+    } catch (error: any) {
+      // Don't show alert for "not implemented" errors
+      if (!error.message?.includes("configuração adicional")) {
+        Alert.alert(
+          "Erro",
+          error.message || "Erro ao fazer login com Apple. Tente novamente."
+        );
+      } else {
+        Alert.alert("Em desenvolvimento", error.message);
+      }
     }
   };
 
@@ -156,6 +190,33 @@ export default function LoginScreen() {
               <Text style={styles.loginButtonText}>Entrar</Text>
             )}
           </TouchableOpacity>
+
+          <View style={styles.divider}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>ou continue com</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          {/* Social Login Buttons */}
+          <View style={styles.socialButtonsContainer}>
+            <TouchableOpacity
+              style={styles.socialButton}
+              onPress={handleGoogleLogin}
+              disabled={isLoading}
+            >
+              <Ionicons name="logo-google" size={24} color="#DB4437" />
+              <Text style={styles.socialButtonText}>Google</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.socialButton}
+              onPress={handleAppleLogin}
+              disabled={isLoading}
+            >
+              <Ionicons name="logo-apple" size={24} color={COLORS.text} />
+              <Text style={styles.socialButtonText}>Apple</Text>
+            </TouchableOpacity>
+          </View>
 
           <View style={styles.divider}>
             <View style={styles.dividerLine} />
