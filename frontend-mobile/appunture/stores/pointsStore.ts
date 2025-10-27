@@ -201,15 +201,39 @@ export const usePointsStore = create<PointsState>((set, get) => ({
       // Try to load from API first
       try {
         const response = await apiService.getFavorites();
+        
+        // Mark all points as favorites
+        const favoritesWithFlag = response.points.map((p) => ({
+          ...p,
+          isFavorite: true,
+        }));
+        
         set({
-          favorites: response.points,
+          favorites: favoritesWithFlag,
           loading: false,
         });
-      } catch (apiError) {
-        // Fall back to local favorites
-        const localFavorites = await databaseService.getFavorites(1); // Assuming user id 1
+        
+        // Update the isFavorite flag in points and searchResults
+        const favoriteIds = new Set(response.points.map((p) => p.id));
         set({
-          favorites: localFavorites.map((p) => ({
+          points: get().points.map((p) => ({
+            ...p,
+            isFavorite: favoriteIds.has(p.id),
+          })),
+          searchResults: get().searchResults.map((p) => ({
+            ...p,
+            isFavorite: favoriteIds.has(p.id),
+          })),
+        });
+        
+        console.log("Favorites loaded from API:", response.points.length);
+      } catch (apiError) {
+        console.warn("Failed to load favorites from API, falling back to local:", apiError);
+        
+        // Fall back to local favorites
+        try {
+          const localFavorites = await databaseService.getFavorites(1); // Assuming user id 1
+          const mappedFavorites = localFavorites.map((p) => ({
             id: String(p.id),
             code: "",
             name: p.name,
@@ -221,15 +245,28 @@ export const usePointsStore = create<PointsState>((set, get) => ({
             coordinates: p.coordinates ? JSON.parse(p.coordinates) : undefined,
             image_url: p.image_path,
             isFavorite: true,
-          })),
-          loading: false,
-        });
+          }));
+          
+          set({
+            favorites: mappedFavorites,
+            loading: false,
+          });
+          
+          console.log("Favorites loaded from local database:", mappedFavorites.length);
+        } catch (localError) {
+          console.error("Failed to load local favorites:", localError);
+          set({
+            favorites: [],
+            loading: false,
+          });
+        }
       }
     } catch (error: any) {
       console.error("Load favorites error:", error);
       set({
         error: error.message || "Failed to load favorites",
         loading: false,
+        favorites: [],
       });
     }
   },
@@ -239,37 +276,87 @@ export const usePointsStore = create<PointsState>((set, get) => ({
       const { favorites } = get();
       const isFavorite = favorites.some((p) => p.id === pointId);
 
-      if (isFavorite) {
-        // Remove from favorites
-        await apiService.removeFavorite(pointId);
+      // Optimistically update UI first
+      const point =
+        get().points.find((p) => p.id === pointId) ||
+        get().searchResults.find((p) => p.id === pointId) ||
+        favorites.find((p) => p.id === pointId);
 
+      if (!point && !isFavorite) {
+        throw new Error("Point not found");
+      }
+
+      // Update UI immediately for better UX
+      if (isFavorite) {
         set({
           favorites: favorites.filter((p) => p.id !== pointId),
           points: get().points.map((p) =>
             p.id === pointId ? { ...p, isFavorite: false } : p
           ),
+          searchResults: get().searchResults.map((p) =>
+            p.id === pointId ? { ...p, isFavorite: false } : p
+          ),
         });
-      } else {
-        // Add to favorites
-        await apiService.addFavorite(pointId);
+      } else if (point) {
+        set({
+          favorites: [...favorites, { ...point, isFavorite: true }],
+          points: get().points.map((p) =>
+            p.id === pointId ? { ...p, isFavorite: true } : p
+          ),
+          searchResults: get().searchResults.map((p) =>
+            p.id === pointId ? { ...p, isFavorite: true } : p
+          ),
+        });
+      }
 
-        // Find the point to add to favorites
-        const point =
-          get().points.find((p) => p.id === pointId) ||
-          get().searchResults.find((p) => p.id === pointId);
-
-        if (point) {
+      // Try to sync with backend
+      try {
+        if (isFavorite) {
+          await apiService.removeFavorite(pointId);
+        } else {
+          await apiService.addFavorite(pointId);
+        }
+        
+        // Store locally after successful sync
+        // TODO: Add to local database for offline persistence
+        console.log(`Favorite ${isFavorite ? "removed" : "added"} successfully:`, pointId);
+      } catch (syncError: any) {
+        console.warn("Failed to sync favorite with backend:", syncError);
+        
+        // Revert optimistic update on error
+        if (isFavorite) {
+          // Was trying to remove, revert by adding back
+          if (point) {
+            set({
+              favorites: [...get().favorites, { ...point, isFavorite: true }],
+              points: get().points.map((p) =>
+                p.id === pointId ? { ...p, isFavorite: true } : p
+              ),
+              searchResults: get().searchResults.map((p) =>
+                p.id === pointId ? { ...p, isFavorite: true } : p
+              ),
+            });
+          }
+        } else {
+          // Was trying to add, revert by removing
           set({
-            favorites: [...favorites, { ...point, isFavorite: true }],
+            favorites: get().favorites.filter((p) => p.id !== pointId),
             points: get().points.map((p) =>
-              p.id === pointId ? { ...p, isFavorite: true } : p
+              p.id === pointId ? { ...p, isFavorite: false } : p
+            ),
+            searchResults: get().searchResults.map((p) =>
+              p.id === pointId ? { ...p, isFavorite: false } : p
             ),
           });
         }
+        
+        // Re-throw to notify user
+        throw new Error("Não foi possível sincronizar. Verifique sua conexão.");
       }
     } catch (error: any) {
       console.error("Toggle favorite error:", error);
       set({ error: error.message || "Failed to toggle favorite" });
+      throw error;
     }
   },
 
