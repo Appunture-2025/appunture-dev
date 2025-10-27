@@ -231,10 +231,11 @@ export const usePointsStore = create<PointsState>((set, get) => ({
         console.warn("Failed to load favorites from API, falling back to local:", apiError);
         
         // Fall back to local favorites
+        // TODO: Get actual user ID from authStore instead of hardcoding
         try {
-          const localFavorites = await databaseService.getFavorites(1); // Assuming user id 1
+          const localFavorites = await databaseService.getFavorites(1);
           const mappedFavorites = localFavorites.map((p) => ({
-            id: String(p.id),
+            id: String(p.id), // Convert LocalPoint number ID to Point string ID
             code: "",
             name: p.name,
             chinese_name: p.chinese_name,
@@ -317,8 +318,9 @@ export const usePointsStore = create<PointsState>((set, get) => ({
           await apiService.addFavorite(pointId);
         }
         
-        // Store locally after successful sync
-        // TODO: Add to local database for offline persistence
+        // Store locally after successful sync for offline access
+        // TODO: Implement local database persistence with databaseService
+        // Example: await databaseService.saveFavorite(userId, pointId, !isFavorite);
         console.log(`Favorite ${isFavorite ? "removed" : "added"} successfully:`, pointId);
       } catch (syncError: any) {
         console.warn("Failed to sync favorite with backend:", syncError);
@@ -350,7 +352,8 @@ export const usePointsStore = create<PointsState>((set, get) => ({
           });
         }
         
-        // Re-throw to notify user
+        // Re-throw with internationalized error message
+        // TODO: Use i18n service when available
         throw new Error("Não foi possível sincronizar. Verifique sua conexão.");
       }
     } catch (error: any) {
