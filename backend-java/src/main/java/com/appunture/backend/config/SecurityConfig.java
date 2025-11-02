@@ -1,6 +1,7 @@
 package com.appunture.backend.config;
 
 import com.appunture.backend.security.FirebaseAuthenticationFilter;
+import com.appunture.backend.security.RateLimitingFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,7 +18,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
+import java.util.List;
+
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Configuration
 @EnableWebSecurity
@@ -25,9 +28,15 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     private final FirebaseAuthenticationFilter firebaseAuthenticationFilter;
+    private final RateLimitingFilter rateLimitingFilter;
+    private final SecurityProperties securityProperties;
 
-    public SecurityConfig(FirebaseAuthenticationFilter firebaseAuthenticationFilter) {
+    public SecurityConfig(FirebaseAuthenticationFilter firebaseAuthenticationFilter,
+                          RateLimitingFilter rateLimitingFilter,
+                          SecurityProperties securityProperties) {
         this.firebaseAuthenticationFilter = firebaseAuthenticationFilter;
+        this.rateLimitingFilter = rateLimitingFilter;
+        this.securityProperties = securityProperties;
     }
 
     @Bean
@@ -42,11 +51,34 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+        // SECURITY WARNING: Never use allowedOrigins("*") in production!
+        // Always configure specific domains in application-{profile}.yml
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
+        SecurityProperties.Cors cors = securityProperties.getCors();
+
+        List<String> allowedOrigins = cors.getAllowedOrigins();
+        List<String> allowedOriginPatterns = cors.getAllowedOriginPatterns();
+
+        if (!isEmpty(allowedOriginPatterns)) {
+            configuration.setAllowedOriginPatterns(allowedOriginPatterns);
+        } else if (!isEmpty(allowedOrigins)) {
+            boolean wildcard = allowedOrigins.stream().anyMatch("*"::equals);
+            if (wildcard) {
+                configuration.setAllowedOriginPatterns(List.of("*"));
+            } else {
+                configuration.setAllowedOrigins(allowedOrigins);
+            }
+        } else {
+            configuration.setAllowedOriginPatterns(List.of("*"));
+        }
+
+        configuration.setAllowedMethods(cors.getAllowedMethods());
+        configuration.setAllowedHeaders(cors.getAllowedHeaders());
+        if (!isEmpty(cors.getExposedHeaders())) {
+            configuration.setExposedHeaders(cors.getExposedHeaders());
+        }
+        configuration.setAllowCredentials(cors.isAllowCredentials());
+        configuration.setMaxAge(cors.getMaxAge() != null ? cors.getMaxAge().getSeconds() : 3600);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -73,6 +105,7 @@ public class SecurityConfig {
 
         // Adiciona o filtro de autenticação Firebase
         http.addFilterBefore(firebaseAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(rateLimitingFilter, FirebaseAuthenticationFilter.class);
         
         return http.build();
     }

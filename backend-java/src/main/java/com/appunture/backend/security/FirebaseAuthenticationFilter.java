@@ -1,5 +1,6 @@
 package com.appunture.backend.security;
 
+import com.appunture.backend.config.SecurityProperties;
 import com.appunture.backend.service.FirebaseAuthService;
 import com.google.firebase.auth.FirebaseToken;
 import jakarta.servlet.FilterChain;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
 
     private final FirebaseAuthService firebaseAuthService;
+    private final SecurityProperties securityProperties;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
@@ -45,13 +47,21 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
                 String uid = decodedToken.getUid();
                 String email = decodedToken.getEmail();
 
+                if (securityProperties.isRequireEmailVerified() && !decodedToken.isEmailVerified()) {
+                    log.warn("Rejected authentication for {} - email not verified", email);
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"error\":\"email_not_verified\",\"message\":\"Email address not verified.\"}");
+                    return;
+                }
+
                 // Extrair role dos custom claims
                 List<SimpleGrantedAuthority> authorities = extractAuthorities(decodedToken);
 
                 UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(decodedToken, null, authorities);
 
-                authentication.setDetails(new FirebaseAuthDetails(uid, email, decodedToken.getClaims()));
+                authentication.setDetails(new FirebaseAuthDetails(uid, email, decodedToken.getClaims(), decodedToken.isEmailVerified()));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 
@@ -115,15 +125,18 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
         private final String uid;
         private final String email;
         private final Map<String, Object> claims;
+        private final boolean emailVerified;
 
-        public FirebaseAuthDetails(String uid, String email, Map<String, Object> claims) {
+        public FirebaseAuthDetails(String uid, String email, Map<String, Object> claims, boolean emailVerified) {
             this.uid = uid;
             this.email = email;
             this.claims = claims;
+            this.emailVerified = emailVerified;
         }
 
         public String getUid() { return uid; }
         public String getEmail() { return email; }
         public Map<String, Object> getClaims() { return claims; }
+        public boolean isEmailVerified() { return emailVerified; }
     }
 }

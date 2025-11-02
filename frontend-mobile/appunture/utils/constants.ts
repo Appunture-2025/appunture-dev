@@ -153,5 +153,5 @@ export const SYNC_INTERVALS = {
 
 export const MAX_SEARCH_RESULTS = 50;
 export const MAX_RECENT_SEARCHES = 10;
-export const DATABASE_VERSION = 1;
+export const DATABASE_VERSION = 2;
 export const DATABASE_NAME = "appunture.db";

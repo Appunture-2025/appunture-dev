@@ -196,6 +196,7 @@ export default function SymptomsScreen() {
           value={searchQuery}
           onChangeText={handleSearch}
           placeholder="Buscar sintomas..."
+          onSubmit={() => handleSearch(searchQuery)}
         />
       </View>
 

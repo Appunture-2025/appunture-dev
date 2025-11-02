@@ -1,6 +1,6 @@
 // Database Schema Types
 export interface LocalPoint {
-  id: number;
+  id: string;
   name: string;
   chinese_name?: string;
   meridian: string;
@@ -10,38 +10,42 @@ export interface LocalPoint {
   contraindications?: string;
   image_path?: string;
   coordinates?: string; // JSON string
+  code?: string;
+  favorite_count?: number;
   synced: boolean;
   last_sync?: string;
 }
 
 export interface LocalSymptom {
-  id: number;
+  id: string;
   name: string;
   synonyms?: string; // JSON string array
   category?: string;
+  use_count?: number;
   synced: boolean;
   last_sync?: string;
 }
 
 export interface SymptomPoint {
-  id: number;
-  symptom_id: number;
-  point_id: number;
+  symptom_id: string;
+  point_id: string;
   efficacy_score: number;
 }
 
 export interface Favorite {
   id: number;
-  point_id: number;
-  user_id: number;
+  point_id: string;
+  user_id: string;
   synced: boolean;
+  operation: "UPSERT" | "DELETE";
   created_at: string;
+  updated_at?: string;
 }
 
 export interface Note {
   id: number;
-  point_id: number;
-  user_id: number;
+  point_id: string;
+  user_id: string;
   content: string;
   synced: boolean;
   created_at: string;
@@ -60,6 +64,18 @@ export interface SyncStatus {
   table_name: string;
   last_sync: string;
   status: "success" | "error" | "pending";
+}
+
+export interface SyncOperation {
+  id: number;
+  entity: string;
+  entity_id: string;
+  operation: "UPSERT" | "DELETE" | string;
+  payload?: string | null;
+  status: "pending" | "in_progress" | "retry" | "failed";
+  retry_count: number;
+  last_attempt?: string;
+  created_at: string;
 }
 
 // Database Operation Types

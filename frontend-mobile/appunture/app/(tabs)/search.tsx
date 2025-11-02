@@ -56,11 +56,11 @@ export default function SearchScreen() {
     }
   };
 
-  const handlePointPress = (pointId: number) => {
+  const handlePointPress = (pointId: string) => {
     // Navigation will be handled by PointCard component
   };
 
-  const handleToggleFavorite = async (pointId: number) => {
+  const handleToggleFavorite = async (pointId: string) => {
     try {
       await toggleFavorite(pointId);
     } catch (error) {
@@ -73,8 +73,8 @@ export default function SearchScreen() {
   const renderPoint = ({ item }: { item: any }) => (
     <PointCard
       point={item}
-      onPress={() => handlePointPress(item.id)}
-      onToggleFavorite={() => handleToggleFavorite(item.id)}
+      onPress={() => handlePointPress(String(item.id))}
+      onToggleFavorite={() => handleToggleFavorite(String(item.id))}
       showFavoriteButton={true}
     />
   );
@@ -106,7 +106,7 @@ export default function SearchScreen() {
       <FlatList
         data={displayPoints}
         renderItem={renderPoint}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => String(item.id)}
         ListHeaderComponent={renderHeader}
         ListEmptyComponent={renderEmpty}
         contentContainerStyle={styles.listContainer}

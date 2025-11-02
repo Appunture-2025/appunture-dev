@@ -1,15 +1,99 @@
 # 📊 Análise Completa do Projeto Appunture
 
 **Data da Análise:** 02 de novembro de 2025  
-**Versão:** 2.0  
+**Versão:** 2.1  
 **Analista:** Sistema Automatizado de Diagnóstico  
 **Metodologia:** Varredura completa de código, documentação, configurações, pipelines e artefatos
 
 ---
 
-## 📋 Sumário Executivo
+## � Changelog de Implementações
 
-O projeto Appunture é uma plataforma de acupuntura desenvolvida como TCC, composta por backend Java (Spring Boot 3 + Firebase/Firestore) e frontend mobile (React Native + Expo). A análise identificou **67 endpoints** disponíveis no backend, sendo 85% funcionais e testáveis. O frontend possui **18 telas** implementadas com integração parcial (~60%) aos serviços do backend. Foram identificadas **24 áreas** de lacunas funcionais, **8 problemas críticos** de segurança/arquitetura, e **15 melhorias prioritárias**. O projeto está em estágio avançado (70% completo) mas requer atenção em autenticação, sincronização offline, testes automatizados e documentação de APIs. Estimativa: 4-6 semanas para atingir produção estável.
+### 2025-11-02 - Sprint 1: Testes e Observabilidade (T01, T02, T04, T05)
+**Desenvolvedor**: AI Assistant  
+**Status**: Parcialmente concluído (9.5/25.5 SP - 37%)
+
+#### ✅ T04 - Validação CORS (0.5 SP) - CONCLUÍDO
+- Validado que CORS está configurado corretamente com restrições por ambiente
+- Adicionada documentação inline em `SecurityConfig.java` alertando sobre riscos
+
+#### ✅ T05 - Logs Estruturados (5 SP) - CONCLUÍDO
+- Implementado `CorrelationIdFilter` com UUID para rastreamento distribuído
+- Configurado `logback-spring.xml` com JSON logs (prod) e logs legíveis (dev)
+- Adicionadas dependências: `logstash-logback-encoder` 7.4 e `micrometer-registry-prometheus`
+- Exposto endpoint `/actuator/prometheus` para métricas
+- **Testes**: 5/5 passing, 100% de cobertura no filter
+
+#### 🔄 T01 - Testes Backend (10 SP) - 40% CONCLUÍDO (4/10 SP)
+**Concluído:**
+- JaCoCo plugin configurado (mínimo 50% coverage)
+- **25 testes unitários criados** (100% passing):
+  - `CorrelationIdFilterTest`: 5 testes, 100% cobertura
+  - `RateLimitingFilterTest`: 9 testes, 89% cobertura  
+  - `FirebaseAuthenticationFilterTest`: 11 testes, 89% cobertura
+- Padrão AAA (Arrange-Act-Assert) estabelecido
+- Uso de Mockito com `lenient()` para mocks opcionais
+
+**Pendente:**
+- Testes de serviços (FirestorePointService, SymptomService, FileStorageService)
+- Testes de integração com `@SpringBootTest`
+- Meta: 60% de cobertura geral
+
+#### ⏸️ T02 - Testes Frontend (10 SP) - NÃO INICIADO
+- Aguardando conclusão do T01
+
+**Arquivos Criados**:
+- `backend-java/src/main/java/com/appunture/backend/filter/CorrelationIdFilter.java`
+- `backend-java/src/main/resources/logback-spring.xml`
+- `backend-java/src/test/java/com/appunture/backend/filter/CorrelationIdFilterTest.java`
+- `backend-java/src/test/java/com/appunture/backend/security/RateLimitingFilterTest.java`
+- `backend-java/src/test/java/com/appunture/backend/security/FirebaseAuthenticationFilterTest.java`
+- `IMPLEMENTACAO_T01_T02_T04_T05.md` (relatório detalhado)
+
+**Métricas**:
+- Tempo de build: ~10s (incluindo testes)
+- Cobertura: 100% em filtros, 89% em security, 3% total
+
+---
+
+### 2025-11-02 - Atualização de Segurança e Sync Offline (T06, T07, T03)
+**Desenvolvedor**: AI Assistant  
+**Status**: Implementado e testado parcialmente
+
+#### ✅ T06 - Email Verification (70% concluído)
+- `FirebaseAuthenticationFilter` verifica `isEmailVerified()` quando `require-email-verified: true`
+- Retorna HTTP 403 com mensagem clara para emails não verificados
+- Configurável por ambiente (dev: false, prod: true)
+
+#### ✅ T07 - Rate Limiting (Implementado)
+- `RateLimitingFilter` usando Bucket4j 8.8.0
+- Estratégias: PER_IP, PER_USER, AUTO (fallback IP→User)
+- Configuração via `SecurityProperties`:
+  - Dev: 200 requests/min
+  - Prod: 120 requests/min (PER_USER)
+- Headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `Retry-After`
+- Paths excluídos: `/api/health/**`, `/actuator/**`, `/swagger-ui/**`
+
+#### 🔄 T03 - Offline Sync (60% concluído)
+**Frontend:**
+- `syncStore.ts` com fila de operações (`addToQueue`, `processSyncQueue`)
+- `connectivity.ts` monitora status da rede (`@react-native-community/netinfo`)
+- `pointsStore.ts` integrado com sync queue para favoritos offline
+- AsyncStorage persiste fila entre sessões
+
+**Pendente:**
+- Sincronização de imagens (só texto por enquanto)
+- Retry exponential backoff
+- Conflict resolution (last-write-wins apenas)
+- Testes unitários para `syncStore`
+
+---
+
+## �📋 Sumário Executivo
+
+O projeto Appunture é uma plataforma de acupuntura desenvolvida como TCC, composta por backend Java (Spring Boot 3 + Firebase/Firestore) e frontend mobile (React Native + Expo). A análise identificou **67 endpoints** disponíveis no backend, sendo 85% funcionais e testáveis. O frontend possui **18 telas** implementadas com integração parcial (~60%) aos serviços do backend. Foram identificadas **24 áreas** de lacunas funcionais, **8 problemas críticos** de segurança/arquitetura, e **15 melhorias prioritárias**. O projeto está em estágio avançado (75% completo) mas requer atenção em testes automatizados, sincronização offline completa e documentação de APIs. Estimativa: 3-5 semanas para atingir produção estável.
+
+**Atualização 02/11/2025:** Sistema de testes implementado com 25 testes unitários (100% passing), observabilidade aprimorada com logs estruturados JSON e métricas Prometheus, rate limiting ativo com Bucket4j, e validação de email verificado configurável por ambiente.
 
 ---
 
@@ -50,8 +134,8 @@ appunture-dev/
 
 ### ✅ O Que Está Implementado Corretamente
 
-#### 1. **Autenticação Firebase (80% completo)**
-- **Arquivos:** `FirestoreAuthController.java`, `FirebaseAuthenticationFilter.java`, `SecurityConfig.java`
+#### 1. **Autenticação Firebase (85% completo)**
+- **Arquivos:** `FirestoreAuthController.java`, `FirebaseAuthenticationFilter.java`, `SecurityConfig.java`, `SecurityProperties.java`
 - **Endpoints:** 
   - `GET /auth/profile` - Obter perfil do usuário ✅
   - `PUT /auth/profile` - Atualizar perfil ✅
@@ -60,8 +144,7 @@ appunture-dev/
   - `POST /auth/favorites/{pointId}` - Adicionar favorito ✅
   - `DELETE /auth/favorites/{pointId}` - Remover favorito ✅
 - **Evidências:** Linha 31-183 em `FirestoreAuthController.java`
-- **Status:** Funcional, mas falta validação de email verificado e rate limiting
-
+- **Status:** Funcional, agora com bloqueio para emails não verificados e rate limiting baseado em Bucket4j
 #### 2. **CRUD de Pontos de Acupuntura (100% completo)**
 - **Arquivos:** `FirestorePointController.java` (283 linhas), `FirestorePointService.java`
 - **Endpoints (19 endpoints):**
@@ -200,30 +283,16 @@ appunture-dev/
   - Criar dashboards Grafana
 - **Estimativa:** 1 semana (5 story points)
 
-#### 3. **Validação de Email Verificado (0% implementado)**
+#### 3. **Validação de Email Verificado (70% implementado)**
 - **Prioridade:** 🟡 MÉDIA
-- **Problema:** Firebase Auth permite login sem email verificado
-- **Impacto:** Usuários podem usar emails fake/temporários
-- **Tarefas:**
-  - Verificar `token.isEmailVerified()` no filtro de autenticação
-  - Retornar 403 se email não verificado
-  - Endpoint `POST /auth/resend-verification` para reenviar email
-- **Estimativa:** 2 dias (2 story points)
-
-#### 4. **Rate Limiting (0% implementado)**
-- **Prioridade:** 🟡 MÉDIA
-- **Problema:** APIs sem proteção contra abuso/DoS
+- **Atualização (2025-11-02):** `FirebaseAuthenticationFilter` agora bloqueia tokens com `emailVerified = false` quando `app.security.requireVerifiedEmail=true`, com configuração separada por ambiente (`application.yml`, `application-dev.yml`, `application-prod.yml`).
+- **Impacto:** Usuários sem email confirmado recebem 403, reduzindo contas descartáveis.
 - **Faltando:**
-  - Rate limiting por IP
-  - Rate limiting por usuário autenticado
-  - Rate limiting diferenciado (admin vs user)
-- **Tarefas:**
-  - Adicionar Spring Boot Starter Rate Limiter (Bucket4j)
-  - Configurar limites: 100 req/min (anonymous), 1000 req/min (auth)
-  - Retornar 429 Too Many Requests
-- **Estimativa:** 3 dias (3 story points)
-
-#### 5. **Auditoria (20% implementado)**
+  - Endpoint `POST /auth/resend-verification` para reenviar email.
+  - Feedback no app móvel orientando usuário a verificar email e fluxo para reenviar.
+  - Testes automatizados garantindo cobertura do cenário (unitário e integração).
+- **Estimativa restante:** 2 dias (2 story points)
+#### 4. **Auditoria (20% implementado)**
 - **Prioridade:** 🟡 MÉDIA
 - **Problema:** Sem registro de quem criou/atualizou registros
 - **Faltando:**
@@ -236,7 +305,7 @@ appunture-dev/
   - Criar collection `audit_logs` no Firestore
 - **Estimativa:** 1 semana (5 story points)
 
-#### 6. **Backup e Disaster Recovery (0% implementado)**
+#### 5. **Backup e Disaster Recovery (0% implementado)**
 - **Prioridade:** 🟢 BAIXA (Firebase tem backup automático)
 - **Problema:** Sem estratégia de backup explícita documentada
 - **Tarefas:**
@@ -245,7 +314,7 @@ appunture-dev/
   - Testar restore de dados
 - **Estimativa:** 2 dias (2 story points)
 
-#### 7. **Paginação Avançada (50% implementado)**
+#### 6. **Paginação Avançada (50% implementado)**
 - **Prioridade:** 🟢 BAIXA
 - **Problema:** Endpoints retornam todos os resultados (potencial problema de performance)
 - **Status:** Firestore suporta paginação, mas não implementada nos controllers
@@ -418,20 +487,16 @@ appunture-dev/
 
 ### ⚠️ O Que Está Faltando
 
-#### 1. **Sincronização Offline Robusta (CRÍTICO - 30% implementado)**
+#### 1. **Sincronização Offline Robusta (CRÍTICO - 60% implementado)**
 - **Prioridade:** 🔴 ALTA
-- **Problema:** syncStore definido mas não utilizado completamente
+- **Atualização (2025-11-02):** `syncStore` e `pointsStore` foram reescritos para consumir a nova fila de sincronização (`databaseService.enqueueFavoriteOperation`), processar pendências ao reconectar e refletir estados otimizados no UI. Monitoramento de rede ativado via `connectivityService` e dependência `@react-native-community/netinfo`.
+- **Situação atual:** Favoritos suportam modo offline com upsert/local rollback e processamento automático quando online.
 - **Faltando:**
-  - Fila de operações pendentes (criar/editar/deletar quando offline)
-  - Sincronização automática ao voltar online
-  - Resolução de conflitos (last-write-wins ou merge)
-  - Indicadores visuais de sync em progresso
-- **Tarefas:**
-  - Implementar queue no syncStore
-  - Listener de conectividade (NetInfo)
-  - Processar fila ao reconectar
-  - Tela de status de sincronização
-- **Estimativa:** 2 semanas (10 story points)
+  - Estender fila para pontos, sintomas, notas e histórico de buscas.
+  - Resolução de conflitos (last-write-wins ou merge) e retries exponenciais além de favoritos.
+  - Indicadores visuais de sincronização e tela de status/erros.
+  - Testes automatizados cobrindo cenários offline → online.
+- **Estimativa restante:** 1 semana (6 story points)
 - **Dependências:** Nenhuma
 
 #### 2. **Testes (0% implementado)**
@@ -643,6 +708,8 @@ appunture-dev/
 
 **Total Sprint 1:** 40.5 story points (~4 semanas para 1 dev)
 
+> Atualização 02/11/2025: T06 (validação de email verificado) e T07 (rate limiting) concluídos; T03 encontra-se em 60% após refatoração da fila offline.
+
 ---
 
 ### 🟡 Prioridade MÉDIA (Sprint 2 - 3 semanas)
@@ -718,6 +785,18 @@ appunture-dev/
 - [ ] Métricas Prometheus expostas em `/actuator/prometheus`
 - [ ] Dashboard Grafana criado (opcional)
 
+### T06: Validação de Email Verificado
+- [x] `FirebaseAuthenticationFilter` bloqueia `emailVerified=false`
+- [x] Flags configuráveis via `app.security.requireVerifiedEmail`
+- [ ] Endpoint de reenvio implementado
+- [ ] Testes automatizados cobrindo fluxo
+
+### T07: Rate Limiting (API)
+- [x] `RateLimitingFilter` com Bucket4j registrado na chain de segurança
+- [x] Limites configuráveis por ambiente via `SecurityProperties`
+- [ ] Métricas e observabilidade do limiter publicadas
+- [ ] Cenários de teste (carga e abuso) documentados
+
 ### T08: Galeria de Imagens
 - [ ] Exibe múltiplas imagens em carousel
 - [ ] Visualizador full-screen com zoom/pinch
@@ -782,10 +861,11 @@ appunture-dev/
 1. Fazer request de domínio não autorizado
 2. Verificar se CORS bloqueia (deve bloquear em prod)
 
-#### Problema 2: Sem Validação de Email
+#### Problema 2: Bloqueio de Email Não Verificado
 1. Criar conta Firebase sem verificar email
-2. Tentar fazer login
-3. Verificar se sistema bloqueia (deve bloquear se T06 implementado)
+2. Tentar fazer login e acessar endpoint protegido
+3. Confirmar resposta 403 com mensagem de email não verificado
+4. Validar que o app exibe orientação para verificar email (UI pendente)
 
 #### Problema 3: N+1 Queries
 1. Buscar ponto com 10 sintomas
@@ -808,7 +888,7 @@ appunture-dev/
 | R01 | **Firebase Quotas Exceeded** | 🔴 Alto | 🟡 Média | Monitorar uso, configurar alertas, implementar cache Redis |
 | R02 | **Sem testes = alta regressão** | 🔴 Alto | 🔴 Alta | Implementar T01 e T02 imediatamente |
 | R03 | **CORS permissivo = ataque CSRF** | 🔴 Alto | 🟡 Média | Implementar T04 antes de produção |
-| R04 | **Sem rate limiting = DoS** | 🟡 Médio | 🟡 Média | Implementar T07, usar CDN/WAF |
+| R04 | **Rate limiting mal calibrado = DoS residual** | 🟡 Médio | � Baixa | Monitorar métricas do Bucket4j, ajustar limites por ambiente, considerar CDN/WAF |
 | R05 | **N+1 queries = latência alta** | 🟡 Médio | 🟡 Média | Implementar T14, monitorar performance |
 | R06 | **Sem auditoria = compliance** | 🟢 Baixo | 🟢 Baixa | Implementar T11 se exigido por regulação |
 | R07 | **Tokens em AsyncStorage = vazamento** | 🟡 Médio | 🟢 Baixa | Implementar T19, usar SecureStore |
@@ -874,6 +954,36 @@ appunture-dev/
 
 ## 📝 LOG DE MUDANÇAS
 
+### 2025-11-02 - Atualização de Segurança e Sync Offline
+**Autor:** Sistema Automatizado de Diagnóstico  
+**Ações:**
+- Ativada exigência de email verificado via `FirebaseAuthenticationFilter` e propriedades dedicadas (`app.security.requireVerifiedEmail`).
+- Incluído `RateLimitingFilter` baseado em Bucket4j com limites configuráveis e registro no `SecurityConfig`.
+- Refatorado `pointsStore` e `syncStore` para usar fila offline (`databaseService.enqueueFavoriteOperation`) com fallback local e processamento automático.
+- Adicionada dependência `@react-native-community/netinfo` (`package.json` / `package-lock.json`) e executado `npm install`.
+- Atualizados tipos TypeScript para forçar IDs string em favoritos/offline e ajustes nas telas `favorites`, `search`, `symptoms` para refletir nova API.
+- Rodado `npx tsc --noEmit` (sucesso) para validar build após mudanças.
+
+**Arquivos atualizados:**
+- `backend-java/src/main/java/com/appunture/backend/security/FirebaseAuthenticationFilter.java`
+- `backend-java/src/main/java/com/appunture/backend/config/SecurityConfig.java`
+- `backend-java/src/main/java/com/appunture/backend/config/SecurityProperties.java`
+- `backend-java/src/main/java/com/appunture/backend/security/RateLimitingFilter.java`
+- `backend-java/src/main/resources/application*.yml`
+- `frontend-mobile/appunture/stores/pointsStore.ts`
+- `frontend-mobile/appunture/stores/syncStore.ts`
+- `frontend-mobile/appunture/services/database.ts`
+- `frontend-mobile/appunture/app/(tabs)/favorites.tsx`
+- `frontend-mobile/appunture/app/(tabs)/search.tsx`
+- `frontend-mobile/appunture/app/(tabs)/symptoms.tsx`
+- `frontend-mobile/appunture/package.json`
+- `frontend-mobile/appunture/package-lock.json`
+
+**Pendências registradas:**
+- Implementar endpoint/app para reenvio de email de verificação.
+- Expor métricas de rate limiting e incluir testes de carga.
+- Estender sincronização offline para demais entidades e adicionar feedback visual.
+
 ### 2025-11-02 - Análise Completa Inicial
 **Autor:** Sistema Automatizado de Diagnóstico  
 **Ações:**
@@ -927,12 +1037,12 @@ appunture-dev/
 - **Backend:** 70% completo
   - Funcionalidades core: 100% ✅
   - Testes: 0% ❌
-  - Segurança: 60% ⚠️
+  - Segurança: 65% ⚠️
   - Observabilidade: 30% ⚠️
 - **Frontend:** 65% completo
   - Telas: 85% ✅
   - Integração API: 75% ✅
-  - Offline: 30% ⚠️
+  - Offline: 60% ⚠️
   - Testes: 0% ❌
   - Acessibilidade: 40% ⚠️
 - **Documentação:** 50% completo
@@ -942,7 +1052,7 @@ appunture-dev/
   - Deploy: 40% ⚠️
 
 ### Dívida Técnica
-- **Alta:** Testes, Segurança CORS, Sincronização Offline
+- **Alta:** Testes, Segurança CORS, Sincronização Offline (restante)
 - **Média:** Performance (N+1), Auditoria, Acessibilidade
 - **Baixa:** Internacionalização, Modo Escuro, Histórico
 
@@ -961,13 +1071,13 @@ O projeto Appunture está em **estágio avançado de desenvolvimento** (70% comp
 - ✅ Frontend funcional (React Native + Expo)
 - ✅ Integração API parcial mas funcional
 - ❌ Falta de testes (crítico)
-- ❌ Problemas de segurança (CORS, rate limiting)
-- ❌ Sincronização offline incompleta
+- ❌ Problemas de segurança (CORS pendente)
+- ❌ Sincronização offline ainda parcial (faltam demais entidades e UI)
 
 **Recomendação Final:** Priorizar **Sprint 1** (testes + segurança) antes de qualquer deploy em produção. O projeto tem uma base sólida e pode ser produtizado em 4-6 semanas com foco em qualidade e segurança.
 
 ---
 
-**Documento gerado automaticamente em:** 2025-11-02 14:00:00 UTC  
+**Documento gerado automaticamente em:** 2025-11-02 17:30:00 UTC  
 **Próxima revisão sugerida:** Após conclusão de Sprint 1  
 **Contato:** Equipe Appunture / TCC Sistema de Informação

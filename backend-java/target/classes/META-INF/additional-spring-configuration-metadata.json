@@ -1,9 +1,0 @@
-{
-  "properties": [
-    {
-      "name": "app.file-storage.local-path",
-      "type": "java.lang.String",
-      "description": "Local upload path"
-    }
-  ]
-}

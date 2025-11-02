@@ -32,19 +32,54 @@ firebase:
 app:
   firebase:
     enabled: true
-  cors:
-    allowed-origins:
-      - https://${GOOGLE_CLOUD_PROJECT}.web.app
-      - https://${GOOGLE_CLOUD_PROJECT}.firebaseapp.com
-      - https://your-custom-domain.com
+  security:
+    require-email-verified: true
+    cors:
+      allowed-origins:
+        - https://${GOOGLE_CLOUD_PROJECT}.web.app
+        - https://${GOOGLE_CLOUD_PROJECT}.firebaseapp.com
+        - https://your-custom-domain.com
+      allowed-methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - OPTIONS
+      allowed-headers:
+        - Authorization
+        - Content-Type
+        - X-Requested-With
+        - Accept
+      exposed-headers:
+        - X-RateLimit-Limit
+        - X-RateLimit-Remaining
+      allow-credentials: true
+      max-age: PT1H
+    rate-limit:
+      enabled: true
+      capacity: 120
+      refill-tokens: 120
+      refill-duration: PT1M
+      strategy: PER_USER
+      excluded-paths:
+        - /api/health/**
+        - /actuator/health
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,prometheus,metrics
   endpoint:
     health:
       probes:
         enabled: true
       show-details: when-authorized
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      profile: ${spring.profiles.active}
+    export:
+      prometheus:
+        enabled: true

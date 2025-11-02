@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="appunture-backend"/>
+    <springProperty scope="context" name="LOG_LEVEL" source="logging.level.root" defaultValue="INFO"/>
+    <springProperty scope="context" name="SPRING_PROFILE" source="spring.profiles.active" defaultValue="dev"/>
+
+    <!-- Console Appender for Development (Human-readable) -->
+    <appender name="CONSOLE_DEV" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} [%X{correlationId}] - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- Console Appender for Production (JSON) -->
+    <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeMdcKeyName>correlationId</includeMdcKeyName>
+            <includeMdcKeyName>userId</includeMdcKeyName>
+            <includeMdcKeyName>requestMethod</includeMdcKeyName>
+            <includeMdcKeyName>requestUri</includeMdcKeyName>
+            <includeMdcKeyName>responseStatus</includeMdcKeyName>
+            <customFields>{"app":"${APP_NAME}","profile":"${SPRING_PROFILE}"}</customFields>
+            <fieldNames>
+                <timestamp>timestamp</timestamp>
+                <message>message</message>
+                <logger>logger</logger>
+                <thread>thread</thread>
+                <level>level</level>
+                <levelValue>[ignore]</levelValue>
+            </fieldNames>
+        </encoder>
+    </appender>
+
+    <!-- Async Appender for better performance -->
+    <appender name="ASYNC_CONSOLE_JSON" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>512</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <appender-ref ref="CONSOLE_JSON"/>
+    </appender>
+
+    <!-- Root Logger -->
+    <root level="${LOG_LEVEL}">
+        <springProfile name="dev">
+            <appender-ref ref="CONSOLE_DEV"/>
+        </springProfile>
+        <springProfile name="prod">
+            <appender-ref ref="ASYNC_CONSOLE_JSON"/>
+        </springProfile>
+    </root>
+
+    <!-- Application Loggers -->
+    <logger name="com.appunture.backend" level="DEBUG" additivity="false">
+        <springProfile name="dev">
+            <appender-ref ref="CONSOLE_DEV"/>
+        </springProfile>
+        <springProfile name="prod">
+            <appender-ref ref="ASYNC_CONSOLE_JSON"/>
+        </springProfile>
+    </logger>
+
+    <!-- Framework Loggers -->
+    <logger name="org.springframework.web" level="INFO"/>
+    <logger name="org.springframework.security" level="DEBUG"/>
+    <logger name="com.google.cloud" level="WARN"/>
+    <logger name="com.google.firebase" level="WARN"/>
+</configuration>
