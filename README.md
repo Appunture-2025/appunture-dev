@@ -2,6 +2,32 @@
 
 Projeto em desenvolvimento para Trabalho de Conclusão de Curso: plataforma de apoio ao estudo e consulta de pontos de acupuntura e sintomas associados.
 
+## 📊 Status do Projeto
+
+**Progresso Geral:** 70% completo
+
+- **Backend:** 70% completo
+  - ✅ Funcionalidades core: 100%
+  - ✅ Documentação API (Swagger): 100%
+  - ⚠️ Testes: 0% (CRÍTICO)
+  - ⚠️ Segurança: 60%
+  - ⚠️ Observabilidade: 30%
+
+- **Frontend Mobile:** 65% completo
+  - ✅ Telas: 85% (18 telas implementadas)
+  - ✅ Integração API: 75%
+  - ⚠️ Sincronização offline: 30%
+  - ⚠️ Testes: 0% (CRÍTICO)
+  - ⚠️ Acessibilidade: 40%
+
+**Estatísticas:**
+- 67 endpoints REST backend (6 controllers)
+- 18 telas React Native (2840 linhas de código)
+- 4 stores Zustand para state management
+- Firebase Authentication + Firestore + Storage integrados
+
+**Estimativa para Produção:** 4-6 semanas focando em testes e segurança
+
 ## Objetivo
 
 Fornecer API e interfaces web/mobile para:
@@ -89,14 +115,44 @@ backend-java/src/main/java/com/appunture/backend
 
 Operações de criação/alteração/remoção exigem ROLE_ADMIN.
 
+## 📊 Documentação e Análises
+
+- **[ANALISE_ATUALIZADA.md](./ANALISE_ATUALIZADA.md)** - Análise completa e diagnóstico técnico do projeto (850+ linhas)
+  - Diagnóstico Backend e Frontend detalhado
+  - Backlog priorizado (28 tarefas em 3 sprints)
+  - Critérios de aceitação e checklist de QA
+  - Riscos e recomendações arquiteturais
+- **[FRONTEND_MOBILE_GAP_ANALYSIS.md](./FRONTEND_MOBILE_GAP_ANALYSIS.md)** - Análise de lacunas Frontend vs Backend
+- **[IMPLEMENTACAO_RELATORIO.md](./IMPLEMENTACAO_RELATORIO.md)** - Relatório de implementação detalhado
+- **[LEIA-ME_ANALISE.md](./LEIA-ME_ANALISE.md)** - Resumo executivo das análises
+
 ## Roadmap (Próximos Passos)
 
-- Finalizar automações para provisionamento de credenciais Firebase/Firestore entre ambientes
-- Smoke tests automatizados para fluxos autenticados usando Firebase ID tokens
-- Ajustar relacionamento ponto-sintoma com score editável
-- Melhoria de testes (cobertura + perfis)
-- Observabilidade (metrics, logs estruturados)
-- Deploy em ambiente cloud (ECS/Fargate ou similar)
+### Prioridade Alta 🔴 (Sprint 1 - 4 semanas)
+- Implementar testes backend (unitários + integração) - 0% atual
+- Implementar testes frontend (Jest + React Native Testing Library) - 0% atual
+- Sincronização offline robusta no mobile
+- Corrigir CORS para produção (segurança crítica)
+- Logs estruturados (JSON) + Correlation ID
+- Validação de email verificado (Firebase Auth)
+- Rate limiting nas APIs
+
+### Prioridade Média 🟡 (Sprint 2 - 3 semanas)
+- Galeria de múltiplas imagens por ponto
+- Mapa corporal interativo com coordenadas
+- Upload de foto de perfil
+- Sistema de auditoria (createdBy, updatedBy)
+- Performance: otimizar N+1 queries
+- Acessibilidade completa no mobile
+
+### Prioridade Baixa 🟢 (Sprint 3 - 2 semanas)
+- Login social (Google, Apple)
+- Notificações push (FCM)
+- Modo escuro
+- Internacionalização (pt/en)
+- Documentação completa
+
+**Para detalhes completos, consultar [ANALISE_ATUALIZADA.md](./ANALISE_ATUALIZADA.md)**
 
 ## Aviso Acadêmico
 
