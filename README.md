@@ -117,7 +117,15 @@ Operações de criação/alteração/remoção exigem ROLE_ADMIN.
 
 ## 📊 Documentação e Análises
 
-- **[ANALISE_ATUALIZADA.md](./ANALISE_ATUALIZADA.md)** - Análise completa e diagnóstico técnico do projeto (850+ linhas)
+- **[DIAGNOSTICO_COMPLETO.md](./DIAGNOSTICO_COMPLETO.md)** - 🆕 Diagnóstico técnico completo e acionável
+  - Sumário executivo com métricas atualizadas
+  - O que está implementado (com evidências)
+  - O que falta implementar (com prioridades)
+  - O que precisa de ajustes (bugs, arquitetura, performance)
+  - Backlog consolidado em 3 sprints
+  - Checklist de QA para homologação
+  - Riscos e recomendações arquiteturais
+- **[ANALISE_ATUALIZADA.md](./ANALISE_ATUALIZADA.md)** - Análise completa e diagnóstico técnico do projeto (1083 linhas)
   - Diagnóstico Backend e Frontend detalhado
   - Backlog priorizado (28 tarefas em 3 sprints)
   - Critérios de aceitação e checklist de QA

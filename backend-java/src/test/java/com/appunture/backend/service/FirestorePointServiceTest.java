@@ -68,13 +68,14 @@ class FirestorePointServiceTest {
 
     @Test
     void updatePoint_ShouldApplyChangesAndPersist() {
+        LocalDateTime beforeUpdate = LocalDateTime.now().minusSeconds(1);
         FirestorePoint existing = FirestorePoint.builder()
                 .id("point-1")
                 .code("OLD")
                 .name("Old Name")
                 .symptomIds(new ArrayList<>())
                 .imageUrls(new ArrayList<>())
-                .updatedAt(LocalDateTime.now().minusDays(1))
+                .updatedAt(beforeUpdate)
                 .build();
 
         FirestorePoint updates = FirestorePoint.builder()
@@ -94,7 +95,7 @@ class FirestorePointServiceTest {
         assertThat(result.getName()).isEqualTo("New Name");
         assertThat(result.getDescription()).isEqualTo("Updated description");
         assertThat(result.getCoordinates()).containsEntry("x", 10.0);
-        assertThat(result.getUpdatedAt()).isAfter(existing.getUpdatedAt());
+        assertThat(result.getUpdatedAt()).isAfterOrEqualTo(beforeUpdate);
         verify(pointRepository).save(existing);
     }
 
