@@ -6,6 +6,7 @@ import {
   Note,
   SearchHistory,
   SyncOperation,
+  ImageSyncOperation,
 } from "../types/database";
 import { DATABASE_NAME, DATABASE_VERSION } from "../utils/constants";
 
@@ -93,6 +94,7 @@ class DatabaseService {
         "notes",
         "sync_status",
         "sync_queue",
+        "image_sync_queue",
       ];
       for (const table of tables) {
         await db.execAsync(`DROP TABLE IF EXISTS ${table}`);
@@ -283,6 +285,17 @@ class DatabaseService {
       last_attempt DATETIME,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
+
+    await db.execAsync(`CREATE TABLE IF NOT EXISTS image_sync_queue (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      point_id TEXT NOT NULL,
+      image_uri TEXT NOT NULL,
+      payload TEXT,
+      status TEXT NOT NULL DEFAULT 'pending',
+      retry_count INTEGER NOT NULL DEFAULT 0,
+      last_attempt DATETIME,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
   }
 
   private async createIndexes(): Promise<void> {
@@ -299,6 +312,8 @@ class DatabaseService {
       "CREATE INDEX IF NOT EXISTS idx_notes_point ON notes(point_id)",
       "CREATE INDEX IF NOT EXISTS idx_sync_queue_status ON sync_queue(status)",
       "CREATE INDEX IF NOT EXISTS idx_sync_queue_entity ON sync_queue(entity, entity_id)",
+      "CREATE INDEX IF NOT EXISTS idx_image_sync_queue_status ON image_sync_queue(status)",
+      "CREATE INDEX IF NOT EXISTS idx_image_sync_queue_point ON image_sync_queue(point_id)",
     ];
 
     for (const statement of statements) {
@@ -586,10 +601,18 @@ class DatabaseService {
   async enqueueFavoriteOperation(
     userId: string,
     pointId: string,
-    action: "ADD" | "REMOVE"
+    action: "ADD" | "REMOVE",
+    timestamp?: string
   ): Promise<void> {
     const db = this.getDb();
-    const payload = JSON.stringify({ userId, pointId, action });
+    // Use provided timestamp for conflict resolution, or current time for new operations
+    // This ensures all operations have timestamps for proper conflict resolution
+    const payload = JSON.stringify({ 
+      userId, 
+      pointId, 
+      action,
+      timestamp: timestamp || new Date().toISOString()
+    });
 
     await db.runAsync(
       "DELETE FROM sync_queue WHERE entity = ? AND entity_id = ?",
@@ -771,6 +794,7 @@ class DatabaseService {
       "search_history",
       "sync_status",
       "sync_queue",
+      "image_sync_queue",
     ];
     await db.execAsync("BEGIN TRANSACTION");
     try {
@@ -782,6 +806,64 @@ class DatabaseService {
       await db.execAsync("ROLLBACK");
       throw error;
     }
+  }
+
+  // Image sync queue operations
+
+  async enqueueImageSync(pointId: string, imageUri: string): Promise<void> {
+    const db = this.getDb();
+    const payload = JSON.stringify({ pointId, imageUri });
+
+    await db.runAsync(
+      "DELETE FROM image_sync_queue WHERE point_id = ?",
+      [pointId]
+    );
+
+    await db.runAsync(
+      `INSERT INTO image_sync_queue (point_id, image_uri, payload, status, retry_count)
+       VALUES (?, ?, ?, 'pending', 0)`,
+      [pointId, imageUri, payload]
+    );
+  }
+
+  async getPendingImages(limit = 50): Promise<ImageSyncOperation[]> {
+    const db = this.getDb();
+    const result = (await db.getAllAsync(
+      "SELECT * FROM image_sync_queue WHERE status IN ('pending', 'retry') ORDER BY created_at LIMIT ?",
+      [limit]
+    )) as ImageSyncOperation[];
+    return result;
+  }
+
+  async markImageSyncInProgress(id: number): Promise<void> {
+    const db = this.getDb();
+    await db.runAsync(
+      `UPDATE image_sync_queue SET status = 'in_progress', last_attempt = ?, retry_count = retry_count + 1 WHERE id = ?`,
+      [new Date().toISOString(), id]
+    );
+  }
+
+  async markImageSyncCompleted(id: number): Promise<void> {
+    const db = this.getDb();
+    await db.runAsync("DELETE FROM image_sync_queue WHERE id = ?", [id]);
+  }
+
+  async markImageSyncFailed(id: number): Promise<void> {
+    const db = this.getDb();
+    await db.runAsync(
+      `UPDATE image_sync_queue
+       SET status = CASE WHEN retry_count >= ? THEN 'failed' ELSE 'retry' END
+       WHERE id = ?`,
+      [MAX_QUEUE_RETRIES, id]
+    );
+  }
+
+  async countPendingImages(): Promise<number> {
+    const db = this.getDb();
+    const row = (await db.getFirstAsync(
+      "SELECT COUNT(1) AS total FROM image_sync_queue WHERE status IN ('pending', 'retry', 'in_progress')"
+    )) as RawRow | undefined;
+    return row ? Number(row.total ?? 0) : 0;
   }
 }
 

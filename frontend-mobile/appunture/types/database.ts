@@ -78,6 +78,17 @@ export interface SyncOperation {
   created_at: string;
 }
 
+export interface ImageSyncOperation {
+  id: number;
+  point_id: string;
+  image_uri: string;
+  payload?: string | null;
+  status: "pending" | "in_progress" | "retry" | "failed";
+  retry_count: number;
+  last_attempt?: string;
+  created_at: string;
+}
+
 // Database Operation Types
 export interface DatabaseResult {
   success: boolean;
