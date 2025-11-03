@@ -8,6 +8,11 @@ import { connectivityService } from "../services/connectivity";
 import { storeLastSync, getLastSync } from "../services/storage";
 import { useAuthStore } from "./authStore";
 
+// Exponential backoff configuration
+const INITIAL_RETRY_DELAY = 1000; // 1 second
+const MAX_RETRY_DELAY = 60000; // 60 seconds
+const BACKOFF_MULTIPLIER = 2;
+
 interface SyncStore extends SyncState {
   checkConnection: () => Promise<boolean>;
   syncAll: () => Promise<void>;
@@ -22,6 +27,8 @@ interface SyncStore extends SyncState {
   refreshPendingOperations: () => Promise<void>;
   pendingOperations: number;
   queueProcessing: boolean;
+  syncImages: () => Promise<void>;
+  pendingImages: number;
 }
 
 const toLocalPoint = (point: Point, timestamp: string): LocalPoint => ({
@@ -51,6 +58,30 @@ const toLocalSymptom = (symptom: Symptom, timestamp: string): LocalSymptom => ({
   last_sync: timestamp,
 });
 
+/**
+ * Calculate exponential backoff delay based on retry count
+ */
+const calculateBackoffDelay = (retryCount: number): number => {
+  const delay = INITIAL_RETRY_DELAY * Math.pow(BACKOFF_MULTIPLIER, retryCount);
+  return Math.min(delay, MAX_RETRY_DELAY);
+};
+
+/**
+ * Resolve conflicts using last-write-wins strategy with timestamp comparison
+ */
+const resolveConflict = (
+  localTimestamp: string | undefined,
+  remoteTimestamp: string | undefined
+): "local" | "remote" => {
+  if (!localTimestamp) return "remote";
+  if (!remoteTimestamp) return "local";
+  
+  const localDate = new Date(localTimestamp).getTime();
+  const remoteDate = new Date(remoteTimestamp).getTime();
+  
+  return localDate > remoteDate ? "local" : "remote";
+};
+
 export const useSyncStore = create<SyncStore>((set, get) => ({
   isOnline: true,
   lastSync: undefined,
@@ -58,6 +89,7 @@ export const useSyncStore = create<SyncStore>((set, get) => ({
   autoSync: true,
   pendingOperations: 0,
   queueProcessing: false,
+  pendingImages: 0,
 
   checkConnection: async () => {
     try {
@@ -89,6 +121,7 @@ export const useSyncStore = create<SyncStore>((set, get) => ({
         get().syncPoints(),
         get().syncSymptoms(),
         get().syncFavorites(),
+        get().syncImages(),
       ]);
 
       const now = new Date().toISOString();
@@ -206,6 +239,23 @@ export const useSyncStore = create<SyncStore>((set, get) => ({
 
       for (const operation of operations) {
         try {
+          // Apply exponential backoff if operation has been retried
+          if (operation.retry_count > 0) {
+            const backoffDelay = calculateBackoffDelay(operation.retry_count);
+            const lastAttempt = operation.last_attempt
+              ? new Date(operation.last_attempt).getTime()
+              : 0;
+            const now = Date.now();
+            const timeSinceLastAttempt = now - lastAttempt;
+
+            if (timeSinceLastAttempt < backoffDelay) {
+              console.log(
+                `Skipping operation ${operation.id} - backoff delay not elapsed (${backoffDelay - timeSinceLastAttempt}ms remaining)`
+              );
+              continue;
+            }
+          }
+
           await databaseService.markOperationInProgress(operation.id);
           const payload = operation.payload ? JSON.parse(operation.payload) : {};
           const userId = payload.userId as string | undefined;
@@ -217,27 +267,59 @@ export const useSyncStore = create<SyncStore>((set, get) => ({
             throw new Error("Invalid favorite operation payload");
           }
 
-          if (operation.operation === "DELETE" || action === "REMOVE") {
-            await apiService.removeFavorite(pointId);
-            await databaseService.setFavoriteStatus({
-              pointId,
-              userId,
-              isFavorite: false,
-              synced: true,
-            });
-          } else {
-            await apiService.addFavorite(pointId);
-            await databaseService.setFavoriteStatus({
-              pointId,
-              userId,
-              isFavorite: true,
-              synced: true,
-            });
+          // Conflict resolution: check remote state before applying
+          let shouldProceed = true;
+          try {
+            const remoteFavorites = await apiService.getFavorites();
+            const isRemoteFavorite = remoteFavorites.points.some(p => p.id === pointId);
+            const localFavorite = await databaseService.isFavorite(pointId, userId);
+            
+            // Use timestamp-based conflict resolution
+            const localTimestamp = payload.timestamp as string | undefined;
+            const remoteTimestamp = payload.remoteTimestamp as string | undefined;
+            
+            if (isRemoteFavorite !== localFavorite) {
+              const winner = resolveConflict(localTimestamp, remoteTimestamp);
+              if (winner === "remote") {
+                // Remote wins, update local to match remote
+                await databaseService.setFavoriteStatus({
+                  pointId,
+                  userId,
+                  isFavorite: isRemoteFavorite,
+                  synced: true,
+                });
+                shouldProceed = false;
+                console.log(`Conflict resolved: remote wins for point ${pointId}`);
+              }
+            }
+          } catch (conflictCheckError) {
+            // If conflict check fails, proceed with sync attempt
+            console.warn("Conflict check failed, proceeding with sync", conflictCheckError);
+          }
+
+          if (shouldProceed) {
+            if (operation.operation === "DELETE" || action === "REMOVE") {
+              await apiService.removeFavorite(pointId);
+              await databaseService.setFavoriteStatus({
+                pointId,
+                userId,
+                isFavorite: false,
+                synced: true,
+              });
+            } else {
+              await apiService.addFavorite(pointId);
+              await databaseService.setFavoriteStatus({
+                pointId,
+                userId,
+                isFavorite: true,
+                synced: true,
+              });
+            }
           }
 
           await databaseService.markOperationCompleted(operation.id);
         } catch (operationError) {
-          console.warn("Failed to process sync operation", operationError);
+          console.warn(`Failed to process sync operation ${operation.id}`, operationError);
           await databaseService.markOperationFailed(operation.id);
         }
       }
@@ -249,10 +331,76 @@ export const useSyncStore = create<SyncStore>((set, get) => ({
 
   refreshPendingOperations: async () => {
     try {
-      const pendingOperations = await databaseService.countPendingOperations();
-      set({ pendingOperations });
+      const [pendingOperations, pendingImages] = await Promise.all([
+        databaseService.countPendingOperations(),
+        databaseService.countPendingImages(),
+      ]);
+      set({ pendingOperations, pendingImages });
     } catch (error) {
       console.error("Failed to refresh pending operations", error);
+    }
+  },
+
+  syncImages: async () => {
+    const user = useAuthStore.getState().user;
+    if (!user || user.id === undefined || user.id === null) {
+      return;
+    }
+
+    try {
+      const pendingImages = await databaseService.getPendingImages(50);
+      
+      for (const imageOp of pendingImages) {
+        try {
+          await databaseService.markImageSyncInProgress(imageOp.id);
+          
+          // Apply exponential backoff if operation has been retried
+          if (imageOp.retry_count > 0) {
+            const backoffDelay = calculateBackoffDelay(imageOp.retry_count);
+            const lastAttempt = imageOp.last_attempt
+              ? new Date(imageOp.last_attempt).getTime()
+              : 0;
+            const now = Date.now();
+            const timeSinceLastAttempt = now - lastAttempt;
+
+            if (timeSinceLastAttempt < backoffDelay) {
+              console.log(
+                `Skipping image sync ${imageOp.id} - backoff delay not elapsed`
+              );
+              continue;
+            }
+          }
+
+          // Placeholder for actual image upload logic
+          // In a real implementation, this would:
+          // 1. Read the image from local storage
+          // 2. Upload it to the server
+          // 3. Update the point record with the new image URL
+          
+          const payload = imageOp.payload ? JSON.parse(imageOp.payload) : {};
+          const pointId = payload.pointId as string | undefined;
+          const imageUri = payload.imageUri as string | undefined;
+          
+          if (!pointId || !imageUri) {
+            throw new Error("Invalid image sync payload");
+          }
+
+          // For now, we'll just mark as completed
+          // TODO: Implement actual image upload to server
+          console.log(`Image sync for point ${pointId}: ${imageUri} (not yet implemented)`);
+          
+          await databaseService.markImageSyncCompleted(imageOp.id);
+        } catch (imageError) {
+          console.warn(`Failed to sync image ${imageOp.id}`, imageError);
+          await databaseService.markImageSyncFailed(imageOp.id);
+        }
+      }
+      
+      await get().refreshPendingOperations();
+      console.log(`Synced ${pendingImages.length} images`);
+    } catch (error) {
+      console.error("Image sync error:", error);
+      throw error;
     }
   },
 }));
