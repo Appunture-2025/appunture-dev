@@ -1,4 +1,10 @@
-import axios, { AxiosInstance, AxiosError } from "axios";
+import axios, {
+  AxiosInstance,
+  AxiosError,
+  InternalAxiosRequestConfig,
+  AxiosResponse,
+  AxiosHeaders,
+} from "axios";
 import {
   Point,
   Symptom,
@@ -19,6 +25,7 @@ import {
 } from "../types/api";
 import { API_BASE_URL } from "../utils/constants";
 import { getStoredToken } from "./storage";
+import { firebaseAuth } from "./firebase";
 
 class ApiService {
   private client: AxiosInstance;
@@ -38,21 +45,40 @@ class ApiService {
   private setupInterceptors() {
     // Request interceptor to add auth token
     this.client.interceptors.request.use(
-      async (config) => {
-        const token = await getStoredToken();
+      async (config: InternalAxiosRequestConfig) => {
+        const currentUser = firebaseAuth.currentUser;
+        let token: string | null = null;
+
+        if (currentUser) {
+          try {
+            token = await currentUser.getIdToken();
+          } catch (error) {
+            console.warn("Failed to retrieve Firebase ID token", error);
+          }
+        }
+
+        if (!token) {
+          token = await getStoredToken();
+        }
+
         if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
+          config.headers = config.headers ?? new AxiosHeaders();
+          if (config.headers instanceof AxiosHeaders) {
+            config.headers.set("Authorization", `Bearer ${token}`);
+          } else {
+            (config.headers as Record<string, string>).Authorization = `Bearer ${token}`;
+          }
         }
         return config;
       },
-      (error) => {
+      (error: AxiosError) => {
         return Promise.reject(error);
       }
     );
 
     // Response interceptor to handle errors
     this.client.interceptors.response.use(
-      (response) => response,
+      (response: AxiosResponse) => response,
       (error: AxiosError) => {
         const apiError: ApiError = {
           error: "Network Error",
@@ -96,17 +122,29 @@ class ApiService {
     return response.data;
   }
 
-  async getProfile(): Promise<{ user: User }> {
-    const response = await this.client.get<{ user: User }>("/auth/profile");
-    return response.data;
+  async getProfile(): Promise<User> {
+    const response = await this.client.get<{ user?: User } | User>(
+      "/auth/profile"
+    );
+    const payload = response.data as { user?: User } | User;
+    return ("user" in payload && payload.user ? payload.user : payload) as User;
   }
 
-  async updateProfile(userData: UserProfile): Promise<{ user: User }> {
-    const response = await this.client.put<{ user: User }>(
+  async updateProfile(userData: UserProfile): Promise<User> {
+    const response = await this.client.put<{ user?: User } | User>(
       "/auth/profile",
       userData
     );
-    return response.data;
+    const payload = response.data as { user?: User } | User;
+    return ("user" in payload && payload.user ? payload.user : payload) as User;
+  }
+
+  async syncFirebaseUser(): Promise<User> {
+    const response = await this.client.post<{ user?: User } | User>(
+      "/auth/sync"
+    );
+    const payload = response.data as { user?: User } | User;
+    return ("user" in payload && payload.user ? payload.user : payload) as User;
   }
 
   // Points endpoints
@@ -121,7 +159,7 @@ class ApiService {
     return response.data;
   }
 
-  async getPoint(id: number): Promise<{ point: PointWithSymptoms }> {
+  async getPoint(id: string): Promise<{ point: PointWithSymptoms }> {
     const response = await this.client.get<{ point: PointWithSymptoms }>(
       `/points/${id}`
     );
@@ -130,23 +168,51 @@ class ApiService {
 
   async searchPoints(query: string): Promise<SearchResponse> {
     const response = await this.client.get<SearchResponse>("/points/search", {
-      params: { q: query },
+      params: { name: query }, // Backend uses 'name' parameter
     });
     return response.data;
   }
 
-  async getPointsBySymptom(symptomId: number): Promise<PointsResponse> {
+  async getPointsBySymptom(symptomId: string): Promise<PointsResponse> {
     const response = await this.client.get<PointsResponse>(
       `/points/symptom/${symptomId}`
     );
     return response.data;
   }
 
-  async getMeridians(): Promise<MeridiansResponse> {
-    const response = await this.client.get<MeridiansResponse>(
-      "/points/meridians"
+  async getPointByCode(code: string): Promise<{ point: PointWithSymptoms }> {
+    const response = await this.client.get<{ point: PointWithSymptoms }>(
+      `/points/code/${code}`
     );
     return response.data;
+  }
+
+  async getPointsByMeridian(meridian: string): Promise<PointsResponse> {
+    const response = await this.client.get<PointsResponse>(
+      `/points/meridian/${meridian}`
+    );
+    return response.data;
+  }
+
+  async getPopularPoints(limit: number = 10): Promise<PointsResponse> {
+    const response = await this.client.get<PointsResponse>("/points/popular", {
+      params: { limit },
+    });
+    return response.data;
+  }
+
+  async getMeridians(): Promise<MeridiansResponse> {
+    // Backend doesn't have /points/meridians endpoint
+    // We need to get distinct meridians from points
+    const response = await this.client.get<PointsResponse>("/points");
+    const meridians = Array.from(
+      new Set(response.data.points.map((p) => p.meridian))
+    ).map((meridian) => ({
+      meridian,
+      point_count: response.data.points.filter((p) => p.meridian === meridian)
+        .length,
+    }));
+    return { meridians };
   }
 
   // Symptoms endpoints
@@ -157,7 +223,7 @@ class ApiService {
     return response.data;
   }
 
-  async getSymptom(id: number): Promise<{ symptom: SymptomWithPoints }> {
+  async getSymptom(id: string): Promise<{ symptom: SymptomWithPoints }> {
     const response = await this.client.get<{ symptom: SymptomWithPoints }>(
       `/symptoms/${id}`
     );
@@ -168,7 +234,7 @@ class ApiService {
     const response = await this.client.get<SymptomsResponse>(
       "/symptoms/search",
       {
-        params: { q: query },
+        params: { name: query }, // Backend uses 'name' parameter
       }
     );
     return response.data;
@@ -181,18 +247,67 @@ class ApiService {
     return response.data;
   }
 
-  // Favorites endpoints (if implemented in backend)
-  async addFavorite(pointId: number): Promise<void> {
-    await this.client.post(`/favorites`, { pointId });
+  async getSymptomsByCategory(category: string): Promise<SymptomsResponse> {
+    const response = await this.client.get<SymptomsResponse>(
+      `/symptoms/category/${category}`
+    );
+    return response.data;
   }
 
-  async removeFavorite(pointId: number): Promise<void> {
-    await this.client.delete(`/favorites/${pointId}`);
+  async getSymptomsByTag(tag: string): Promise<SymptomsResponse> {
+    const response = await this.client.get<SymptomsResponse>(
+      `/symptoms/tag/${tag}`
+    );
+    return response.data;
+  }
+
+  async getSymptomsByPoint(pointId: string): Promise<SymptomsResponse> {
+    const response = await this.client.get<SymptomsResponse>(
+      `/symptoms/point/${pointId}`
+    );
+    return response.data;
+  }
+
+  async getPopularSymptoms(limit: number = 10): Promise<SymptomsResponse> {
+    const response = await this.client.get<SymptomsResponse>(
+      "/symptoms/popular",
+      {
+        params: { limit },
+      }
+    );
+    return response.data;
+  }
+
+  async incrementSymptomUse(symptomId: string): Promise<void> {
+    await this.client.post(`/symptoms/${symptomId}/use`);
+  }
+
+  // Favorites endpoints - Fixed to match backend
+  async addFavorite(pointId: string): Promise<void> {
+    await this.client.post(`/auth/favorites/${pointId}`);
+  }
+
+  async removeFavorite(pointId: string): Promise<void> {
+    await this.client.delete(`/auth/favorites/${pointId}`);
   }
 
   async getFavorites(): Promise<{ points: Point[] }> {
-    const response = await this.client.get<{ points: Point[] }>("/favorites");
-    return response.data;
+    // Backend returns favorites as part of user profile
+    const profile = await this.getProfile();
+    const favoriteIds = (profile as any).favoritePoints || [];
+    
+    // If we have favorite IDs, fetch the actual points
+    if (favoriteIds.length === 0) {
+      return { points: [] };
+    }
+    
+    // Fetch all points and filter by favorites
+    const allPoints = await this.getPoints();
+    const favoritePoints = allPoints.points.filter((p) =>
+      favoriteIds.includes(p.id)
+    );
+    
+    return { points: favoritePoints };
   }
 
   // Health check
@@ -200,6 +315,90 @@ class ApiService {
     // Remove /api from the base URL for health check
     const healthUrl = API_BASE_URL.replace("/api", "") + "/health";
     const response = await axios.get(healthUrl);
+    return response.data;
+  }
+
+  // Admin endpoints - Points
+  async createPoint(pointData: Partial<Point>): Promise<{ point: Point }> {
+    const response = await this.client.post<{ point: Point }>(
+      "/points",
+      pointData
+    );
+    return response.data;
+  }
+
+  async updatePoint(
+    id: string,
+    pointData: Partial<Point>
+  ): Promise<{ point: Point }> {
+    const response = await this.client.put<{ point: Point }>(
+      `/points/${id}`,
+      pointData
+    );
+    return response.data;
+  }
+
+  async deletePoint(id: string): Promise<void> {
+    await this.client.delete(`/points/${id}`);
+  }
+
+  async updatePointCoordinates(
+    pointId: string,
+    x: number,
+    y: number
+  ): Promise<{ point: Point }> {
+    const response = await this.client.put<{ point: Point }>(
+      `/points/${pointId}/coordinates`,
+      { x, y }
+    );
+    return response.data;
+  }
+
+  async addImageToPoint(
+    pointId: string,
+    imageUrl: string
+  ): Promise<{ point: Point }> {
+    const response = await this.client.post<{ point: Point }>(
+      `/points/${pointId}/images`,
+      { imageUrl }
+    );
+    return response.data;
+  }
+
+  // Admin endpoints - Symptoms
+  async createSymptom(
+    symptomData: Partial<Symptom>
+  ): Promise<{ symptom: Symptom }> {
+    const response = await this.client.post<{ symptom: Symptom }>(
+      "/symptoms",
+      symptomData
+    );
+    return response.data;
+  }
+
+  async updateSymptom(
+    id: string,
+    symptomData: Partial<Symptom>
+  ): Promise<{ symptom: Symptom }> {
+    const response = await this.client.put<{ symptom: Symptom }>(
+      `/symptoms/${id}`,
+      symptomData
+    );
+    return response.data;
+  }
+
+  async deleteSymptom(id: string): Promise<void> {
+    await this.client.delete(`/symptoms/${id}`);
+  }
+
+  // Statistics
+  async getPointStats(): Promise<any> {
+    const response = await this.client.get("/points/stats");
+    return response.data;
+  }
+
+  async getSymptomStats(): Promise<any> {
+    const response = await this.client.get("/symptoms/stats");
     return response.data;
   }
 

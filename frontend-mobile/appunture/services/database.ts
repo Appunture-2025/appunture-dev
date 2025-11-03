@@ -2,14 +2,16 @@ import * as SQLite from "expo-sqlite";
 import {
   LocalPoint,
   LocalSymptom,
-  SymptomPoint,
   Favorite,
   Note,
   SearchHistory,
-  SyncStatus,
-  DatabaseResult,
+  SyncOperation,
 } from "../types/database";
 import { DATABASE_NAME, DATABASE_VERSION } from "../utils/constants";
+
+const MAX_QUEUE_RETRIES = 5;
+
+type RawRow = Record<string, any>;
 
 class DatabaseService {
   private db: SQLite.SQLiteDatabase | null = null;
@@ -17,7 +19,10 @@ class DatabaseService {
   async init(): Promise<void> {
     try {
       this.db = await SQLite.openDatabaseAsync(DATABASE_NAME);
-      await this.createTables();
+      await this.db.execAsync("PRAGMA foreign_keys = ON;");
+      await this.db.execAsync("PRAGMA journal_mode = WAL;");
+      await this.applyMigrations();
+      await this.createIndexes();
       console.log("Database initialized successfully");
     } catch (error) {
       console.error("Error initializing database:", error);
@@ -25,344 +30,699 @@ class DatabaseService {
     }
   }
 
-  private async createTables(): Promise<void> {
-    if (!this.db) throw new Error("Database not initialized");
+  private getDb(): SQLite.SQLiteDatabase {
+    if (!this.db) {
+      throw new Error("Database not initialized");
+    }
+    return this.db;
+  }
 
-    const queries = [
-      // Points table
-      `CREATE TABLE IF NOT EXISTS points (
-        id INTEGER PRIMARY KEY,
-        name TEXT NOT NULL,
-        chinese_name TEXT,
-        meridian TEXT NOT NULL,
-        location TEXT NOT NULL,
-        functions TEXT,
-        indications TEXT,
-        contraindications TEXT,
-        image_path TEXT,
-        coordinates TEXT,
-        synced BOOLEAN DEFAULT 0,
-        last_sync DATETIME
-      )`,
+  private async applyMigrations(): Promise<void> {
+    const db = this.getDb();
 
-      // Symptoms table
-      `CREATE TABLE IF NOT EXISTS symptoms (
-        id INTEGER PRIMARY KEY,
-        name TEXT NOT NULL,
-        synonyms TEXT,
-        category TEXT,
-        synced BOOLEAN DEFAULT 0,
-        last_sync DATETIME
-      )`,
+    const legacySchema = await this.isLegacySchema();
+    if (legacySchema) {
+      await this.migrateLegacySchema();
+    } else {
+      await this.createSchemaIfMissing();
+    }
 
-      // Symptom-Point relationship table
-      `CREATE TABLE IF NOT EXISTS symptom_points (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        symptom_id INTEGER NOT NULL,
-        point_id INTEGER NOT NULL,
-        efficacy_score REAL DEFAULT 1.0,
-        FOREIGN KEY(symptom_id) REFERENCES symptoms(id),
-        FOREIGN KEY(point_id) REFERENCES points(id),
-        UNIQUE(symptom_id, point_id)
-      )`,
+    await this.setUserVersion(DATABASE_VERSION);
+  }
 
-      // Favorites table
-      `CREATE TABLE IF NOT EXISTS favorites (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        point_id INTEGER NOT NULL,
-        user_id INTEGER NOT NULL,
-        synced BOOLEAN DEFAULT 0,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(point_id) REFERENCES points(id),
-        UNIQUE(point_id, user_id)
-      )`,
-
-      // Notes table
-      `CREATE TABLE IF NOT EXISTS notes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        point_id INTEGER NOT NULL,
-        user_id INTEGER NOT NULL,
-        content TEXT NOT NULL,
-        synced BOOLEAN DEFAULT 0,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(point_id) REFERENCES points(id)
-      )`,
-
-      // Search history table
-      `CREATE TABLE IF NOT EXISTS search_history (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        query TEXT NOT NULL,
-        type TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )`,
-
-      // Sync status table
-      `CREATE TABLE IF NOT EXISTS sync_status (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        table_name TEXT NOT NULL UNIQUE,
-        last_sync DATETIME NOT NULL,
-        status TEXT NOT NULL DEFAULT 'success'
-      )`,
-
-      // Indexes for better performance
-      `CREATE INDEX IF NOT EXISTS idx_points_meridian ON points(meridian)`,
-      `CREATE INDEX IF NOT EXISTS idx_points_name ON points(name)`,
-      `CREATE INDEX IF NOT EXISTS idx_symptoms_category ON symptoms(category)`,
-      `CREATE INDEX IF NOT EXISTS idx_symptom_points_symptom ON symptom_points(symptom_id)`,
-      `CREATE INDEX IF NOT EXISTS idx_symptom_points_point ON symptom_points(point_id)`,
-      `CREATE INDEX IF NOT EXISTS idx_favorites_user ON favorites(user_id)`,
-      `CREATE INDEX IF NOT EXISTS idx_notes_point ON notes(point_id)`,
-    ];
-
-    for (const query of queries) {
-      await this.db.execAsync(query);
+  private async isLegacySchema(): Promise<boolean> {
+    const db = this.getDb();
+    try {
+      const tableInfo = (await db.getAllAsync(
+        "PRAGMA table_info(points)"
+      )) as Array<RawRow>;
+      if (!tableInfo || tableInfo.length === 0) {
+        return false;
+      }
+      const idColumn = tableInfo.find((column) => column.name === "id");
+      if (!idColumn) {
+        return false;
+      }
+      return String(idColumn.type ?? "").toUpperCase() !== "TEXT";
+    } catch {
+      return false;
     }
   }
 
-  // Points operations
-  async insertPoint(point: Omit<LocalPoint, "id">): Promise<number> {
-    if (!this.db) throw new Error("Database not initialized");
+  private async migrateLegacySchema(): Promise<void> {
+    const db = this.getDb();
+    console.log("Migrating local database to schema version 2");
 
-    const result = await this.db.runAsync(
-      `INSERT INTO points (name, chinese_name, meridian, location, functions, indications, contraindications, image_path, coordinates, synced, last_sync)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    const [points, symptoms, symptomPoints, favorites, notes, syncStatus] =
+      await Promise.all([
+        db.getAllAsync("SELECT * FROM points") as Promise<Array<RawRow>>,
+        db.getAllAsync("SELECT * FROM symptoms") as Promise<Array<RawRow>>,
+        db.getAllAsync("SELECT * FROM symptom_points") as Promise<Array<RawRow>>,
+        db.getAllAsync("SELECT * FROM favorites") as Promise<Array<RawRow>>,
+        db.getAllAsync("SELECT * FROM notes") as Promise<Array<RawRow>>,
+        db.getAllAsync("SELECT * FROM sync_status") as Promise<Array<RawRow>>,
+      ]);
+
+    await db.execAsync("BEGIN TRANSACTION");
+    try {
+      const tables = [
+        "points",
+        "symptoms",
+        "symptom_points",
+        "favorites",
+        "notes",
+        "sync_status",
+        "sync_queue",
+      ];
+      for (const table of tables) {
+        await db.execAsync(`DROP TABLE IF EXISTS ${table}`);
+      }
+
+      await this.createSchemaIfMissing();
+
+      for (const point of points) {
+        await db.runAsync(
+          `INSERT INTO points (id, code, name, chinese_name, meridian, location, functions, indications, contraindications, image_path, coordinates, favorite_count, synced, last_sync)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            String(point.id),
+            point.code ?? null,
+            point.name,
+            point.chinese_name ?? null,
+            point.meridian,
+            point.location,
+            point.functions ?? null,
+            point.indications ?? null,
+            point.contraindications ?? null,
+            point.image_path ?? null,
+            point.coordinates ?? null,
+            point.favorite_count ?? null,
+            point.synced === 0 ? 0 : 1,
+            point.last_sync ?? null,
+          ]
+        );
+      }
+
+      for (const symptom of symptoms) {
+        await db.runAsync(
+          `INSERT INTO symptoms (id, name, synonyms, category, use_count, synced, last_sync)
+           VALUES (?, ?, ?, ?, ?, ?, ?)`,
+          [
+            String(symptom.id),
+            symptom.name,
+            symptom.synonyms ?? null,
+            symptom.category ?? null,
+            symptom.use_count ?? null,
+            symptom.synced === 0 ? 0 : 1,
+            symptom.last_sync ?? null,
+          ]
+        );
+      }
+
+      for (const relation of symptomPoints) {
+        await db.runAsync(
+          `INSERT OR REPLACE INTO symptom_points (symptom_id, point_id, efficacy_score)
+           VALUES (?, ?, ?)`,
+          [
+            String(relation.symptom_id),
+            String(relation.point_id),
+            relation.efficacy_score ?? 1,
+          ]
+        );
+      }
+
+      for (const favorite of favorites) {
+        await db.runAsync(
+          `INSERT OR REPLACE INTO favorites (point_id, user_id, synced, operation, created_at, updated_at)
+           VALUES (?, ?, ?, ?, ?, ?)`,
+          [
+            String(favorite.point_id),
+            String(favorite.user_id ?? favorite.userId ?? "local"),
+            favorite.synced === 0 ? 0 : 1,
+            "UPSERT",
+            favorite.created_at ?? new Date().toISOString(),
+            favorite.updated_at ?? favorite.created_at ?? new Date().toISOString(),
+          ]
+        );
+      }
+
+      for (const note of notes) {
+        await db.runAsync(
+          `INSERT INTO notes (point_id, user_id, content, synced, created_at, updated_at)
+           VALUES (?, ?, ?, ?, ?, ?)`,
+          [
+            String(note.point_id),
+            String(note.user_id ?? note.userId ?? "local"),
+            note.content,
+            note.synced === 0 ? 0 : 1,
+            note.created_at ?? new Date().toISOString(),
+            note.updated_at ?? note.created_at ?? new Date().toISOString(),
+          ]
+        );
+      }
+
+      for (const status of syncStatus) {
+        await db.runAsync(
+          `INSERT OR REPLACE INTO sync_status (table_name, last_sync, status)
+           VALUES (?, ?, ?)`,
+          [
+            status.table_name,
+            status.last_sync ?? new Date().toISOString(),
+            status.status ?? "success",
+          ]
+        );
+      }
+
+      await db.execAsync("COMMIT");
+    } catch (error) {
+      await db.execAsync("ROLLBACK");
+      console.error("Failed to migrate legacy schema:", error);
+      throw error;
+    }
+  }
+
+  private async createSchemaIfMissing(): Promise<void> {
+    const db = this.getDb();
+
+    await db.execAsync(`CREATE TABLE IF NOT EXISTS points (
+      id TEXT PRIMARY KEY,
+      code TEXT,
+      name TEXT NOT NULL,
+      chinese_name TEXT,
+      meridian TEXT NOT NULL,
+      location TEXT NOT NULL,
+      functions TEXT,
+      indications TEXT,
+      contraindications TEXT,
+      image_path TEXT,
+      coordinates TEXT,
+      favorite_count INTEGER,
+      synced INTEGER DEFAULT 1,
+      last_sync DATETIME
+    )`);
+
+    await db.execAsync(`CREATE TABLE IF NOT EXISTS symptoms (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      synonyms TEXT,
+      category TEXT,
+      use_count INTEGER,
+      synced INTEGER DEFAULT 1,
+      last_sync DATETIME
+    )`);
+
+    await db.execAsync(`CREATE TABLE IF NOT EXISTS symptom_points (
+      symptom_id TEXT NOT NULL,
+      point_id TEXT NOT NULL,
+      efficacy_score REAL DEFAULT 1.0,
+      PRIMARY KEY(symptom_id, point_id)
+    )`);
+
+    await db.execAsync(`CREATE TABLE IF NOT EXISTS favorites (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      point_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      synced INTEGER DEFAULT 0,
+      operation TEXT NOT NULL DEFAULT 'UPSERT',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(point_id, user_id)
+    )`);
+
+    await db.execAsync(`CREATE TABLE IF NOT EXISTS notes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      point_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      content TEXT NOT NULL,
+      synced INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+
+    await db.execAsync(`CREATE TABLE IF NOT EXISTS search_history (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      query TEXT NOT NULL,
+      type TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+
+    await db.execAsync(`CREATE TABLE IF NOT EXISTS sync_status (
+      table_name TEXT PRIMARY KEY,
+      last_sync DATETIME NOT NULL,
+      status TEXT NOT NULL DEFAULT 'success'
+    )`);
+
+    await db.execAsync(`CREATE TABLE IF NOT EXISTS sync_queue (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      entity TEXT NOT NULL,
+      entity_id TEXT NOT NULL,
+      operation TEXT NOT NULL,
+      payload TEXT,
+      status TEXT NOT NULL DEFAULT 'pending',
+      retry_count INTEGER NOT NULL DEFAULT 0,
+      last_attempt DATETIME,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+  }
+
+  private async createIndexes(): Promise<void> {
+    const db = this.getDb();
+
+    const statements = [
+      "CREATE INDEX IF NOT EXISTS idx_points_meridian ON points(meridian)",
+      "CREATE INDEX IF NOT EXISTS idx_points_name ON points(name)",
+      "CREATE INDEX IF NOT EXISTS idx_symptoms_category ON symptoms(category)",
+      "CREATE INDEX IF NOT EXISTS idx_symptom_points_symptom ON symptom_points(symptom_id)",
+      "CREATE INDEX IF NOT EXISTS idx_symptom_points_point ON symptom_points(point_id)",
+      "CREATE INDEX IF NOT EXISTS idx_favorites_user ON favorites(user_id)",
+      "CREATE INDEX IF NOT EXISTS idx_favorites_point ON favorites(point_id)",
+      "CREATE INDEX IF NOT EXISTS idx_notes_point ON notes(point_id)",
+      "CREATE INDEX IF NOT EXISTS idx_sync_queue_status ON sync_queue(status)",
+      "CREATE INDEX IF NOT EXISTS idx_sync_queue_entity ON sync_queue(entity, entity_id)",
+    ];
+
+    for (const statement of statements) {
+      await db.execAsync(statement);
+    }
+  }
+
+  private async setUserVersion(version: number): Promise<void> {
+    const db = this.getDb();
+    await db.execAsync(`PRAGMA user_version = ${version}`);
+  }
+
+  // Points operations
+
+  async upsertPoint(point: LocalPoint): Promise<void> {
+    const db = this.getDb();
+
+    await db.runAsync(
+      `INSERT INTO points (id, code, name, chinese_name, meridian, location, functions, indications, contraindications, image_path, coordinates, favorite_count, synced, last_sync)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+       ON CONFLICT(id) DO UPDATE SET
+         code = excluded.code,
+         name = excluded.name,
+         chinese_name = excluded.chinese_name,
+         meridian = excluded.meridian,
+         location = excluded.location,
+         functions = excluded.functions,
+         indications = excluded.indications,
+         contraindications = excluded.contraindications,
+         image_path = excluded.image_path,
+         coordinates = excluded.coordinates,
+         favorite_count = excluded.favorite_count,
+         synced = excluded.synced,
+         last_sync = excluded.last_sync`,
       [
+        point.id,
+        point.code ?? null,
         point.name,
-        point.chinese_name || null,
+        point.chinese_name ?? null,
         point.meridian,
         point.location,
-        point.functions || null,
-        point.indications || null,
-        point.contraindications || null,
-        point.image_path || null,
-        point.coordinates || null,
+        point.functions ?? null,
+        point.indications ?? null,
+        point.contraindications ?? null,
+        point.image_path ?? null,
+        point.coordinates ?? null,
+        point.favorite_count ?? null,
         point.synced ? 1 : 0,
-        point.last_sync || null,
+        point.last_sync ?? new Date().toISOString(),
       ]
     );
+  }
 
-    return result.lastInsertRowId;
+  async upsertPoints(points: LocalPoint[]): Promise<void> {
+    if (points.length === 0) {
+      return;
+    }
+    const db = this.getDb();
+    await db.execAsync("BEGIN TRANSACTION");
+    try {
+      for (const point of points) {
+        await this.upsertPoint(point);
+      }
+      await db.execAsync("COMMIT");
+    } catch (error) {
+      await db.execAsync("ROLLBACK");
+      throw error;
+    }
+  }
+
+  async removePointsNotIn(ids: string[]): Promise<void> {
+    const db = this.getDb();
+    if (ids.length === 0) {
+      await db.execAsync("DELETE FROM points");
+      return;
+    }
+
+    const placeholders = ids.map(() => "?").join(", ");
+    await db.runAsync(
+      `DELETE FROM points WHERE id NOT IN (${placeholders})`,
+      ids
+    );
   }
 
   async getPoints(limit?: number, offset?: number): Promise<LocalPoint[]> {
-    if (!this.db) throw new Error("Database not initialized");
-
+    const db = this.getDb();
     let query = "SELECT * FROM points ORDER BY meridian, name";
     const params: any[] = [];
 
-    if (limit) {
+    if (typeof limit === "number") {
       query += " LIMIT ?";
       params.push(limit);
-
-      if (offset) {
+      if (typeof offset === "number") {
         query += " OFFSET ?";
         params.push(offset);
       }
     }
 
-    const result = await this.db.getAllAsync(query, params);
-    return result as LocalPoint[];
+    const result = (await db.getAllAsync(query, params)) as LocalPoint[];
+    return result;
   }
 
-  async getPointById(id: number): Promise<LocalPoint | null> {
-    if (!this.db) throw new Error("Database not initialized");
-
-    const result = await this.db.getFirstAsync(
-      "SELECT * FROM points WHERE id = ?",
-      [id]
-    );
-
-    return result as LocalPoint | null;
+  async getPointById(id: string): Promise<LocalPoint | null> {
+    const db = this.getDb();
+    const row = await db.getFirstAsync("SELECT * FROM points WHERE id = ?", [
+      id,
+    ]);
+    return (row as LocalPoint) ?? null;
   }
 
   async searchPoints(query: string): Promise<LocalPoint[]> {
-    if (!this.db) throw new Error("Database not initialized");
-
+    const db = this.getDb();
     const searchTerm = `%${query}%`;
-    const result = await this.db.getAllAsync(
+    const result = (await db.getAllAsync(
       `SELECT * FROM points 
        WHERE name LIKE ? OR chinese_name LIKE ? OR meridian LIKE ? OR location LIKE ? OR indications LIKE ?
-       ORDER BY 
-         CASE 
-           WHEN name LIKE ? THEN 1
-           WHEN chinese_name LIKE ? THEN 2
-           WHEN meridian LIKE ? THEN 3
-           ELSE 4
-         END`,
+       ORDER BY name`,
       [
         searchTerm,
         searchTerm,
         searchTerm,
         searchTerm,
         searchTerm,
-        searchTerm,
-        searchTerm,
-        searchTerm,
       ]
-    );
-
-    return result as LocalPoint[];
+    )) as LocalPoint[];
+    return result;
   }
 
   async getPointsByMeridian(meridian: string): Promise<LocalPoint[]> {
-    if (!this.db) throw new Error("Database not initialized");
-
-    const result = await this.db.getAllAsync(
+    const db = this.getDb();
+    const result = (await db.getAllAsync(
       "SELECT * FROM points WHERE meridian = ? ORDER BY name",
       [meridian]
-    );
-
-    return result as LocalPoint[];
+    )) as LocalPoint[];
+    return result;
   }
 
   // Symptoms operations
-  async insertSymptom(symptom: Omit<LocalSymptom, "id">): Promise<number> {
-    if (!this.db) throw new Error("Database not initialized");
 
-    const result = await this.db.runAsync(
-      `INSERT INTO symptoms (name, synonyms, category, synced, last_sync)
-       VALUES (?, ?, ?, ?, ?)`,
+  async upsertSymptom(symptom: LocalSymptom): Promise<void> {
+    const db = this.getDb();
+    await db.runAsync(
+      `INSERT INTO symptoms (id, name, synonyms, category, use_count, synced, last_sync)
+       VALUES (?, ?, ?, ?, ?, ?, ?)
+       ON CONFLICT(id) DO UPDATE SET
+         name = excluded.name,
+         synonyms = excluded.synonyms,
+         category = excluded.category,
+         use_count = excluded.use_count,
+         synced = excluded.synced,
+         last_sync = excluded.last_sync`,
       [
+        symptom.id,
         symptom.name,
-        symptom.synonyms || null,
-        symptom.category || null,
+        symptom.synonyms ?? null,
+        symptom.category ?? null,
+        symptom.use_count ?? null,
         symptom.synced ? 1 : 0,
-        symptom.last_sync || null,
+        symptom.last_sync ?? new Date().toISOString(),
       ]
     );
+  }
 
-    return result.lastInsertRowId;
+  async upsertSymptoms(symptoms: LocalSymptom[]): Promise<void> {
+    if (symptoms.length === 0) {
+      return;
+    }
+    const db = this.getDb();
+    await db.execAsync("BEGIN TRANSACTION");
+    try {
+      for (const symptom of symptoms) {
+        await this.upsertSymptom(symptom);
+      }
+      await db.execAsync("COMMIT");
+    } catch (error) {
+      await db.execAsync("ROLLBACK");
+      throw error;
+    }
   }
 
   async getSymptoms(): Promise<LocalSymptom[]> {
-    if (!this.db) throw new Error("Database not initialized");
-
-    const result = await this.db.getAllAsync(
+    const db = this.getDb();
+    const result = (await db.getAllAsync(
       "SELECT * FROM symptoms ORDER BY category, name"
-    );
-
-    return result as LocalSymptom[];
+    )) as LocalSymptom[];
+    return result;
   }
 
   async searchSymptoms(query: string): Promise<LocalSymptom[]> {
-    if (!this.db) throw new Error("Database not initialized");
-
+    const db = this.getDb();
     const searchTerm = `%${query}%`;
-    const result = await this.db.getAllAsync(
+    const result = (await db.getAllAsync(
       "SELECT * FROM symptoms WHERE name LIKE ? OR synonyms LIKE ? ORDER BY name",
       [searchTerm, searchTerm]
-    );
-
-    return result as LocalSymptom[];
+    )) as LocalSymptom[];
+    return result;
   }
 
   // Favorites operations
-  async addFavorite(pointId: number, userId: number): Promise<number> {
-    if (!this.db) throw new Error("Database not initialized");
 
-    const result = await this.db.runAsync(
-      "INSERT OR REPLACE INTO favorites (point_id, user_id, synced) VALUES (?, ?, ?)",
-      [pointId, userId, 0]
-    );
+  async setFavoriteStatus(params: {
+    pointId: string;
+    userId: string;
+    isFavorite: boolean;
+    synced: boolean;
+  }): Promise<void> {
+    const db = this.getDb();
+    const now = new Date().toISOString();
 
-    return result.lastInsertRowId;
+    if (params.isFavorite) {
+      await db.runAsync(
+        `INSERT INTO favorites (point_id, user_id, synced, operation, created_at, updated_at)
+         VALUES (?, ?, ?, ?, COALESCE((SELECT created_at FROM favorites WHERE point_id = ? AND user_id = ?), ?), ?)
+         ON CONFLICT(point_id, user_id) DO UPDATE SET
+            synced = excluded.synced,
+            operation = excluded.operation,
+            updated_at = excluded.updated_at`,
+        [
+          params.pointId,
+          params.userId,
+          params.synced ? 1 : 0,
+          params.synced ? "UPSERT" : "UPSERT",
+          params.pointId,
+          params.userId,
+          now,
+          now,
+        ]
+      );
+    } else {
+      if (params.synced) {
+        await db.runAsync(
+          "DELETE FROM favorites WHERE point_id = ? AND user_id = ?",
+          [params.pointId, params.userId]
+        );
+      } else {
+        await db.runAsync(
+          `INSERT INTO favorites (point_id, user_id, synced, operation, created_at, updated_at)
+           VALUES (?, ?, 0, 'DELETE', COALESCE((SELECT created_at FROM favorites WHERE point_id = ? AND user_id = ?), ?), ?)
+           ON CONFLICT(point_id, user_id) DO UPDATE SET
+             synced = 0,
+             operation = 'DELETE',
+             updated_at = ?`,
+          [
+            params.pointId,
+            params.userId,
+            params.pointId,
+            params.userId,
+            now,
+            now,
+            now,
+          ]
+        );
+      }
+    }
   }
 
-  async removeFavorite(pointId: number, userId: number): Promise<void> {
-    if (!this.db) throw new Error("Database not initialized");
-
-    await this.db.runAsync(
-      "DELETE FROM favorites WHERE point_id = ? AND user_id = ?",
-      [pointId, userId]
-    );
+  async replaceFavorites(userId: string, pointIds: string[]): Promise<void> {
+    const db = this.getDb();
+    await db.execAsync("BEGIN TRANSACTION");
+    try {
+      await db.runAsync("DELETE FROM favorites WHERE user_id = ?", [userId]);
+      for (const pointId of pointIds) {
+        await db.runAsync(
+          `INSERT INTO favorites (point_id, user_id, synced, operation, created_at, updated_at)
+           VALUES (?, ?, 1, 'UPSERT', ?, ?)`,
+          [pointId, userId, new Date().toISOString(), new Date().toISOString()]
+        );
+      }
+      await db.execAsync("COMMIT");
+    } catch (error) {
+      await db.execAsync("ROLLBACK");
+      throw error;
+    }
   }
 
-  async getFavorites(userId: number): Promise<LocalPoint[]> {
-    if (!this.db) throw new Error("Database not initialized");
-
-    const result = await this.db.getAllAsync(
-      `SELECT p.* FROM points p
-       JOIN favorites f ON p.id = f.point_id
-       WHERE f.user_id = ?
-       ORDER BY f.created_at DESC`,
+  async getFavorites(userId: string): Promise<Favorite[]> {
+    const db = this.getDb();
+    const result = (await db.getAllAsync(
+      `SELECT * FROM favorites WHERE user_id = ? ORDER BY updated_at DESC`,
       [userId]
-    );
-
-    return result as LocalPoint[];
+    )) as Favorite[];
+    return result;
   }
 
-  async isFavorite(pointId: number, userId: number): Promise<boolean> {
-    if (!this.db) throw new Error("Database not initialized");
+  async enqueueFavoriteOperation(
+    userId: string,
+    pointId: string,
+    action: "ADD" | "REMOVE"
+  ): Promise<void> {
+    const db = this.getDb();
+    const payload = JSON.stringify({ userId, pointId, action });
 
-    const result = await this.db.getFirstAsync(
+    await db.runAsync(
+      "DELETE FROM sync_queue WHERE entity = ? AND entity_id = ?",
+      ["favorite", `${userId}:${pointId}`]
+    );
+
+    await db.runAsync(
+      `INSERT INTO sync_queue (entity, entity_id, operation, payload, status, retry_count)
+       VALUES ('favorite', ?, ?, ?, 'pending', 0)`,
+      [
+        `${userId}:${pointId}`,
+        action === "ADD" ? "UPSERT" : "DELETE",
+        payload,
+      ]
+    );
+  }
+
+  async getPendingOperations(entity?: string, limit = 50): Promise<SyncOperation[]> {
+    const db = this.getDb();
+    let query =
+      "SELECT * FROM sync_queue WHERE status IN ('pending', 'retry') ORDER BY created_at LIMIT ?";
+    const params: any[] = [limit];
+
+    if (entity) {
+      query =
+        "SELECT * FROM sync_queue WHERE entity = ? AND status IN ('pending', 'retry') ORDER BY created_at LIMIT ?";
+      params.unshift(entity);
+    }
+
+    const result = (await db.getAllAsync(query, params)) as SyncOperation[];
+    return result;
+  }
+
+  async markOperationInProgress(id: number): Promise<void> {
+    const db = this.getDb();
+    await db.runAsync(
+      `UPDATE sync_queue SET status = 'in_progress', last_attempt = ?, retry_count = retry_count + 1 WHERE id = ?`,
+      [new Date().toISOString(), id]
+    );
+  }
+
+  async markOperationCompleted(id: number): Promise<void> {
+    const db = this.getDb();
+    await db.runAsync("DELETE FROM sync_queue WHERE id = ?", [id]);
+  }
+
+  async markOperationFailed(id: number): Promise<void> {
+    const db = this.getDb();
+    await db.runAsync(
+      `UPDATE sync_queue
+       SET status = CASE WHEN retry_count >= ? THEN 'failed' ELSE 'retry' END
+       WHERE id = ?`,
+      [MAX_QUEUE_RETRIES, id]
+    );
+  }
+
+  async countPendingOperations(): Promise<number> {
+    const db = this.getDb();
+    const row = (await db.getFirstAsync(
+      "SELECT COUNT(1) AS total FROM sync_queue WHERE status IN ('pending', 'retry', 'in_progress')"
+    )) as RawRow | undefined;
+    return row ? Number(row.total ?? 0) : 0;
+  }
+
+  async removeFavorite(pointId: string, userId: string): Promise<void> {
+    const db = this.getDb();
+    await db.runAsync("DELETE FROM favorites WHERE point_id = ? AND user_id = ?", [
+      pointId,
+      userId,
+    ]);
+  }
+
+  async isFavorite(pointId: string, userId: string): Promise<boolean> {
+    const db = this.getDb();
+    const result = await db.getFirstAsync(
       "SELECT id FROM favorites WHERE point_id = ? AND user_id = ?",
       [pointId, userId]
     );
-
-    return result !== null;
+    return Boolean(result);
   }
 
   // Notes operations
+
   async addNote(
-    pointId: number,
-    userId: number,
+    pointId: string,
+    userId: string,
     content: string
   ): Promise<number> {
-    if (!this.db) throw new Error("Database not initialized");
-
-    const result = await this.db.runAsync(
-      "INSERT INTO notes (point_id, user_id, content, synced) VALUES (?, ?, ?, ?)",
-      [pointId, userId, content, 0]
+    const db = this.getDb();
+    const result = await db.runAsync(
+      "INSERT INTO notes (point_id, user_id, content, synced) VALUES (?, ?, ?, 0)",
+      [pointId, userId, content]
     );
-
     return result.lastInsertRowId;
   }
 
   async updateNote(id: number, content: string): Promise<void> {
-    if (!this.db) throw new Error("Database not initialized");
-
-    await this.db.runAsync(
+    const db = this.getDb();
+    await db.runAsync(
       "UPDATE notes SET content = ?, updated_at = CURRENT_TIMESTAMP, synced = 0 WHERE id = ?",
       [content, id]
     );
   }
 
   async deleteNote(id: number): Promise<void> {
-    if (!this.db) throw new Error("Database not initialized");
-
-    await this.db.runAsync("DELETE FROM notes WHERE id = ?", [id]);
+    const db = this.getDb();
+    await db.runAsync("DELETE FROM notes WHERE id = ?", [id]);
   }
 
-  async getNotes(pointId: number, userId: number): Promise<Note[]> {
-    if (!this.db) throw new Error("Database not initialized");
-
-    const result = await this.db.getAllAsync(
+  async getNotes(pointId: string, userId: string): Promise<Note[]> {
+    const db = this.getDb();
+    const result = (await db.getAllAsync(
       "SELECT * FROM notes WHERE point_id = ? AND user_id = ? ORDER BY created_at DESC",
       [pointId, userId]
-    );
-
-    return result as Note[];
+    )) as Note[];
+    return result;
   }
 
   // Search history operations
   async addSearchHistory(query: string, type: string): Promise<void> {
-    if (!this.db) throw new Error("Database not initialized");
-
-    await this.db.runAsync(
+    const db = this.getDb();
+    await db.runAsync(
       "INSERT INTO search_history (query, type) VALUES (?, ?)",
       [query, type]
     );
 
-    // Keep only last 50 searches
-    await this.db.runAsync(
+    await db.runAsync(
       "DELETE FROM search_history WHERE id NOT IN (SELECT id FROM search_history ORDER BY created_at DESC LIMIT 50)"
     );
   }
 
   async getSearchHistory(type?: string): Promise<SearchHistory[]> {
-    if (!this.db) throw new Error("Database not initialized");
-
+    const db = this.getDb();
     let query = "SELECT * FROM search_history";
     const params: any[] = [];
 
@@ -373,54 +733,35 @@ class DatabaseService {
 
     query += " ORDER BY created_at DESC LIMIT 10";
 
-    const result = await this.db.getAllAsync(query, params);
-    return result as SearchHistory[];
-  }
-
-  // Sync operations
-  async markAsSynced(table: string, id: number): Promise<void> {
-    if (!this.db) throw new Error("Database not initialized");
-
-    await this.db.runAsync(
-      `UPDATE ${table} SET synced = 1, last_sync = CURRENT_TIMESTAMP WHERE id = ?`,
-      [id]
-    );
-  }
-
-  async getUnsyncedRecords(table: string): Promise<any[]> {
-    if (!this.db) throw new Error("Database not initialized");
-
-    const result = await this.db.getAllAsync(
-      `SELECT * FROM ${table} WHERE synced = 0`
-    );
-
+    const result = (await db.getAllAsync(query, params)) as SearchHistory[];
     return result;
   }
 
-  async updateSyncStatus(tableName: string, status: string): Promise<void> {
-    if (!this.db) throw new Error("Database not initialized");
+  // Sync status helpers
 
-    await this.db.runAsync(
-      "INSERT OR REPLACE INTO sync_status (table_name, last_sync, status) VALUES (?, CURRENT_TIMESTAMP, ?)",
-      [tableName, status]
+  async updateSyncStatus(tableName: string, status: string): Promise<void> {
+    const db = this.getDb();
+    await db.runAsync(
+      `INSERT INTO sync_status (table_name, last_sync, status)
+       VALUES (?, ?, ?)
+       ON CONFLICT(table_name) DO UPDATE SET
+         last_sync = excluded.last_sync,
+         status = excluded.status`,
+      [tableName, new Date().toISOString(), status]
     );
   }
 
   async getLastSync(tableName: string): Promise<string | null> {
-    if (!this.db) throw new Error("Database not initialized");
-
-    const result = await this.db.getFirstAsync(
+    const db = this.getDb();
+    const row = await db.getFirstAsync(
       "SELECT last_sync FROM sync_status WHERE table_name = ?",
       [tableName]
     );
-
-    return result ? (result as any).last_sync : null;
+    return row ? (row as any).last_sync : null;
   }
 
-  // Clear all data
   async clearAllData(): Promise<void> {
-    if (!this.db) throw new Error("Database not initialized");
-
+    const db = this.getDb();
     const tables = [
       "points",
       "symptoms",
@@ -429,18 +770,17 @@ class DatabaseService {
       "notes",
       "search_history",
       "sync_status",
+      "sync_queue",
     ];
-
-    for (const table of tables) {
-      await this.db.runAsync(`DELETE FROM ${table}`);
-    }
-  }
-
-  // Close database connection
-  async close(): Promise<void> {
-    if (this.db) {
-      // Note: SQLite databases are automatically closed when the app is terminated
-      this.db = null;
+    await db.execAsync("BEGIN TRANSACTION");
+    try {
+      for (const table of tables) {
+        await db.runAsync(`DELETE FROM ${table}`);
+      }
+      await db.execAsync("COMMIT");
+    } catch (error) {
+      await db.execAsync("ROLLBACK");
+      throw error;
     }
   }
 }

@@ -20,6 +20,22 @@ firebase:
 app:
   firebase:
     enabled: false  # Desabilite para desenvolvimento sem Firebase
+  security:
+    require-email-verified: false
+    cors:
+      allowed-origin-patterns:
+        - http://localhost:*
+        - http://127.0.0.1:*
+        - http://192.168.*.*
+        - http://10.*.*.*
+      allowed-headers:
+        - "*"
+      allowed-methods:
+        - "*"
+      allow-credentials: true
+      max-age: PT30M
+    rate-limit:
+      enabled: false
 
 logging:
   level:

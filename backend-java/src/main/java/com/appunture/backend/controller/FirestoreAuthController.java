@@ -2,7 +2,6 @@ package com.appunture.backend.controller;
 
 import com.appunture.backend.dto.response.UserProfileResponse;
 import com.appunture.backend.model.firestore.FirestoreUser;
-import com.appunture.backend.service.FirebaseAuthService;
 import com.appunture.backend.service.FirestoreUserService;
 import com.google.firebase.auth.FirebaseToken;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,12 +21,11 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/auth")
-@Tag(name = "Auth", description = "Authentication and user profile endpoints (Firebase)")
+@Tag(name = "Auth", description = "Authentication and user profile endpoints (Firebase + Firestore)")
 @RequiredArgsConstructor
 @Slf4j
-public class FirebaseAuthController {
+public class FirestoreAuthController {
 
-    private final FirebaseAuthService firebaseAuthService;
     private final FirestoreUserService userService;
 
     @GetMapping("/profile")
@@ -140,8 +138,7 @@ public class FirebaseAuthController {
                 "email", token.getEmail() != null ? token.getEmail() : "",
                 "name", token.getName() != null ? token.getName() : "",
                 "emailVerified", token.isEmailVerified(),
-                "issuer", token.getIssuer(),
-                "authTime", token.getAuthTime()
+                "issuer", token.getIssuer()
             );
 
             // Buscar perfil no Firestore

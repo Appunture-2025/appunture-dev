@@ -9,6 +9,7 @@ import {
   Switch,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { useAuthStore } from "../../stores/authStore";
 import { useSyncStore } from "../../stores/syncStore";
 import { COLORS } from "../../utils/constants";
@@ -25,8 +26,9 @@ interface SettingsOption {
 }
 
 export default function ProfileScreen() {
+  const router = useRouter();
   const { user, logout } = useAuthStore();
-  const { isOnline, lastSyncTime } = useSyncStore();
+  const { isOnline, lastSync } = useSyncStore();
   const [notifications, setNotifications] = useState(true);
   const [offlineMode, setOfflineMode] = useState(false);
 
@@ -42,6 +44,16 @@ export default function ProfileScreen() {
   };
 
   const settings: SettingsOption[] = [
+    {
+      id: "edit-profile",
+      title: "Editar perfil",
+      subtitle: "Alterar nome, foto e informações",
+      type: "navigation",
+      icon: "create-outline",
+      onPress: () => {
+        router.push("/profile-edit");
+      },
+    },
     {
       id: "notifications",
       title: "Notificações",
@@ -172,6 +184,29 @@ export default function ProfileScreen() {
           {user?.email || "email@exemplo.com"}
         </Text>
 
+        {/* Email Verification Badge */}
+        {user?.emailVerified !== undefined && (
+          <View
+            style={[
+              styles.emailBadge,
+              {
+                backgroundColor: user.emailVerified
+                  ? COLORS.success
+                  : COLORS.warning,
+              },
+            ]}
+          >
+            <Ionicons
+              name={user.emailVerified ? "checkmark-circle" : "alert-circle"}
+              size={14}
+              color={COLORS.surface}
+            />
+            <Text style={styles.emailBadgeText}>
+              {user.emailVerified ? "Email verificado" : "Email não verificado"}
+            </Text>
+          </View>
+        )}
+
         {/* Sync Status */}
         <View style={styles.syncStatus}>
           <View
@@ -182,10 +217,10 @@ export default function ProfileScreen() {
           />
           <Text style={styles.syncText}>
             {isOnline ? "Online" : "Offline"}
-            {lastSyncTime && (
+            {lastSync && (
               <Text style={styles.lastSync}>
                 {" • Última sincronização: "}
-                {new Date(lastSyncTime).toLocaleString("pt-BR")}
+                {new Date(lastSync).toLocaleString("pt-BR")}
               </Text>
             )}
           </Text>
@@ -242,7 +277,21 @@ const styles = StyleSheet.create({
   userEmail: {
     fontSize: 16,
     color: COLORS.textSecondary,
+    marginBottom: 12,
+  },
+  emailBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
     marginBottom: 16,
+    gap: 4,
+  },
+  emailBadgeText: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: COLORS.surface,
   },
   syncStatus: {
     flexDirection: "row",

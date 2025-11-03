@@ -1,10 +1,13 @@
+import type { User, LoginCredentials, RegisterData, UserProfile } from "./user";
+
 // API Types
 export interface Point {
-  isFavorite: unknown;
-  id: number;
+  isFavorite: boolean;
+  id: string; // Firestore uses string IDs
   code: string;
   name: string;
   chinese_name?: string;
+  chineseName?: string; // Backend uses camelCase
   meridian: string;
   location: string;
   indications?: string;
@@ -13,26 +16,25 @@ export interface Point {
     x: number;
     y: number;
   };
-  image_url?: string;
+  image_url?: string; // Legacy support
+  imageUrls?: string[]; // Backend supports multiple images
+  favoriteCount?: number; // Backend tracks favorites
   created_at?: string;
   updated_at?: string;
+  createdAt?: string; // Backend uses camelCase
+  updatedAt?: string; // Backend uses camelCase
 }
 
 export interface Symptom {
-  id: number;
+  id: string; // Firestore uses string IDs
   name: string;
   description?: string;
   category?: string;
+  severity?: number; // Backend has severity field (0-10)
+  tags?: string[]; // Backend supports tags
+  useCount?: number; // Backend tracks usage
   created_at?: string;
-}
-
-export interface User {
-  id: number;
-  email: string;
-  name: string;
-  profession?: string;
-  role: "user" | "admin";
-  created_at?: string;
+  createdAt?: string; // Backend uses camelCase
 }
 
 export interface PointWithSymptoms extends Point {
@@ -104,17 +106,17 @@ export interface LocalSymptom extends Symptom {
 }
 
 export interface Favorite {
-  id: number;
-  point_id: number;
-  user_id: number;
+  id?: number; // Local DB ID
+  point_id: string; // Changed to string to match Firestore
+  user_id: string; // Changed to string to match Firestore
   synced: boolean;
   created_at: string;
 }
 
 export interface Note {
-  id: number;
-  point_id: number;
-  user_id: number;
+  id?: number; // Local DB ID
+  point_id: string; // Changed to string to match Firestore
+  user_id: string; // Changed to string to match Firestore
   content: string;
   synced: boolean;
   created_at: string;
@@ -122,26 +124,10 @@ export interface Note {
 }
 
 export interface SymptomPoint {
-  id: number;
-  symptom_id: number;
-  point_id: number;
+  id?: number; // Local DB ID
+  symptom_id: string; // Changed to string to match Firestore
+  point_id: string; // Changed to string to match Firestore
   efficacy_score: number;
 }
 
-// Authentication Types
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-export interface RegisterData {
-  email: string;
-  password: string;
-  name: string;
-  profession?: string;
-}
-
-export interface UserProfile {
-  name: string;
-  profession?: string;
-}
+export type { User, LoginCredentials, RegisterData, UserProfile };

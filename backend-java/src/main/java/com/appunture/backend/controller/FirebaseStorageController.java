@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/storage")
+@RequestMapping("/storage")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "Firebase Storage", description = "Endpoints para gerenciamento de arquivos no Firebase Storage")

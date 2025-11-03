@@ -1,11 +1,22 @@
 // User and Auth Types
+export type UserRole = "user" | "admin" | "USER" | "ADMIN";
+
 export interface User {
-  id: number;
+  id?: string | number;
+  firebaseUid?: string;
   email: string;
   name: string;
   profession?: string;
-  role: "user" | "admin";
+  role: UserRole;
+  phoneNumber?: string;
+  profileImageUrl?: string;
+  favoritePointIds?: string[];
+  emailVerified?: boolean;
+  enabled?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
   created_at?: string;
+  updated_at?: string;
 }
 
 export interface AuthState {

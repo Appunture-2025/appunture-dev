@@ -1,5 +1,6 @@
 package com.appunture.backend.security;
 
+import com.appunture.backend.config.SecurityProperties;
 import com.appunture.backend.service.FirebaseAuthService;
 import com.google.firebase.auth.FirebaseToken;
 import jakarta.servlet.FilterChain;
@@ -11,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -27,6 +27,7 @@ import java.util.Map;
 public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
 
     private final FirebaseAuthService firebaseAuthService;
+    private final SecurityProperties securityProperties;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
@@ -45,16 +46,23 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
                 FirebaseToken decodedToken = firebaseAuthService.verifyToken(token);
                 String uid = decodedToken.getUid();
                 String email = decodedToken.getEmail();
-                
+
+                if (securityProperties.isRequireEmailVerified() && !decodedToken.isEmailVerified()) {
+                    log.warn("Rejected authentication for {} - email not verified", email);
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"error\":\"email_not_verified\",\"message\":\"Email address not verified.\"}");
+                    return;
+                }
+
                 // Extrair role dos custom claims
                 List<SimpleGrantedAuthority> authorities = extractAuthorities(decodedToken);
-                
-                UsernamePasswordAuthenticationToken authentication = 
-                    new UsernamePasswordAuthenticationToken(uid, null, authorities);
-                
-                // Adicionar informações extras ao contexto
-                authentication.setDetails(new FirebaseAuthDetails(uid, email, decodedToken.getClaims()));
-                
+
+                UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(decodedToken, null, authorities);
+
+                authentication.setDetails(new FirebaseAuthDetails(uid, email, decodedToken.getClaims(), decodedToken.isEmailVerified()));
+
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 
                 log.debug("User authenticated: {} ({})", email, uid);
@@ -102,8 +110,7 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isPublicEndpoint(String uri) {
-        return uri.startsWith("/api/public") ||
-               uri.startsWith("/api/auth/register") ||
+    return uri.startsWith("/api/public") ||
                uri.startsWith("/api/health") ||
                uri.startsWith("/swagger-ui") ||
                uri.startsWith("/v3/api-docs") ||
@@ -118,15 +125,18 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
         private final String uid;
         private final String email;
         private final Map<String, Object> claims;
+        private final boolean emailVerified;
 
-        public FirebaseAuthDetails(String uid, String email, Map<String, Object> claims) {
+        public FirebaseAuthDetails(String uid, String email, Map<String, Object> claims, boolean emailVerified) {
             this.uid = uid;
             this.email = email;
             this.claims = claims;
+            this.emailVerified = emailVerified;
         }
 
         public String getUid() { return uid; }
         public String getEmail() { return email; }
         public Map<String, Object> getClaims() { return claims; }
+        public boolean isEmailVerified() { return emailVerified; }
     }
 }

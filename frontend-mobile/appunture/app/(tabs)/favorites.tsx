@@ -44,7 +44,7 @@ export default function FavoritesScreen() {
     }
   };
 
-  const handleToggleFavorite = async (pointId: number) => {
+  const handleToggleFavorite = async (pointId: string) => {
     try {
       await toggleFavorite(pointId);
       // Reload favorites to update the list
@@ -58,7 +58,7 @@ export default function FavoritesScreen() {
     <PointCard
       point={item}
       onPress={() => {}}
-      onToggleFavorite={() => handleToggleFavorite(item.id)}
+      onToggleFavorite={() => handleToggleFavorite(String(item.id))}
       showFavoriteButton={true}
       isFavorite={true}
     />
@@ -101,7 +101,7 @@ export default function FavoritesScreen() {
       <FlatList
         data={favorites}
         renderItem={renderPoint}
-        keyExtractor={(item) => item.id.toString()}
+  keyExtractor={(item) => String(item.id)}
         ListEmptyComponent={renderEmpty}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}

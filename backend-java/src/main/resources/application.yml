@@ -39,23 +39,61 @@ firebase:
     bucket: ${FIREBASE_STORAGE_BUCKET:appunture-tcc.appspot.com}
 
 app:
-  security:
-    jwt-secret: CHANGEME_SUPER_SECRET_KEY  # Não usado com Firebase, mas mantido para compatibilidade
-    jwt-expiration-minutes: 60
   file-storage:
     local-path: ./uploads  # Fallback se Cloud Storage não estiver disponível
-  admin-seed:
-    email: admin@appunture.com
-    password: changeMeAdmin123
   firebase:
     enabled: ${FIREBASE_ENABLED:true}  # Permite desabilitar Firebase para desenvolvimento
+  security:
+    require-email-verified: false
+    cors:
+      allowed-origin-patterns:
+        - http://localhost:*
+        - http://127.0.0.1:*
+        - http://192.168.*.*
+        - http://10.*.*.*
+      allowed-methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - OPTIONS
+      allowed-headers:
+        - Authorization
+        - Content-Type
+        - X-Requested-With
+        - Accept
+      exposed-headers:
+        - X-RateLimit-Limit
+        - X-RateLimit-Remaining
+      allow-credentials: true
+      max-age: PT1H
+    rate-limit:
+      enabled: true
+      capacity: 200
+      refill-tokens: 200
+      refill-duration: PT1M
+      strategy: AUTO
+      excluded-paths:
+        - /api/health/**
+        - /v3/api-docs/**
+        - /swagger-ui/**
+        - /actuator/**
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,prometheus,metrics
   endpoint:
     health:
       probes:
+        enabled: true
+      show-details: when-authorized
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      profile: ${spring.profiles.active}
+    export:
+      prometheus:
         enabled: true

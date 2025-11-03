@@ -40,6 +40,24 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="symptoms"
+        options={{
+          title: "Sintomas",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="medical" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="meridians"
+        options={{
+          title: "Meridianos",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="git-network-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="chatbot"
         options={{
           title: "Assistente",

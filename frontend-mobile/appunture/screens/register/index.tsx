@@ -64,7 +64,11 @@ export default function RegisterScreen() {
     }
 
     try {
-      await register(name.trim(), email.trim(), password);
+      await register({
+        name: name.trim(),
+        email: email.trim(),
+        password,
+      });
       Alert.alert(
         "Sucesso",
         "Conta criada com sucesso! Você pode fazer login agora.",

@@ -78,13 +78,14 @@ A migração completa do backend Node.js para **Java Spring Boot 3.2.5 + Firebas
 
 ## 🚀 API ENDPOINTS IMPLEMENTADOS
 
-### 🔐 Autenticação (Firebase Auth)
+### 🔐 Autenticação (Firebase Auth + Firestore)
 ```http
-POST   /auth/register           # Registro usuário
-POST   /auth/login             # Login Firebase
-GET    /auth/profile           # Perfil usuário
-PUT    /auth/profile           # Atualizar perfil
-DELETE /auth/account           # Deletar conta
+GET    /auth/profile               # Perfil Firestore do usuário autenticado
+PUT    /auth/profile               # Atualizar perfil no Firestore
+POST   /auth/sync                  # Sincronizar usuário do Firebase Auth → Firestore
+GET    /auth/me                    # Dados do token + perfil
+POST   /auth/favorites/{pointId}   # Adicionar favorito
+DELETE /auth/favorites/{pointId}   # Remover favorito
 ```
 
 ### 🎯 Pontos de Acupuntura
@@ -96,15 +97,19 @@ PUT    /points/{id}            # Atualizar ponto (admin)
 DELETE /points/{id}            # Deletar ponto (admin)
 GET    /points/search          # Buscar pontos por termo
 GET    /points/popular         # Pontos mais utilizados
-GET    /points/favorites       # Favoritos do usuário
-POST   /points/{id}/favorite   # Adicionar aos favoritos
-DELETE /points/{id}/favorite   # Remover dos favoritos
+GET    /points/symptom/{id}    # Pontos associados ao sintoma
+GET    /points/meridian/{id}   # Pontos por meridiano
 ```
 
 ### 🩺 Sintomas
 ```http
 GET    /symptoms               # Listar sintomas
 GET    /symptoms/{id}          # Buscar sintoma específico
+GET    /symptoms/point/{id}    # Sintomas relacionados a um ponto
+GET    /symptoms/category/{c}  # Sintomas por categoria
+GET    /symptoms/tag/{tag}     # Sintomas por tag
+GET    /symptoms/severity      # Sintomas por faixa de severidade
+GET    /symptoms/popular       # Sintomas mais utilizados
 POST   /symptoms               # Criar sintoma (admin)
 PUT    /symptoms/{id}          # Atualizar sintoma (admin)
 DELETE /symptoms/{id}          # Deletar sintoma (admin)

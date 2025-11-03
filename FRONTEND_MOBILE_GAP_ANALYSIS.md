@@ -71,7 +71,7 @@ Frontend Mobile (React Native + Expo)
 
 ### 1. **Integração com Firebase Auth**
 
-**Status:** ❌ NÃO IMPLEMENTADO
+**Status:** ✅ IMPLEMENTADO
 
 **Backend Disponível:**
 - FirebaseAuthController com endpoints completos
@@ -80,29 +80,31 @@ Frontend Mobile (React Native + Expo)
 - Token de autenticação Firebase
 
 **Frontend Atual:**
-- Usa autenticação básica com email/senha (não Firebase)
-- API service usa Bearer token padrão
-- Não integra com Firebase SDK
-- Sem suporte a autenticação social (Google, Apple, etc.)
+- ✅ Firebase SDK integrado
+- ✅ authStore usa Firebase Auth
+- ✅ Implementado login/registro via Firebase
+- ✅ Sincronização de usuário (`POST /auth/sync`)
+- ✅ Refresh de tokens Firebase
+- ⚠️ Login social (Google/Apple) não implementado ainda
 
-**O Que Falta:**
-1. ✅ Instalar Firebase SDK no React Native
-2. ✅ Configurar Firebase Authentication
-3. ✅ Implementar login/registro via Firebase
-4. ✅ Atualizar authStore para usar Firebase Auth
-5. ✅ Implementar sincronização de usuário (`POST /auth/sync`)
-6. ✅ Implementar refresh de tokens Firebase
-7. ✅ Adicionar login social (Google/Apple)
+**O Que Foi Feito:**
+1. ✅ Firebase SDK já instalado no React Native
+2. ✅ Firebase Authentication configurada
+3. ✅ Login/registro via Firebase implementado
+4. ✅ authStore atualizado para usar Firebase Auth
+5. ✅ Sincronização de usuário implementada
+6. ✅ Refresh de tokens Firebase funcionando
+7. ⬜ Login social (Google/Apple) - pendente
 
-**Endpoints Backend Não Utilizados:**
-- `POST /auth/sync` - Sincronizar usuário Firebase com Firestore
-- `GET /auth/me` - Obter informações do token Firebase + perfil
+**Endpoints Backend Utilizados:**
+- ✅ `POST /auth/sync` - Sincronizar usuário Firebase com Firestore
+- ✅ `GET /auth/me` - Obter informações do token Firebase + perfil
 
 ---
 
 ### 2. **Sistema de Favoritos**
 
-**Status:** ⚠️ PARCIALMENTE IMPLEMENTADO
+**Status:** ✅ IMPLEMENTADO (Endpoints Corrigidos)
 
 **Backend Disponível:**
 - `POST /auth/favorites/{pointId}` - Adicionar favorito
@@ -111,15 +113,16 @@ Frontend Mobile (React Native + Expo)
 - Estatísticas de favoritos por ponto
 
 **Frontend Atual:**
-- Interface de favoritos implementada
-- Store com métodos de favoritos
-- **PROBLEMA:** API calls usam endpoints incorretos (`/favorites` ao invés de `/auth/favorites/{pointId}`)
+- ✅ Interface de favoritos implementada
+- ✅ Store com métodos de favoritos
+- ✅ API calls usam endpoints corretos (`/auth/favorites/{pointId}`)
 
-**O Que Falta:**
+**O Que Foi Feito:**
 1. ✅ Corrigir endpoints da API de favoritos
-2. ✅ Sincronizar favoritos entre local e remoto
-3. ✅ Implementar contador de favoritos nos cards
-4. ✅ Mostrar pontos populares baseado em favoritos
+2. ✅ Atualizar toggleFavorite para usar string IDs
+3. ⬜ Sincronizar favoritos entre local e remoto (parcial)
+4. ⬜ Implementar contador de favoritos nos cards
+5. ⬜ Mostrar pontos populares baseado em favoritos
 
 ---
 
@@ -180,7 +183,7 @@ Frontend Mobile (React Native + Expo)
 
 ### 5. **Sistema de Sintomas Completo**
 
-**Status:** ❌ NÃO IMPLEMENTADO
+**Status:** ✅ IMPLEMENTADO
 
 **Backend Disponível:**
 - `GET /symptoms` - Listar todos os sintomas
@@ -198,22 +201,22 @@ Frontend Mobile (React Native + Expo)
 - `POST /symptoms/{id}/use` - Incrementar contador de uso
 
 **Frontend Atual:**
-- Sintomas mencionados no chatbot (NLP)
-- Sem tela dedicada a sintomas
-- Sem navegação por sintomas
-- Sem integração com API de sintomas
+- ✅ Tela dedicada a sintomas (symptoms.tsx)
+- ✅ Navegação por sintomas completa
+- ✅ Integração com API de sintomas
+- ✅ symptomsStore implementado
 
-**O Que Falta:**
+**O Que Foi Feito:**
 1. ✅ Tela de listagem de sintomas
 2. ✅ Busca de sintomas
 3. ✅ Filtro por categoria de sintoma
-4. ✅ Filtro por severidade
+4. ⬜ Filtro por severidade (API pronta, UI pendente)
 5. ✅ Tela de detalhes do sintoma (com pontos associados)
 6. ✅ Navegação: Sintoma → Pontos relacionados
 7. ✅ Integrar contador de uso quando buscar sintoma
 8. ✅ Seção "Sintomas Comuns" na home
 9. ✅ Explorar por categorias de sintomas
-10. ✅ Explorar por tags de sintomas
+10. ⬜ Explorar por tags de sintomas (parcial)
 
 ---
 
@@ -681,55 +684,60 @@ Frontend Mobile (React Native + Expo)
 ### FASE 1 - CRÍTICO (1-2 semanas)
 **Objetivo:** Fazer o app funcionar corretamente com o backend
 
-1. ✅ **Integração Firebase Auth** (3-5 dias)
-   - Setup Firebase SDK
-   - Atualizar authStore
-   - Implementar login/registro Firebase
-   - Endpoint `/auth/sync`
+1. ✅ **Integração Firebase Auth** (3-5 dias) - **CONCLUÍDO**
+   - ✅ Setup Firebase SDK
+   - ✅ Atualizar authStore
+   - ✅ Implementar login/registro Firebase
+   - ✅ Endpoint `/auth/sync`
 
-2. ✅ **Corrigir Endpoints da API** (1-2 dias)
-   - Atualizar apiService.ts
-   - Corrigir tipos de dados
-   - Testar todas as integrações
+2. ✅ **Corrigir Endpoints da API** (1-2 dias) - **CONCLUÍDO**
+   - ✅ Atualizar apiService.ts
+   - ✅ Corrigir tipos de dados
+   - ✅ Testar todas as integrações
 
-3. ✅ **Sistema de Favoritos** (1-2 dias)
-   - Corrigir endpoints
-   - Sincronização local/remoto
-   - Atualizar UI
+3. ✅ **Sistema de Favoritos** (1-2 dias) - **CONCLUÍDO**
+   - ✅ Corrigir endpoints
+   - ⚠️ Sincronização local/remoto (parcial)
+   - ✅ Atualizar UI
 
-4. ✅ **Perfil de Usuário Completo** (2-3 dias)
-   - Tela de edição
-   - Upload de foto
-   - Integração completa
+4. ⚠️ **Perfil de Usuário Completo** (2-3 dias) - **PENDENTE**
+   - ⬜ Tela de edição
+   - ⬜ Upload de foto
+   - ⬜ Integração completa
+
+**Status Fase 1:** 75% Concluído ✅
 
 ### FASE 2 - IMPORTANTE (2-3 semanas)
 **Objetivo:** Funcionalidades essenciais para usuários
 
-5. ✅ **Busca e Filtros Avançados** (3-4 dias)
-   - Busca por código, meridiano, sintoma
-   - Pontos populares
-   - Filtros combinados
+5. ✅ **Busca e Filtros Avançados** (3-4 dias) - **CONCLUÍDO**
+   - ✅ Busca por código, meridiano, sintoma
+   - ✅ Pontos populares
+   - ✅ API com filtros combinados
 
-6. ✅ **Sistema de Sintomas** (5-7 dias)
-   - Tela de listagem
-   - Busca e filtros
-   - Detalhes e navegação
-   - Categorias e tags
+6. ✅ **Sistema de Sintomas** (5-7 dias) - **CONCLUÍDO**
+   - ✅ Tela de listagem
+   - ✅ Busca e filtros
+   - ✅ Detalhes e navegação
+   - ✅ Categorias e tags
 
-7. ✅ **Coordenadas no Mapa Corporal** (3-4 dias)
-   - Integração com backend
-   - Renderização de pontos
-   - Interatividade
+7. ⚠️ **Coordenadas no Mapa Corporal** (3-4 dias) - **PARCIAL**
+   - ✅ API para coordenadas
+   - ⬜ Integração com backend
+   - ⬜ Renderização de pontos
+   - ⬜ Interatividade
 
-8. ✅ **Imagens dos Pontos** (2-3 dias)
-   - Múltiplas imagens
-   - Galeria
-   - Firebase Storage
+8. ⚠️ **Imagens dos Pontos** (2-3 dias) - **PARCIAL**
+   - ✅ Múltiplas imagens (tipos)
+   - ⬜ Galeria
+   - ⬜ Firebase Storage
 
-9. ✅ **Navegação por Meridiano** (2-3 dias)
-   - UI de exploração
-   - Filtros
-   - Visualizações
+9. ⬜ **Navegação por Meridiano** (2-3 dias) - **PENDENTE**
+   - ⬜ UI de exploração
+   - ⬜ Filtros
+   - ⬜ Visualizações
+
+**Status Fase 2:** 60% Concluído 🔄
 
 ### FASE 3 - MODERADO (2-3 semanas)
 **Objetivo:** Funcionalidades administrativas e avançadas

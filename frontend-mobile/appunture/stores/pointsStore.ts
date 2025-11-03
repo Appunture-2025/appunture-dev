@@ -1,11 +1,101 @@
 import { create } from "zustand";
-import { Point, PointWithSymptoms } from "../types/api";
-import { LocalPoint } from "../types/database";
+import type { Point, PointWithSymptoms } from "../types/api";
+import type { LocalPoint } from "../types/database";
 import { apiService } from "../services/api";
 import { databaseService } from "../services/database";
+import { useAuthStore } from "./authStore";
+import { useSyncStore } from "./syncStore";
+
+const LOCAL_USER_ID = "local";
+
+const parseCoordinates = (value?: string | null) => {
+  if (!value) {
+    return undefined;
+  }
+
+  try {
+    return JSON.parse(value);
+  } catch {
+    return undefined;
+  }
+};
+
+const mapLocalPointToPoint = (local: LocalPoint, isFavorite: boolean): Point => {
+  const coordinates = parseCoordinates(local.coordinates);
+  const imageUrl = local.image_path ?? undefined;
+
+  return {
+    id: local.id,
+    code: local.code ?? "",
+    name: local.name,
+    chinese_name: local.chinese_name,
+    chineseName: local.chinese_name,
+    meridian: local.meridian,
+    location: local.location,
+    indications: local.indications ?? undefined,
+    contraindications: local.contraindications ?? undefined,
+    coordinates,
+    image_url: imageUrl,
+    imageUrls: imageUrl ? [imageUrl] : undefined,
+    favoriteCount: local.favorite_count ?? undefined,
+    isFavorite,
+  };
+};
+
+const getCurrentUserId = (): string => {
+  const user = useAuthStore.getState().user;
+  if (!user || user.id === undefined || user.id === null) {
+    return LOCAL_USER_ID;
+  }
+  return String(user.id);
+};
+
+const getActiveFavoriteIds = async (userId: string): Promise<Set<string>> => {
+  try {
+    const favorites = await databaseService.getFavorites(userId);
+    return new Set(
+      favorites
+        .filter((favorite) => favorite.operation !== "DELETE")
+        .map((favorite) => favorite.point_id)
+    );
+  } catch (error) {
+    console.warn("Failed to load favorite ids:", error);
+    return new Set<string>();
+  }
+};
+
+const applyFavoriteFlags = (
+  points: Point[],
+  favoriteIds: Set<string>
+): Point[] =>
+  points.map((point) => ({
+    ...point,
+    isFavorite: favoriteIds.has(point.id) || Boolean(point.isFavorite),
+  }));
+
+const loadLocalFavorites = async (userId: string): Promise<Point[]> => {
+  try {
+    const favorites = await databaseService.getFavorites(userId);
+    const activeFavorites = favorites.filter(
+      (favorite) => favorite.operation !== "DELETE"
+    );
+
+    const points: Point[] = [];
+    for (const favorite of activeFavorites) {
+      const localPoint = await databaseService.getPointById(favorite.point_id);
+      if (localPoint) {
+        points.push(mapLocalPointToPoint(localPoint, true));
+      }
+    }
+
+    return points;
+  } catch (error) {
+    console.error("Failed to load local favorites:", error);
+    return [];
+  }
+};
 
 interface PointsState {
-  // State
   points: Point[];
   favorites: Point[];
   selectedPoint: PointWithSymptoms | null;
@@ -13,338 +103,504 @@ interface PointsState {
   meridians: Array<{ meridian: string; point_count: number }>;
   loading: boolean;
   error: string | null;
-
-  // Actions
   loadPoints: (params?: {
     limit?: number;
     offset?: number;
     meridian?: string;
   }) => Promise<void>;
-  loadPoint: (id: number) => Promise<void>;
+  loadPoint: (id: string) => Promise<void>;
   searchPoints: (query: string) => Promise<void>;
+  searchPointByCode: (code: string) => Promise<void>;
+  loadPointsByMeridian: (meridian: string) => Promise<void>;
+  loadPopularPoints: (limit?: number) => Promise<void>;
   loadMeridians: () => Promise<void>;
   loadFavorites: () => Promise<void>;
-  toggleFavorite: (pointId: number) => Promise<void>;
+  toggleFavorite: (pointId: string) => Promise<void>;
   clearSearch: () => void;
   setError: (error: string | null) => void;
   setLoading: (loading: boolean) => void;
-
-  // Offline methods
   getLocalPoints: () => Promise<void>;
-  getLocalPoint: (id: number) => Promise<void>;
+  getLocalPoint: (id: string) => Promise<void>;
   syncPoints: () => Promise<void>;
 }
 
-export const usePointsStore = create<PointsState>((set, get) => ({
-  // Initial state
-  points: [],
-  favorites: [],
-  selectedPoint: null,
-  searchResults: [],
-  meridians: [],
-  loading: false,
-  error: null,
+export const usePointsStore = create<PointsState>((set, get) => {
+  const applyFavoritesToState = (favoritePoints: Point[]) => {
+    const favoriteIds = new Set(favoritePoints.map((point) => point.id));
+    set((state) => ({
+      favorites: favoritePoints,
+      points: applyFavoriteFlags(state.points, favoriteIds),
+      searchResults: applyFavoriteFlags(state.searchResults, favoriteIds),
+      loading: false,
+      error: null,
+    }));
+  };
 
-  // Actions
-  loadPoints: async (params) => {
-    try {
+  const updateCollectionsForFavorite = (point: Point, isFavorite: boolean) => {
+    set((state) => {
+      const updateList = (list: Point[]) =>
+        list.map((item) =>
+          item.id === point.id ? { ...item, isFavorite } : item
+        );
+
+      const filteredFavorites = state.favorites.filter(
+        (favorite) => favorite.id !== point.id
+      );
+
+      return {
+        favorites: isFavorite
+          ? [{ ...point, isFavorite: true }, ...filteredFavorites]
+          : filteredFavorites,
+        points: updateList(state.points),
+        searchResults: updateList(state.searchResults),
+        error: null,
+      };
+    });
+  };
+
+  const revertCollectionsForFavorite = (
+    pointId: string,
+    snapshot: Point,
+    shouldBeFavorite: boolean
+  ) => {
+    set((state) => {
+      const updateList = (list: Point[]) =>
+        list.map((item) =>
+          item.id === pointId ? { ...item, isFavorite: shouldBeFavorite } : item
+        );
+
+      const filteredFavorites = state.favorites.filter(
+        (favorite) => favorite.id !== pointId
+      );
+
+      return {
+        favorites: shouldBeFavorite
+          ? [{ ...snapshot, isFavorite: true }, ...filteredFavorites]
+          : filteredFavorites,
+        points: updateList(state.points),
+        searchResults: updateList(state.searchResults),
+        error: "Não foi possível sincronizar. Verifique sua conexão.",
+      };
+    });
+  };
+
+  return {
+    points: [],
+    favorites: [],
+    selectedPoint: null,
+    searchResults: [],
+    meridians: [],
+    loading: false,
+    error: null,
+
+    loadPoints: async (params) => {
       set({ loading: true, error: null });
+      const userId = getCurrentUserId();
 
-      const response = await apiService.getPoints(params);
-
-      set({
-        points: response.points,
-        loading: false,
-      });
-    } catch (error: any) {
-      console.error("Load points error:", error);
-
-      // Try to load from local database
       try {
-        await get().getLocalPoints();
-      } catch (localError) {
+        const response = await apiService.getPoints(params);
+        const favoriteIds = await getActiveFavoriteIds(userId);
         set({
-          error: error.message || "Failed to load points",
+          points: applyFavoriteFlags(response.points, favoriteIds),
           loading: false,
         });
-      }
-    }
-  },
+      } catch (error: any) {
+        console.error("Load points error:", error);
 
-  loadPoint: async (id: number) => {
-    try {
-      set({ loading: true, error: null });
-
-      const response = await apiService.getPoint(id);
-
-      set({
-        selectedPoint: response.point,
-        loading: false,
-      });
-    } catch (error: any) {
-      console.error("Load point error:", error);
-
-      // Try to load from local database
-      try {
-        await get().getLocalPoint(id);
-      } catch (localError) {
-        set({
-          error: error.message || "Failed to load point",
-          loading: false,
-        });
-      }
-    }
-  },
-
-  searchPoints: async (query: string) => {
-    try {
-      set({ loading: true, error: null });
-
-      const response = await apiService.searchPoints(query);
-
-      set({
-        searchResults: response.points,
-        loading: false,
-      });
-    } catch (error: any) {
-      console.error("Search points error:", error);
-
-      // Try to search locally
-      try {
-        const localPoints = await databaseService.searchPoints(query);
-        set({
-          searchResults: localPoints.map((p) => ({
-            id: p.id,
-            code: "", // LocalPoint doesn't have code
-            name: p.name,
-            chinese_name: p.chinese_name,
-            meridian: p.meridian,
-            location: p.location,
-            indications: p.indications,
-            contraindications: p.contraindications,
-            coordinates: p.coordinates ? JSON.parse(p.coordinates) : undefined,
-            image_url: p.image_path,
-          })),
-          loading: false,
-        });
-      } catch (localError) {
-        set({
-          error: error.message || "Failed to search points",
-          loading: false,
-        });
-      }
-    }
-  },
-
-  loadMeridians: async () => {
-    try {
-      set({ loading: true, error: null });
-
-      const response = await apiService.getMeridians();
-
-      set({
-        meridians: response.meridians,
-        loading: false,
-      });
-    } catch (error: any) {
-      console.error("Load meridians error:", error);
-      set({
-        error: error.message || "Failed to load meridians",
-        loading: false,
-      });
-    }
-  },
-
-  loadFavorites: async () => {
-    try {
-      set({ loading: true, error: null });
-
-      // Try to load from API first
-      try {
-        const response = await apiService.getFavorites();
-        set({
-          favorites: response.points,
-          loading: false,
-        });
-      } catch (apiError) {
-        // Fall back to local favorites
-        const localFavorites = await databaseService.getFavorites(1); // Assuming user id 1
-        set({
-          favorites: localFavorites.map((p) => ({
-            id: p.id,
-            code: "",
-            name: p.name,
-            chinese_name: p.chinese_name,
-            meridian: p.meridian,
-            location: p.location,
-            indications: p.indications,
-            contraindications: p.contraindications,
-            coordinates: p.coordinates ? JSON.parse(p.coordinates) : undefined,
-            image_url: p.image_path,
-          })),
-          loading: false,
-        });
-      }
-    } catch (error: any) {
-      console.error("Load favorites error:", error);
-      set({
-        error: error.message || "Failed to load favorites",
-        loading: false,
-      });
-    }
-  },
-
-  toggleFavorite: async (pointId: number) => {
-    try {
-      const { favorites } = get();
-      const isFavorite = favorites.some((p) => p.id === pointId);
-
-      if (isFavorite) {
-        // Remove from favorites
         try {
-          await apiService.removeFavorite(pointId);
-        } catch (apiError) {
-          // Remove locally
-          await databaseService.removeFavorite(pointId, 1);
-        }
-
-        set({
-          favorites: favorites.filter((p) => p.id !== pointId),
-        });
-      } else {
-        // Add to favorites
-        try {
-          await apiService.addFavorite(pointId);
-        } catch (apiError) {
-          // Add locally
-          await databaseService.addFavorite(pointId, 1);
-        }
-
-        // Find the point to add to favorites
-        const point =
-          get().points.find((p) => p.id === pointId) ||
-          get().searchResults.find((p) => p.id === pointId);
-
-        if (point) {
+          await get().getLocalPoints();
+        } catch {
+          const message =
+            error instanceof Error ? error.message : "Failed to load points";
           set({
-            favorites: [...favorites, point],
+            error: message,
+            loading: false,
           });
         }
       }
-    } catch (error: any) {
-      console.error("Toggle favorite error:", error);
-      set({ error: error.message || "Failed to toggle favorite" });
-    }
-  },
+    },
 
-  clearSearch: () => {
-    set({ searchResults: [] });
-  },
+    loadPoint: async (id: string) => {
+      set({ loading: true, error: null });
+      const userId = getCurrentUserId();
 
-  setError: (error: string | null) => {
-    set({ error });
-  },
+      try {
+        const response = await apiService.getPoint(id);
+        let isFavorite = Boolean(response.point.isFavorite);
 
-  setLoading: (loading: boolean) => {
-    set({ loading });
-  },
+        if (!isFavorite) {
+          try {
+            isFavorite = await databaseService.isFavorite(id, userId);
+          } catch {
+            // Ignore local lookup failure, keep API value
+          }
+        }
 
-  // Offline methods
-  getLocalPoints: async () => {
-    try {
-      const localPoints = await databaseService.getPoints();
-
-      set({
-        points: localPoints.map((p) => ({
-          id: p.id,
-          code: "",
-          name: p.name,
-          chinese_name: p.chinese_name,
-          meridian: p.meridian,
-          location: p.location,
-          indications: p.indications,
-          contraindications: p.contraindications,
-          coordinates: p.coordinates ? JSON.parse(p.coordinates) : undefined,
-          image_url: p.image_path,
-        })),
-        loading: false,
-      });
-    } catch (error: any) {
-      console.error("Get local points error:", error);
-      throw error;
-    }
-  },
-
-  getLocalPoint: async (id: number) => {
-    try {
-      const localPoint = await databaseService.getPointById(id);
-
-      if (localPoint) {
         set({
           selectedPoint: {
-            id: localPoint.id,
-            code: "",
-            name: localPoint.name,
-            chinese_name: localPoint.chinese_name,
-            meridian: localPoint.meridian,
-            location: localPoint.location,
-            indications: localPoint.indications,
-            contraindications: localPoint.contraindications,
-            coordinates: localPoint.coordinates
-              ? JSON.parse(localPoint.coordinates)
-              : undefined,
-            image_url: localPoint.image_path,
-            symptoms: [], // No symptoms data in local storage
+            ...response.point,
+            isFavorite,
           },
           loading: false,
         });
-      } else {
-        throw new Error("Point not found locally");
+      } catch (error: any) {
+        console.error("Load point error:", error);
+
+        try {
+          await get().getLocalPoint(id);
+        } catch {
+          const message =
+            error instanceof Error ? error.message : "Failed to load point";
+          set({
+            error: message,
+            loading: false,
+          });
+        }
       }
-    } catch (error: any) {
-      console.error("Get local point error:", error);
-      throw error;
-    }
-  },
+    },
 
-  syncPoints: async () => {
-    try {
-      set({ loading: true });
+    searchPoints: async (query: string) => {
+      set({ loading: true, error: null });
+      const userId = getCurrentUserId();
 
-      // Get points from API
-      const response = await apiService.getPoints();
+      try {
+        const response = await apiService.searchPoints(query);
+        const favoriteIds = await getActiveFavoriteIds(userId);
 
-      // Update local database
-      for (const point of response.points) {
-        await databaseService.insertPoint({
-          name: point.name,
-          chinese_name: point.chinese_name,
-          meridian: point.meridian,
-          location: point.location,
-          indications: point.indications,
-          contraindications: point.contraindications,
-          coordinates: point.coordinates
-            ? JSON.stringify(point.coordinates)
-            : undefined,
-          image_path: point.image_url,
-          synced: true,
-          last_sync: new Date().toISOString(),
+        set({
+          searchResults: applyFavoriteFlags(response.points, favoriteIds),
+          loading: false,
+        });
+      } catch (error) {
+        console.error("Search points error:", error);
+        const message =
+          error instanceof Error ? error.message : "Failed to search points";
+        set({
+          error: message,
+          loading: false,
         });
       }
+    },
 
-      // Update state
-      set({
-        points: response.points,
-        loading: false,
-      });
+    searchPointByCode: async (code: string) => {
+      set({ loading: true, error: null });
+      const userId = getCurrentUserId();
 
-      console.log("Points synced successfully");
-    } catch (error: any) {
-      console.error("Sync points error:", error);
-      set({
-        error: error.message || "Failed to sync points",
-        loading: false,
-      });
-    }
-  },
-}));
+      try {
+        const response = await apiService.getPointByCode(code);
+        let isFavorite = Boolean(response.point.isFavorite);
+
+        if (!isFavorite) {
+          try {
+            isFavorite = await databaseService.isFavorite(
+              response.point.id,
+              userId
+            );
+          } catch {
+            // Ignore lookup failure
+          }
+        }
+
+        set({
+          selectedPoint: {
+            ...response.point,
+            isFavorite,
+          },
+          loading: false,
+        });
+      } catch (error) {
+        console.error("Search point by code error:", error);
+        const message =
+          error instanceof Error ? error.message : "Failed to find point";
+        set({
+          error: message,
+          loading: false,
+        });
+      }
+    },
+
+    loadPointsByMeridian: async (meridian: string) => {
+      set({ loading: true, error: null });
+      const userId = getCurrentUserId();
+
+      try {
+        const response = await apiService.getPointsByMeridian(meridian);
+        const favoriteIds = await getActiveFavoriteIds(userId);
+
+        set({
+          points: applyFavoriteFlags(response.points, favoriteIds),
+          loading: false,
+        });
+      } catch (error) {
+        console.error("Load points by meridian error:", error);
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Failed to load points by meridian";
+        set({
+          error: message,
+          loading: false,
+        });
+      }
+    },
+
+    loadPopularPoints: async (limit = 10) => {
+      set({ loading: true, error: null });
+      const userId = getCurrentUserId();
+
+      try {
+        const response = await apiService.getPopularPoints(limit);
+        const favoriteIds = await getActiveFavoriteIds(userId);
+
+        set({
+          points: applyFavoriteFlags(response.points, favoriteIds),
+          loading: false,
+        });
+      } catch (error) {
+        console.error("Load popular points error:", error);
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Failed to load popular points";
+        set({
+          error: message,
+          loading: false,
+        });
+      }
+    },
+
+    loadMeridians: async () => {
+      set({ loading: true, error: null });
+
+      try {
+        const response = await apiService.getMeridians();
+
+        set({
+          meridians: response.meridians,
+          loading: false,
+        });
+      } catch (error) {
+        console.error("Load meridians error:", error);
+        const message =
+          error instanceof Error ? error.message : "Failed to load meridians";
+        set({
+          error: message,
+          loading: false,
+        });
+      }
+    },
+
+    loadFavorites: async () => {
+      set({ loading: true, error: null });
+      const { user } = useAuthStore.getState();
+      const hasAuthenticatedUser = Boolean(
+        user && user.id !== undefined && user.id !== null
+      );
+      const userId = hasAuthenticatedUser ? String(user!.id) : LOCAL_USER_ID;
+
+      if (!hasAuthenticatedUser) {
+        const localFavorites = await loadLocalFavorites(userId);
+        applyFavoritesToState(localFavorites);
+        return;
+      }
+
+      try {
+        const response = await apiService.getFavorites();
+        const favoritesWithFlag = response.points.map((point) => ({
+          ...point,
+          isFavorite: true,
+        }));
+
+        await databaseService.replaceFavorites(
+          userId,
+          favoritesWithFlag.map((point) => point.id)
+        );
+        await databaseService
+          .updateSyncStatus("favorites", "success")
+          .catch(() => undefined);
+
+        applyFavoritesToState(favoritesWithFlag);
+      } catch (error) {
+        console.warn(
+          "Failed to load favorites from API, using local cache:",
+          error
+        );
+
+        const localFavorites = await loadLocalFavorites(userId);
+        if (localFavorites.length === 0) {
+          const message =
+            error instanceof Error
+              ? error.message
+              : "Failed to load favorites";
+          set({
+            favorites: [],
+            loading: false,
+            error: message,
+          });
+        } else {
+          applyFavoritesToState(localFavorites);
+        }
+      }
+    },
+
+    toggleFavorite: async (pointId: string) => {
+      const state = get();
+      const isCurrentlyFavorite = state.favorites.some(
+        (favorite) => favorite.id === pointId
+      );
+      const shouldFavorite = !isCurrentlyFavorite;
+
+      let point =
+        state.points.find((item) => item.id === pointId) ??
+        state.searchResults.find((item) => item.id === pointId) ??
+        state.favorites.find((item) => item.id === pointId);
+
+      if (!point && shouldFavorite) {
+        const localPoint = await databaseService.getPointById(pointId);
+        if (localPoint) {
+          point = mapLocalPointToPoint(localPoint, true);
+        }
+      }
+
+      if (!point) {
+        throw new Error("Point not found");
+      }
+
+      const originalSnapshot: Point = {
+        ...point,
+        isFavorite: isCurrentlyFavorite,
+      };
+      const updatedPoint: Point = { ...point, isFavorite: shouldFavorite };
+
+      updateCollectionsForFavorite(updatedPoint, shouldFavorite);
+
+      try {
+        const { user } = useAuthStore.getState();
+        const hasAuthenticatedUser = Boolean(
+          user && user.id !== undefined && user.id !== null
+        );
+        const userId = hasAuthenticatedUser
+          ? String(user!.id)
+          : LOCAL_USER_ID;
+
+        if (!hasAuthenticatedUser) {
+          await databaseService.setFavoriteStatus({
+            pointId,
+            userId,
+            isFavorite: shouldFavorite,
+            synced: true,
+          });
+          return;
+        }
+
+        await databaseService.setFavoriteStatus({
+          pointId,
+          userId,
+          isFavorite: shouldFavorite,
+          synced: false,
+        });
+
+        await databaseService.enqueueFavoriteOperation(
+          userId,
+          pointId,
+          shouldFavorite ? "ADD" : "REMOVE"
+        );
+
+        const syncStore = useSyncStore.getState();
+        if (syncStore.isOnline) {
+          await syncStore.processSyncQueue();
+        } else {
+          await syncStore.refreshPendingOperations();
+        }
+      } catch (error) {
+        console.error("Toggle favorite error:", error);
+        revertCollectionsForFavorite(pointId, originalSnapshot, isCurrentlyFavorite);
+        throw new Error("Não foi possível sincronizar. Verifique sua conexão.");
+      }
+    },
+
+    clearSearch: () => {
+      set({ searchResults: [] });
+    },
+
+    setError: (error: string | null) => {
+      set({ error });
+    },
+
+    setLoading: (loading: boolean) => {
+      set({ loading });
+    },
+
+    getLocalPoints: async () => {
+      const userId = getCurrentUserId();
+
+      try {
+        const [localPoints, favoriteIds] = await Promise.all([
+          databaseService.getPoints(),
+          getActiveFavoriteIds(userId),
+        ]);
+
+        const points = localPoints.map((point) =>
+          mapLocalPointToPoint(point, favoriteIds.has(point.id))
+        );
+
+        set({
+          points,
+          loading: false,
+        });
+      } catch (error) {
+        console.error("Get local points error:", error);
+        set({ loading: false });
+        throw error;
+      }
+    },
+
+    getLocalPoint: async (id: string) => {
+      const userId = getCurrentUserId();
+
+      try {
+        const [localPoint, favoriteIds] = await Promise.all([
+          databaseService.getPointById(id),
+          getActiveFavoriteIds(userId),
+        ]);
+
+        if (!localPoint) {
+          throw new Error("Point not found locally");
+        }
+
+        const point = mapLocalPointToPoint(localPoint, favoriteIds.has(id));
+        const pointWithSymptoms: PointWithSymptoms = {
+          ...point,
+          symptoms: [],
+        };
+
+        set({
+          selectedPoint: pointWithSymptoms,
+          loading: false,
+        });
+      } catch (error) {
+        console.error("Get local point error:", error);
+        set({ loading: false });
+        throw error;
+      }
+    },
+
+    syncPoints: async () => {
+      const syncStore = useSyncStore.getState();
+      set({ loading: true, error: null });
+
+      try {
+        await syncStore.syncPoints();
+        await get().getLocalPoints();
+      } catch (error) {
+        console.error("Sync points error:", error);
+        const message =
+          error instanceof Error ? error.message : "Failed to sync points";
+        set({
+          error: message,
+          loading: false,
+        });
+      }
+    },
+  };
+});
