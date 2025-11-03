@@ -605,6 +605,8 @@ class DatabaseService {
     timestamp?: string
   ): Promise<void> {
     const db = this.getDb();
+    // Use provided timestamp for conflict resolution, or current time for new operations
+    // This ensures all operations have timestamps for proper conflict resolution
     const payload = JSON.stringify({ 
       userId, 
       pointId, 
