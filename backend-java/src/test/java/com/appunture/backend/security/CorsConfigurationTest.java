@@ -174,6 +174,15 @@ class CorsConfigurationTest {
 
     /**
      * Método auxiliar que replica a lógica de SecurityConfig.corsConfigurationSource()
+     * 
+     * Nota: Esta duplicação é intencional para testes unitários.
+     * O objetivo é validar a lógica de configuração CORS isoladamente,
+     * sem dependências do contexto Spring. Isso permite:
+     * 1. Testes rápidos e independentes
+     * 2. Validação da lógica sem carregar o contexto Spring
+     * 3. Detecção de regressões na lógica de configuração
+     * 
+     * Se a lógica em SecurityConfig mudar, este método também deve ser atualizado.
      */
     private CorsConfiguration createCorsConfiguration(SecurityProperties.Cors cors) {
         CorsConfiguration configuration = new CorsConfiguration();
