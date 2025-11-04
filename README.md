@@ -117,6 +117,14 @@ Operações de criação/alteração/remoção exigem ROLE_ADMIN.
 
 ## 📊 Documentação e Análises
 
+- **[TASKS.md](./TASKS.md)** - 🆕 **Arquivo de Tasks com Prompts Prontos** (3092 linhas)
+  - 28 tarefas detalhadas organizadas por prioridade
+  - Prompts completos e prontos para execução
+  - Critérios de aceitação para cada task
+  - Estimativas e dependências
+  - Checklists de QA por sprint
+  - **Use este arquivo para implementar melhorias de forma padronizada**
+
 - **[DIAGNOSTICO_COMPLETO.md](./DIAGNOSTICO_COMPLETO.md)** - 🆕 Diagnóstico técnico completo e acionável
   - Sumário executivo com métricas atualizadas
   - O que está implementado (com evidências)
@@ -125,11 +133,13 @@ Operações de criação/alteração/remoção exigem ROLE_ADMIN.
   - Backlog consolidado em 3 sprints
   - Checklist de QA para homologação
   - Riscos e recomendações arquiteturais
-- **[ANALISE_ATUALIZADA.md](./ANALISE_ATUALIZADA.md)** - Análise completa e diagnóstico técnico do projeto (1083 linhas)
+
+- **[ANALISE_ATUALIZADA.md](./ANALISE_ATUALIZADA.md)** - Análise completa e diagnóstico técnico do projeto (1118 linhas)
   - Diagnóstico Backend e Frontend detalhado
   - Backlog priorizado (28 tarefas em 3 sprints)
   - Critérios de aceitação e checklist de QA
   - Riscos e recomendações arquiteturais
+
 - **[FRONTEND_MOBILE_GAP_ANALYSIS.md](./FRONTEND_MOBILE_GAP_ANALYSIS.md)** - Análise de lacunas Frontend vs Backend
 - **[IMPLEMENTACAO_RELATORIO.md](./IMPLEMENTACAO_RELATORIO.md)** - Relatório de implementação detalhado
 - **[LEIA-ME_ANALISE.md](./LEIA-ME_ANALISE.md)** - Resumo executivo das análises
@@ -160,7 +170,10 @@ Operações de criação/alteração/remoção exigem ROLE_ADMIN.
 - Internacionalização (pt/en)
 - Documentação completa
 
-**Para detalhes completos, consultar [ANALISE_ATUALIZADA.md](./ANALISE_ATUALIZADA.md)**
+**Para detalhes completos, consultar:**
+- **[TASKS.md](./TASKS.md)** - Tarefas com prompts prontos para execução
+- **[ANALISE_ATUALIZADA.md](./ANALISE_ATUALIZADA.md)** - Análise técnica completa
+- **[DIAGNOSTICO_COMPLETO.md](./DIAGNOSTICO_COMPLETO.md)** - Diagnóstico acionável
 
 ## Aviso Acadêmico
 
