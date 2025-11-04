@@ -49,10 +49,26 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
+    /**
+     * ⚠️ SEGURANÇA CRÍTICA - CORS CONFIGURATION
+     * 
+     * NUNCA usar allowedOrigins("*") em produção!
+     * Isso permite que qualquer site faça requests à API, abrindo brecha para:
+     * - CSRF (Cross-Site Request Forgery)
+     * - XSS (Cross-Site Scripting)
+     * - Data leakage
+     * 
+     * Sempre especificar domínios permitidos explicitamente.
+     * Em produção, usar apenas HTTPS.
+     * 
+     * Configuração é feita através de:
+     * - application-dev.yml: Para desenvolvimento (localhost patterns)
+     * - application-prod.yml: Para produção (domínios específicos HTTPS)
+     * 
+     * @return CorsConfigurationSource configurado de acordo com o ambiente
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        // SECURITY WARNING: Never use allowedOrigins("*") in production!
-        // Always configure specific domains in application-{profile}.yml
         CorsConfiguration configuration = new CorsConfiguration();
         SecurityProperties.Cors cors = securityProperties.getCors();
 
@@ -69,7 +85,13 @@ public class SecurityConfig {
                 configuration.setAllowedOrigins(allowedOrigins);
             }
         } else {
-            configuration.setAllowedOriginPatterns(List.of("*"));
+            // ⚠️ SEGURANÇA: Se nenhum origin foi configurado, não permitir nenhum!
+            // Isso força a configuração explícita em application.yml
+            configuration.setAllowedOrigins(List.of());
+            throw new IllegalStateException(
+                "CORS não configurado! Configure 'app.security.cors.allowed-origins' " +
+                "ou 'app.security.cors.allowed-origin-patterns' em application.yml"
+            );
         }
 
         configuration.setAllowedMethods(cors.getAllowedMethods());

@@ -1,14 +1,4 @@
 # application-dev.yml - Configuração para desenvolvimento local
-spring:
-  profiles:
-    active: dev
-  datasource:
-    url: jdbc:postgresql://localhost:5432/appunture
-    username: appunture
-    password: password123
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
 
 # Configurações Firebase - Para desenvolvimento local
 firebase:
