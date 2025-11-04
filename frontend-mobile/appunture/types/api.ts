@@ -12,6 +12,7 @@ export interface Point {
   location: string;
   indications?: string;
   contraindications?: string;
+  functions?: string;
   coordinates?: {
     x: number;
     y: number;
@@ -23,6 +24,7 @@ export interface Point {
   updated_at?: string;
   createdAt?: string; // Backend uses camelCase
   updatedAt?: string; // Backend uses camelCase
+  pendingSync?: boolean;
 }
 
 export interface Symptom {
@@ -35,6 +37,9 @@ export interface Symptom {
   useCount?: number; // Backend tracks usage
   created_at?: string;
   createdAt?: string; // Backend uses camelCase
+  updated_at?: string;
+  updatedAt?: string;
+  pendingSync?: boolean;
 }
 
 export interface PointWithSymptoms extends Point {
@@ -92,6 +97,7 @@ export interface CategoriesResponse {
 export interface ApiError {
   error: string;
   message?: string;
+  status?: number;
 }
 
 // Local Database Types

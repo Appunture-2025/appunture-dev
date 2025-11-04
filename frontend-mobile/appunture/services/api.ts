@@ -8,6 +8,7 @@ import axios, {
 import {
   Point,
   Symptom,
+  Note,
   User,
   LoginResponse,
   RegisterResponse,
@@ -90,14 +91,17 @@ class ApiService {
           const responseData = error.response.data as any;
           apiError.error = responseData?.error || "Server Error";
           apiError.message = responseData?.message || error.message;
+          apiError.status = error.response.status;
         } else if (error.request) {
           // Request was made but no response received
           apiError.error = "Network Error";
           apiError.message = "No response from server";
+          apiError.status = undefined;
         } else {
           // Something else happened
           apiError.error = "Request Error";
           apiError.message = error.message;
+          apiError.status = undefined;
         }
 
         return Promise.reject(apiError);
@@ -389,6 +393,46 @@ class ApiService {
 
   async deleteSymptom(id: string): Promise<void> {
     await this.client.delete(`/symptoms/${id}`);
+  }
+
+  // Notes endpoints
+  async createNote(noteData: {
+    pointId: string;
+    content: string;
+    userId: string;
+  }): Promise<{ note: Note }> {
+    const response = await this.client.post<{ note: Note }>(
+      "/notes",
+      noteData
+    );
+    return response.data;
+  }
+
+  async updateNote(
+    noteId: string,
+    noteData: {
+      pointId: string;
+      content: string;
+      userId: string;
+    }
+  ): Promise<{ note: Note }> {
+    const response = await this.client.put<{ note: Note }>(
+      `/notes/${noteId}`,
+      noteData
+    );
+    return response.data;
+  }
+
+  async deleteNote(noteId: string): Promise<void> {
+    await this.client.delete(`/notes/${noteId}`);
+  }
+
+  async logSearchHistory(entry: {
+    query: string;
+    type: string;
+    timestamp: string;
+  }): Promise<void> {
+    await this.client.post("/search/history", entry);
   }
 
   // Statistics

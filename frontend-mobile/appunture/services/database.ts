@@ -7,6 +7,7 @@ import {
   SearchHistory,
   SyncOperation,
   ImageSyncOperation,
+  SyncEntityType,
 } from "../types/database";
 import { DATABASE_NAME, DATABASE_VERSION } from "../utils/constants";
 
@@ -16,6 +17,14 @@ type RawRow = Record<string, any>;
 
 class DatabaseService {
   private db: SQLite.SQLiteDatabase | null = null;
+
+  private generateOperationId(prefix?: string): string {
+    const random = Math.random().toString(36).slice(2, 10);
+    const time = Date.now().toString(36);
+    return [prefix, time, random]
+      .filter(Boolean)
+      .join(":");
+  }
 
   async init(): Promise<void> {
     try {
@@ -274,18 +283,6 @@ class DatabaseService {
       status TEXT NOT NULL DEFAULT 'success'
     )`);
 
-    await db.execAsync(`CREATE TABLE IF NOT EXISTS sync_queue (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      entity TEXT NOT NULL,
-      entity_id TEXT NOT NULL,
-      operation TEXT NOT NULL,
-      payload TEXT,
-      status TEXT NOT NULL DEFAULT 'pending',
-      retry_count INTEGER NOT NULL DEFAULT 0,
-      last_attempt DATETIME,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
-
     await db.execAsync(`CREATE TABLE IF NOT EXISTS image_sync_queue (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       point_id TEXT NOT NULL,
@@ -301,6 +298,8 @@ class DatabaseService {
   private async createIndexes(): Promise<void> {
     const db = this.getDb();
 
+    await this.ensureSyncQueueSchema();
+
     const statements = [
       "CREATE INDEX IF NOT EXISTS idx_points_meridian ON points(meridian)",
       "CREATE INDEX IF NOT EXISTS idx_points_name ON points(name)",
@@ -311,13 +310,72 @@ class DatabaseService {
       "CREATE INDEX IF NOT EXISTS idx_favorites_point ON favorites(point_id)",
       "CREATE INDEX IF NOT EXISTS idx_notes_point ON notes(point_id)",
       "CREATE INDEX IF NOT EXISTS idx_sync_queue_status ON sync_queue(status)",
-      "CREATE INDEX IF NOT EXISTS idx_sync_queue_entity ON sync_queue(entity, entity_id)",
+      "CREATE INDEX IF NOT EXISTS idx_sync_queue_entity ON sync_queue(entity_type)",
+      "CREATE INDEX IF NOT EXISTS idx_sync_queue_reference ON sync_queue(reference)",
       "CREATE INDEX IF NOT EXISTS idx_image_sync_queue_status ON image_sync_queue(status)",
       "CREATE INDEX IF NOT EXISTS idx_image_sync_queue_point ON image_sync_queue(point_id)",
     ];
 
     for (const statement of statements) {
       await db.execAsync(statement);
+    }
+  }
+
+  private async ensureSyncQueueSchema(): Promise<void> {
+    const db = this.getDb();
+
+    let needsRecreate = false;
+    try {
+      const columns = (await db.getAllAsync("PRAGMA table_info(sync_queue)")) as Array<RawRow>;
+      if (columns.length === 0) {
+        needsRecreate = true;
+      } else {
+        const columnNames = new Set(columns.map((column) => String(column.name)));
+        const requiredColumns = [
+          "id",
+          "entity_type",
+          "operation",
+          "data",
+          "timestamp",
+          "retry_count",
+          "status",
+          "created_at",
+        ];
+
+        needsRecreate = requiredColumns.some((column) => !columnNames.has(column));
+
+        if (!needsRecreate) {
+          if (!columnNames.has("reference")) {
+            await db.execAsync("ALTER TABLE sync_queue ADD COLUMN reference TEXT");
+          }
+          if (!columnNames.has("last_error")) {
+            await db.execAsync("ALTER TABLE sync_queue ADD COLUMN last_error TEXT");
+          }
+          if (!columnNames.has("last_attempt")) {
+            await db.execAsync("ALTER TABLE sync_queue ADD COLUMN last_attempt INTEGER");
+          }
+        }
+      }
+    } catch (error) {
+      console.warn("Failed to inspect sync_queue schema, recreating table", error);
+      needsRecreate = true;
+    }
+
+    if (needsRecreate) {
+      await db.execAsync("DROP TABLE IF EXISTS sync_queue");
+      await db.execAsync(`CREATE TABLE IF NOT EXISTS sync_queue (
+        id TEXT PRIMARY KEY,
+        entity_type TEXT NOT NULL,
+        operation TEXT NOT NULL,
+        data TEXT NOT NULL,
+        reference TEXT,
+        timestamp INTEGER NOT NULL,
+        retry_count INTEGER NOT NULL DEFAULT 0,
+        last_error TEXT,
+        last_attempt INTEGER,
+        status TEXT NOT NULL DEFAULT 'pending',
+        created_at INTEGER NOT NULL
+      )`);
     }
   }
 
@@ -395,6 +453,19 @@ class DatabaseService {
     await db.runAsync(
       `DELETE FROM points WHERE id NOT IN (${placeholders})`,
       ids
+    );
+  }
+
+  async deletePointById(id: string): Promise<void> {
+    const db = this.getDb();
+    await db.runAsync("DELETE FROM points WHERE id = ?", [id]);
+  }
+
+  async markPointSynced(id: string, lastSync?: string): Promise<void> {
+    const db = this.getDb();
+    await db.runAsync(
+      "UPDATE points SET synced = 1, last_sync = ? WHERE id = ?",
+      [lastSync ?? new Date().toISOString(), id]
     );
   }
 
@@ -502,6 +573,19 @@ class DatabaseService {
     return result;
   }
 
+  async deleteSymptomById(id: string): Promise<void> {
+    const db = this.getDb();
+    await db.runAsync("DELETE FROM symptoms WHERE id = ?", [id]);
+  }
+
+  async markSymptomSynced(id: string, lastSync?: string): Promise<void> {
+    const db = this.getDb();
+    await db.runAsync(
+      "UPDATE symptoms SET synced = 1, last_sync = ? WHERE id = ?",
+      [lastSync ?? new Date().toISOString(), id]
+    );
+  }
+
   async searchSymptoms(query: string): Promise<LocalSymptom[]> {
     const db = this.getDb();
     const searchTerm = `%${query}%`;
@@ -603,69 +687,240 @@ class DatabaseService {
     pointId: string,
     action: "ADD" | "REMOVE",
     timestamp?: string
-  ): Promise<void> {
-    const db = this.getDb();
-    // Use provided timestamp for conflict resolution, or current time for new operations
-    // This ensures all operations have timestamps for proper conflict resolution
-    const payload = JSON.stringify({ 
-      userId, 
-      pointId, 
-      action,
-      timestamp: timestamp || new Date().toISOString()
+  ): Promise<string> {
+    const isoTimestamp = timestamp || new Date().toISOString();
+    const millis = Date.parse(isoTimestamp) || Date.now();
+
+    return this.enqueueSyncOperation({
+      entityType: "favorite",
+      operation: action === "ADD" ? "UPSERT" : "DELETE",
+      data: {
+        userId,
+        pointId,
+        action,
+        timestamp: isoTimestamp,
+      },
+      reference: `favorite:${userId}:${pointId}`,
+      timestamp: millis,
     });
-
-    await db.runAsync(
-      "DELETE FROM sync_queue WHERE entity = ? AND entity_id = ?",
-      ["favorite", `${userId}:${pointId}`]
-    );
-
-    await db.runAsync(
-      `INSERT INTO sync_queue (entity, entity_id, operation, payload, status, retry_count)
-       VALUES ('favorite', ?, ?, ?, 'pending', 0)`,
-      [
-        `${userId}:${pointId}`,
-        action === "ADD" ? "UPSERT" : "DELETE",
-        payload,
-      ]
-    );
   }
 
-  async getPendingOperations(entity?: string, limit = 50): Promise<SyncOperation[]> {
+  async enqueueSyncOperation(params: {
+    entityType: SyncEntityType;
+    operation: string;
+    data: Record<string, unknown>;
+    reference?: string;
+    timestamp?: number;
+    id?: string;
+  }): Promise<string> {
     const db = this.getDb();
-    let query =
-      "SELECT * FROM sync_queue WHERE status IN ('pending', 'retry') ORDER BY created_at LIMIT ?";
-    const params: any[] = [limit];
+    const operationId = params.id ?? this.generateOperationId(params.entityType);
+    const timestamp = params.timestamp ?? Date.now();
 
-    if (entity) {
-      query =
-        "SELECT * FROM sync_queue WHERE entity = ? AND status IN ('pending', 'retry') ORDER BY created_at LIMIT ?";
-      params.unshift(entity);
+    if (params.reference) {
+      await db.runAsync("DELETE FROM sync_queue WHERE reference = ?", [params.reference]);
     }
+
+    await db.runAsync(
+      `INSERT INTO sync_queue (id, entity_type, operation, data, reference, timestamp, retry_count, last_error, last_attempt, status, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, 0, NULL, NULL, 'pending', ?)` ,
+      [
+        operationId,
+        params.entityType,
+        params.operation,
+        JSON.stringify(params.data),
+        params.reference ?? null,
+        timestamp,
+        Date.now(),
+      ]
+    );
+
+    return operationId;
+  }
+
+  async enqueuePointOperation(params: {
+    operation: "CREATE" | "UPDATE" | "DELETE";
+    point: Record<string, unknown> & { id?: string };
+    localId?: string;
+    timestamp?: string;
+  }): Promise<string> {
+    const reference = params.point.id
+      ? `point:${params.point.id}`
+      : params.localId
+      ? `point:local:${params.localId}`
+      : undefined;
+
+    const timestampMs = params.timestamp ? Date.parse(params.timestamp) : undefined;
+    const normalizedTimestamp = typeof timestampMs === "number" && Number.isFinite(timestampMs)
+      ? timestampMs
+      : undefined;
+
+    return this.enqueueSyncOperation({
+      entityType: "point",
+      operation: params.operation,
+      data: {
+        point: params.point,
+        pointId: params.point.id,
+        localId: params.localId,
+        timestamp: params.timestamp ?? new Date().toISOString(),
+      },
+      reference,
+      timestamp: normalizedTimestamp,
+    });
+  }
+
+  async enqueueSymptomOperation(params: {
+    operation: "CREATE" | "UPDATE" | "DELETE";
+    symptom: Record<string, unknown> & { id?: string };
+    timestamp?: string;
+  }): Promise<string> {
+    const reference = params.symptom.id
+      ? `symptom:${params.symptom.id}`
+      : undefined;
+
+    const timestampMs = params.timestamp ? Date.parse(params.timestamp) : undefined;
+    const normalizedTimestamp = typeof timestampMs === "number" && Number.isFinite(timestampMs)
+      ? timestampMs
+      : undefined;
+
+    return this.enqueueSyncOperation({
+      entityType: "symptom",
+      operation: params.operation,
+      data: {
+        symptom: params.symptom,
+        symptomId: params.symptom.id,
+        timestamp: params.timestamp ?? new Date().toISOString(),
+      },
+      reference,
+      timestamp: normalizedTimestamp,
+    });
+  }
+
+  async enqueueNoteOperation(params: {
+    action: "CREATE" | "UPDATE" | "DELETE";
+    noteId?: number | string;
+    pointId: string;
+    content?: string;
+    userId: string;
+    timestamp?: string;
+  }): Promise<string> {
+    const reference = params.noteId ? `note:${params.noteId}` : undefined;
+
+    const timestampMs = params.timestamp ? Date.parse(params.timestamp) : undefined;
+    const normalizedTimestamp = typeof timestampMs === "number" && Number.isFinite(timestampMs)
+      ? timestampMs
+      : undefined;
+
+    return this.enqueueSyncOperation({
+      entityType: "note",
+      operation: params.action,
+      data: {
+        noteId: params.noteId,
+        pointId: params.pointId,
+        content: params.content,
+        userId: params.userId,
+        timestamp: params.timestamp ?? new Date().toISOString(),
+        action: params.action,
+      },
+      reference,
+      timestamp: normalizedTimestamp,
+    });
+  }
+
+  async enqueueSearchHistoryEntry(params: {
+    query: string;
+    type: string;
+    timestamp?: string;
+  }): Promise<string> {
+    const reference = `search:${params.type}:${params.query}`;
+
+    const timestampMs = params.timestamp ? Date.parse(params.timestamp) : undefined;
+    const normalizedTimestamp = typeof timestampMs === "number" && Number.isFinite(timestampMs)
+      ? timestampMs
+      : undefined;
+
+    return this.enqueueSyncOperation({
+      entityType: "search_history",
+      operation: "UPSERT",
+      data: {
+        query: params.query,
+        type: params.type,
+        timestamp: params.timestamp ?? new Date().toISOString(),
+      },
+      reference,
+      timestamp: normalizedTimestamp,
+    });
+  }
+
+  async getQueuedOperations(
+    entityType?: SyncEntityType,
+    limit = 100
+  ): Promise<SyncOperation[]> {
+    const db = this.getDb();
+    const params: any[] = [];
+    let query =
+      "SELECT * FROM sync_queue WHERE status IN ('pending', 'retry')";
+
+    if (entityType) {
+      query += " AND entity_type = ?";
+      params.push(entityType);
+    }
+
+    query += " ORDER BY timestamp ASC LIMIT ?";
+    params.push(limit);
 
     const result = (await db.getAllAsync(query, params)) as SyncOperation[];
     return result;
   }
 
-  async markOperationInProgress(id: number): Promise<void> {
+  async getFailedOperations(limit = 100): Promise<SyncOperation[]> {
+    const db = this.getDb();
+    const result = (await db.getAllAsync(
+      "SELECT * FROM sync_queue WHERE status = 'failed' ORDER BY last_attempt DESC LIMIT ?",
+      [limit]
+    )) as SyncOperation[];
+    return result;
+  }
+
+  async markOperationInProgress(id: string): Promise<void> {
     const db = this.getDb();
     await db.runAsync(
-      `UPDATE sync_queue SET status = 'in_progress', last_attempt = ?, retry_count = retry_count + 1 WHERE id = ?`,
-      [new Date().toISOString(), id]
+      `UPDATE sync_queue
+         SET status = 'in_progress',
+             last_attempt = ?,
+             retry_count = retry_count + 1
+       WHERE id = ?`,
+      [Date.now(), id]
     );
   }
 
-  async markOperationCompleted(id: number): Promise<void> {
+  async markOperationCompleted(id: string): Promise<void> {
     const db = this.getDb();
     await db.runAsync("DELETE FROM sync_queue WHERE id = ?", [id]);
   }
 
-  async markOperationFailed(id: number): Promise<void> {
+  async markOperationFailed(id: string, errorMessage?: string | null): Promise<void> {
     const db = this.getDb();
     await db.runAsync(
       `UPDATE sync_queue
-       SET status = CASE WHEN retry_count >= ? THEN 'failed' ELSE 'retry' END
+         SET status = CASE WHEN retry_count >= ? THEN 'failed' ELSE 'retry' END,
+             last_error = ?,
+             last_attempt = ?
        WHERE id = ?`,
-      [MAX_QUEUE_RETRIES, id]
+      [MAX_QUEUE_RETRIES, errorMessage ?? null, Date.now(), id]
+    );
+  }
+
+  async resetOperation(id: string): Promise<void> {
+    const db = this.getDb();
+    await db.runAsync(
+      `UPDATE sync_queue
+         SET status = 'pending',
+             retry_count = 0,
+             last_error = NULL,
+             last_attempt = NULL
+       WHERE id = ?`,
+      [id]
     );
   }
 
@@ -675,6 +930,11 @@ class DatabaseService {
       "SELECT COUNT(1) AS total FROM sync_queue WHERE status IN ('pending', 'retry', 'in_progress')"
     )) as RawRow | undefined;
     return row ? Number(row.total ?? 0) : 0;
+  }
+
+  async removeOperation(id: string): Promise<void> {
+    const db = this.getDb();
+    await db.runAsync("DELETE FROM sync_queue WHERE id = ?", [id]);
   }
 
   async removeFavorite(pointId: string, userId: string): Promise<void> {
@@ -709,17 +969,40 @@ class DatabaseService {
     return result.lastInsertRowId;
   }
 
-  async updateNote(id: number, content: string): Promise<void> {
+  async updateNote(id: number | string, content: string): Promise<void> {
     const db = this.getDb();
+    const noteId = typeof id === "number" ? id : Number(id);
+    if (!Number.isFinite(noteId)) {
+      return;
+    }
     await db.runAsync(
       "UPDATE notes SET content = ?, updated_at = CURRENT_TIMESTAMP, synced = 0 WHERE id = ?",
-      [content, id]
+      [content, noteId]
     );
   }
 
-  async deleteNote(id: number): Promise<void> {
+  async markNoteSynced(id: number | string | undefined, synced = true): Promise<void> {
     const db = this.getDb();
-    await db.runAsync("DELETE FROM notes WHERE id = ?", [id]);
+    if (id === undefined || id === null) {
+      return;
+    }
+    const noteId = typeof id === "number" ? id : Number(id);
+    if (!Number.isFinite(noteId)) {
+      return;
+    }
+    await db.runAsync(
+      "UPDATE notes SET synced = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+      [synced ? 1 : 0, noteId]
+    );
+  }
+
+  async deleteNote(id: number | string): Promise<void> {
+    const db = this.getDb();
+    const noteId = typeof id === "number" ? id : Number(id);
+    if (!Number.isFinite(noteId)) {
+      return;
+    }
+    await db.runAsync("DELETE FROM notes WHERE id = ?", [noteId]);
   }
 
   async getNotes(pointId: string, userId: string): Promise<Note[]> {
