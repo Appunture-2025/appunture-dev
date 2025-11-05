@@ -1,17 +1,7 @@
 module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
+  preset: 'jest-expo',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  testMatch: ['**/__tests__/**/*.test.ts', '**/?(*.)+(spec|test).ts'],
-  transform: {
-    '^.+\\.tsx?$': ['ts-jest', {
-      tsconfig: {
-        jsx: 'react',
-        esModuleInterop: true,
-        allowSyntheticDefaultImports: true,
-      },
-    }],
-  },
+  testMatch: ['**/__tests__/**/*.test.(ts|tsx)', '**/?(*.)+(spec|test).(ts|tsx)'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
     'expo-sqlite': '<rootDir>/__mocks__/expo-sqlite.ts',
@@ -20,15 +10,18 @@ module.exports = {
     'expo-secure-store': '<rootDir>/__mocks__/expo-secure-store.ts',
     '@react-native-async-storage/async-storage': '<rootDir>/__mocks__/async-storage.ts',
     '^firebase/(.*)$': '<rootDir>/__mocks__/firebase-$1.ts',
+    'react-native-reanimated': '<rootDir>/__mocks__/react-native-reanimated.ts',
+  'react-native-reanimated-carousel': '<rootDir>/__mocks__/react-native-reanimated-carousel.tsx',
+    'react-native-gesture-handler': '<rootDir>/__mocks__/react-native-gesture-handler.ts',
+    'react-native/Libraries/Animated/NativeAnimatedHelper': '<rootDir>/__mocks__/native-animated-helper.ts',
   },
   collectCoverageFrom: [
     'stores/**/*.ts',
     'services/**/*.ts',
+    'components/**/*.tsx',
     '!**/*.d.ts',
     '!**/node_modules/**',
   ],
-  transformIgnorePatterns: [
-    'node_modules/(?!(expo-sqlite|@react-native-community|expo-secure-store|@react-native-async-storage)/)',
-  ],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 };
 
