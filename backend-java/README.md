@@ -169,6 +169,90 @@ GET /health/liveness      # Liveness probe
 
 ## 🔧 Configuração
 
+### 🔒 Segurança - CORS (Cross-Origin Resource Sharing)
+
+#### ⚠️ CRÍTICO: Configuração Por Ambiente
+
+A aplicação utiliza configuração CORS restritiva por segurança. **NUNCA use `allowedOrigins("*")` em produção!**
+
+**Riscos de CORS Permissivo:**
+- CSRF (Cross-Site Request Forgery)
+- XSS (Cross-Site Scripting)  
+- Data leakage
+- Acesso não autorizado à API
+
+#### Ambiente de Desenvolvimento (`application-dev.yml`)
+
+Permite apenas localhost e IPs de rede local:
+
+```yaml
+app:
+  security:
+    cors:
+      allowed-origin-patterns:
+        - http://localhost:*
+        - http://127.0.0.1:*
+        - http://192.168.*.*
+        - http://10.*.*.*
+      allow-credentials: true
+```
+
+**Uso:**
+- Frontend React: `http://localhost:3000`
+- Expo Mobile: `http://localhost:19006`
+- Testes locais: `http://127.0.0.1:8080`
+
+#### Ambiente de Produção (`application-prod.yml`)
+
+**Apenas domínios HTTPS específicos:**
+
+```yaml
+app:
+  security:
+    cors:
+      allowed-origins:
+        - https://appunture.com
+        - https://app.appunture.com
+        - https://admin.appunture.com
+        - https://appunture-tcc.web.app
+        - https://appunture-tcc.firebaseapp.com
+      allow-credentials: true
+```
+
+**⚠️ Para adicionar novo domínio em produção:**
+1. Edite `application-prod.yml`
+2. Adicione domínio HTTPS completo
+3. Execute testes CORS
+4. Deploy com validação
+
+#### Testando CORS Localmente
+
+```bash
+# Dev - Deve PERMITIR localhost
+curl -X OPTIONS http://localhost:8080/api/health \
+  -H "Origin: http://localhost:3000" \
+  -H "Access-Control-Request-Method: GET" \
+  -v
+
+# Prod - Deve BLOQUEAR domínios não autorizados
+curl -X OPTIONS https://api.appunture.com/api/health \
+  -H "Origin: https://evil.com" \
+  -H "Access-Control-Request-Method: GET" \
+  -v
+```
+
+#### Testes Automatizados
+
+Execute os testes de CORS para validar a configuração:
+
+```bash
+# Executar testes CORS
+mvn test -Dtest=CorsConfigurationTest
+
+# Resultado esperado:
+# ✅ Tests run: 8, Failures: 0, Errors: 0
+```
+
 ### Variáveis de Ambiente
 
 | Variável | Descrição | Obrigatório |

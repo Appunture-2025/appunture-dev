@@ -66,16 +66,32 @@ export interface SyncStatus {
   status: "success" | "error" | "pending";
 }
 
+export type SyncEntityType =
+  | "favorite"
+  | "point"
+  | "symptom"
+  | "note"
+  | "search_history"
+  | "image";
+
+export type SyncOperationStatus =
+  | "pending"
+  | "in_progress"
+  | "retry"
+  | "failed";
+
 export interface SyncOperation {
-  id: number;
-  entity: string;
-  entity_id: string;
-  operation: "UPSERT" | "DELETE" | string;
-  payload?: string | null;
-  status: "pending" | "in_progress" | "retry" | "failed";
+  id: string;
+  entity_type: SyncEntityType;
+  operation: string;
+  data: string;
+  reference?: string | null;
+  timestamp: number;
   retry_count: number;
-  last_attempt?: string;
-  created_at: string;
+  last_error?: string | null;
+  last_attempt?: number | null;
+  status: SyncOperationStatus;
+  created_at: number;
 }
 
 export interface ImageSyncOperation {

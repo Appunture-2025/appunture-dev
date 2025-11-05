@@ -28,10 +28,20 @@ public class SecurityProperties {
                 || !CollectionUtils.isEmpty(cors.getAllowedOriginPatterns()));
     }
 
+    /**
+     * Configuração CORS (Cross-Origin Resource Sharing)
+     * 
+     * ⚠️ ATENÇÃO: O padrão é RESTRITIVO por segurança.
+     * Sempre configure allowed-origins ou allowed-origin-patterns 
+     * explicitamente em application-{profile}.yml
+     * 
+     * NUNCA deixe allowedOrigins = ["*"] em produção!
+     */
     @Getter
     @Setter
     public static class Cors {
-        private List<String> allowedOrigins = new ArrayList<>(Collections.singletonList("*"));
+        // Default vazio = mais seguro. Deve ser configurado explicitamente em application.yml
+        private List<String> allowedOrigins = new ArrayList<>();
         private List<String> allowedOriginPatterns = new ArrayList<>();
         private List<String> allowedMethods = List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
         private List<String> allowedHeaders = new ArrayList<>(Collections.singletonList("*"));

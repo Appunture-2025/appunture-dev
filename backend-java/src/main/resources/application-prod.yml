@@ -1,13 +1,4 @@
-spring:
-  application:
-    name: appunture-backend
-  profiles:
-    active: prod
-  # PostgreSQL/JPA removido - usando Firestore
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+# application-prod.yml - Configuração para produção
 
 server:
   port: 8080
@@ -35,10 +26,14 @@ app:
   security:
     require-email-verified: true
     cors:
+      # ⚠️ PRODUÇÃO: Sempre especificar domínios HTTPS explicitamente
+      # NUNCA usar "*" ou patterns permissivos em produção!
       allowed-origins:
-        - https://${GOOGLE_CLOUD_PROJECT}.web.app
-        - https://${GOOGLE_CLOUD_PROJECT}.firebaseapp.com
-        - https://your-custom-domain.com
+        - https://appunture.com
+        - https://app.appunture.com
+        - https://admin.appunture.com
+        - https://appunture-tcc.web.app
+        - https://appunture-tcc.firebaseapp.com
       allowed-methods:
         - GET
         - POST
@@ -79,7 +74,6 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
-      profile: ${spring.profiles.active}
     export:
       prometheus:
         enabled: true
