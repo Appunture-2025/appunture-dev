@@ -1,10 +1,18 @@
 package com.appunture.backend.controller;
 
+import com.appunture.backend.dto.response.MessageResponse;
 import com.appunture.backend.dto.response.UserProfileResponse;
+import com.appunture.backend.exception.RateLimitExceededException;
 import com.appunture.backend.model.firestore.FirestoreUser;
+import com.appunture.backend.service.FirebaseAuthService;
 import com.appunture.backend.service.FirestoreUserService;
 import com.google.firebase.auth.FirebaseToken;
+import com.google.firebase.auth.FirebaseAuthException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +35,7 @@ import java.util.Optional;
 public class FirestoreAuthController {
 
     private final FirestoreUserService userService;
+    private final FirebaseAuthService firebaseAuthService;
 
     @GetMapping("/profile")
     @Operation(summary = "Get user profile", description = "Returns current authenticated user profile from Firestore")
@@ -200,6 +209,41 @@ public class FirestoreAuthController {
         } catch (Exception e) {
             log.error("Erro ao remover favorito: {}", e.getMessage(), e);
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/resend-verification")
+    @Operation(summary = "Reenviar email de verificação", description = "Reenvia o email de verificação para o usuário autenticado")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Email reenviado com sucesso",
+            content = @Content(schema = @Schema(implementation = MessageResponse.class))),
+        @ApiResponse(responseCode = "429", description = "Limite de reenvios atingido",
+            content = @Content(schema = @Schema(implementation = MessageResponse.class))),
+        @ApiResponse(responseCode = "400", description = "Email já verificado",
+            content = @Content(schema = @Schema(implementation = MessageResponse.class))),
+        @ApiResponse(responseCode = "401", description = "Não autenticado"),
+        @ApiResponse(responseCode = "500", description = "Erro interno",
+            content = @Content(schema = @Schema(implementation = MessageResponse.class)))
+    })
+    @SecurityRequirement(name = "firebase")
+    public ResponseEntity<MessageResponse> resendVerificationEmail(@AuthenticationPrincipal FirebaseToken token) {
+        try {
+            String uid = token.getUid();
+            log.debug("Solicitando reenvio de email de verificação para usuário {}", uid);
+            firebaseAuthService.resendVerificationEmail(uid);
+            return ResponseEntity.ok(new MessageResponse("Email de verificação reenviado. Verifique sua caixa de entrada."));
+        } catch (RateLimitExceededException e) {
+            log.warn("Limite de reenvio de verificação atingido para {}: {}", token.getUid(), e.getMessage());
+            return ResponseEntity.status(429).body(new MessageResponse(e.getMessage()));
+        } catch (IllegalStateException e) {
+            log.warn("Reenvio de verificação não será realizado para {}: {}", token.getUid(), e.getMessage());
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        } catch (FirebaseAuthException e) {
+            log.error("Erro Firebase ao reenviar verificação para {}: {}", token.getUid(), e.getMessage(), e);
+            return ResponseEntity.internalServerError().body(new MessageResponse("Erro ao reenviar email. Tente novamente mais tarde."));
+        } catch (Exception e) {
+            log.error("Erro inesperado ao reenviar verificação para {}", token.getUid(), e);
+            return ResponseEntity.internalServerError().body(new MessageResponse("Erro ao reenviar email. Tente novamente mais tarde."));
         }
     }
 }

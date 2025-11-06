@@ -1,0 +1,31 @@
+const queuedOperationsMock = jest.fn();
+const pendingImagesMock = jest.fn();
+
+export const databaseService = {
+  init: jest.fn(),
+  getQueuedOperations: queuedOperationsMock,
+  getPendingOperations: queuedOperationsMock,
+  markOperationInProgress: jest.fn(),
+  markOperationCompleted: jest.fn(),
+  markOperationFailed: jest.fn(),
+  getFailedOperations: jest.fn(),
+  resetOperation: jest.fn(),
+  removeOperation: jest.fn(),
+  countPendingOperations: jest.fn(),
+  getPendingImages: pendingImagesMock,
+  markImageSyncInProgress: jest.fn(),
+  markImageSyncCompleted: jest.fn(),
+  markImageSyncFailed: jest.fn(),
+  countPendingImages: jest.fn(),
+  setFavoriteStatus: jest.fn(),
+  isFavorite: jest.fn(),
+  upsertPoints: jest.fn(),
+  removePointsNotIn: jest.fn(),
+  upsertSymptoms: jest.fn(),
+  replaceFavorites: jest.fn(),
+  updateSyncStatus: jest.fn(),
+  enqueueImageSync: jest.fn(),
+  enqueueSyncOperation: jest.fn(),
+  markOperationDeferred: jest.fn(),
+  markOperationRetry: jest.fn(),
+};

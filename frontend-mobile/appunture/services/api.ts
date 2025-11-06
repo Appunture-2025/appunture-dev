@@ -151,6 +151,40 @@ class ApiService {
     return ("user" in payload && payload.user ? payload.user : payload) as User;
   }
 
+  async uploadFile(
+    formData: FormData,
+    onProgress?: (progress: number) => void
+  ): Promise<{ url: string }> {
+    const response = await this.client.post<{ url: string }>(
+      "/storage/upload",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (progressEvent) => {
+          if (!progressEvent.total) {
+            return;
+          }
+
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          onProgress?.(percentCompleted);
+        },
+      }
+    );
+
+    return response.data;
+  }
+
+  async resendVerificationEmail(): Promise<{ message: string }> {
+    const response = await this.client.post<{ message: string }>(
+      "/auth/resend-verification"
+    );
+    return response.data;
+  }
+
   // Points endpoints
   async getPoints(params?: {
     limit?: number;
@@ -362,11 +396,44 @@ class ApiService {
     pointId: string,
     imageUrl: string
   ): Promise<{ point: Point }> {
+    return this.addImagesToPoint(pointId, [imageUrl]);
+  }
+
+  async addImagesToPoint(
+    pointId: string,
+    imageUrls: string[]
+  ): Promise<{ point: Point }> {
     const response = await this.client.post<{ point: Point }>(
       `/points/${pointId}/images`,
-      { imageUrl }
+      { imageUrls }
     );
     return response.data;
+  }
+
+  async reorderPointImages(
+    pointId: string,
+    imageUrls: string[]
+  ): Promise<{ point: Point }> {
+    const response = await this.client.put<{ point: Point }>(
+      `/points/${pointId}/images/order`,
+      { imageUrls }
+    );
+    return response.data;
+  }
+
+  async deletePointImage(pointId: string, imageUrl: string): Promise<void> {
+    await this.client.delete(`/points/${pointId}/images`, {
+      data: { imageUrl },
+    });
+  }
+
+  async deleteStorageFile(imageUrl: string): Promise<void> {
+    const fileName = imageUrl.split("/").pop();
+    if (!fileName) {
+      return;
+    }
+
+    await this.client.delete(`/storage/${encodeURIComponent(fileName)}`);
   }
 
   // Admin endpoints - Symptoms

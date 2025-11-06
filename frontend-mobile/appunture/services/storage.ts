@@ -1,7 +1,12 @@
+import { Platform } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from "expo-image-picker";
+import type { ImagePickerAsset } from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
 import { STORAGE_KEYS } from "../utils/constants";
 import { User, AppSettings } from "../types/user";
+import { apiService } from "./api";
 
 // Secure storage for sensitive data
 export const storeToken = async (token: string): Promise<void> => {
@@ -137,4 +142,125 @@ export const clearAllData = async (): Promise<void> => {
   } catch (error) {
     console.error("Error clearing all data:", error);
   }
+};
+
+const MIME_TYPES: Record<string, string> = {
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  png: "image/png",
+  webp: "image/webp",
+  heic: "image/heic",
+  heif: "image/heif",
+};
+
+const normaliseFileName = (uri: string): string => {
+  const cleaned = uri.split(/[?#]/)[0] ?? "image.jpg";
+  const fileName = cleaned.split("/").pop() ?? "image.jpg";
+  return fileName.includes(".") ? fileName : `${fileName}.jpg`;
+};
+
+const resolveMimeType = (uri: string): string => {
+  const fileName = normaliseFileName(uri);
+  const extension = fileName.split(".").pop()?.toLowerCase();
+  return (extension && MIME_TYPES[extension]) || "image/jpeg";
+};
+
+export interface UploadProgressState {
+  index: number;
+  progress: number;
+}
+
+export const mediaStorageService = {
+  async pickImage(allowsMultiple = false): Promise<ImagePickerAsset[]> {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      throw new Error("Permissão de acesso às fotos negada");
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsMultipleSelection: allowsMultiple,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.8,
+      orderedSelection: true,
+      selectionLimit: allowsMultiple ? 0 : 1,
+    });
+
+    if (result.canceled || !result.assets?.length) {
+      return [];
+    }
+
+    return result.assets;
+  },
+
+  async takePicture(): Promise<ImagePickerAsset | null> {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      throw new Error("Permissão de câmera negada");
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.8,
+    });
+
+    if (result.canceled || !result.assets?.length) {
+      return null;
+    }
+
+    return result.assets[0];
+  },
+
+  async compressImage(
+    uri: string,
+    maxWidth = 1200,
+    maxHeight = 1200
+  ): Promise<string> {
+    const manipResult = await ImageManipulator.manipulateAsync(
+      uri,
+      [{ resize: { width: maxWidth, height: maxHeight } }],
+      {
+        compress: 0.7,
+        format: ImageManipulator.SaveFormat.JPEG,
+      }
+    );
+
+    return manipResult.uri;
+  },
+
+  async uploadImage(
+    uri: string,
+    onProgress?: (progress: number) => void
+  ): Promise<string> {
+    const compressedUri = await this.compressImage(uri);
+    const fileName = normaliseFileName(compressedUri);
+
+    const formData = new FormData();
+    formData.append("file", {
+      uri:
+        Platform.OS === "ios" && compressedUri.startsWith("file://")
+          ? compressedUri.replace("file://", "")
+          : compressedUri,
+      name: fileName,
+      type: resolveMimeType(compressedUri),
+    } as unknown as Blob);
+
+    const response = await apiService.uploadFile(formData, onProgress);
+    return response.url;
+  },
+
+  async uploadMultipleImages(
+    uris: string[],
+    onProgress?: (state: UploadProgressState) => void
+  ): Promise<string[]> {
+    const urls: string[] = [];
+
+    for (let index = 0; index < uris.length; index += 1) {
+      const url = await this.uploadImage(uris[index], (progress) =>
+        onProgress?.({ index, progress })
+      );
+      urls.push(url);
+    }
+
+    return urls;
+  },
 };

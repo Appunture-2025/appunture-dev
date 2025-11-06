@@ -1,18 +1,23 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { usePointsStore } from "../../stores/pointsStore";
+import { useAuthStore } from "../../stores/authStore";
 import { COLORS } from "../../utils/constants";
 import { styles } from "./styles";
 import { Point } from "../../types/api";
+import ImageGallery from "../../components/ImageGallery";
+import { mediaStorageService } from "../../services/storage";
+import { apiService } from "../../services/api";
 
 const techniques = [
   "Agulha fina",
@@ -25,57 +30,225 @@ const techniques = [
 
 export default function PointDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const router = useRouter();
-  const { points, favorites, toggleFavorite } = usePointsStore();
-  const [point, setPoint] = useState<(Point & { function?: string }) | null>(
-    null
-  );
-  const [loading, setLoading] = useState(true);
+  const {
+    points,
+    favorites,
+    selectedPoint,
+    loadPoint,
+    toggleFavorite,
+    loading,
+  } = usePointsStore((state) => ({
+    points: state.points,
+    favorites: state.favorites,
+    selectedPoint: state.selectedPoint,
+    loadPoint: state.loadPoint,
+    toggleFavorite: state.toggleFavorite,
+    loading: state.loading,
+  }));
+  const { user } = useAuthStore();
+  const [localLoading, setLocalLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<Record<number, number>>({});
+
+  const pointId = useMemo(() => (Array.isArray(id) ? id[0] : id) ?? "", [id]);
 
   useEffect(() => {
-    const rawId = Array.isArray(id) ? id[0] : id;
+    let isMounted = true;
 
-    if (!rawId) {
-      setPoint(null);
-      setLoading(false);
-      return;
+    const fetchPoint = async () => {
+      if (!pointId) {
+        setLocalLoading(false);
+        return;
+      }
+
+      setLocalLoading(true);
+
+      try {
+        await loadPoint(pointId);
+      } catch (error) {
+        console.warn("Falha ao carregar ponto", error);
+      } finally {
+        if (isMounted) {
+          setLocalLoading(false);
+        }
+      }
+    };
+
+    fetchPoint();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [pointId, loadPoint]);
+
+  const resolvedPoint: (Point & { function?: string }) | null = useMemo(() => {
+    if (selectedPoint && selectedPoint.id === pointId) {
+      return selectedPoint as Point & { function?: string };
     }
 
-    const foundPoint =
-      points.find((p) => p.id === rawId) ||
-      favorites.find((p) => p.id === rawId);
-
-    setPoint(foundPoint ?? null);
-    setLoading(false);
-  }, [id, points, favorites]);
+    return (
+      points.find((p) => p.id === pointId) ||
+      favorites.find((p) => p.id === pointId) ||
+      null
+    );
+  }, [favorites, pointId, points, selectedPoint]);
 
   const handleToggleFavorite = async () => {
-    if (!point) return;
+    if (!resolvedPoint) return;
     
     try {
-      await toggleFavorite(point.id);
+      await toggleFavorite(resolvedPoint.id);
     } catch (error) {
       Alert.alert("Erro", "Não foi possível alterar favorito");
     }
   };
 
-  const isFavorite = favorites.some((p) => p.id === point?.id);
+  const isFavorite = favorites.some((p) => p.id === resolvedPoint?.id);
   const indicationsList = useMemo(() => {
-    if (!point?.indications) {
+    if (!resolvedPoint?.indications) {
       return [] as string[];
     }
 
-    if (Array.isArray(point.indications)) {
-      return point.indications;
+    if (Array.isArray(resolvedPoint.indications)) {
+      return resolvedPoint.indications;
     }
 
-    return point.indications
+    return resolvedPoint.indications
       .split(/\n|;|•|,/)
       .map((item) => item.trim())
       .filter(Boolean);
-  }, [point?.indications]);
+  }, [resolvedPoint?.indications]);
 
-  if (loading) {
+  const isAdmin = useMemo(() => {
+    const role = user?.role?.toString().toUpperCase();
+    return role === "ADMIN";
+  }, [user?.role]);
+
+  const refreshPoint = useCallback(async () => {
+    if (!pointId) {
+      return;
+    }
+    try {
+      await loadPoint(pointId);
+    } catch (error) {
+      console.warn("Falha ao atualizar ponto", error);
+    }
+  }, [loadPoint, pointId]);
+
+  const handleAddImagesFromLibrary = useCallback(async () => {
+    if (!resolvedPoint) return;
+
+    try {
+      const assets = await mediaStorageService.pickImage(true);
+      if (assets.length === 0) {
+        return;
+      }
+
+      setUploading(true);
+      const urls = await mediaStorageService.uploadMultipleImages(
+        assets.map((asset) => asset.uri),
+        ({ index, progress }) =>
+          setUploadProgress((prev) => ({ ...prev, [index]: progress }))
+      );
+
+      await apiService.addImagesToPoint(resolvedPoint.id, urls);
+      await refreshPoint();
+      Alert.alert("Sucesso", "Imagens adicionadas com sucesso!");
+    } catch (error) {
+      console.error("Erro ao adicionar imagens", error);
+      Alert.alert("Erro", "Falha ao adicionar imagens");
+    } finally {
+      setUploading(false);
+      setUploadProgress({});
+    }
+  }, [refreshPoint, resolvedPoint]);
+
+  const handleTakePicture = useCallback(async () => {
+    if (!resolvedPoint) return;
+
+    try {
+      const asset = await mediaStorageService.takePicture();
+      if (!asset) {
+        return;
+      }
+
+      setUploading(true);
+      const url = await mediaStorageService.uploadImage(asset.uri, (progress) =>
+        setUploadProgress({ 0: progress })
+      );
+
+      await apiService.addImagesToPoint(resolvedPoint.id, [url]);
+      await refreshPoint();
+      Alert.alert("Sucesso", "Imagem adicionada com sucesso!");
+    } catch (error) {
+      console.error("Erro ao capturar imagem", error);
+      Alert.alert("Erro", "Falha ao adicionar imagem da câmera");
+    } finally {
+      setUploading(false);
+      setUploadProgress({});
+    }
+  }, [refreshPoint, resolvedPoint]);
+
+  const handleAddImage = useCallback(() => {
+    Alert.alert("Adicionar imagem", "Selecione uma opção", [
+      { text: "Cancelar", style: "cancel" },
+      { text: "Câmera", onPress: handleTakePicture },
+      { text: "Galeria", onPress: handleAddImagesFromLibrary },
+    ]);
+  }, [handleAddImagesFromLibrary, handleTakePicture]);
+
+  const handleDeleteImage = useCallback(
+    (index: number) => {
+      if (!resolvedPoint?.imageUrls || !resolvedPoint.imageUrls[index]) {
+        return;
+      }
+
+      const imageUrl = resolvedPoint.imageUrls[index];
+
+      Alert.alert("Remover imagem", "Deseja deletar esta imagem?", [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Deletar",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await apiService.deletePointImage(resolvedPoint.id, imageUrl);
+              await apiService.deleteStorageFile(imageUrl);
+              await refreshPoint();
+              Alert.alert("Sucesso", "Imagem deletada");
+            } catch (error) {
+              console.error("Erro ao deletar imagem", error);
+              Alert.alert("Erro", "Falha ao deletar imagem");
+            }
+          },
+        },
+      ]);
+    },
+    [refreshPoint, resolvedPoint]
+  );
+
+  const handleReorderImages = useCallback(
+    async (fromIndex: number, toIndex: number) => {
+      if (!resolvedPoint?.imageUrls) {
+        return;
+      }
+
+      const nextOrder = [...resolvedPoint.imageUrls];
+      const [moved] = nextOrder.splice(fromIndex, 1);
+      nextOrder.splice(toIndex, 0, moved);
+
+      try {
+        await apiService.reorderPointImages(resolvedPoint.id, nextOrder);
+        await refreshPoint();
+      } catch (error) {
+        console.error("Erro ao reordenar imagens", error);
+        Alert.alert("Erro", "Falha ao reordenar imagens");
+      }
+    },
+    [refreshPoint, resolvedPoint]
+  );
+
+  if (loading || localLoading) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
@@ -85,7 +258,7 @@ export default function PointDetailsScreen() {
     );
   }
 
-  if (!point) {
+  if (!resolvedPoint) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
@@ -98,10 +271,32 @@ export default function PointDetailsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.content}>
+        <ImageGallery
+          images={resolvedPoint.imageUrls ?? []}
+          editable={isAdmin}
+          onAddImage={handleAddImage}
+          onDeleteImage={handleDeleteImage}
+          onReorder={handleReorderImages}
+        />
+
+        {uploading && (
+          <View style={styles.uploadInfo}>
+            <ActivityIndicator color={COLORS.primary} style={styles.uploadSpinner} />
+            <View style={styles.uploadTexts}>
+              <Text style={styles.uploadTitle}>Enviando imagens...</Text>
+              {Object.entries(uploadProgress).map(([index, progress]) => (
+                <Text key={index} style={styles.uploadProgressText}>
+                  Imagem {Number(index) + 1}: {progress}%
+                </Text>
+              ))}
+            </View>
+          </View>
+        )}
+
         <View style={styles.header}>
-          <Text style={styles.pointName}>{point.name}</Text>
-          <Text style={styles.pointCode}>{point.code}</Text>
-          <Text style={styles.pointMeridian}>{point.meridian}</Text>
+          <Text style={styles.pointName}>{resolvedPoint.name}</Text>
+          <Text style={styles.pointCode}>{resolvedPoint.code}</Text>
+          <Text style={styles.pointMeridian}>{resolvedPoint.meridian}</Text>
           
           <TouchableOpacity
             style={[styles.favoriteButton, isFavorite && styles.favoriteButtonActive]}
@@ -129,7 +324,7 @@ export default function PointDetailsScreen() {
             />
             <Text style={styles.cardTitle}>Posição Anatômica</Text>
             <Text style={styles.cardContent}>
-              {point.location || "Localização não disponível"}
+              {resolvedPoint.location || "Localização não disponível"}
             </Text>
           </View>
         </View>
@@ -181,7 +376,7 @@ export default function PointDetailsScreen() {
             />
             <Text style={styles.cardTitle}>Ação Terapêutica</Text>
             <Text style={styles.cardContent}>
-              {point.function || "Função terapêutica não especificada"}
+              {resolvedPoint.function || "Função terapêutica não especificada"}
             </Text>
           </View>
         </View>

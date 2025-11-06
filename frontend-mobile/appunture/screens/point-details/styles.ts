@@ -15,6 +15,32 @@ export const styles = StyleSheet.create({
   header: {
     marginBottom: SPACING.xl,
   },
+  uploadInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: `${COLORS.primary}10`,
+    borderRadius: 12,
+    padding: SPACING.md,
+    borderWidth: 1,
+    borderColor: `${COLORS.primary}30`,
+    marginBottom: SPACING.lg,
+  },
+  uploadSpinner: {
+    marginRight: SPACING.md,
+  },
+  uploadTexts: {
+    flex: 1,
+  },
+  uploadTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: COLORS.primary,
+    marginBottom: SPACING.xs,
+  },
+  uploadProgressText: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+  },
   pointName: {
     fontSize: 28,
     fontWeight: "bold",
