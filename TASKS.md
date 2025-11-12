@@ -17,13 +17,14 @@ Este documento contém todas as tarefas identificadas na análise completa do pr
 - ✅ **TASK-005** - Logs estruturados JSON + Correlation ID implementados (100% concluído)
 - ✅ **TASK-007** - Rate limiting com Bucket4j implementado (100% concluído)
 - ✅ **TASK-008** - Galeria de imagens múltiplas implementada (100% concluído - commit 49f94a4)
-- 🔄 **TASK-001** - Testes backend atualizados: 45 testes unitários (100% passando)
+- 🔄 **TASK-001** - Testes backend atualizados: 57 testes unitários (100% passando, 0-29% coverage, mvn verify FAILING)
 - 🔄 **TASK-006** - Validação de email verificado: 70% concluído (bloqueio implementado)
 
 **Métricas Atualizadas:**
-- Backend: 45 testes unitários, 100% passando ✅
+- Backend: 57 testes unitários, 100% passando ✅
 - Frontend: ImageGallery component implementado com testes ✅
-- Cobertura de testes: ~15% (meta: 60%)
+- Cobertura de testes backend: 0-29% por package (mvn verify FAILING ❌)
+- Meta de cobertura: 50% por package, 60% overall (BUNDLE level)
 
 **Commits Relevantes:**
 - `49f94a4` - feat: add image gallery component with upload and delete functionality
@@ -76,34 +77,45 @@ Este documento contém todas as tarefas identificadas na análise completa do pr
 
 **Área:** Backend  
 **Estimativa:** 10 story points (1-2 semanas)  
-**Status Atual:** 🔄 40% concluído (45 testes existentes, 100% passando, ~15% cobertura)  
+**Status Atual:** 🔄 40% concluído (57 testes existentes, 100% passando, 0-29% cobertura por package)  
 **Prioridade:** 🔴 CRÍTICA  
 **Dependências:** Nenhuma
 
 #### Descrição
-Expandir a cobertura de testes do backend Java de 15% para no mínimo 60%, incluindo testes de integração para todos os controllers e testes de segurança para autenticação e autorização.
+Expandir a cobertura de testes do backend Java de 0-29% por package para no mínimo 50% por package (60% overall), incluindo testes de integração para todos os controllers e testes de segurança para autenticação e autorização.
 
 #### Contexto
-Atualmente o projeto possui 45 testes unitários (100% passando) focados em filtros e services básicos:
+Atualmente o projeto possui 57 testes unitários (100% passando) focados em filtros e services básicos:
 - CorrelationIdFilterTest: 5 testes (100% cobertura) ✅
 - RateLimitingFilterTest: 9 testes (89% cobertura) ✅
 - FirebaseAuthenticationFilterTest: 11 testes (89% cobertura) ✅
+- CorsConfigurationTest: 8 testes (100% passando) ✅
 - FirestorePointServiceTest: 6 testes (100% passando) ✅
 - FirestoreSymptomServiceTest: 14 testes (100% passando) ✅
+- FirebaseAuthServiceTest: 4 testes (100% passando) ✅
 
-Faltam testes de integração com `@SpringBootTest`, testes de repositories Firestore, e testes end-to-end de autenticação.
+**Coverage atual (mvn verify FAILING):**
+- Controllers: 0% coverage (target: 50%+)
+- DTOs: 0% coverage
+- Repositories: 0% coverage
+- Services: 29% coverage (target: 50%+)
+- Config: 16% coverage (target: 50%+)
+
+Faltam testes de integração com `@SpringBootTest` ou `@WebMvcTest`, testes de repositories Firestore, e testes end-to-end de autenticação.
 
 #### Critérios de Aceitação
-- [ ] Cobertura mínima de 60% em todos os services
-- [ ] Testes de integração para AuthController (mínimo 10 testes)
-- [ ] Testes de integração para PointController (mínimo 15 testes)
-- [ ] Testes de integração para SymptomController (mínimo 15 testes)
-- [ ] Testes de integração para AdminController (mínimo 8 testes)
-- [ ] Testes de integração para StorageController (mínimo 5 testes)
+- [ ] Cobertura mínima de 50% em todos os packages (60% overall BUNDLE level)
+- [ ] Testes de integração para FirestoreAuthController (mínimo 10 testes)
+- [ ] Testes de integração para FirestorePointController (mínimo 15 testes)
+- [ ] Testes de integração para FirestoreSymptomController (mínimo 15 testes)
+- [ ] Testes de integração para FirestoreAdminController (mínimo 8 testes)
+- [ ] Testes de integração para FirebaseStorageController (mínimo 5 testes)
+- [ ] Testes de integração para FirestoreHealthController (mínimo 3 testes)
 - [ ] Testes de segurança (autenticação válida/inválida, RBAC)
-- [ ] JaCoCo configurado para falhar build se cobertura < 60%
-- [ ] Relatórios JaCoCo gerados automaticamente
-- [ ] 100% dos testes passando no CI
+- [ ] JaCoCo configurado para falhar build se cobertura < 60% (BUNDLE level)
+- [ ] Relatórios JaCoCo gerados automaticamente em target/site/jacoco/
+- [ ] 100% dos testes passando (mvn verify deve PASSAR)
+- [ ] Total 100+ testes implementados
 
 #### Arquivos Principais
 - `backend-java/src/test/java/com/appunture/backend/controller/`
@@ -119,46 +131,67 @@ Implemente testes completos para o backend Java Spring Boot do projeto Appunture
 CONTEXTO:
 - Projeto: Appunture (TCC - plataforma de acupuntura)
 - Stack: Spring Boot 3 + Java 17 + Firebase/Firestore
-- Status atual: 45 testes unitários, ~15% cobertura
-- Meta: 60% cobertura mínima
+- Status atual: 57 testes unitários, 0-29% cobertura por package, mvn verify FAILING
+- Meta: 50% cobertura mínima por package, 60% cobertura overall (BUNDLE level)
 
 REQUISITOS:
 
 1. TESTES DE INTEGRAÇÃO PARA CONTROLLERS
-   - Use @SpringBootTest e @AutoConfigureMockMvc
+   - Use @WebMvcTest para controllers isolados OU @SpringBootTest para testes E2E
+   - Use @AutoConfigureMockMvc para testes de controllers
    - Mock do Firebase Authentication com tokens válidos
    - Teste todos os endpoints de cada controller
    - Inclua casos de sucesso e falha
    - Verifique status HTTP, response body e headers
+   - Use @WithMockUser ou custom MockFirebaseAuthentication para segurança
 
 2. CONTROLLERS A TESTAR:
    a) FirestoreAuthController (/auth):
       - GET /auth/profile (200, 401, 404)
-      - PUT /auth/profile (200, 400, 401)
+      - PUT /auth/profile (200, 400, 401, 404)
       - POST /auth/sync (200, 400, 401)
+      - GET /auth/me (200, 401)
       - POST /auth/favorites/{pointId} (200, 404, 401)
       - DELETE /auth/favorites/{pointId} (200, 404, 401)
+      - POST /auth/resend-verification (200, 429, 400, 401, 500)
    
    b) FirestorePointController (/points):
       - GET /points (200)
       - GET /points/{id} (200, 404)
       - GET /points/code/{code} (200, 404)
-      - POST /points (201 Admin, 403 User, 401)
-      - PUT /points/{id} (200 Admin, 403 User, 404)
-      - DELETE /points/{id} (204 Admin, 403 User)
+      - GET /points/meridian/{meridian} (200)
+      - GET /points/symptom/{symptomId} (200)
+      - GET /points/search?name={name} (200)
+      - GET /points/popular?limit={limit} (200)
+      - GET /points/stats (200)
+      - POST /points (201 Admin, 403 User, 401, 400)
+      - PUT /points/{id} (200 Admin, 403 User, 404, 400)
+      - DELETE /points/{id} (204 Admin, 403 User, 404)
+      - POST /points/{pointId}/symptoms/{symptomId} (200 Admin, 403 User, 400)
+      - DELETE /points/{pointId}/symptoms/{symptomId} (200 Admin, 403 User)
+      - POST /points/{pointId}/images (200 Admin, 403 User, 400)
+      - PUT /points/{pointId}/coordinates (200 Admin, 403 User, 400)
    
    c) FirestoreSymptomController (/symptoms):
       - Similar ao PointController
-      - Mínimo 15 testes cobrindo todos os endpoints
+      - Mínimo 15 testes cobrindo todos os endpoints CRUD
+      - Testar permissões ADMIN vs USER
    
    d) FirestoreAdminController (/admin):
       - Todos os endpoints requerem ROLE_ADMIN
-      - Testar rejeição de ROLE_USER
+      - Testar rejeição de ROLE_USER (403)
       - Dashboard, users, stats, seed
+      - Mínimo 8 testes
    
    e) FirebaseStorageController (/api/storage):
       - Upload, signed URLs, delete
       - Mock do Firebase Storage
+      - Mínimo 5 testes
+   
+   f) FirestoreHealthController (/health):
+      - GET /health (200)
+      - Verificar status de conexões
+      - Mínimo 3 testes
 
 3. TESTES DE SEGURANÇA:
    - Criar `SecurityIntegrationTest.java`
@@ -175,25 +208,36 @@ REQUISITOS:
    - Usar Firebase Emulator ou mocks
 
 5. CONFIGURAÇÃO JACOCO:
-   - Atualizar pom.xml com:
-     <execution>
-       <id>jacoco-check</id>
-       <goals><goal>check</goal></goals>
-       <configuration>
-         <rules>
-           <rule>
-             <element>BUNDLE</element>
-             <limits>
-               <limit>
-                 <counter>LINE</counter>
-                 <value>COVEREDRATIO</value>
-                 <minimum>0.60</minimum>
-               </limit>
-             </limits>
-           </rule>
-         </rules>
-       </configuration>
-     </execution>
+   - Atualizar pom.xml - jacoco-check execution:
+   - ALTERAR de PACKAGE para BUNDLE level
+   - Configurar minimum 0.60 (60% coverage)
+   
+   <execution>
+     <id>jacoco-check</id>
+     <goals><goal>check</goal></goals>
+     <configuration>
+       <rules>
+         <rule>
+           <element>BUNDLE</element>
+           <limits>
+             <limit>
+               <counter>LINE</counter>
+               <value>COVEREDRATIO</value>
+               <minimum>0.60</minimum>
+             </limit>
+           </limits>
+         </rule>
+       </rules>
+     </configuration>
+   </execution>
+   
+   - OPCIONAL: Excluir DTOs e models da verificação se necessário:
+   <configuration>
+     <excludes>
+       <exclude>**/dto/**/*</exclude>
+       <exclude>**/model/**/*</exclude>
+     </excludes>
+   </configuration>
 
 6. PADRÕES A SEGUIR:
    - Usar padrão AAA (Arrange-Act-Assert)
@@ -204,16 +248,26 @@ REQUISITOS:
    - Assertions claras com mensagens
 
 7. EXECUTAR E VALIDAR:
-   - mvn clean test
-   - mvn verify (deve passar com cobertura >= 60%)
+   - mvn clean test (deve passar com 100+ testes)
+   - mvn verify (deve passar com cobertura >= 60% BUNDLE level)
    - Verificar relatório em target/site/jacoco/index.html
+   - Confirmar que build PASSA (não FAIL) com cobertura adequada
    - CI deve passar com todos os testes
 
 ARQUIVOS A CRIAR/MODIFICAR:
-- src/test/java/com/appunture/backend/controller/*IntegrationTest.java (5 novos)
-- src/test/java/com/appunture/backend/security/SecurityIntegrationTest.java (novo)
-- src/test/java/com/appunture/backend/repository/*Test.java (2 novos)
-- pom.xml (atualizar configuração JaCoCo)
+- src/test/java/com/appunture/backend/controller/*IntegrationTest.java (6 novos arquivos)
+  * FirestoreAuthControllerIntegrationTest.java (10+ testes)
+  * FirestorePointControllerIntegrationTest.java (18+ testes)
+  * FirestoreSymptomControllerIntegrationTest.java (15+ testes)
+  * FirestoreAdminControllerIntegrationTest.java (8+ testes)
+  * FirebaseStorageControllerIntegrationTest.java (5+ testes)
+  * FirestoreHealthControllerIntegrationTest.java (3+ testes)
+- src/test/java/com/appunture/backend/security/SecurityIntegrationTest.java (novo, 10+ testes)
+- src/test/java/com/appunture/backend/repository/*Test.java (2 novos arquivos, 15+ testes)
+  * FirestorePointRepositoryTest.java
+  * FirestoreSymptomRepositoryTest.java
+- pom.xml (atualizar jacoco-check de PACKAGE para BUNDLE, minimum 0.60)
+- backend-java/README.md (adicionar seção sobre testes)
 
 RESULTADO ESPERADO:
 - 60%+ cobertura
@@ -5958,10 +6012,11 @@ RESULTADO ESPERADO:
 - Sprint 3 (Baixa): 0/32 SP concluídos (0%)
 
 **Métricas de Qualidade:**
-- Backend: 45 testes unitários, 100% passando ✅
-- Cobertura de testes: ~15% (meta: 60%)
+- Backend: 57 testes unitários, 100% passando ✅
+- Cobertura de testes backend: 0-29% por package (mvn verify FAILING ❌)
+- Target coverage: 50% por package, 60% overall
 - Frontend: ImageGallery component com testes ✅
-- Zero falhas de build ✅
+- Zero falhas de testes unitários ✅
 
 **Próximas Prioridades:**
 1. 🔴 TASK-001: Completar testes backend (restantes 60%)
