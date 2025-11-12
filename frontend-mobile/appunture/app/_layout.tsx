@@ -20,6 +20,7 @@ export default function RootLayout() {
   const loadStoredAuth = useAuthStore((state: any) => state.loadStoredAuth);
   const loadLastSync = useSyncStore((state: any) => state.loadLastSync);
   const checkConnection = useSyncStore((state: any) => state.checkConnection);
+  const processSyncQueue = useSyncStore((state: any) => state.processSyncQueue);
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -34,7 +35,14 @@ export default function RootLayout() {
         await loadLastSync();
 
         // Check connection status
-        await checkConnection();
+        const isOnline = await checkConnection();
+
+        // Auto-sync if online and has pending operations
+        if (isOnline) {
+          processSyncQueue().catch((error) => {
+            console.warn("Auto-sync failed on app start:", error);
+          });
+        }
 
         console.log("App initialized successfully");
       } catch (error) {

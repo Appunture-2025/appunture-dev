@@ -128,14 +128,198 @@ O chatbot usa processamento local de linguagem natural para:
 - Responsivo para tablets
 - Animações fluidas
 
-## 🔄 Sincronização
+## 🔄 Sincronização Offline
 
-O app funciona offline-first:
+O app utiliza uma estratégia offline-first completa com sincronização inteligente:
 
-1. **Dados são armazenados localmente primeiro**
+### Funcionalidades
+
+1. **Dados armazenados localmente primeiro**
 2. **Sincronização automática quando online**
 3. **Resolução de conflitos inteligente**
 4. **Indicadores visuais de status**
+5. **Retry automático com backoff exponencial**
+
+### Fluxo de Sincronização
+
+```mermaid
+graph TD
+    A[Usuário faz ação] --> B{Está online?}
+    B -->|Não| C[Salvar localmente]
+    C --> D[Adicionar à fila de sync]
+    B -->|Sim| E[Tentar sincronizar]
+    E --> F{Sucesso?}
+    F -->|Sim| G[Atualizar local]
+    F -->|Não| D
+    D --> H[Aguardar conexão]
+    H --> I{Voltou online?}
+    I -->|Sim| J[Processar fila]
+    J --> K[Retry exponencial]
+    K --> L{Sucesso?}
+    L -->|Sim| G
+    L -->|Não| M[Incrementar retry]
+    M --> N{Max retries?}
+    N -->|Não| K
+    N -->|Sim| O[Marcar como falha]
+```
+
+### Entidades Sincronizadas
+
+- ✅ **Favoritos** (add/remove)
+- ✅ **Pontos** (create/update/delete)
+- ✅ **Sintomas** (create/update/delete)
+- ✅ **Notas Pessoais** (create/update/delete)
+- ✅ **Histórico de Buscas** (log)
+- ✅ **Imagens** (upload)
+
+### Retry Exponencial Backoff
+
+O sistema implementa retry automático com backoff exponencial:
+
+```typescript
+Tentativa 1: imediato
+Tentativa 2: 1 segundo
+Tentativa 3: 2 segundos
+Tentativa 4: 4 segundos
+Tentativa 5: 8 segundos
+Tentativa 6: 16 segundos
+...
+Máximo: 60 segundos
+```
+
+Após 5 tentativas falhadas, a operação é marcada como "falha" e pode ser tentada manualmente.
+
+### Resolução de Conflitos
+
+Utiliza estratégia **Last-Write-Wins** baseada em timestamps:
+
+```typescript
+if (localTimestamp > remoteTimestamp) {
+  // Local é mais recente → enviar para servidor
+  await api.updatePoint(localData);
+} else {
+  // Servidor é mais recente → atualizar local
+  await database.updatePoint(remoteData);
+}
+```
+
+### Indicadores Visuais
+
+#### SyncBanner
+Banner exibido no topo da tela mostrando:
+- 🔴 **Offline**: "Modo Offline - Alterações serão sincronizadas quando conectar"
+- 🔵 **Sincronizando**: "Sincronizando X itens..."
+- ⚠️ **Falhas**: "X operações falharam" (clicável para ver detalhes)
+- ⏳ **Pendentes**: "X pendentes" (sutil, quando há operações na fila)
+- ✅ **Sucesso**: Toast temporário "X operações sincronizadas"
+
+#### Badge no Perfil
+Mostra número de operações pendentes no ícone do perfil:
+- Aparece quando há operações na fila
+- Exibe contador (ex: "5" ou "99+" se > 99)
+- Vermelho para chamar atenção
+
+#### Tela de Status (/sync-status)
+Tela detalhada acessível clicando no banner de falhas ou no perfil:
+
+**Seção 1: Status Geral**
+- Indicador Online/Offline
+- Última sincronização bem-sucedida
+- Botão "Sincronizar Agora"
+
+**Seção 2: Operações Pendentes**
+- Contador de operações na fila
+- Contador de imagens pendentes
+- Estado vazio quando tudo sincronizado
+
+**Seção 3: Operações Falhadas**
+- Lista de operações que falharam
+- Detalhes do erro para cada uma
+- Botões:
+  - ✅ "Tentar Novamente" (individual)
+  - 🗑️ "Remover" (individual)
+  - ♻️ "Tentar Todas" (bulk)
+  - 🗑️ "Limpar Todas" (bulk)
+
+### Comportamento Automático
+
+1. **App inicia**: 
+   - Verifica conectividade
+   - Auto-sync se online e tem operações pendentes
+
+2. **Reconexão**:
+   - Detecta automaticamente via NetInfo
+   - Inicia sync queue imediatamente
+
+3. **Background Sync**:
+   - Processa operações pendentes
+   - Respei
+
+ta backoff para operações falhadas
+   - Continua mesmo se uma operação falhar
+
+### Troubleshooting
+
+#### Operações não sincronizam
+1. Verificar conectividade (banner mostrará status)
+2. Abrir `/sync-status` para ver detalhes
+3. Verificar erros nas operações falhadas
+4. Tentar "Sincronizar Agora" manualmente
+
+#### Conflitos de dados
+- Sistema usa last-write-wins automaticamente
+- Prioriza dados mais recentes
+- Não há perda de dados (versão antiga é substituída)
+
+#### Fila de sync crescendo
+- Verificar se há erros recorrentes
+- Limpar operações obsoletas manualmente
+- Tentar novamente operações falhadas
+- Em último caso, "Limpar Todas" e refazer ações
+
+### Desenvolvimento
+
+Para testar sincronização offline:
+
+```bash
+# Rodar testes E2E de sync
+npm run test -- syncStore.e2e.test.ts
+
+# Testar manualmente:
+# 1. Ativar modo avião
+# 2. Fazer ações (favoritar, criar nota, etc)
+# 3. Verificar que ficam pendentes
+# 4. Desativar modo avião
+# 5. Verificar que sincronizam automaticamente
+```
+
+### Arquitetura
+
+```
+┌─────────────────┐
+│   UI Layer      │
+│  SyncBanner     │ ← Mostra status visual
+│  sync-status    │ ← Tela de gerenciamento
+└────────┬────────┘
+         │
+┌────────▼────────┐
+│  syncStore      │ ← Lógica de sincronização
+│  (Zustand)      │   - processSyncQueue()
+│                 │   - retry logic
+│                 │   - conflict resolution
+└────────┬────────┘
+         │
+┌────────▼────────┐
+│  databaseService│ ← Fila de operações
+│  (SQLite)       │   - sync_queue table
+│                 │   - enqueue/dequeue
+└────────┬────────┘
+         │
+┌────────▼────────┐
+│  apiService     │ ← Comunicação com backend
+│  (Axios)        │   - CRUD operations
+└─────────────────┘
+```
 
 ## 🧪 Testes
 
