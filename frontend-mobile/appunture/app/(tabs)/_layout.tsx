@@ -1,26 +1,49 @@
 import { Tabs } from "expo-router";
+import { View, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../utils/constants";
+import { SyncBanner } from "../../components/SyncBanner";
+import { useSyncStore } from "../../stores/syncStore";
+
+function ProfileTabIcon({ color, size }: { color: string; size: number }) {
+  const { pendingOperations, pendingImages } = useSyncStore();
+  const totalPending = pendingOperations + pendingImages;
+
+  return (
+    <View>
+      <Ionicons name="person" size={size} color={color} />
+      {totalPending > 0 && (
+        <View style={styles.badge}>
+          <Text style={styles.badgeText}>
+            {totalPending > 99 ? "99+" : totalPending}
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+}
 
 export default function TabLayout() {
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: COLORS.primary,
-        tabBarInactiveTintColor: COLORS.textSecondary,
-        tabBarStyle: {
-          backgroundColor: COLORS.surface,
-          borderTopColor: COLORS.border,
-        },
-        headerStyle: {
-          backgroundColor: COLORS.primary,
-        },
-        headerTintColor: COLORS.surface,
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
-      }}
-    >
+    <>
+      <SyncBanner />
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: COLORS.primary,
+          tabBarInactiveTintColor: COLORS.textSecondary,
+          tabBarStyle: {
+            backgroundColor: COLORS.surface,
+            borderTopColor: COLORS.border,
+          },
+          headerStyle: {
+            backgroundColor: COLORS.primary,
+          },
+          headerTintColor: COLORS.surface,
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      >
       <Tabs.Screen
         name="index"
         options={{
@@ -80,10 +103,31 @@ export default function TabLayout() {
         options={{
           title: "Perfil",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" size={size} color={color} />
+            <ProfileTabIcon color={color} size={size} />
           ),
         }}
       />
     </Tabs>
+    </>
   );
 }
+
+const styles = StyleSheet.create({
+  badge: {
+    position: "absolute",
+    top: -6,
+    right: -10,
+    backgroundColor: COLORS.error,
+    borderRadius: 10,
+    minWidth: 18,
+    height: 18,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 4,
+  },
+  badgeText: {
+    color: COLORS.surface,
+    fontSize: 10,
+    fontWeight: "bold",
+  },
+});
