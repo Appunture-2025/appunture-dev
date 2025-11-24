@@ -5,6 +5,7 @@ export const databaseService = {
   init: jest.fn(),
   getQueuedOperations: queuedOperationsMock,
   getPendingOperations: queuedOperationsMock,
+  getQueuedNotes: jest.fn(),
   markOperationInProgress: jest.fn(),
   markOperationCompleted: jest.fn(),
   markOperationFailed: jest.fn(),
@@ -19,6 +20,7 @@ export const databaseService = {
   countPendingImages: jest.fn(),
   setFavoriteStatus: jest.fn(),
   isFavorite: jest.fn(),
+  upsertPoint: jest.fn(),
   upsertPoints: jest.fn(),
   removePointsNotIn: jest.fn(),
   upsertSymptoms: jest.fn(),
@@ -28,4 +30,7 @@ export const databaseService = {
   enqueueSyncOperation: jest.fn(),
   markOperationDeferred: jest.fn(),
   markOperationRetry: jest.fn(),
+  deletePointById: jest.fn(),
+  markPointSynced: jest.fn(),
+  markNoteSynced: jest.fn(),
 };

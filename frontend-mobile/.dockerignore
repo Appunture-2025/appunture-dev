@@ -1,0 +1,5 @@
+appunture/node_modules
+appunture/.expo
+appunture/dist
+appunture/web-build
+npm-debug.log

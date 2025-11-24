@@ -8,7 +8,7 @@ import { apiService } from '../../services/api';
 import { connectivityService } from '../../services/connectivity';
 
 // Mock the dependencies
-jest.mock('../../services/database');
+jest.mock('../../services/database', () => require('../../services/__mocks__/database'));
 jest.mock('../../services/api');
 jest.mock('../../services/connectivity');
 jest.mock('../../services/firebase');
@@ -81,18 +81,16 @@ describe('syncStore', () => {
       const operations = [
         {
           id: 1,
-          entity: 'favorite',
-          entity_id: 'user1:point1',
-          operation: 'UPSERT',
-          payload: JSON.stringify({ userId: 'user1', pointId: 'point1', action: 'ADD' }),
+          entity_type: 'favorite',
+          data: JSON.stringify({ userId: 'user1', pointId: 'point1', action: 'ADD' }),
           status: 'retry' as const,
           retry_count: 2, // Should have 4 second backoff (1 * 2^2)
-          last_attempt: new Date(now - 2000).toISOString(), // Only 2 seconds ago
+          last_attempt: now - 2000, // Only 2 seconds ago
           created_at: new Date().toISOString(),
         },
       ];
 
-      (databaseService.getPendingOperations as jest.Mock).mockResolvedValue(operations);
+      (databaseService.getQueuedOperations as jest.Mock).mockResolvedValue(operations);
       (databaseService.markOperationInProgress as jest.Mock).mockResolvedValue(undefined);
       (databaseService.markOperationCompleted as jest.Mock).mockResolvedValue(undefined);
       (databaseService.countPendingOperations as jest.Mock).mockResolvedValue(1);
@@ -109,18 +107,16 @@ describe('syncStore', () => {
       const operations = [
         {
           id: 1,
-          entity: 'favorite',
-          entity_id: 'user1:point1',
-          operation: 'UPSERT',
-          payload: JSON.stringify({ userId: 'user1', pointId: 'point1', action: 'ADD' }),
+          entity_type: 'favorite',
+          data: JSON.stringify({ userId: 'user1', pointId: 'point1', action: 'ADD' }),
           status: 'retry' as const,
           retry_count: 2,
-          last_attempt: new Date(now - 5000).toISOString(), // 5 seconds ago, backoff is 4s
+          last_attempt: now - 5000, // 5 seconds ago, backoff is 4s
           created_at: new Date().toISOString(),
         },
       ];
 
-      (databaseService.getPendingOperations as jest.Mock).mockResolvedValue(operations);
+      (databaseService.getQueuedOperations as jest.Mock).mockResolvedValue(operations);
       (databaseService.markOperationInProgress as jest.Mock).mockResolvedValue(undefined);
       (databaseService.markOperationCompleted as jest.Mock).mockResolvedValue(undefined);
       (apiService.addFavorite as jest.Mock).mockResolvedValue({ success: true });
@@ -143,10 +139,8 @@ describe('syncStore', () => {
       const operations = [
         {
           id: 1,
-          entity: 'favorite',
-          entity_id: 'user1:point1',
-          operation: 'UPSERT',
-          payload: JSON.stringify({
+          entity_type: 'favorite',
+          data: JSON.stringify({
             userId: 'user1',
             pointId: 'point1',
             action: 'ADD',
@@ -159,7 +153,7 @@ describe('syncStore', () => {
         },
       ];
 
-      (databaseService.getPendingOperations as jest.Mock).mockResolvedValue(operations);
+      (databaseService.getQueuedOperations as jest.Mock).mockResolvedValue(operations);
       (databaseService.markOperationInProgress as jest.Mock).mockResolvedValue(undefined);
       (databaseService.markOperationCompleted as jest.Mock).mockResolvedValue(undefined);
       (apiService.getFavorites as jest.Mock).mockResolvedValue({ points: [] });
@@ -179,10 +173,8 @@ describe('syncStore', () => {
       const operations = [
         {
           id: 1,
-          entity: 'favorite',
-          entity_id: 'user1:point1',
-          operation: 'UPSERT',
-          payload: JSON.stringify({
+          entity_type: 'favorite',
+          data: JSON.stringify({
             userId: 'user1',
             pointId: 'point1',
             action: 'ADD',
@@ -195,7 +187,7 @@ describe('syncStore', () => {
         },
       ];
 
-      (databaseService.getPendingOperations as jest.Mock).mockResolvedValue(operations);
+      (databaseService.getQueuedOperations as jest.Mock).mockResolvedValue(operations);
       (databaseService.markOperationInProgress as jest.Mock).mockResolvedValue(undefined);
       (databaseService.markOperationCompleted as jest.Mock).mockResolvedValue(undefined);
       (apiService.getFavorites as jest.Mock).mockResolvedValue({
@@ -272,13 +264,12 @@ describe('syncStore', () => {
       ];
 
       (databaseService.getPendingImages as jest.Mock).mockResolvedValue(imageOps);
-      (databaseService.markImageSyncInProgress as jest.Mock).mockResolvedValue(undefined);
+      (databaseService.markImageSyncInProgress as jest.Mock).mockRejectedValueOnce(
+        new Error('upload failed')
+      );
       (databaseService.markImageSyncFailed as jest.Mock).mockResolvedValue(undefined);
       (databaseService.countPendingOperations as jest.Mock).mockResolvedValue(0);
       (databaseService.countPendingImages as jest.Mock).mockResolvedValue(1);
-
-      // Simulate a failure by having invalid payload
-      imageOps[0].payload = JSON.stringify({ invalid: true });
 
       await useSyncStore.getState().syncImages();
 
@@ -298,7 +289,7 @@ describe('syncStore', () => {
       (databaseService.upsertSymptoms as jest.Mock).mockResolvedValue(undefined);
       (databaseService.replaceFavorites as jest.Mock).mockResolvedValue(undefined);
       (databaseService.updateSyncStatus as jest.Mock).mockResolvedValue(undefined);
-      (databaseService.getPendingOperations as jest.Mock).mockResolvedValue([]);
+      (databaseService.getQueuedOperations as jest.Mock).mockResolvedValue([]);
       (databaseService.getPendingImages as jest.Mock).mockResolvedValue([]);
       (databaseService.countPendingOperations as jest.Mock).mockResolvedValue(0);
       (databaseService.countPendingImages as jest.Mock).mockResolvedValue(0);
@@ -317,7 +308,7 @@ describe('syncStore', () => {
       (connectivityService.isOnline as jest.Mock).mockResolvedValue(false);
 
       await expect(useSyncStore.getState().syncAll()).rejects.toThrow(
-        'No internet connection'
+        'Sem conexão com a internet'
       );
     });
   });
@@ -351,7 +342,7 @@ describe('syncStore', () => {
 
       await useSyncStore.getState().processSyncQueue();
 
-      expect(databaseService.getPendingOperations).not.toHaveBeenCalled();
+      expect(databaseService.getQueuedOperations).not.toHaveBeenCalled();
     });
 
     it('should not process when offline', async () => {
@@ -359,24 +350,22 @@ describe('syncStore', () => {
 
       await useSyncStore.getState().processSyncQueue();
 
-      expect(databaseService.getPendingOperations).not.toHaveBeenCalled();
+      expect(databaseService.getQueuedOperations).not.toHaveBeenCalled();
     });
 
     it('should process ADD favorite operation', async () => {
       const operations = [
         {
           id: 1,
-          entity: 'favorite',
-          entity_id: 'user1:point1',
-          operation: 'UPSERT',
-          payload: JSON.stringify({ userId: 'user1', pointId: 'point1', action: 'ADD' }),
+          entity_type: 'favorite',
+          data: JSON.stringify({ userId: 'user1', pointId: 'point1', action: 'ADD' }),
           status: 'pending' as const,
           retry_count: 0,
           created_at: new Date().toISOString(),
         },
       ];
 
-      (databaseService.getPendingOperations as jest.Mock).mockResolvedValue(operations);
+      (databaseService.getQueuedOperations as jest.Mock).mockResolvedValue(operations);
       (databaseService.markOperationInProgress as jest.Mock).mockResolvedValue(undefined);
       (databaseService.markOperationCompleted as jest.Mock).mockResolvedValue(undefined);
       (apiService.addFavorite as jest.Mock).mockResolvedValue({ success: true });
@@ -402,21 +391,19 @@ describe('syncStore', () => {
       const operations = [
         {
           id: 1,
-          entity: 'favorite',
-          entity_id: 'user1:point1',
-          operation: 'DELETE',
-          payload: JSON.stringify({ userId: 'user1', pointId: 'point1', action: 'REMOVE' }),
+          entity_type: 'favorite',
+          data: JSON.stringify({ userId: 'user1', pointId: 'point1', action: 'REMOVE' }),
           status: 'pending' as const,
           retry_count: 0,
           created_at: new Date().toISOString(),
         },
       ];
 
-      (databaseService.getPendingOperations as jest.Mock).mockResolvedValue(operations);
+      (databaseService.getQueuedOperations as jest.Mock).mockResolvedValue(operations);
       (databaseService.markOperationInProgress as jest.Mock).mockResolvedValue(undefined);
       (databaseService.markOperationCompleted as jest.Mock).mockResolvedValue(undefined);
-      (apiService.removeFavorite as jest.Mock).mockResolvedValue({ success: true });
-      (apiService.getFavorites as jest.Mock).mockResolvedValue({ points: [] });
+        (apiService.removeFavorite as jest.Mock).mockResolvedValue({ success: true });
+        (apiService.getFavorites as jest.Mock).mockResolvedValue({ points: [{ id: 'point1' }] });
       (databaseService.setFavoriteStatus as jest.Mock).mockResolvedValue(undefined);
       (databaseService.isFavorite as jest.Mock).mockResolvedValue(false);
       (databaseService.countPendingOperations as jest.Mock).mockResolvedValue(0);

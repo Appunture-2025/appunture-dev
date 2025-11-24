@@ -10,7 +10,7 @@ import { useSyncStore } from '../../stores/syncStore';
 import type { SyncOperation } from '../../types/database';
 
 // Mock the dependencies
-jest.mock('../../services/database');
+jest.mock('../../services/database', () => require('../../services/__mocks__/database'));
 jest.mock('../../services/api');
 jest.mock('../../services/connectivity');
 jest.mock('../../services/firebase');
@@ -50,7 +50,7 @@ describe('Offline Sync E2E Tests', () => {
       // Step 1: Go offline
       (connectivityService.isOnline as jest.Mock).mockResolvedValue(false);
       await store.checkConnection();
-      expect(store.isOnline).toBe(false);
+      expect(useSyncStore.getState().isOnline).toBe(false);
 
       // Step 2: Create favorite operation in queue
       const favoriteOperation: SyncOperation = {
