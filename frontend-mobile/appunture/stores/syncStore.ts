@@ -135,16 +135,34 @@ export const useSyncStore = create<SyncStore>((set, get) => {
     const shouldFavorite = action === "ADD";
 
     try {
-      // Evita chamadas desnecessárias se estado remoto já corresponde à intenção
       const remoteFavorites = await apiService.getFavorites();
       const isRemoteFavorite = remoteFavorites.points.some((point) => point.id === pointId);
+      const conflictWinner = resolveConflict(payload.timestamp, payload.remoteTimestamp);
 
-      if (isRemoteFavorite !== shouldFavorite) {
-        if (shouldFavorite) {
-          await apiService.addFavorite(pointId);
-        } else {
-          await apiService.removeFavorite(pointId);
-        }
+      if (conflictWinner === "remote") {
+        await databaseService.setFavoriteStatus({
+          pointId,
+          userId,
+          isFavorite: isRemoteFavorite,
+          synced: true,
+        });
+        return;
+      }
+
+      if (isRemoteFavorite === shouldFavorite) {
+        await databaseService.setFavoriteStatus({
+          pointId,
+          userId,
+          isFavorite: shouldFavorite,
+          synced: true,
+        });
+        return;
+      }
+
+      if (shouldFavorite) {
+        await apiService.addFavorite(pointId);
+      } else {
+        await apiService.removeFavorite(pointId);
       }
 
       await databaseService.setFavoriteStatus({
@@ -516,6 +534,11 @@ export const useSyncStore = create<SyncStore>((set, get) => {
     },
 
     syncImages: async () => {
+      const userId = getCurrentUserId();
+      if (!userId) {
+        return;
+      }
+
       const pendingImages = await databaseService.getPendingImages(50);
 
       for (const imageOp of pendingImages) {
@@ -604,12 +627,17 @@ export const useSyncStore = create<SyncStore>((set, get) => {
     },
 
     refreshPendingOperations: async () => {
-      const [pendingOperations, pendingImages] = await Promise.all([
-        databaseService.countPendingOperations(),
-        databaseService.countPendingImages(),
-      ]);
+      try {
+        const [pendingOperations, pendingImages] = await Promise.all([
+          databaseService.countPendingOperations(),
+          databaseService.countPendingImages(),
+        ]);
 
-      set({ pendingOperations, pendingImages });
+        set({ pendingOperations, pendingImages });
+      } catch (error) {
+        console.warn("Falha ao atualizar contadores de sincronização", error);
+        set({ pendingOperations: 0, pendingImages: 0 });
+      }
     },
 
     refreshFailedOperations: async () => {
