@@ -4,6 +4,131 @@
       "name": "app.file-storage.local-path",
       "type": "java.lang.String",
       "description": "Local upload path"
+    },
+    {
+      "name": "firebase.project-id",
+      "type": "java.lang.String",
+      "description": "Firebase project identifier"
+    },
+    {
+      "name": "firebase.service-account-key",
+      "type": "java.lang.String",
+      "description": "Base64 encoded Firebase service account JSON"
+    },
+    {
+      "name": "firebase.storage.bucket",
+      "type": "java.lang.String",
+      "description": "Firebase Storage bucket name"
+    },
+    {
+      "name": "app.firebase.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Toggle Firebase integration"
+    },
+    {
+      "name": "app.images.thumbnail.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable thumbnail generation"
+    },
+    {
+      "name": "app.images.thumbnail.function-url",
+      "type": "java.lang.String",
+      "description": "Cloud Function URL for thumbnail generation"
+    },
+    {
+      "name": "app.images.thumbnail.fallback-query",
+      "type": "java.lang.String",
+      "description": "Fallback query string appended to thumbnail URLs"
+    },
+    {
+      "name": "app.images.thumbnail.default-width",
+      "type": "java.lang.Integer",
+      "description": "Default width for generated thumbnails"
+    },
+    {
+      "name": "app.images.thumbnail.default-height",
+      "type": "java.lang.Integer",
+      "description": "Default height for generated thumbnails"
+    },
+    {
+      "name": "app.security.require-email-verified",
+      "type": "java.lang.Boolean",
+      "description": "Require email verification before granting access"
+    },
+    {
+      "name": "app.security.cors.allowed-origins",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Explicit origins allowed by CORS"
+    },
+    {
+      "name": "app.security.cors.allowed-origin-patterns",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Pattern-based origins allowed by CORS"
+    },
+    {
+      "name": "app.security.cors.allowed-methods",
+      "type": "java.util.List<java.lang.String>",
+      "description": "HTTP methods permitted by CORS"
+    },
+    {
+      "name": "app.security.cors.allowed-headers",
+      "type": "java.util.List<java.lang.String>",
+      "description": "HTTP headers allowed in CORS requests"
+    },
+    {
+      "name": "app.security.cors.exposed-headers",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Response headers exposed to clients"
+    },
+    {
+      "name": "app.security.cors.allow-credentials",
+      "type": "java.lang.Boolean",
+      "description": "Whether CORS requests can include credentials"
+    },
+    {
+      "name": "app.security.cors.max-age",
+      "type": "java.time.Duration",
+      "description": "Caching duration for preflight responses"
+    },
+    {
+      "name": "app.security.cors.allow-public-endpoints",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Endpoints that bypass authentication"
+    },
+    {
+      "name": "app.security.rate-limit.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable rate limiting filter"
+    },
+    {
+      "name": "app.security.rate-limit.capacity",
+      "type": "java.lang.Integer",
+      "description": "Maximum bucket capacity"
+    },
+    {
+      "name": "app.security.rate-limit.refill-tokens",
+      "type": "java.lang.Integer",
+      "description": "Tokens refilled per interval"
+    },
+    {
+      "name": "app.security.rate-limit.refill-duration",
+      "type": "java.time.Duration",
+      "description": "Interval between refills"
+    },
+    {
+      "name": "app.security.rate-limit.max-retries",
+      "type": "java.lang.Integer",
+      "description": "Max retries when throttled"
+    },
+    {
+      "name": "app.security.rate-limit.strategy",
+      "type": "java.lang.String",
+      "description": "Strategy used to calculate rate-limit keys"
+    },
+    {
+      "name": "app.security.rate-limit.excluded-paths",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Paths excluded from rate limiting"
     }
   ]
 }

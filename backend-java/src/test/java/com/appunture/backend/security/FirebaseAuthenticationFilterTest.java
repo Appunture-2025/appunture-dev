@@ -2,7 +2,6 @@ package com.appunture.backend.security;
 
 import com.appunture.backend.config.SecurityProperties;
 import com.appunture.backend.service.FirebaseAuthService;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,10 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 

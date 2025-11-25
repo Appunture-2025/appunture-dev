@@ -1,6 +1,8 @@
 package com.appunture.backend.security;
 
 import com.appunture.backend.config.SecurityProperties;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,11 +45,14 @@ class RateLimitingFilterTest {
     @Mock
     private Authentication authentication;
 
+    private MeterRegistry meterRegistry;
+
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;
 
     @BeforeEach
     void setUp() {
+        meterRegistry = new SimpleMeterRegistry();
         when(securityProperties.getRateLimit()).thenReturn(rateLimit);
         lenient().when(rateLimit.isEnabled()).thenReturn(true);
         lenient().when(rateLimit.getCapacity()).thenReturn(10);
@@ -56,7 +61,7 @@ class RateLimitingFilterTest {
         lenient().when(rateLimit.getStrategy()).thenReturn(SecurityProperties.Strategy.PER_IP);
         lenient().when(rateLimit.getExcludedPaths()).thenReturn(List.of("/api/health/**", "/actuator/**"));
 
-        filter = new RateLimitingFilter(securityProperties);
+        filter = new RateLimitingFilter(securityProperties, meterRegistry);
         filter.initBucketConfiguration();
 
         request = new MockHttpServletRequest();

@@ -39,7 +39,7 @@ firebase:
     bucket: ${FIREBASE_STORAGE_BUCKET:appunture-tcc.appspot.com}
 
 app:
-  file-storage:
+  "file-storage":
     local-path: ./uploads # Fallback se Cloud Storage não estiver disponível
   firebase:
     enabled: ${FIREBASE_ENABLED:true} # Permite desabilitar Firebase para desenvolvimento
@@ -101,6 +101,7 @@ management:
     tags:
       application: ${spring.application.name}
       profile: ${spring.profiles.active}
-    export:
-      prometheus:
+  prometheus:
+    metrics:
+      export:
         enabled: true
