@@ -10,6 +10,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,15 +34,25 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RateLimitingFilter extends OncePerRequestFilter {
 
     private final SecurityProperties securityProperties;
+    private final MeterRegistry meterRegistry;
 
     private final Map<String, Bucket> buckets = new ConcurrentHashMap<>();
 
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     private Bandwidth bandwidth;
+    private Counter rateLimitRejectionsCounter;
+    private Counter rateLimitAllowedCounter;
 
     @PostConstruct
     void initBucketConfiguration() {
+        this.rateLimitRejectionsCounter = Counter.builder("app_rate_limit_rejections_total")
+                .description("Total de requisições bloqueadas pelo filtro de rate limit")
+                .register(meterRegistry);
+        this.rateLimitAllowedCounter = Counter.builder("app_rate_limit_allowed_total")
+                .description("Total de requisições que passaram pelo filtro de rate limit")
+                .register(meterRegistry);
+
         SecurityProperties.RateLimit rateLimit = securityProperties.getRateLimit();
         if (!rateLimit.isEnabled()) {
             return;
@@ -91,6 +103,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
             long available = bucket.getAvailableTokens();
             response.setHeader("X-RateLimit-Limit", Integer.toString(rateLimit.getCapacity()));
             response.setHeader("X-RateLimit-Remaining", Long.toString(available));
+            Optional.ofNullable(rateLimitAllowedCounter).ifPresent(Counter::increment);
             filterChain.doFilter(request, response);
             return;
         }
@@ -103,6 +116,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         response.setContentType("application/json");
         response.getWriter().write("{\"error\":\"rate_limit_exceeded\",\"message\":\"Too many requests. Please retry later.\"}");
         log.debug("Rate limit exceeded for key {}", resolveKey(request, rateLimit.getStrategy()));
+        Optional.ofNullable(rateLimitRejectionsCounter).ifPresent(Counter::increment);
     }
 
     private String resolveKey(HttpServletRequest request, SecurityProperties.Strategy strategy) {

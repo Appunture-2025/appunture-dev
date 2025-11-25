@@ -1,11 +1,19 @@
 package com.appunture.backend.controller;
 
+import com.appunture.backend.dto.point.PointImageRemovalRequest;
+import com.appunture.backend.dto.point.PointImageRequest;
 import com.appunture.backend.model.firestore.FirestorePoint;
 import com.appunture.backend.service.FirestorePointService;
 import com.google.firebase.auth.FirebaseToken;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -33,6 +41,11 @@ public class FirestorePointController {
     @GetMapping
     @Operation(summary = "List all points", description = "List all acupuncture points from Firestore")
     @SecurityRequirement(name = "firebase")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Lista completa de pontos",
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = FirestorePoint.class)))),
+        @ApiResponse(responseCode = "500", description = "Erro inesperado")
+    })
     public ResponseEntity<List<FirestorePoint>> getAllPoints() {
         try {
             List<FirestorePoint> points = pointService.findAll();
@@ -231,23 +244,80 @@ public class FirestorePointController {
     @Operation(summary = "Add image to point", description = "Adds an image URL to a point (Admin only)")
     @SecurityRequirement(name = "firebase")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> addImageToPoint(
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        description = "Payload contendo URL da imagem e opções de thumbnail",
+        required = true,
+        content = @Content(schema = @Schema(implementation = PointImageRequest.class))
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Ponto atualizado",
+            content = @Content(schema = @Schema(implementation = FirestorePoint.class))),
+        @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+        @ApiResponse(responseCode = "500", description = "Erro inesperado")
+    })
+    public ResponseEntity<FirestorePoint> addImageToPoint(
             @PathVariable String pointId,
-            @RequestBody Map<String, String> request) {
+            @AuthenticationPrincipal FirebaseToken token,
+            @Valid @RequestBody PointImageRequest request) {
         try {
-            String imageUrl = request.get("imageUrl");
-            if (imageUrl == null || imageUrl.isEmpty()) {
-                return ResponseEntity.badRequest().build();
-            }
-            
             log.debug("Adicionando imagem ao ponto {}", pointId);
-            pointService.addImageToPoint(pointId, imageUrl);
-            return ResponseEntity.ok().build();
+            String actorId = token != null ? token.getUid() : "system";
+            String actorEmail = token != null ? token.getEmail() : null;
+            FirestorePoint updatedPoint = pointService.addImageToPoint(
+                    pointId,
+                    request.getImageUrl(),
+                    actorId,
+                    actorEmail,
+                    request.getNotes(),
+                    Boolean.TRUE.equals(request.getGenerateThumbnail()),
+                    request.getThumbnailUrl()
+            );
+            return ResponseEntity.ok(updatedPoint);
         } catch (IllegalArgumentException e) {
             log.warn("Erro ao adicionar imagem ao ponto {}: {}", pointId, e.getMessage());
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
             log.error("Erro ao adicionar imagem ao ponto {}: {}", pointId, e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @DeleteMapping("/{pointId}/images")
+    @Operation(summary = "Remove image from point", description = "Remove uma imagem do ponto registrando auditoria (Admin only)")
+    @SecurityRequirement(name = "firebase")
+    @PreAuthorize("hasRole('ADMIN')")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        description = "Payload indicando a imagem que deve ser removida",
+        required = true,
+        content = @Content(schema = @Schema(implementation = PointImageRemovalRequest.class))
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Ponto atualizado",
+            content = @Content(schema = @Schema(implementation = FirestorePoint.class))),
+        @ApiResponse(responseCode = "400", description = "Imagem inexistente ou payload inválido"),
+        @ApiResponse(responseCode = "500", description = "Erro inesperado")
+    })
+    public ResponseEntity<FirestorePoint> removeImageFromPoint(
+            @PathVariable String pointId,
+            @AuthenticationPrincipal FirebaseToken token,
+            @Valid @RequestBody PointImageRemovalRequest request) {
+        try {
+            log.debug("Removendo imagem do ponto {}", pointId);
+            String actorId = token != null ? token.getUid() : "system";
+            String actorEmail = token != null ? token.getEmail() : null;
+            FirestorePoint updatedPoint = pointService.removeImageFromPoint(
+                    pointId,
+                    request.getImageUrl(),
+                    actorId,
+                    actorEmail,
+                    request.getReason()
+            );
+            return ResponseEntity.ok(updatedPoint);
+        } catch (IllegalArgumentException e) {
+            log.warn("Erro ao remover imagem do ponto {}: {}", pointId, e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            log.error("Erro ao remover imagem do ponto {}: {}", pointId, e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }
     }

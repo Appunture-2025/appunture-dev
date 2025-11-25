@@ -1,12 +1,15 @@
 package com.appunture.backend.service;
 
 import com.appunture.backend.model.firestore.FirestorePoint;
+import com.appunture.backend.model.firestore.FirestorePoint.ImageAuditEntry;
 import com.appunture.backend.repository.firestore.FirestorePointRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,6 +23,8 @@ import java.util.Optional;
 public class FirestorePointService {
 
     private final FirestorePointRepository pointRepository;
+    private final ThumbnailGenerationService thumbnailGenerationService;
+    private static final int MAX_AUDIT_ENTRIES = 50;
 
     /**
      * Busca um ponto por ID
@@ -133,6 +138,12 @@ public class FirestorePointService {
         if (updates.getImageUrls() != null) {
             point.setImageUrls(updates.getImageUrls());
         }
+        if (updates.getImageThumbnailMap() != null) {
+            point.setImageThumbnailMap(updates.getImageThumbnailMap());
+        }
+        if (updates.getImageAudit() != null) {
+            point.setImageAudit(updates.getImageAudit());
+        }
         if (updates.getSymptomIds() != null) {
             point.setSymptomIds(updates.getSymptomIds());
         }
@@ -204,44 +215,104 @@ public class FirestorePointService {
     /**
      * Adiciona imagem ao ponto
      */
-    public void addImageToPoint(String pointId, String imageUrl) {
-        log.debug("Adicionando imagem ao ponto: {}", pointId);
-        
-        Optional<FirestorePoint> pointOpt = pointRepository.findById(pointId);
-        if (pointOpt.isEmpty()) {
-            throw new IllegalArgumentException("Ponto não encontrado: " + pointId);
+    public FirestorePoint addImageToPoint(String pointId,
+                                          String imageUrl,
+                                          String performedBy,
+                                          String performedByEmail,
+                                          String notes,
+                                          boolean generateThumbnail,
+                                          String providedThumbnailUrl) {
+        log.debug("Adicionando imagem {} ao ponto {}", imageUrl, pointId);
+
+        FirestorePoint point = pointRepository.findById(pointId)
+                .orElseThrow(() -> new IllegalArgumentException("Ponto não encontrado: " + pointId));
+
+        List<String> imageUrls = ensureMutableList(point.getImageUrls());
+        if (!imageUrls.contains(imageUrl)) {
+            imageUrls.add(imageUrl);
+        }
+        point.setImageUrls(imageUrls);
+
+        Map<String, String> thumbnailMap = ensureMutableMap(point.getImageThumbnailMap());
+        thumbnailGenerationService.resolveThumbnail(imageUrl, generateThumbnail, providedThumbnailUrl)
+                .ifPresent(thumbnailUrl -> thumbnailMap.put(imageUrl, thumbnailUrl));
+        if (!thumbnailMap.isEmpty()) {
+            point.setImageThumbnailMap(thumbnailMap);
         }
 
-        FirestorePoint point = pointOpt.get();
-        if (point.getImageUrls() == null) {
-            point.setImageUrls(List.of(imageUrl));
-        } else if (!point.getImageUrls().contains(imageUrl)) {
-            point.getImageUrls().add(imageUrl);
-        }
+        appendImageAuditEntry(point, imageUrl, thumbnailMap.get(imageUrl), "ADDED", performedBy, performedByEmail, notes);
         point.setUpdatedAt(LocalDateTime.now());
 
-        pointRepository.save(point);
-        log.debug("Imagem adicionada ao ponto com sucesso");
+        FirestorePoint saved = pointRepository.save(point);
+        log.info("Imagem {} adicionada ao ponto {} por {}", imageUrl, pointId, performedBy);
+        return saved;
     }
 
     /**
-     * Remove imagem do ponto
+     * Remove imagem do ponto com auditoria
      */
-    public void removeImageFromPoint(String pointId, String imageUrl) {
-        log.debug("Removendo imagem do ponto: {}", pointId);
-        
-        Optional<FirestorePoint> pointOpt = pointRepository.findById(pointId);
-        if (pointOpt.isEmpty()) {
-            throw new IllegalArgumentException("Ponto não encontrado: " + pointId);
-        }
+    public FirestorePoint removeImageFromPoint(String pointId,
+                                               String imageUrl,
+                                               String performedBy,
+                                               String performedByEmail,
+                                               String notes) {
+        log.debug("Removendo imagem {} do ponto {}", imageUrl, pointId);
 
-        FirestorePoint point = pointOpt.get();
-        if (point.getImageUrls() != null) {
-            point.getImageUrls().remove(imageUrl);
-            point.setUpdatedAt(LocalDateTime.now());
-            pointRepository.save(point);
-            log.debug("Imagem removida do ponto com sucesso");
+        FirestorePoint point = pointRepository.findById(pointId)
+                .orElseThrow(() -> new IllegalArgumentException("Ponto não encontrado: " + pointId));
+
+        List<String> imageUrls = ensureMutableList(point.getImageUrls());
+        boolean removed = imageUrls.remove(imageUrl);
+        if (!removed) {
+            throw new IllegalArgumentException("Imagem não encontrada no ponto: " + imageUrl);
         }
+        point.setImageUrls(imageUrls);
+
+        Map<String, String> thumbnailMap = ensureMutableMap(point.getImageThumbnailMap());
+        thumbnailMap.remove(imageUrl);
+        point.setImageThumbnailMap(thumbnailMap.isEmpty() ? null : thumbnailMap);
+
+        appendImageAuditEntry(point, imageUrl, null, "REMOVED", performedBy, performedByEmail, notes);
+        point.setUpdatedAt(LocalDateTime.now());
+
+        FirestorePoint saved = pointRepository.save(point);
+        log.info("Imagem {} removida do ponto {} por {}", imageUrl, pointId, performedBy);
+        return saved;
+    }
+
+    private void appendImageAuditEntry(FirestorePoint point,
+                                       String imageUrl,
+                                       String thumbnailUrl,
+                                       String action,
+                                       String performedBy,
+                                       String performedByEmail,
+                                       String notes) {
+        List<ImageAuditEntry> auditEntries = ensureMutableAudit(point.getImageAudit());
+        auditEntries.add(ImageAuditEntry.builder()
+                .imageUrl(imageUrl)
+                .thumbnailUrl(thumbnailUrl)
+                .action(action)
+                .performedBy(performedBy)
+                .performedByEmail(performedByEmail)
+                .timestamp(LocalDateTime.now())
+                .notes(notes)
+                .build());
+        if (auditEntries.size() > MAX_AUDIT_ENTRIES) {
+            auditEntries.remove(0);
+        }
+        point.setImageAudit(auditEntries);
+    }
+
+    private List<String> ensureMutableList(List<String> source) {
+        return source == null ? new ArrayList<>() : new ArrayList<>(source);
+    }
+
+    private Map<String, String> ensureMutableMap(Map<String, String> source) {
+        return source == null ? new HashMap<>() : new HashMap<>(source);
+    }
+
+    private List<ImageAuditEntry> ensureMutableAudit(List<ImageAuditEntry> source) {
+        return source == null ? new ArrayList<>() : new ArrayList<>(source);
     }
 
     /**

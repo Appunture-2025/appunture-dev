@@ -7,14 +7,16 @@ Este documento detalha as principais decisões arquiteturais tomadas durante a m
 ## 🎯 Contexto e Objetivos
 
 ### Situação Inicial
+
 - **Backend Anterior**: Node.js + Express + PostgreSQL
-- **Problemas Identificados**: 
+- **Problemas Identificados**:
   - Custos de hosting PostgreSQL
   - Complexidade de deploy e manutenção
   - Limitações para integração mobile nativa
   - Dependência de infraestrutura tradicional
 
 ### Objetivos da Migração
+
 1. **Zero custo** durante desenvolvimento TCC
 2. **Escalabilidade** automática
 3. **Integração mobile** otimizada
@@ -23,23 +25,24 @@ Este documento detalha as principais decisões arquiteturais tomadas durante a m
 
 ## 🔄 Comparação: Antes vs Depois
 
-| Aspecto | Backend Anterior (Node.js) | Backend Atual (Java/Firebase) |
-|---------|---------------------------|--------------------------------|
-| **Runtime** | Node.js 18 + Express | Java 17 + Spring Boot 3.2.5 |
-| **Database** | PostgreSQL (Relacional) | Firestore (NoSQL) |
-| **Autenticação** | JWT customizado | Firebase Auth |
-| **Storage** | Sistema de arquivos local | Firebase Storage |
-| **Deploy** | VPS/Heroku (pago) | Cloud Run (free tier) |
-| **Custos mensais** | $15-50 | $0 (dentro dos limites) |
-| **Integração mobile** | API REST apenas | SDK nativo + Offline |
-| **Escalabilidade** | Manual | Automática |
-| **Manutenção** | Alta | Baixa (gerenciado) |
+| Aspecto               | Backend Anterior (Node.js) | Backend Atual (Java/Firebase) |
+| --------------------- | -------------------------- | ----------------------------- |
+| **Runtime**           | Node.js 18 + Express       | Java 17 + Spring Boot 3.2.5   |
+| **Database**          | PostgreSQL (Relacional)    | Firestore (NoSQL)             |
+| **Autenticação**      | JWT customizado            | Firebase Auth                 |
+| **Storage**           | Sistema de arquivos local  | Firebase Storage              |
+| **Deploy**            | VPS/Heroku (pago)          | Cloud Run (free tier)         |
+| **Custos mensais**    | $15-50                     | $0 (dentro dos limites)       |
+| **Integração mobile** | API REST apenas            | SDK nativo + Offline          |
+| **Escalabilidade**    | Manual                     | Automática                    |
+| **Manutenção**        | Alta                       | Baixa (gerenciado)            |
 
 ## 🏗️ Decisões Arquiteturais Detalhadas
 
 ### 1. Linguagem e Framework: Java 17 + Spring Boot 3.2.5
 
 #### ✅ Justificativas
+
 - **Maturidade**: Ecossistema Java robusto e bem estabelecido
 - **Performance**: JVM otimizada, melhor performance que Node.js para operações complexas
 - **Tipo Safety**: Detecção de erros em tempo de compilação
@@ -48,6 +51,7 @@ Este documento detalha as principais decisões arquiteturais tomadas durante a m
 - **Jakarta EE**: Padrão moderno da indústria
 
 #### 📊 Comparação de Performance
+
 ```
 Operação                    Node.js    Java/Spring Boot
 Startup time               ~2s        ~8s
@@ -59,6 +63,7 @@ Concorrência               Event loop  Thread pool
 ```
 
 #### ⚡ Vantagens Técnicas
+
 - **Compilação**: Otimizações automáticas do bytecode
 - **Garbage Collection**: Gerenciamento de memória avançado
 - **Thread Management**: Pool de threads eficiente
@@ -70,10 +75,12 @@ Concorrência               Event loop  Thread pool
 #### ✅ Por que Firestore?
 
 **Custos:**
+
 - PostgreSQL: $15-30/mês (RDS/Digital Ocean)
 - Firestore: $0 (50k reads, 20k writes diários gratuitos)
 
 **Escalabilidade:**
+
 ```javascript
 // PostgreSQL - Scaling vertical
 {
@@ -93,6 +100,7 @@ Concorrência               Event loop  Thread pool
 ```
 
 **Integração Mobile:**
+
 ```javascript
 // PostgreSQL - Apenas API REST
 Mobile App -> API REST -> PostgreSQL
@@ -104,6 +112,7 @@ Mobile App -> Firestore SDK -> Local Cache -> Firestore
 ```
 
 #### 🔄 Migração de Dados
+
 ```sql
 -- PostgreSQL Schema (Antes)
 CREATE TABLE users (
@@ -153,6 +162,7 @@ points/{pointId} {
 #### ✅ Vantagens Firebase Auth
 
 **Segurança:**
+
 ```javascript
 // JWT Customizado (Antes)
 - Secret management manual
@@ -168,6 +178,7 @@ points/{pointId} {
 ```
 
 **Features Out-of-the-Box:**
+
 - Multi-factor Authentication (MFA)
 - Social login (Google, Facebook, etc.)
 - Email verification automática
@@ -175,6 +186,7 @@ points/{pointId} {
 - Admin SDK para operações avançadas
 
 **Custom Claims para Roles:**
+
 ```javascript
 // Definir role customizada
 await admin.auth().setCustomUserClaims(uid, {
@@ -192,10 +204,12 @@ String role = (String) token.getClaims().get("role");
 #### ✅ Benefícios Firebase Storage
 
 **Custos e Manutenção:**
+
 - Sistema local: Backup, CDN, resize manual
 - Firebase Storage: Tudo gerenciado, CDN global
 
 **Integração Mobile:**
+
 ```javascript
 // Sistema local (Antes)
 Mobile -> Upload API -> Local filesystem -> Manual CDN
@@ -206,6 +220,7 @@ Mobile -> Firebase SDK -> Direct upload -> Global CDN
 ```
 
 **Processamento de Imagens:**
+
 ```javascript
 // Manual (Antes)
 const sharp = require('sharp');
@@ -224,6 +239,7 @@ https://firebasestorage.googleapis.com/image.jpg?w=300&h=300&q=80
 #### ✅ Vantagens Cloud Run
 
 **Modelo de Pricing:**
+
 ```javascript
 // VPS Tradicional
 {
@@ -245,6 +261,7 @@ https://firebasestorage.googleapis.com/image.jpg?w=300&h=300&q=80
 ```
 
 **Configuração Container:**
+
 ```dockerfile
 # Otimizado para Cloud Run
 FROM openjdk:17-jre-slim
@@ -255,6 +272,7 @@ ENTRYPOINT ["java", "-XX:+UseSerialGC", "-XX:MaxRAM=512m", "-jar", "/app.jar"]
 ```
 
 **Auto-scaling Configuration:**
+
 ```yaml
 # Cloud Run scaling
 apiVersion: serving.knative.dev/v1
@@ -263,8 +281,8 @@ spec:
   template:
     metadata:
       annotations:
-        autoscaling.knative.dev/minScale: "0"    # Scale to zero
-        autoscaling.knative.dev/maxScale: "100"  # Max instances
+        autoscaling.knative.dev/minScale: "0" # Scale to zero
+        autoscaling.knative.dev/maxScale: "100" # Max instances
         run.googleapis.com/cpu-throttling: "false"
 ```
 
@@ -273,6 +291,7 @@ spec:
 ### Benchmarks Comparativos
 
 #### 1. Latência de Response
+
 ```
 Endpoint: GET /points (100 pontos)
 
@@ -283,11 +302,12 @@ Node.js + PostgreSQL:
 
 Java + Firestore:
 - Média: 80ms
-- P95: 150ms  
+- P95: 150ms
 - P99: 250ms
 ```
 
 #### 2. Throughput
+
 ```
 Concurrent Users: 100
 
@@ -303,6 +323,7 @@ Java + Spring Boot:
 ```
 
 #### 3. Cold Start (Serverless)
+
 ```
 Node.js (Cloud Functions):
 - Cold start: 2-3s
@@ -317,16 +338,17 @@ Java (Cloud Run):
 ### Otimizações Implementadas
 
 #### 1. Cache Strategy
+
 ```java
 @Service
 @Slf4j
 public class FirestorePointService {
-    
+
     @Cacheable(value = "popular-points", key = "#limit")
     public List<PointResponse> findPopularPoints(int limit) {
         // Cache por 1 hora
     }
-    
+
     @CacheEvict(value = "popular-points", allEntries = true)
     public void updatePointUsage(String pointId) {
         // Invalidar cache ao atualizar
@@ -335,6 +357,7 @@ public class FirestorePointService {
 ```
 
 #### 2. Async Operations
+
 ```java
 @Async
 public CompletableFuture<List<FirestorePoint>> findPointsAsync() {
@@ -347,10 +370,11 @@ public CompletableFuture<List<FirestorePoint>> findPointsAsync() {
 ```
 
 #### 3. Connection Pooling
+
 ```java
 @Configuration
 public class FirestoreConfig {
-    
+
     @Bean
     public Firestore firestore() {
         FirestoreOptions options = FirestoreOptions.newBuilder()
@@ -363,7 +387,7 @@ public class FirestoreConfig {
                     .build()
             )
             .build();
-        
+
         return options.getService();
     }
 }
@@ -374,6 +398,7 @@ public class FirestoreConfig {
 ### Limites Free Tier Firebase
 
 #### Firestore
+
 ```javascript
 Daily limits (free):
 {
@@ -394,6 +419,7 @@ Monthly estimate for TCC:
 ```
 
 #### Firebase Storage
+
 ```javascript
 Free tier:
 {
@@ -412,7 +438,49 @@ TCC usage:
 }
 ```
 
+## 📈 Observabilidade, Dashboards e Alertas
+
+### Stack configurada
+
+| Componente      | Função                                                           | Arquivo/Config                                                                        |
+| --------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **Prometheus**  | Scrape de métricas Micrometer expostas em `/actuator/prometheus` | `backend-java/observability/prometheus.yml`                                           |
+| **Alert Rules** | Latência P95, erros 5xx e estouro de rate-limit                  | `backend-java/observability/alert-rules.yml`                                          |
+| **Grafana**     | Dashboard opinativo importado automaticamente                    | `backend-java/observability/grafana-dashboard.json` + provisioning em `grafana-*.yml` |
+
+Para subir todo o stack local (backend + Prometheus + Grafana):
+
+1. `docker compose up backend-java prometheus grafana -d`
+2. Acesse Prometheus em `http://localhost:9090` (alvos já apontam para `backend-java:8080/actuator/prometheus`).
+3. Acesse Grafana em `http://localhost:3000` (usuário/padrão `admin/admin`) e verifique o dashboard **“Appunture Backend Observability”** já provisionado em _Folder > Appunture_.
+
+### Métricas e dashboards
+
+Os painéis principais do JSON provisionado:
+
+- **HTTP P95 Latency**: `histogram_quantile(0.95, rate(http_server_requests_seconds_bucket...))` – thresholds 0.8s (alerta) / 1.2s (crítico).
+- **5xx Error Rate**: `sum(rate(http_server_requests_seconds_count{status=~"5.."}...))` – identifica regressões ou falhas externas.
+- **Rate Limit Rejections**: `sum(rate(app_rate_limit_rejections_total[5m]))` – alimentado pelos novos `Counter`s Micrometer registrados no `RateLimitingFilter`.
+- **Requests per Endpoint**: ranking de rotas para apoiar tuning de cache e índices.
+
+### Alertas Prometheus prontos
+
+| Alerta                    | Critério                                      | Ação sugerida                                                                     |
+| ------------------------- | --------------------------------------------- | --------------------------------------------------------------------------------- |
+| `AppuntureHighLatencyP95` | P95 > 1s por 5 minutos                        | Verificar Firestore quota, Cloud Run cold start ou gargalos de upload.            |
+| `AppuntureErrorSpike`     | Taxa > 0.5 req/s com status 5xx               | Checar logs estruturados (Logback JSON) e integridade dos tokens Firebase.        |
+| `RateLimitRejections`     | `app_rate_limit_rejections_total` > 0.2 req/s | Validar se há abuso/bot ou se o limite precisa ser ajustado no `application.yml`. |
+
+Para integrar com Alertmanager/Slack basta apontar o `prometheus.yml` para a instância desejada (o arquivo já referencia `alert-rules.yml`).
+
+### FAQs
+
+- **Onde ajustar queries?** Abra o JSON em `observability/grafana-dashboard.json` ou edite diretamente no Grafana (provisionamento permite updates pela UI).
+- **Quais variáveis estão disponíveis?** Tags padrão Micrometer `application` e `profile` já são exportadas; use-as como filtros na UI.
+- **Como expandir?** Adicione novos `.json` no mesmo volume e crie novos `providers` em `grafana-dashboard-provisioning.yml`.
+
 #### Cloud Run
+
 ```javascript
 Free tier (monthly):
 {
@@ -433,26 +501,27 @@ TCC projection:
 
 ### Comparação de Custos (6 meses TCC)
 
-| Serviço | Solução Anterior | Solução Firebase | Economia |
-|---------|------------------|------------------|----------|
-| **Database** | PostgreSQL $15/mês | Firestore $0 | $90 |
-| **Hosting** | VPS $20/mês | Cloud Run $0 | $120 |
-| **Storage** | S3 $5/mês | Firebase Storage $0 | $30 |
-| **CDN** | CloudFlare $10/mês | Firebase $0 | $60 |
-| **Monitoring** | DataDog $25/mês | Google Cloud $0 | $150 |
-| **Backup** | Manual $10/mês | Automático $0 | $60 |
-| **Total** | **$85/mês** | **$0/mês** | **$510** |
+| Serviço        | Solução Anterior   | Solução Firebase    | Economia |
+| -------------- | ------------------ | ------------------- | -------- |
+| **Database**   | PostgreSQL $15/mês | Firestore $0        | $90      |
+| **Hosting**    | VPS $20/mês        | Cloud Run $0        | $120     |
+| **Storage**    | S3 $5/mês          | Firebase Storage $0 | $30      |
+| **CDN**        | CloudFlare $10/mês | Firebase $0         | $60      |
+| **Monitoring** | DataDog $25/mês    | Google Cloud $0     | $150     |
+| **Backup**     | Manual $10/mês     | Automático $0       | $60      |
+| **Total**      | **$85/mês**        | **$0/mês**          | **$510** |
 
 ## 🔒 Considerações de Segurança
 
 ### Security by Design
 
 #### 1. Authentication & Authorization
+
 ```java
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -470,6 +539,7 @@ public class SecurityConfig {
 ```
 
 #### 2. Firestore Security Rules
+
 ```javascript
 // Granular permission control
 rules_version = '2';
@@ -477,14 +547,14 @@ service cloud.firestore {
   match /databases/{database}/documents {
     // Users can only access their own data
     match /users/{userId} {
-      allow read, write: if request.auth != null 
+      allow read, write: if request.auth != null
         && request.auth.uid == userId;
     }
-    
+
     // Role-based access for admin operations
     match /points/{pointId} {
       allow read: if true; // Public read
-      allow write: if request.auth != null 
+      allow write: if request.auth != null
         && request.auth.token.role == 'ADMIN';
     }
   }
@@ -492,11 +562,12 @@ service cloud.firestore {
 ```
 
 #### 3. Input Validation
+
 ```java
 @RestController
 @Validated
 public class FirestorePointController {
-    
+
     @PostMapping("/points")
     public ResponseEntity<PointResponse> createPoint(
             @Valid @RequestBody CreatePointRequest request) {
@@ -511,7 +582,7 @@ public class CreatePointRequest {
     @NotBlank(message = "Nome é obrigatório")
     @Size(min = 3, max = 100, message = "Nome deve ter entre 3 e 100 caracteres")
     private String name;
-    
+
     @NotNull(message = "Coordenadas são obrigatórias")
     @Valid
     private Coordinates coordinates;
@@ -523,24 +594,28 @@ public class CreatePointRequest {
 ### Processo Incremental
 
 #### Fase 1: Infraestrutura ✅
+
 - [x] Setup Firebase projeto
 - [x] Configuração Firestore
 - [x] Firebase Auth integration
 - [x] Cloud Run deployment
 
 #### Fase 2: Core Services ✅
+
 - [x] User management
 - [x] Points CRUD
 - [x] Symptoms CRUD
 - [x] Authentication flow
 
 #### Fase 3: Advanced Features 🔄
+
 - [ ] Search optimization
 - [ ] Caching strategy
 - [ ] File upload
 - [ ] Analytics integration
 
 #### Fase 4: Testing & Optimization 📋
+
 - [ ] Unit tests (80% coverage)
 - [ ] Integration tests
 - [ ] Performance optimization
@@ -551,23 +626,23 @@ public class CreatePointRequest {
 ```java
 @Component
 public class DataMigrationService {
-    
+
     public void migrateFromPostgreSQL() {
         // 1. Export PostgreSQL data
         List<User> pgUsers = postgresRepository.findAll();
-        
+
         // 2. Transform to Firestore format
         List<FirestoreUser> firestoreUsers = pgUsers.stream()
             .map(this::transformUser)
             .collect(toList());
-        
+
         // 3. Batch import to Firestore
         WriteBatch batch = firestore.batch();
         firestoreUsers.forEach(user -> {
             DocumentReference docRef = firestore.collection("users").document();
             batch.set(docRef, user);
         });
-        
+
         // 4. Execute batch write
         batch.commit();
     }
@@ -590,7 +665,7 @@ Performance Metrics:
 Business Metrics:
 {
   userRegistration: "daily",
-  pointUsage: "weekly trends", 
+  pointUsage: "weekly trends",
   searchQueries: "popularity ranking",
   adminOperations: "audit trail"
 }
@@ -612,11 +687,11 @@ alerting:
   - name: "High Error Rate"
     condition: "error_rate > 1%"
     duration: "5m"
-    
+
   - name: "High Latency"
     condition: "response_time_p95 > 200ms"
     duration: "2m"
-    
+
   - name: "Firestore Quota"
     condition: "daily_reads > 40000"
     duration: "1m"
@@ -640,11 +715,13 @@ logging:
 ### Justificativas Técnicas para Banca
 
 1. **Escolha de Tecnologia**:
+
    - Java: Robustez e performance empresarial
    - Spring Boot: Produtividade e padrões da indústria
    - Firebase: Solução moderna para mobile-first
 
 2. **Arquitetura Serverless**:
+
    - Redução de complexidade operacional
    - Escalabilidade automática
    - Foco no desenvolvimento vs infraestrutura
@@ -659,18 +736,21 @@ logging:
 ### Roadmap Tecnológico
 
 #### Curto Prazo (3-6 meses)
+
 - [ ] GraalVM native compilation (cold start < 1s)
 - [ ] Advanced caching with Redis
 - [ ] Real-time notifications (Firebase FCM)
 - [ ] Advanced analytics dashboard
 
 #### Médio Prazo (6-12 meses)
+
 - [ ] Machine Learning integration (recommendations)
 - [ ] GraphQL API alternative
 - [ ] Microservices decomposition
 - [ ] Multi-region deployment
 
 #### Longo Prazo (1+ anos)
+
 - [ ] Kubernetes migration (if needed)
 - [ ] Event-driven architecture
 - [ ] Advanced AI features

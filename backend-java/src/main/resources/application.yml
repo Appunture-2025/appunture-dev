@@ -34,15 +34,22 @@ logging:
 # Configurações Firebase e Google Cloud (para TCC - Plano Gratuito)
 firebase:
   project-id: ${FIREBASE_PROJECT_ID:appunture-tcc}
-  service-account-key: ${FIREBASE_SERVICE_ACCOUNT_KEY:}  # JSON em string base64 ou vazio para usar ADC
+  service-account-key: ${FIREBASE_SERVICE_ACCOUNT_KEY:} # JSON em string base64 ou vazio para usar ADC
   storage:
     bucket: ${FIREBASE_STORAGE_BUCKET:appunture-tcc.appspot.com}
 
 app:
   file-storage:
-    local-path: ./uploads  # Fallback se Cloud Storage não estiver disponível
+    local-path: ./uploads # Fallback se Cloud Storage não estiver disponível
   firebase:
-    enabled: ${FIREBASE_ENABLED:true}  # Permite desabilitar Firebase para desenvolvimento
+    enabled: ${FIREBASE_ENABLED:true} # Permite desabilitar Firebase para desenvolvimento
+  images:
+    thumbnail:
+      enabled: ${THUMBNAIL_GENERATION_ENABLED:true}
+      function-url: ${THUMBNAIL_FUNCTION_URL:}
+      fallback-query: alt=media&token=thumb-320&size=320
+      default-width: 320
+      default-height: 320
   security:
     require-email-verified: false
     cors:

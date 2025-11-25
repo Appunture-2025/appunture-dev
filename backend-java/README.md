@@ -106,6 +106,7 @@ src/main/java/com/appunture/backend/
 ## 🌐 API Endpoints
 
 ### 🔐 Autenticação (Firebase ID Token obrigatório)
+
 ```
 GET    /auth/profile               # Perfil do usuário no Firestore
 PUT    /auth/profile               # Atualizar perfil
@@ -116,6 +117,7 @@ DELETE /auth/favorites/{pointId}   # Remover favorito
 ```
 
 ### 🎯 Pontos de Acupuntura
+
 ```
 GET    /points             # Listar pontos
 GET    /points/{id}        # Buscar ponto por ID Firestore
@@ -130,6 +132,7 @@ GET    /points/popular     # Pontos populares
 ```
 
 ### 🩺 Sintomas
+
 ```
 GET    /symptoms               # Listar sintomas
 GET    /symptoms/{id}          # Buscar sintoma
@@ -146,11 +149,13 @@ GET    /symptoms/categories # Categorias de sintomas
 ```
 
 ### 👤 Favoritos
+
 ```
 Manuseados via /auth/favorites/**
 ```
 
 ### 👨‍💼 Administração
+
 ```
 GET    /admin/dashboard    # Dashboard admin
 GET    /admin/users        # Gerenciar usuários
@@ -160,12 +165,19 @@ GET    /admin/stats        # Estatísticas
 ```
 
 ### 🏥 Health Checks
+
 ```
 GET /health               # Status básico
 GET /health/detailed      # Status detalhado
 GET /health/readiness     # Readiness probe
 GET /health/liveness      # Liveness probe
 ```
+
+## 🧰 Coleções e Contratos
+
+- **Postman/Insomnia**: importe `backend-java/openapi/appunture-backend.postman_collection.json` (variáveis `baseUrl`, `firebase_id_token` e `admin_id_token` já configuradas).
+- **Swagger UI**: disponível em `/swagger-ui.html` com os novos exemplos (`FirestorePoint`, `PointImageRequest`).
+- **Observabilidade**: arquivos prontos em `backend-java/observability/` para provisionar Prometheus/Grafana + alertas.
 
 ## 🔧 Configuração
 
@@ -176,8 +188,9 @@ GET /health/liveness      # Liveness probe
 A aplicação utiliza configuração CORS restritiva por segurança. **NUNCA use `allowedOrigins("*")` em produção!**
 
 **Riscos de CORS Permissivo:**
+
 - CSRF (Cross-Site Request Forgery)
-- XSS (Cross-Site Scripting)  
+- XSS (Cross-Site Scripting)
 - Data leakage
 - Acesso não autorizado à API
 
@@ -198,6 +211,7 @@ app:
 ```
 
 **Uso:**
+
 - Frontend React: `http://localhost:3000`
 - Expo Mobile: `http://localhost:19006`
 - Testes locais: `http://127.0.0.1:8080`
@@ -220,6 +234,7 @@ app:
 ```
 
 **⚠️ Para adicionar novo domínio em produção:**
+
 1. Edite `application-prod.yml`
 2. Adicione domínio HTTPS completo
 3. Execute testes CORS
@@ -255,13 +270,13 @@ mvn test -Dtest=CorsConfigurationTest
 
 ### Variáveis de Ambiente
 
-| Variável | Descrição | Obrigatório |
-|----------|-----------|-------------|
-| `GOOGLE_APPLICATION_CREDENTIALS` | Caminho para service account JSON | ✅ |
-| `FIREBASE_PROJECT_ID` | ID do projeto Firebase | ✅ |
-| `FIREBASE_STORAGE_BUCKET` | Bucket do Firebase Storage | ✅ |
-| `SERVER_PORT` | Porta do servidor (padrão: 8080) | ❌ |
-| `LOGGING_LEVEL_ROOT` | Nível de log (padrão: INFO) | ❌ |
+| Variável                         | Descrição                         | Obrigatório |
+| -------------------------------- | --------------------------------- | ----------- |
+| `GOOGLE_APPLICATION_CREDENTIALS` | Caminho para service account JSON | ✅          |
+| `FIREBASE_PROJECT_ID`            | ID do projeto Firebase            | ✅          |
+| `FIREBASE_STORAGE_BUCKET`        | Bucket do Firebase Storage        | ✅          |
+| `SERVER_PORT`                    | Porta do servidor (padrão: 8080)  | ❌          |
+| `LOGGING_LEVEL_ROOT`             | Nível de log (padrão: INFO)       | ❌          |
 
 ### application.yml
 
@@ -329,12 +344,14 @@ gcloud run deploy appunture-backend \
 ## 💰 Custos Firebase (Free Tier)
 
 ### Limites Gratuitos Diários
+
 - **Firestore**: 50k reads, 20k writes, 20k deletes
 - **Firebase Auth**: Ilimitado
 - **Firebase Storage**: 5GB total, 1GB transfer/dia
 - **Cloud Run**: 2M requests, 400k GB-seconds
 
 ### Monitoramento
+
 - Dashboard no Firebase Console
 - Alertas configurados para 80% dos limites
 - Logs estruturados para análise de usage
@@ -342,11 +359,13 @@ gcloud run deploy appunture-backend \
 ## 🔍 Desenvolvimento
 
 ### Code Style
+
 - Google Java Style Guide
 - Checkstyle configurado
 - SpotBugs para análise estática
 
 ### Git Workflow
+
 ```bash
 # Feature branch
 git checkout -b feature/nova-funcionalidade

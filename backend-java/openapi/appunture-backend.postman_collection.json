@@ -1,0 +1,98 @@
+{
+  "info": {
+    "_postman_id": "fef423c7-7f5f-48fd-9e4a-6351b5f9b1aa",
+    "name": "Appunture Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Coleção oficial do backend Spring Boot/Firebase com exemplos de payload e headers."
+  },
+  "item": [
+    {
+      "name": "Listar pontos",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{firebase_id_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/points",
+          "host": ["{{baseUrl}}"],
+          "path": ["points"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Adicionar imagem ao ponto",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_id_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"imageUrl\": \"https://storage.googleapis.com/appunture/points/vg20/raw.jpg\",\n  \"thumbnailUrl\": \"https://storage.googleapis.com/appunture/points/vg20/raw_320.jpg\",\n  \"notes\": \"Upload realizado via painel admin\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/points/{{pointId}}/images",
+          "host": ["{{baseUrl}}"],
+          "path": ["points", "{{pointId}}", "images"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Remover imagem do ponto",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_id_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"imageUrl\": \"https://storage.googleapis.com/appunture/points/vg20/raw.jpg\",\n  \"reason\": \"Imagem desatualizada\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/points/{{pointId}}/images",
+          "host": ["{{baseUrl}}"],
+          "path": ["points", "{{pointId}}", "images"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api"
+    },
+    {
+      "key": "firebase_id_token",
+      "value": "{{PUT_YOUR_TOKEN_HERE}}"
+    },
+    {
+      "key": "admin_id_token",
+      "value": "{{PUT_YOUR_ADMIN_TOKEN_HERE}}"
+    },
+    {
+      "key": "pointId",
+      "value": "VG20"
+    }
+  ]
+}
