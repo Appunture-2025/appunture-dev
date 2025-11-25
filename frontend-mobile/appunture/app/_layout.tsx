@@ -39,7 +39,7 @@ export default function RootLayout() {
 
         // Auto-sync if online and has pending operations
         if (isOnline) {
-          processSyncQueue().catch((error) => {
+          processSyncQueue().catch((error: any) => {
             console.warn("Auto-sync failed on app start:", error);
           });
         }
@@ -59,6 +59,7 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="admin" options={{ headerShown: false }} />
           <Stack.Screen
             name="point/[id]"
             options={{

@@ -80,7 +80,15 @@ export default function SearchScreen() {
   );
 
   const renderEmpty = () => (
-    <View style={styles.emptyContainer}>
+    <View
+      style={styles.emptyContainer}
+      accessibilityRole="text"
+      accessibilityLabel={
+        searchQuery
+          ? "Nenhum ponto encontrado para esta busca."
+          : "Nenhum ponto disponível."
+      }
+    >
       <Text style={styles.emptyText}>
         {searchQuery
           ? "Nenhum ponto encontrado para esta busca."
@@ -90,7 +98,11 @@ export default function SearchScreen() {
   );
 
   const renderHeader = () => (
-    <View style={styles.header}>
+    <View
+      style={styles.header}
+      accessibilityRole="header"
+      accessibilityLabel="Busca de pontos"
+    >
       <SearchBar
         placeholder="Buscar pontos, meridianos..."
         value={searchQuery}

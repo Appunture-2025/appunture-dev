@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -92,11 +93,11 @@ export const useAuthStore = create<AuthStore>()(
           // For mobile, we need Google Sign-In library
           // This is a placeholder implementation
           // In production, use @react-native-google-signin/google-signin for mobile
-          
+
           throw new Error(
             "Google Sign-In requer configuração adicional. " +
-            "Para React Native, instale @react-native-google-signin/google-signin. " +
-            "Para web, use signInWithPopup do Firebase Auth."
+              "Para React Native, instale @react-native-google-signin/google-signin. " +
+              "Para web, use signInWithPopup do Firebase Auth."
           );
 
           // Example web implementation:
@@ -120,11 +121,11 @@ export const useAuthStore = create<AuthStore>()(
           // For iOS, use Apple Sign-In
           // This is a placeholder implementation
           // In production, use expo-apple-authentication or native modules
-          
+
           throw new Error(
             "Apple Sign-In requer configuração adicional. " +
-            "Para iOS, use expo-apple-authentication. " +
-            "Disponível apenas em dispositivos Apple."
+              "Para iOS, use expo-apple-authentication. " +
+              "Disponível apenas em dispositivos Apple."
           );
 
           // Example iOS implementation:
@@ -220,17 +221,22 @@ export const useAuthStore = create<AuthStore>()(
             getStoredUserData(),
           ]);
 
-          const firebaseUser = await new Promise<FirebaseUser | null>((resolve) => {
-            const unsubscribe = onAuthStateChanged(firebaseAuth, (user: FirebaseUser | null) => {
-              unsubscribe();
-              resolve(user);
-            });
+          const firebaseUser = await new Promise<FirebaseUser | null>(
+            (resolve) => {
+              const unsubscribe = onAuthStateChanged(
+                firebaseAuth,
+                (user: FirebaseUser | null) => {
+                  unsubscribe();
+                  resolve(user);
+                }
+              );
 
-            setTimeout(() => {
-              unsubscribe();
-              resolve(firebaseAuth.currentUser ?? null);
-            }, 1500);
-          });
+              setTimeout(() => {
+                unsubscribe();
+                resolve(firebaseAuth.currentUser ?? null);
+              }, 1500);
+            }
+          );
 
           if (!firebaseUser) {
             await removeToken();
@@ -300,6 +306,7 @@ export const useAuthStore = create<AuthStore>()(
     }),
     {
       name: "auth-store",
+      storage: createJSONStorage(() => AsyncStorage),
       partialize: (state: AuthStore) => ({
         user: state.user,
         token: state.token,

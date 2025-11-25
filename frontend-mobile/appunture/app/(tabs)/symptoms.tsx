@@ -104,6 +104,11 @@ export default function SymptomsScreen() {
     <TouchableOpacity
       style={styles.symptomCard}
       onPress={() => handleSymptomPress(item)}
+      accessibilityRole="button"
+      accessibilityLabel={`Sintoma ${item.name}. Categoria ${
+        item.category || "Geral"
+      }. ${item.description || ""}`}
+      accessibilityHint="Toque para ver detalhes do sintoma"
     >
       <View style={styles.symptomHeader}>
         <Ionicons
@@ -111,6 +116,7 @@ export default function SymptomsScreen() {
           size={24}
           color={COLORS.primary}
           style={styles.symptomIcon}
+          importantForAccessibility="no-hide-descendants"
         />
         <View style={styles.symptomInfo}>
           <Text style={styles.symptomName}>{item.name}</Text>
@@ -122,6 +128,7 @@ export default function SymptomsScreen() {
           name="chevron-forward"
           size={20}
           color={COLORS.textSecondary}
+          importantForAccessibility="no-hide-descendants"
         />
       </View>
       {item.description && (
@@ -154,6 +161,9 @@ export default function SymptomsScreen() {
         selectedCategory === category && styles.categoryChipActive,
       ]}
       onPress={() => handleCategorySelect(category)}
+      accessibilityRole="button"
+      accessibilityLabel={`Filtrar por categoria ${category}`}
+      accessibilityState={{ selected: selectedCategory === category }}
     >
       <Text
         style={[
@@ -167,8 +177,21 @@ export default function SymptomsScreen() {
   );
 
   const renderEmpty = () => (
-    <View style={styles.emptyContainer}>
-      <Ionicons name="medical-outline" size={64} color={COLORS.textSecondary} />
+    <View
+      style={styles.emptyContainer}
+      accessibilityRole="text"
+      accessibilityLabel={
+        searchQuery
+          ? "Nenhum sintoma encontrado. Tente buscar com outras palavras."
+          : "Nenhum sintoma encontrado. Não há sintomas cadastrados."
+      }
+    >
+      <Ionicons
+        name="medical-outline"
+        size={64}
+        color={COLORS.textSecondary}
+        importantForAccessibility="no-hide-descendants"
+      />
       <Text style={styles.emptyTitle}>Nenhum sintoma encontrado</Text>
       <Text style={styles.emptyText}>
         {searchQuery

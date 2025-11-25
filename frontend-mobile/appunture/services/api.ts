@@ -67,7 +67,9 @@ class ApiService {
           if (config.headers instanceof AxiosHeaders) {
             config.headers.set("Authorization", `Bearer ${token}`);
           } else {
-            (config.headers as Record<string, string>).Authorization = `Bearer ${token}`;
+            (
+              config.headers as Record<string, string>
+            ).Authorization = `Bearer ${token}`;
           }
         }
         return config;
@@ -329,23 +331,16 @@ class ApiService {
     await this.client.delete(`/auth/favorites/${pointId}`);
   }
 
-  async getFavorites(): Promise<{ points: Point[] }> {
-    // Backend returns favorites as part of user profile
-    const profile = await this.getProfile();
-    const favoriteIds = (profile as any).favoritePoints || [];
-    
-    // If we have favorite IDs, fetch the actual points
-    if (favoriteIds.length === 0) {
-      return { points: [] };
-    }
-    
-    // Fetch all points and filter by favorites
-    const allPoints = await this.getPoints();
-    const favoritePoints = allPoints.points.filter((p) =>
-      favoriteIds.includes(p.id)
-    );
-    
-    return { points: favoritePoints };
+  async getFavorites(
+    page = 0,
+    limit = 10
+  ): Promise<{ points: Point[]; total: number; hasMore: boolean }> {
+    const response = await this.client.get<{
+      points: Point[];
+      total: number;
+      hasMore: boolean;
+    }>("/auth/favorites", { params: { page, limit } });
+    return response.data;
   }
 
   // Health check
@@ -468,10 +463,7 @@ class ApiService {
     content: string;
     userId: string;
   }): Promise<{ note: Note }> {
-    const response = await this.client.post<{ note: Note }>(
-      "/notes",
-      noteData
-    );
+    const response = await this.client.post<{ note: Note }>("/notes", noteData);
     return response.data;
   }
 
@@ -527,6 +519,44 @@ class ApiService {
       params,
     });
     return response.data;
+  }
+
+  // Admin endpoints - Users
+  async getUsers(): Promise<User[]> {
+    const response = await this.client.get<User[]>("/admin/users");
+    return response.data;
+  }
+
+  async updateUserRole(userId: string, role: string): Promise<User> {
+    const response = await this.client.put<User>(
+      `/admin/users/${userId}/role`,
+      {
+        role,
+      }
+    );
+    return response.data;
+  }
+
+  async deleteUser(userId: string): Promise<void> {
+    await this.client.delete(`/admin/users/${userId}`);
+  }
+
+  async getAdminStats(): Promise<any> {
+    const response = await this.client.get("/admin/stats");
+    return response.data;
+  }
+
+  // AI Chat
+  async chatWithAi(message: string): Promise<string> {
+    try {
+      const response = await this.client.post<{ response: string }>("/chat", {
+        message,
+      });
+      return response.data.response;
+    } catch (error) {
+      console.error("AI Chat Error:", error);
+      return "Desculpe, estou tendo dificuldades para me conectar ao servidor de inteligência no momento. Por favor, tente novamente mais tarde.";
+    }
   }
 }
 

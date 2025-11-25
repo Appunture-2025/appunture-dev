@@ -28,7 +28,12 @@ export default function SearchBar({
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <Ionicons name="search" size={20} color={COLORS.textSecondary} />
+        <Ionicons
+          name="search"
+          size={20}
+          color={COLORS.textSecondary}
+          importantForAccessibility="no-hide-descendants"
+        />
         <TextInput
           style={styles.input}
           placeholder={placeholder}
@@ -38,10 +43,22 @@ export default function SearchBar({
           onSubmitEditing={onSubmit}
           returnKeyType="search"
           editable={!loading}
+          accessibilityLabel={placeholder}
+          accessibilityHint="Digite para buscar"
         />
-        {loading && <ActivityIndicator size="small" color={COLORS.primary} />}
+        {loading && (
+          <ActivityIndicator
+            size="small"
+            color={COLORS.primary}
+            accessibilityLabel="Buscando..."
+          />
+        )}
         {!loading && value.length > 0 && (
-          <TouchableOpacity onPress={() => onChangeText("")}>
+          <TouchableOpacity
+            onPress={() => onChangeText("")}
+            accessibilityRole="button"
+            accessibilityLabel="Limpar busca"
+          >
             <Ionicons
               name="close-circle"
               size={20}

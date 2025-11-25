@@ -90,22 +90,40 @@ export default function HomeScreen() {
     <TouchableOpacity
       style={styles.symptomCard}
       onPress={() => handleSymptomPress(item.id)}
+      accessibilityRole="button"
+      accessibilityLabel={`Ver detalhes do sintoma ${item.name}${
+        item.category ? `, categoria ${item.category}` : ""
+      }`}
     >
-      <Ionicons name="medical-outline" size={24} color={COLORS.primary} />
+      <Ionicons
+        name="medical-outline"
+        size={24}
+        color={COLORS.primary}
+        importantForAccessibility="no-hide-descendants"
+      />
       <View style={styles.symptomInfo}>
         <Text style={styles.symptomName}>{item.name}</Text>
         {item.category && (
           <Text style={styles.symptomCategory}>{item.category}</Text>
         )}
       </View>
-      <Ionicons name="chevron-forward" size={20} color={COLORS.textSecondary} />
+      <Ionicons
+        name="chevron-forward"
+        size={20}
+        color={COLORS.textSecondary}
+        importantForAccessibility="no-hide-descendants"
+      />
     </TouchableOpacity>
   );
 
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.loadingContainer}>
+        <View
+          style={styles.loadingContainer}
+          accessibilityRole="alert"
+          accessibilityLabel="Carregando dados da tela inicial"
+        >
           <ActivityIndicator size="large" color={COLORS.primary} />
           <Text style={styles.loadingText}>Carregando...</Text>
         </View>
@@ -121,7 +139,7 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Welcome Header */}
-        <View style={styles.welcomeSection}>
+        <View style={styles.welcomeSection} accessibilityRole="header">
           <Text style={styles.welcomeTitle}>
             Bem-vindo{isAuthenticated && user?.name ? `, ${user.name}` : ""}!
           </Text>
@@ -132,40 +150,70 @@ export default function HomeScreen() {
 
         {/* Quick Actions */}
         <View style={styles.quickActionsSection}>
-          <Text style={styles.sectionTitle}>Ações Rápidas</Text>
+          <Text style={styles.sectionTitle} accessibilityRole="header">
+            Ações Rápidas
+          </Text>
           <View style={styles.quickActionsGrid}>
             <TouchableOpacity
               style={styles.quickAction}
               onPress={() => router.push("/(tabs)/search")}
+              accessibilityRole="button"
+              accessibilityLabel="Buscar Pontos"
+              accessibilityHint="Navegar para a busca de pontos"
             >
-              <Ionicons name="search" size={32} color={COLORS.primary} />
+              <Ionicons
+                name="search"
+                size={32}
+                color={COLORS.primary}
+                importantForAccessibility="no-hide-descendants"
+              />
               <Text style={styles.quickActionText}>Buscar Pontos</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.quickAction}
               onPress={() => router.push("/(tabs)/symptoms")}
+              accessibilityRole="button"
+              accessibilityLabel="Ver Sintomas"
+              accessibilityHint="Navegar para a lista de sintomas"
             >
-              <Ionicons name="medical" size={32} color={COLORS.secondary} />
+              <Ionicons
+                name="medical"
+                size={32}
+                color={COLORS.secondary}
+                importantForAccessibility="no-hide-descendants"
+              />
               <Text style={styles.quickActionText}>Ver Sintomas</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.quickAction}
               onPress={() => router.push("/body-map")}
+              accessibilityRole="button"
+              accessibilityLabel="Mapa Corporal"
+              accessibilityHint="Navegar para o mapa corporal interativo"
             >
-              <Ionicons name="body" size={32} color={COLORS.accent} />
+              <Ionicons
+                name="body"
+                size={32}
+                color={COLORS.accent}
+                importantForAccessibility="no-hide-descendants"
+              />
               <Text style={styles.quickActionText}>Mapa Corporal</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.quickAction}
               onPress={() => router.push("/(tabs)/chatbot")}
+              accessibilityRole="button"
+              accessibilityLabel="Assistente IA"
+              accessibilityHint="Conversar com o assistente virtual"
             >
               <Ionicons
                 name="chatbubble-ellipses"
                 size={32}
                 color={COLORS.success}
+                importantForAccessibility="no-hide-descendants"
               />
               <Text style={styles.quickActionText}>Assistente IA</Text>
             </TouchableOpacity>
@@ -176,8 +224,14 @@ export default function HomeScreen() {
         {popularPoints.length > 0 && (
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Pontos Populares</Text>
-              <TouchableOpacity onPress={() => router.push("/(tabs)/search")}>
+              <Text style={styles.sectionTitle} accessibilityRole="header">
+                Pontos Populares
+              </Text>
+              <TouchableOpacity
+                onPress={() => router.push("/(tabs)/search")}
+                accessibilityRole="button"
+                accessibilityLabel="Ver todos os pontos populares"
+              >
                 <Text style={styles.seeAllText}>Ver todos</Text>
               </TouchableOpacity>
             </View>
@@ -196,8 +250,14 @@ export default function HomeScreen() {
         {popularSymptoms.length > 0 && (
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Sintomas Comuns</Text>
-              <TouchableOpacity onPress={() => router.push("/(tabs)/symptoms")}>
+              <Text style={styles.sectionTitle} accessibilityRole="header">
+                Sintomas Comuns
+              </Text>
+              <TouchableOpacity
+                onPress={() => router.push("/(tabs)/symptoms")}
+                accessibilityRole="button"
+                accessibilityLabel="Ver todos os sintomas comuns"
+              >
                 <Text style={styles.seeAllText}>Ver todos</Text>
               </TouchableOpacity>
             </View>

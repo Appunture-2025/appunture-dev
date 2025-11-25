@@ -14,8 +14,13 @@ import { COLORS, SPACING } from "../../utils/constants";
 import PointCard from "../../components/PointCard";
 
 export default function FavoritesScreen() {
-  const { favorites, loading, loadFavorites, toggleFavorite } =
-    usePointsStore();
+  const {
+    favorites,
+    loading,
+    loadFavorites,
+    toggleFavorite,
+    favoritesHasMore,
+  } = usePointsStore();
   const { isAuthenticated } = useAuthStore();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -44,6 +49,12 @@ export default function FavoritesScreen() {
     }
   };
 
+  const handleLoadMore = () => {
+    if (!loading && favoritesHasMore) {
+      loadFavorites(true);
+    }
+  };
+
   const handleToggleFavorite = async (pointId: string) => {
     try {
       await toggleFavorite(pointId);
@@ -64,8 +75,25 @@ export default function FavoritesScreen() {
     />
   );
 
+  const renderFooter = () => {
+    if (!loading || favorites.length === 0) return null;
+    return (
+      <View style={{ paddingVertical: 20 }}>
+        <ActivityIndicator size="small" color={COLORS.primary} />
+      </View>
+    );
+  };
+
   const renderEmpty = () => (
-    <View style={styles.emptyContainer}>
+    <View
+      style={styles.emptyContainer}
+      accessibilityRole="text"
+      accessibilityLabel={
+        isAuthenticated
+          ? "Nenhum favorito ainda. Adicione pontos aos favoritos para vê-los aqui."
+          : "Login necessário. Faça login para salvar seus pontos favoritos."
+      }
+    >
       <Text style={styles.emptyTitle}>Nenhum favorito ainda</Text>
       <Text style={styles.emptyText}>
         {isAuthenticated
@@ -78,7 +106,11 @@ export default function FavoritesScreen() {
   if (!isAuthenticated) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.authRequired}>
+        <View
+          style={styles.authRequired}
+          accessibilityRole="alert"
+          accessibilityLabel="Login Necessário. Para usar os favoritos, você precisa fazer login."
+        >
           <Text style={styles.authTitle}>Login Necessário</Text>
           <Text style={styles.authText}>
             Para usar os favoritos, você precisa fazer login.
@@ -101,15 +133,18 @@ export default function FavoritesScreen() {
       <FlatList
         data={favorites}
         renderItem={renderPoint}
-  keyExtractor={(item) => String(item.id)}
+        keyExtractor={(item) => String(item.id)}
         ListEmptyComponent={renderEmpty}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
         refreshing={refreshing}
         onRefresh={handleRefresh}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={renderFooter}
       />
 
-      {loading && (
+      {loading && favorites.length === 0 && (
         <View style={styles.loadingOverlay}>
           <ActivityIndicator size="large" color={COLORS.primary} />
         </View>

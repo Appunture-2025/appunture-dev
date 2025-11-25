@@ -702,6 +702,34 @@ logging:
   retention: "30 days"
 ```
 
+### 8. Observabilidade e Auditoria
+
+#### ✅ Estratégia de Monitoramento
+
+Implementamos uma stack de observabilidade baseada em Prometheus e Grafana para monitoramento em tempo real da saúde da aplicação.
+
+- **Métricas Coletadas**:
+
+  - Latência de requisições (P95, P99)
+  - Taxa de erros (4xx, 5xx)
+  - Throughput (RPS)
+  - Uso de recursos (CPU, Memória JVM)
+  - Métricas de negócio (Total de pontos, imagens adicionadas)
+
+- **Alertas Configurados**:
+  - `AppuntureHighLatencyP95`: Latência P95 > 1s por 5min
+  - `AppuntureErrorSpike`: Taxa de erros 5xx > 0.5 req/s
+  - `RateLimitRejections`: Rejeições por rate limit > 0.2 req/s
+
+#### 🔒 Auditoria de Segurança
+
+Para operações sensíveis, implementamos logs de auditoria estruturados que permitem rastreabilidade completa das ações dos usuários.
+
+- **Formato de Log**: `AUDIT: User={user} Action={action} Resource={id} Details={details}`
+- **Operações Auditadas**:
+  - Adição de imagens (`ADD_IMAGE`)
+  - Remoção de imagens (`REMOVE_IMAGE`)
+
 ## 🎓 Impacto para o TCC
 
 ### Vantagens Acadêmicas

@@ -4,8 +4,10 @@ import com.appunture.backend.dto.response.MessageResponse;
 import com.appunture.backend.dto.response.UserProfileResponse;
 import com.appunture.backend.exception.RateLimitExceededException;
 import com.appunture.backend.model.firestore.FirestoreUser;
+import com.appunture.backend.model.firestore.FirestorePoint;
 import com.appunture.backend.service.FirebaseAuthService;
 import com.appunture.backend.service.FirestoreUserService;
+import com.appunture.backend.service.FirestorePointService;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.FirebaseAuthException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +25,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.List;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 /**
  * Controller para autenticação usando Firebase Auth + Firestore
@@ -36,6 +41,7 @@ public class FirestoreAuthController {
 
     private final FirestoreUserService userService;
     private final FirebaseAuthService firebaseAuthService;
+    private final FirestorePointService pointService;
 
     @GetMapping("/profile")
     @Operation(summary = "Get user profile", description = "Returns current authenticated user profile from Firestore")
@@ -244,6 +250,54 @@ public class FirestoreAuthController {
         } catch (Exception e) {
             log.error("Erro inesperado ao reenviar verificação para {}", token.getUid(), e);
             return ResponseEntity.internalServerError().body(new MessageResponse("Erro ao reenviar email. Tente novamente mais tarde."));
+        }
+    }
+
+    @GetMapping("/favorites")
+    @Operation(summary = "Get user favorites", description = "Returns paginated list of user favorite points")
+    @SecurityRequirement(name = "firebase")
+    public ResponseEntity<Map<String, Object>> getFavorites(
+            @AuthenticationPrincipal FirebaseToken token,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit) {
+        try {
+            log.debug("Obtendo favoritos do usuário: {}, page={}, limit={}", token.getUid(), page, limit);
+            
+            Optional<FirestoreUser> userOpt = userService.findByFirebaseUid(token.getUid());
+            if (userOpt.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            List<String> favoriteIds = userOpt.get().getFavoritePointIds();
+            if (favoriteIds == null) {
+                favoriteIds = Collections.emptyList();
+            }
+
+            int total = favoriteIds.size();
+            int start = page * limit;
+            int end = Math.min(start + limit, total);
+
+            List<FirestorePoint> points;
+            if (start >= total) {
+                points = Collections.emptyList();
+            } else {
+                List<String> pageIds = favoriteIds.subList(start, end);
+                points = pointService.findAllByIds(pageIds);
+            }
+
+            Map<String, Object> response = Map.of(
+                "points", points,
+                "total", total,
+                "page", page,
+                "limit", limit,
+                "hasMore", end < total
+            );
+            
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            log.error("Erro ao obter favoritos do usuário: {}", e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
         }
     }
 }

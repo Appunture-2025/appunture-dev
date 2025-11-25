@@ -58,6 +58,8 @@ export function SyncBanner() {
             opacity: fadeAnim,
           },
         ]}
+        accessibilityRole="alert"
+        accessibilityLabel={notificationMessage}
       >
         <Ionicons name="checkmark-circle" size={20} color={COLORS.success} />
         <Text style={styles.notificationText}>{notificationMessage}</Text>
@@ -68,7 +70,11 @@ export function SyncBanner() {
   // Show offline banner
   if (!isOnline) {
     return (
-      <View style={[styles.banner, styles.offlineBanner]}>
+      <View
+        style={[styles.banner, styles.offlineBanner]}
+        accessibilityRole="alert"
+        accessibilityLabel="Modo Offline. Alterações serão sincronizadas quando conectar."
+      >
         <Ionicons name="cloud-offline" size={20} color={COLORS.surface} />
         <Text style={styles.bannerText}>
           Modo Offline - Alterações serão sincronizadas quando conectar
@@ -80,10 +86,15 @@ export function SyncBanner() {
   // Show syncing banner
   if (syncInProgress && totalPending > 0) {
     return (
-      <View style={[styles.banner, styles.syncingBanner]}>
+      <View
+        style={[styles.banner, styles.syncingBanner]}
+        accessibilityRole="progressbar"
+        accessibilityLabel={`Sincronizando ${totalPending} itens.`}
+      >
         <ActivityIndicator size="small" color={COLORS.surface} />
         <Text style={styles.bannerText}>
-          Sincronizando {totalPending} {totalPending === 1 ? "item" : "itens"}...
+          Sincronizando {totalPending} {totalPending === 1 ? "item" : "itens"}
+          ...
         </Text>
       </View>
     );
@@ -96,10 +107,14 @@ export function SyncBanner() {
         style={[styles.banner, styles.failedBanner]}
         onPress={() => router.push("/sync-status" as any)}
         activeOpacity={0.7}
+        accessibilityRole="button"
+        accessibilityLabel={`${failedCount} operações falharam. Toque para ver detalhes.`}
+        accessibilityHint="Navega para a tela de status de sincronização"
       >
         <Ionicons name="warning" size={20} color={COLORS.surface} />
         <Text style={styles.bannerText}>
-          ⚠️ {failedCount} {failedCount === 1 ? "operação falhou" : "operações falharam"}
+          ⚠️ {failedCount}{" "}
+          {failedCount === 1 ? "operação falhou" : "operações falharam"}
         </Text>
         <Ionicons name="chevron-forward" size={20} color={COLORS.surface} />
       </TouchableOpacity>
@@ -113,8 +128,15 @@ export function SyncBanner() {
         style={[styles.banner, styles.pendingBanner]}
         onPress={() => router.push("/sync-status" as any)}
         activeOpacity={0.7}
+        accessibilityRole="button"
+        accessibilityLabel={`${totalPending} itens pendentes de sincronização. Toque para ver detalhes.`}
+        accessibilityHint="Navega para a tela de status de sincronização"
       >
-        <Ionicons name="cloud-upload-outline" size={18} color={COLORS.textSecondary} />
+        <Ionicons
+          name="cloud-upload-outline"
+          size={18}
+          color={COLORS.textSecondary}
+        />
         <Text style={styles.pendingText}>
           {totalPending} pendente{totalPending > 1 ? "s" : ""}
         </Text>

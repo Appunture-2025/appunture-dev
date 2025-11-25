@@ -54,6 +54,20 @@ export default function ProfileScreen() {
         router.push("/profile-edit");
       },
     },
+    ...(user?.role === "ADMIN"
+      ? [
+          {
+            id: "admin",
+            title: "Painel Admin",
+            subtitle: "Gerenciar conteúdo",
+            type: "navigation" as const,
+            icon: "shield-checkmark-outline" as keyof typeof Ionicons.glyphMap,
+            onPress: () => {
+              router.push("/admin");
+            },
+          },
+        ]
+      : []),
     {
       id: "notifications",
       title: "Notificações",
@@ -116,12 +130,19 @@ export default function ProfileScreen() {
   ];
 
   const renderSettingItem = (item: SettingsOption) => {
+    const isToggle = item.type === "toggle";
+
     return (
       <TouchableOpacity
         key={item.id}
         style={styles.settingItem}
         onPress={item.onPress}
-        disabled={item.type === "toggle"}
+        disabled={isToggle}
+        accessibilityRole={isToggle ? "none" : "button"}
+        accessibilityLabel={`${item.title}${
+          item.subtitle ? `, ${item.subtitle}` : ""
+        }`}
+        accessibilityHint={isToggle ? undefined : "Toque para ativar"}
       >
         <View style={styles.settingLeft}>
           <View
@@ -134,6 +155,7 @@ export default function ProfileScreen() {
               name={item.icon}
               size={24}
               color={item.id === "logout" ? COLORS.error : COLORS.primary}
+              importantForAccessibility="no-hide-descendants"
             />
           </View>
           <View style={styles.settingText}>
@@ -152,12 +174,15 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.settingRight}>
-          {item.type === "toggle" && (
+          {isToggle && (
             <Switch
               value={item.value}
               onValueChange={item.onToggle}
               trackColor={{ false: COLORS.border, true: COLORS.primary }}
               thumbColor={COLORS.surface}
+              accessibilityRole="switch"
+              accessibilityLabel={item.title}
+              accessibilityHint={item.subtitle}
             />
           )}
           {item.type === "navigation" && (
@@ -165,6 +190,7 @@ export default function ProfileScreen() {
               name="chevron-forward"
               size={20}
               color={COLORS.textSecondary}
+              importantForAccessibility="no-hide-descendants"
             />
           )}
         </View>
@@ -175,9 +201,18 @@ export default function ProfileScreen() {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* User Info */}
-      <View style={styles.userCard}>
+      <View
+        style={styles.userCard}
+        accessibilityRole="header"
+        accessibilityLabel={`Perfil de ${user?.name || "Usuário"}`}
+      >
         <View style={styles.avatar}>
-          <Ionicons name="person" size={40} color={COLORS.primary} />
+          <Ionicons
+            name="person"
+            size={40}
+            color={COLORS.primary}
+            importantForAccessibility="no-hide-descendants"
+          />
         </View>
         <Text style={styles.userName}>{user?.name || "Usuário"}</Text>
         <Text style={styles.userEmail}>
@@ -195,11 +230,15 @@ export default function ProfileScreen() {
                   : COLORS.warning,
               },
             ]}
+            accessibilityLabel={
+              user.emailVerified ? "Email verificado" : "Email não verificado"
+            }
           >
             <Ionicons
               name={user.emailVerified ? "checkmark-circle" : "alert-circle"}
               size={14}
               color={COLORS.surface}
+              importantForAccessibility="no-hide-descendants"
             />
             <Text style={styles.emailBadgeText}>
               {user.emailVerified ? "Email verificado" : "Email não verificado"}
@@ -208,7 +247,18 @@ export default function ProfileScreen() {
         )}
 
         {/* Sync Status */}
-        <View style={styles.syncStatus}>
+        <View
+          style={styles.syncStatus}
+          accessibilityLabel={`Status de sincronização: ${
+            isOnline ? "Online" : "Offline"
+          }${
+            lastSync
+              ? `, última sincronização em ${new Date(lastSync).toLocaleString(
+                  "pt-BR"
+                )}`
+              : ""
+          }`}
+        >
           <View
             style={[
               styles.statusIndicator,

@@ -1,5 +1,8 @@
 # 🚀 Appunture Backend - Java Spring Boot
 
+[![Tests](https://img.shields.io/badge/Tests-mvn%20test-0d9488?logo=apache-maven)](#-testes)
+[![Coverage](https://img.shields.io/badge/Coverage-60%25%2B-brightgreen?logo=jacoco)](target/site/jacoco/index.html)
+
 ## 📋 Visão Geral
 
 Backend moderno do aplicativo Appunture desenvolvido com **Spring Boot 3.2.5** e **Java 17**, integrado com **Firebase/Google Cloud** para uma arquitetura serverless e otimizada para custos zero durante o desenvolvimento do TCC.

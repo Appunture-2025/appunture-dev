@@ -379,4 +379,16 @@ public class FirestorePointService {
                 .limit(limit)
                 .toList();
     }
+
+    /**
+     * Busca múltiplos pontos por ID
+     */
+    public List<FirestorePoint> findAllByIds(List<String> ids) {
+        log.debug("Buscando {} pontos por ID", ids.size());
+        List<FirestorePoint> points = new ArrayList<>();
+        for (String id : ids) {
+            findById(id).ifPresent(points::add);
+        }
+        return points;
+    }
 }

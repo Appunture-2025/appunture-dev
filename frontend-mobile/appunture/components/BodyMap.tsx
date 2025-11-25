@@ -133,6 +133,8 @@ export function BodyMap({
               }
               opacity="0.8"
               onPress={() => onRegionPress(region)}
+              accessible={true}
+              accessibilityLabel={`Região ${region.name}, ${region.pointCount} pontos. Toque para ver detalhes.`}
             />
             <SvgText
               x={region.center.x}
@@ -150,7 +152,9 @@ export function BodyMap({
 
       {/* Legend */}
       <View style={styles.legend}>
-        <Text style={styles.legendTitle}>Regiões do Corpo</Text>
+        <Text style={styles.legendTitle} accessibilityRole="header">
+          Regiões do Corpo
+        </Text>
         <View style={styles.legendItems}>
           {regions.map((region) => (
             <TouchableOpacity
@@ -160,6 +164,9 @@ export function BodyMap({
                 selectedRegion === region.id && styles.selectedLegendItem,
               ]}
               onPress={() => onRegionPress(region)}
+              accessibilityRole="button"
+              accessibilityLabel={`Selecionar região ${region.name}, ${region.pointCount} pontos`}
+              accessibilityState={{ selected: selectedRegion === region.id }}
             >
               <View
                 style={[

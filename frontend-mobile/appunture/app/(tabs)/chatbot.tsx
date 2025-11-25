@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -9,13 +9,12 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useAuthStore } from "../../stores/authStore";
-import { nlpService } from "../../services/nlp";
-import { databaseService } from "../../services/database";
+import Markdown from "react-native-markdown-display";
+import { apiService } from "../../services/api";
 import { COLORS } from "../../utils/constants";
-import { LocalSymptom, LocalPoint } from "../../types/database";
 
 interface ChatMessage {
   id: string;
@@ -35,27 +34,7 @@ export default function ChatBotScreen() {
   ]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [symptoms, setSymptoms] = useState<LocalSymptom[]>([]);
-  const [points, setPoints] = useState<LocalPoint[]>([]);
   const flatListRef = useRef<FlatList>(null);
-  const { user } = useAuthStore();
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    try {
-      const [symptomsData, pointsData] = await Promise.all([
-        databaseService.getSymptoms(),
-        databaseService.getPoints(),
-      ]);
-      setSymptoms(symptomsData);
-      setPoints(pointsData);
-    } catch (error) {
-      console.error("Erro ao carregar dados:", error);
-    }
-  };
 
   const scrollToBottom = () => {
     setTimeout(() => {
@@ -79,15 +58,11 @@ export default function ChatBotScreen() {
     scrollToBottom();
 
     try {
-      const response = await nlpService.processChatQuery(
-        inputText.trim(),
-        symptoms,
-        points
-      );
+      const responseText = await apiService.chatWithAi(userMessage.text);
 
       const botMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
-        text: response.response,
+        text: responseText,
         isUser: false,
         timestamp: new Date(),
       };
@@ -111,15 +86,16 @@ export default function ChatBotScreen() {
         styles.messageContainer,
         item.isUser ? styles.userMessage : styles.botMessage,
       ]}
+      accessibilityRole="text"
+      accessibilityLabel={`${
+        item.isUser ? "Você disse" : "Assistente disse"
+      }: ${item.text}`}
     >
-      <Text
-        style={[
-          styles.messageText,
-          item.isUser ? styles.userMessageText : styles.botMessageText,
-        ]}
-      >
-        {item.text}
-      </Text>
+      {item.isUser ? (
+        <Text style={styles.userMessageText}>{item.text}</Text>
+      ) : (
+        <Markdown style={markdownStyles}>{item.text}</Markdown>
+      )}
       <Text style={styles.timestamp}>
         {item.timestamp.toLocaleTimeString("pt-BR", {
           hour: "2-digit",
@@ -132,46 +108,75 @@ export default function ChatBotScreen() {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
     >
       <FlatList
         ref={flatListRef}
         data={messages}
-        keyExtractor={(item) => item.id}
         renderItem={renderMessage}
-        style={styles.messagesList}
-        contentContainerStyle={styles.messagesContent}
-        showsVerticalScrollIndicator={false}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.messagesList}
+        onContentSizeChange={scrollToBottom}
       />
 
       {isLoading && (
         <View style={styles.loadingContainer}>
+          <ActivityIndicator size="small" color={COLORS.primary} />
           <Text style={styles.loadingText}>Digitando...</Text>
         </View>
       )}
 
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.textInput}
+          style={styles.input}
           value={inputText}
           onChangeText={setInputText}
-          placeholder="Digite sua pergunta..."
+          placeholder="Digite sua mensagem..."
           placeholderTextColor={COLORS.textSecondary}
           multiline
           maxLength={500}
-          onSubmitEditing={handleSendMessage}
+          editable={!isLoading}
+          accessibilityLabel="Campo de mensagem"
+          accessibilityHint="Digite sua pergunta aqui"
         />
         <TouchableOpacity
-          style={[styles.sendButton, { opacity: inputText.trim() ? 1 : 0.5 }]}
+          style={[
+            styles.sendButton,
+            (!inputText.trim() || isLoading) && styles.sendButtonDisabled,
+          ]}
           onPress={handleSendMessage}
           disabled={!inputText.trim() || isLoading}
+          accessibilityRole="button"
+          accessibilityLabel="Enviar mensagem"
+          accessibilityState={{ disabled: !inputText.trim() || isLoading }}
         >
-          <Ionicons name="send" size={24} color={COLORS.surface} />
+          <Ionicons
+            name="send"
+            size={24}
+            color={
+              !inputText.trim() || isLoading ? COLORS.textSecondary : "#fff"
+            }
+            importantForAccessibility="no-hide-descendants"
+          />
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   );
 }
+
+const markdownStyles = {
+  body: {
+    color: COLORS.text,
+    fontSize: 16,
+  },
+  paragraph: {
+    marginBottom: 10,
+  },
+  list_item: {
+    marginBottom: 5,
+  },
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -179,79 +184,78 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
   },
   messagesList: {
-    flex: 1,
-  },
-  messagesContent: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    padding: 16,
+    paddingBottom: 32,
   },
   messageContainer: {
-    marginVertical: 4,
     maxWidth: "80%",
     padding: 12,
     borderRadius: 16,
+    marginBottom: 12,
   },
   userMessage: {
     alignSelf: "flex-end",
     backgroundColor: COLORS.primary,
+    borderBottomRightRadius: 4,
   },
   botMessage: {
     alignSelf: "flex-start",
     backgroundColor: COLORS.surface,
+    borderBottomLeftRadius: 4,
     borderWidth: 1,
     borderColor: COLORS.border,
   },
-  messageText: {
-    fontSize: 16,
-    lineHeight: 20,
-  },
   userMessageText: {
-    color: COLORS.surface,
-  },
-  botMessageText: {
-    color: COLORS.text,
+    fontSize: 16,
+    color: "#fff",
+    lineHeight: 22,
   },
   timestamp: {
-    fontSize: 12,
-    color: COLORS.textSecondary,
-    marginTop: 4,
+    fontSize: 10,
+    color: "rgba(0,0,0,0.5)",
     alignSelf: "flex-end",
+    marginTop: 4,
   },
   loadingContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 8,
+    marginLeft: 16,
+    marginBottom: 8,
   },
   loadingText: {
-    fontStyle: "italic",
+    marginLeft: 8,
     color: COLORS.textSecondary,
+    fontSize: 12,
   },
   inputContainer: {
     flexDirection: "row",
-    alignItems: "flex-end",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    alignItems: "center",
+    padding: 12,
     backgroundColor: COLORS.surface,
     borderTopWidth: 1,
     borderTopColor: COLORS.border,
   },
-  textInput: {
+  input: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: COLORS.border,
+    backgroundColor: COLORS.background,
     borderRadius: 20,
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    marginRight: 8,
+    paddingVertical: 8,
     maxHeight: 100,
+    marginRight: 12,
     fontSize: 16,
     color: COLORS.text,
   },
   sendButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: COLORS.primary,
-    borderRadius: 24,
-    width: 48,
-    height: 48,
     justifyContent: "center",
     alignItems: "center",
+  },
+  sendButtonDisabled: {
+    backgroundColor: COLORS.border,
   },
 });

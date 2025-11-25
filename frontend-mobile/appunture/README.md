@@ -82,6 +82,31 @@ types/
    npm start
    ```
 
+## 🧪 Testes
+
+O projeto utiliza Jest e React Native Testing Library para testes unitários e de integração.
+
+### Executando os testes
+
+```bash
+# Rodar todos os testes
+npm test
+
+# Rodar testes em modo watch (desenvolvimento)
+npm run test:watch
+
+# Gerar relatório de cobertura
+npm run test:coverage
+```
+
+### Estrutura de Testes
+
+Os testes estão localizados na pasta `__tests__` e seguem a estrutura:
+
+- `__tests__/stores/`: Testes das stores Zustand (Auth, Points, Sync)
+- `__tests__/components/`: Testes de componentes UI
+- `__tests__/services/`: Testes de serviços (API, Database)
+
 ## 📊 Stores (Zustand)
 
 ### AuthStore
@@ -206,7 +231,9 @@ if (localTimestamp > remoteTimestamp) {
 ### Indicadores Visuais
 
 #### SyncBanner
+
 Banner exibido no topo da tela mostrando:
+
 - 🔴 **Offline**: "Modo Offline - Alterações serão sincronizadas quando conectar"
 - 🔵 **Sincronizando**: "Sincronizando X itens..."
 - ⚠️ **Falhas**: "X operações falharam" (clicável para ver detalhes)
@@ -214,25 +241,31 @@ Banner exibido no topo da tela mostrando:
 - ✅ **Sucesso**: Toast temporário "X operações sincronizadas"
 
 #### Badge no Perfil
+
 Mostra número de operações pendentes no ícone do perfil:
+
 - Aparece quando há operações na fila
 - Exibe contador (ex: "5" ou "99+" se > 99)
 - Vermelho para chamar atenção
 
 #### Tela de Status (/sync-status)
+
 Tela detalhada acessível clicando no banner de falhas ou no perfil:
 
 **Seção 1: Status Geral**
+
 - Indicador Online/Offline
 - Última sincronização bem-sucedida
 - Botão "Sincronizar Agora"
 
 **Seção 2: Operações Pendentes**
+
 - Contador de operações na fila
 - Contador de imagens pendentes
 - Estado vazio quando tudo sincronizado
 
 **Seção 3: Operações Falhadas**
+
 - Lista de operações que falharam
 - Detalhes do erro para cada uma
 - Botões:
@@ -243,11 +276,13 @@ Tela detalhada acessível clicando no banner de falhas ou no perfil:
 
 ### Comportamento Automático
 
-1. **App inicia**: 
+1. **App inicia**:
+
    - Verifica conectividade
    - Auto-sync se online e tem operações pendentes
 
 2. **Reconexão**:
+
    - Detecta automaticamente via NetInfo
    - Inicia sync queue imediatamente
 
@@ -256,22 +291,26 @@ Tela detalhada acessível clicando no banner de falhas ou no perfil:
    - Respei
 
 ta backoff para operações falhadas
-   - Continua mesmo se uma operação falhar
+
+- Continua mesmo se uma operação falhar
 
 ### Troubleshooting
 
 #### Operações não sincronizam
+
 1. Verificar conectividade (banner mostrará status)
 2. Abrir `/sync-status` para ver detalhes
 3. Verificar erros nas operações falhadas
 4. Tentar "Sincronizar Agora" manualmente
 
 #### Conflitos de dados
+
 - Sistema usa last-write-wins automaticamente
 - Prioriza dados mais recentes
 - Não há perda de dados (versão antiga é substituída)
 
 #### Fila de sync crescendo
+
 - Verificar se há erros recorrentes
 - Limpar operações obsoletas manualmente
 - Tentar novamente operações falhadas
@@ -357,6 +396,78 @@ O app pode ser distribuído via:
 - **APK direto** (desenvolvimento)
 
 ## 🔒 Segurança
+
+## 📡 Contratos de API
+
+### Autenticação (`/auth`)
+
+| Método | Rota             | Descrição              | Payload                                  | Resposta          |
+| :----- | :--------------- | :--------------------- | :--------------------------------------- | :---------------- |
+| POST   | `/auth/register` | Registrar novo usuário | `{ email, password, name, profession? }` | `{ user, token }` |
+| POST   | `/auth/login`    | Login com email/senha  | `{ email, password }`                    | `{ user, token }` |
+| POST   | `/auth/google`   | Login com Google       | `{ idToken }`                            | `{ user, token }` |
+| POST   | `/auth/apple`    | Login com Apple        | `{ idToken, nonce? }`                    | `{ user, token }` |
+| POST   | `/auth/refresh`  | Atualizar token        | `{ refreshToken }`                       | `{ token }`       |
+
+### Usuário (`/users`)
+
+| Método | Rota                            | Descrição                | Payload                  | Resposta  |
+| :----- | :------------------------------ | :----------------------- | :----------------------- | :-------- |
+| GET    | `/users/me`                     | Perfil do usuário logado | -                        | `User`    |
+| PUT    | `/users/me`                     | Atualizar perfil         | `{ name?, profession? }` | `User`    |
+| GET    | `/users/me/favorites`           | Listar favoritos         | -                        | `Point[]` |
+| POST   | `/users/me/favorites/{pointId}` | Adicionar favorito       | -                        | `void`    |
+| DELETE | `/users/me/favorites/{pointId}` | Remover favorito         | -                        | `void`    |
+
+### Pontos (`/points`)
+
+| Método | Rota                      | Descrição                | Payload              | Resposta  |
+| :----- | :------------------------ | :----------------------- | :------------------- | :-------- |
+| GET    | `/points`                 | Listar pontos (paginado) | `?limit=20&offset=0` | `Point[]` |
+| GET    | `/points/{id}`            | Detalhes do ponto        | -                    | `Point`   |
+| GET    | `/points/search`          | Buscar pontos            | `?q=termo`           | `Point[]` |
+| GET    | `/points/meridian/{code}` | Pontos por meridiano     | -                    | `Point[]` |
+
+### Sintomas (`/symptoms`)
+
+| Método | Rota               | Descrição       | Payload     | Resposta    |
+| :----- | :----------------- | :-------------- | :---------- | :---------- |
+| GET    | `/symptoms`        | Listar sintomas | `?limit=50` | `Symptom[]` |
+| GET    | `/symptoms/search` | Buscar sintomas | `?q=termo`  | `Symptom[]` |
+
+### IA (`/chat`)
+
+| Método | Rota    | Descrição               | Payload               | Resposta               |
+| :----- | :------ | :---------------------- | :-------------------- | :--------------------- |
+| POST   | `/chat` | Enviar mensagem para IA | `{ message: string }` | `{ response: string }` |
+
+## 🗺️ Convenção de Atlas e Coordenadas
+
+O frontend resolve imagens locais e coordenadas baseando-se nas seguintes convenções padronizadas com o backend:
+
+### Mapeamento de Imagens
+
+As imagens dos pontos são resolvidas localmente na pasta `assets/body-map/` seguindo o padrão:
+
+`assets/body-map/{meridianCode}/{pointCode}.jpg`
+
+| Parâmetro      | Descrição                       | Exemplo                   |
+| :------------- | :------------------------------ | :------------------------ |
+| `meridianCode` | Código do meridiano (lowercase) | `lung`, `heart`, `kidney` |
+| `pointCode`    | Código do ponto (lowercase)     | `p1`, `c7`, `r3`          |
+
+### Coordenadas
+
+As coordenadas normalizadas (0.0 a 1.0) são enviadas pelo backend no objeto `coordinates`:
+
+```json
+{
+  "x": 0.45, // Posição horizontal (0 = esquerda, 1 = direita)
+  "y": 0.12 // Posição vertical (0 = topo, 1 = base)
+}
+```
+
+O frontend utiliza essas coordenadas para posicionar os marcadores sobre a imagem do mapa corporal (`BodyMap.tsx`).
 
 - Tokens JWT para autenticação
 - Dados sensíveis no SecureStore

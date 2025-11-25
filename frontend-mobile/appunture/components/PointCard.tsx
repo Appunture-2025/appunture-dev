@@ -24,7 +24,13 @@ export default function PointCard({
   return (
     <View style={styles.container}>
       <Link href={`/point/${point.id}`} asChild>
-        <TouchableOpacity style={styles.content} onPress={onPress}>
+        <TouchableOpacity
+          style={styles.content}
+          onPress={onPress}
+          accessibilityRole="button"
+          accessibilityLabel={`Ponto ${point.name}. Meridiano ${point.meridian}. Localização: ${point.location}`}
+          accessibilityHint="Toque para ver detalhes do ponto"
+        >
           <View style={styles.mainContent}>
             <View style={styles.header}>
               <Text style={styles.name}>{point.name}</Text>
@@ -38,16 +44,17 @@ export default function PointCard({
                 name="radio-button-on"
                 size={12}
                 color={COLORS.primary}
+                importantForAccessibility="no-hide-descendants"
               />
               <Text style={styles.meridian}>{point.meridian}</Text>
             </View>
 
-            <Text style={styles.location}>
+            <Text style={styles.location} numberOfLines={2}>
               {truncateText(point.location, 100)}
             </Text>
 
             {point.indications && (
-              <Text style={styles.indications}>
+              <Text style={styles.indications} numberOfLines={2}>
                 Indicações: {truncateText(point.indications, 80)}
               </Text>
             )}
@@ -61,6 +68,17 @@ export default function PointCard({
                   e.stopPropagation();
                   onToggleFavorite();
                 }}
+                accessibilityRole="button"
+                accessibilityLabel={
+                  isFavorite
+                    ? "Remover dos favoritos"
+                    : "Adicionar aos favoritos"
+                }
+                accessibilityHint={
+                  isFavorite
+                    ? "Remove este ponto da sua lista de favoritos"
+                    : "Adiciona este ponto à sua lista de favoritos"
+                }
               >
                 <Ionicons
                   name={isFavorite ? "heart" : "heart-outline"}
@@ -74,6 +92,7 @@ export default function PointCard({
               name="chevron-forward"
               size={20}
               color={COLORS.textSecondary}
+              importantForAccessibility="no-hide-descendants"
             />
           </View>
         </TouchableOpacity>

@@ -44,70 +44,77 @@ export default function TabLayout() {
           },
         }}
       >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Início",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="search"
-        options={{
-          title: "Buscar",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="search" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="symptoms"
-        options={{
-          title: "Sintomas",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="medical" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="meridians"
-        options={{
-          title: "Meridianos",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="git-network-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="chatbot"
-        options={{
-          title: "Assistente",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubble-ellipses" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="favorites"
-        options={{
-          title: "Favoritos",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="heart" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Perfil",
-          tabBarIcon: ({ color, size }) => (
-            <ProfileTabIcon color={color} size={size} />
-          ),
-        }}
-      />
-    </Tabs>
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: "Início",
+            tabBarAccessibilityLabel: "Início",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="home" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="search"
+          options={{
+            title: "Buscar",
+            tabBarAccessibilityLabel: "Buscar pontos",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="search" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="symptoms"
+          options={{
+            title: "Sintomas",
+            tabBarAccessibilityLabel: "Lista de sintomas",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="medical" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="meridians"
+          options={{
+            title: "Meridianos",
+            tabBarAccessibilityLabel: "Lista de meridianos",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="git-network-outline" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="chatbot"
+          options={{
+            title: "Assistente",
+            tabBarAccessibilityLabel: "Assistente virtual",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="chatbubble-ellipses" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="favorites"
+          options={{
+            title: "Favoritos",
+            tabBarAccessibilityLabel: "Meus favoritos",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="heart" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: "Perfil",
+            tabBarAccessibilityLabel: "Meu perfil",
+            tabBarIcon: ({ color, size }) => (
+              <ProfileTabIcon color={color} size={size} />
+            ),
+          }}
+        />
+      </Tabs>
     </>
   );
 }

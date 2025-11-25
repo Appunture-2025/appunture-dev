@@ -36,6 +36,9 @@ const MeridianCard: React.FC<MeridianCardProps> = ({
       style={[styles.card, { backgroundColor: meridianInfo.color }]}
       onPress={onPress}
       activeOpacity={0.7}
+      accessibilityRole="button"
+      accessibilityLabel={`Meridiano ${meridianInfo.name}. ${meridianInfo.chineseName}. Elemento ${meridianInfo.element}. Horário ${meridianInfo.hours}. ${pointCount} pontos.`}
+      accessibilityHint="Toque para ver detalhes do meridiano"
     >
       <View style={styles.cardHeader}>
         <View style={styles.meridianInfo}>
@@ -48,6 +51,7 @@ const MeridianCard: React.FC<MeridianCardProps> = ({
           name="chevron-forward"
           size={24}
           color={COLORS.textSecondary}
+          importantForAccessibility="no-hide-descendants"
         />
       </View>
 
@@ -56,11 +60,21 @@ const MeridianCard: React.FC<MeridianCardProps> = ({
 
       <View style={styles.detailsRow}>
         <View style={styles.detailItem}>
-          <Ionicons name="water-outline" size={16} color={COLORS.textSecondary} />
+          <Ionicons
+            name="water-outline"
+            size={16}
+            color={COLORS.textSecondary}
+            importantForAccessibility="no-hide-descendants"
+          />
           <Text style={styles.detailText}>{meridianInfo.element}</Text>
         </View>
         <View style={styles.detailItem}>
-          <Ionicons name="time-outline" size={16} color={COLORS.textSecondary} />
+          <Ionicons
+            name="time-outline"
+            size={16}
+            color={COLORS.textSecondary}
+            importantForAccessibility="no-hide-descendants"
+          />
           <Text style={styles.detailText}>{meridianInfo.hours}</Text>
         </View>
       </View>
@@ -147,9 +161,8 @@ export default function MeridiansScreen() {
             color={COLORS.primary}
           />
           <Text style={styles.infoText}>
-            Os meridianos são canais de energia (Qi) que percorrem o corpo.
-            Cada meridiano está associado a um órgão e possui funções
-            específicas.
+            Os meridianos são canais de energia (Qi) que percorrem o corpo. Cada
+            meridiano está associado a um órgão e possui funções específicas.
           </Text>
         </View>
 

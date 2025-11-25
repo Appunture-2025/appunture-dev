@@ -260,9 +260,12 @@ public class FirestorePointController {
             @AuthenticationPrincipal FirebaseToken token,
             @Valid @RequestBody PointImageRequest request) {
         try {
-            log.debug("Adicionando imagem ao ponto {}", pointId);
             String actorId = token != null ? token.getUid() : "system";
             String actorEmail = token != null ? token.getEmail() : null;
+            
+            log.info("AUDIT: User={} Action=ADD_IMAGE Resource={} Image={}", 
+                    actorEmail != null ? actorEmail : actorId, pointId, request.getImageUrl());
+            
             FirestorePoint updatedPoint = pointService.addImageToPoint(
                     pointId,
                     request.getImageUrl(),
@@ -302,9 +305,12 @@ public class FirestorePointController {
             @AuthenticationPrincipal FirebaseToken token,
             @Valid @RequestBody PointImageRemovalRequest request) {
         try {
-            log.debug("Removendo imagem do ponto {}", pointId);
             String actorId = token != null ? token.getUid() : "system";
             String actorEmail = token != null ? token.getEmail() : null;
+
+            log.info("AUDIT: User={} Action=REMOVE_IMAGE Resource={} Image={} Reason={}", 
+                    actorEmail != null ? actorEmail : actorId, pointId, request.getImageUrl(), request.getReason());
+
             FirestorePoint updatedPoint = pointService.removeImageFromPoint(
                     pointId,
                     request.getImageUrl(),
