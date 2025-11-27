@@ -18,6 +18,7 @@ import { Point } from "../../types/api";
 import ImageGallery from "../../components/ImageGallery";
 import { mediaStorageService } from "../../services/storage";
 import { apiService } from "../../services/api";
+import { buildPointGallerySources } from "../../utils/pointMedia";
 
 const techniques = [
   "Agulha fina",
@@ -48,7 +49,9 @@ export default function PointDetailsScreen() {
   const { user } = useAuthStore();
   const [localLoading, setLocalLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState<Record<number, number>>({});
+  const [uploadProgress, setUploadProgress] = useState<Record<number, number>>(
+    {}
+  );
 
   const pointId = useMemo(() => (Array.isArray(id) ? id[0] : id) ?? "", [id]);
 
@@ -93,9 +96,18 @@ export default function PointDetailsScreen() {
     );
   }, [favorites, pointId, points, selectedPoint]);
 
+  const gallerySources = useMemo(
+    () =>
+      resolvedPoint
+        ? resolvedPoint.gallerySources ??
+          buildPointGallerySources(resolvedPoint)
+        : [],
+    [resolvedPoint]
+  );
+
   const handleToggleFavorite = async () => {
     if (!resolvedPoint) return;
-    
+
     try {
       await toggleFavorite(resolvedPoint.id);
     } catch (error) {
@@ -198,12 +210,16 @@ export default function PointDetailsScreen() {
   }, [handleAddImagesFromLibrary, handleTakePicture]);
 
   const handleDeleteImage = useCallback(
-    (index: number) => {
-      if (!resolvedPoint?.imageUrls || !resolvedPoint.imageUrls[index]) {
+    (remoteIndex: number) => {
+      if (
+        !resolvedPoint?.imageUrls ||
+        remoteIndex < 0 ||
+        remoteIndex >= resolvedPoint.imageUrls.length
+      ) {
         return;
       }
 
-      const imageUrl = resolvedPoint.imageUrls[index];
+      const imageUrl = resolvedPoint.imageUrls[remoteIndex];
 
       Alert.alert("Remover imagem", "Deseja deletar esta imagem?", [
         { text: "Cancelar", style: "cancel" },
@@ -228,14 +244,21 @@ export default function PointDetailsScreen() {
   );
 
   const handleReorderImages = useCallback(
-    async (fromIndex: number, toIndex: number) => {
-      if (!resolvedPoint?.imageUrls) {
+    async (fromRemoteIndex: number, toRemoteIndex: number) => {
+      if (
+        !resolvedPoint?.imageUrls ||
+        fromRemoteIndex === toRemoteIndex ||
+        fromRemoteIndex < 0 ||
+        toRemoteIndex < 0 ||
+        fromRemoteIndex >= resolvedPoint.imageUrls.length ||
+        toRemoteIndex >= resolvedPoint.imageUrls.length
+      ) {
         return;
       }
 
       const nextOrder = [...resolvedPoint.imageUrls];
-      const [moved] = nextOrder.splice(fromIndex, 1);
-      nextOrder.splice(toIndex, 0, moved);
+      const [moved] = nextOrder.splice(fromRemoteIndex, 1);
+      nextOrder.splice(toRemoteIndex, 0, moved);
 
       try {
         await apiService.reorderPointImages(resolvedPoint.id, nextOrder);
@@ -270,9 +293,12 @@ export default function PointDetailsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.content}>
+      <ScrollView
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.content}
+      >
         <ImageGallery
-          images={resolvedPoint.imageUrls ?? []}
+          images={gallerySources}
           editable={isAdmin}
           onAddImage={handleAddImage}
           onDeleteImage={handleDeleteImage}
@@ -281,7 +307,10 @@ export default function PointDetailsScreen() {
 
         {uploading && (
           <View style={styles.uploadInfo}>
-            <ActivityIndicator color={COLORS.primary} style={styles.uploadSpinner} />
+            <ActivityIndicator
+              color={COLORS.primary}
+              style={styles.uploadSpinner}
+            />
             <View style={styles.uploadTexts}>
               <Text style={styles.uploadTitle}>Enviando imagens...</Text>
               {Object.entries(uploadProgress).map(([index, progress]) => (
@@ -297,9 +326,12 @@ export default function PointDetailsScreen() {
           <Text style={styles.pointName}>{resolvedPoint.name}</Text>
           <Text style={styles.pointCode}>{resolvedPoint.code}</Text>
           <Text style={styles.pointMeridian}>{resolvedPoint.meridian}</Text>
-          
+
           <TouchableOpacity
-            style={[styles.favoriteButton, isFavorite && styles.favoriteButtonActive]}
+            style={[
+              styles.favoriteButton,
+              isFavorite && styles.favoriteButtonActive,
+            ]}
             onPress={handleToggleFavorite}
           >
             <Ionicons
@@ -307,7 +339,12 @@ export default function PointDetailsScreen() {
               size={20}
               color={isFavorite ? COLORS.error : COLORS.text}
             />
-            <Text style={[styles.favoriteButtonText, isFavorite && styles.favoriteButtonTextActive]}>
+            <Text
+              style={[
+                styles.favoriteButtonText,
+                isFavorite && styles.favoriteButtonTextActive,
+              ]}
+            >
               {isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
             </Text>
           </TouchableOpacity>
@@ -391,8 +428,9 @@ export default function PointDetailsScreen() {
           <View style={styles.warningContent}>
             <Text style={styles.warningTitle}>Aviso Importante</Text>
             <Text style={styles.warningText}>
-              Este aplicativo é apenas para fins educacionais. Sempre consulte um 
-              profissional qualificado antes de aplicar qualquer técnica de acupuntura.
+              Este aplicativo é apenas para fins educacionais. Sempre consulte
+              um profissional qualificado antes de aplicar qualquer técnica de
+              acupuntura.
             </Text>
           </View>
         </View>

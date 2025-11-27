@@ -3,6 +3,7 @@ import type { Point, PointWithSymptoms } from "../types/api";
 import type { LocalPoint } from "../types/database";
 import { apiService } from "../services/api";
 import { databaseService } from "../services/database";
+import { buildPointGallerySources } from "../utils/pointMedia";
 import { useAuthStore } from "./authStore";
 import { useSyncStore } from "./syncStore";
 
@@ -20,6 +21,15 @@ const parseCoordinates = (value?: string | null) => {
   }
 };
 
+const withGalleryMedia = <T extends Point>(point: T): T => {
+  const gallerySources = buildPointGallerySources(point);
+  return {
+    ...point,
+    gallerySources,
+    primaryGalleryImage: gallerySources[0] ?? null,
+  } as T;
+};
+
 const mapLocalPointToPoint = (
   local: LocalPoint,
   isFavorite: boolean
@@ -27,7 +37,7 @@ const mapLocalPointToPoint = (
   const coordinates = parseCoordinates(local.coordinates);
   const imageUrl = local.image_path ?? undefined;
 
-  return {
+  return withGalleryMedia({
     id: local.id,
     code: local.code ?? "",
     name: local.name,
@@ -42,7 +52,7 @@ const mapLocalPointToPoint = (
     imageUrls: imageUrl ? [imageUrl] : undefined,
     favoriteCount: local.favorite_count ?? undefined,
     isFavorite,
-  };
+  });
 };
 
 const getCurrentUserId = (): string => {
@@ -71,10 +81,13 @@ const applyFavoriteFlags = (
   points: Point[],
   favoriteIds: Set<string>
 ): Point[] =>
-  points.map((point) => ({
-    ...point,
-    isFavorite: favoriteIds.has(point.id) || Boolean(point.isFavorite),
-  }));
+  points.map((point) => {
+    const normalized = withGalleryMedia(point);
+    return {
+      ...normalized,
+      isFavorite: favoriteIds.has(point.id) || Boolean(normalized.isFavorite),
+    };
+  });
 
 const loadLocalFavorites = async (userId: string): Promise<Point[]> => {
   try {
@@ -131,9 +144,12 @@ interface PointsState {
 
 export const usePointsStore = create<PointsState>((set, get) => {
   const applyFavoritesToState = (favoritePoints: Point[]) => {
-    const favoriteIds = new Set(favoritePoints.map((point) => point.id));
+    const normalizedFavorites = favoritePoints
+      .map(withGalleryMedia)
+      .map((point) => ({ ...point, isFavorite: true }));
+    const favoriteIds = new Set(normalizedFavorites.map((point) => point.id));
     set((state) => ({
-      favorites: favoritePoints,
+      favorites: normalizedFavorites,
       points: applyFavoriteFlags(state.points, favoriteIds),
       searchResults: applyFavoriteFlags(state.searchResults, favoriteIds),
       loading: false,
@@ -233,7 +249,8 @@ export const usePointsStore = create<PointsState>((set, get) => {
 
       try {
         const response = await apiService.getPoint(id);
-        let isFavorite = Boolean(response.point.isFavorite);
+        const normalizedPoint = withGalleryMedia(response.point);
+        let isFavorite = Boolean(normalizedPoint.isFavorite);
 
         if (!isFavorite) {
           try {
@@ -245,7 +262,7 @@ export const usePointsStore = create<PointsState>((set, get) => {
 
         set({
           selectedPoint: {
-            ...response.point,
+            ...normalizedPoint,
             isFavorite,
           },
           loading: false,
@@ -295,12 +312,13 @@ export const usePointsStore = create<PointsState>((set, get) => {
 
       try {
         const response = await apiService.getPointByCode(code);
-        let isFavorite = Boolean(response.point.isFavorite);
+        const normalizedPoint = withGalleryMedia(response.point);
+        let isFavorite = Boolean(normalizedPoint.isFavorite);
 
         if (!isFavorite) {
           try {
             isFavorite = await databaseService.isFavorite(
-              response.point.id,
+              normalizedPoint.id,
               userId
             );
           } catch {
@@ -310,7 +328,7 @@ export const usePointsStore = create<PointsState>((set, get) => {
 
         set({
           selectedPoint: {
-            ...response.point,
+            ...normalizedPoint,
             isFavorite,
           },
           loading: false,
@@ -419,10 +437,12 @@ export const usePointsStore = create<PointsState>((set, get) => {
 
       try {
         const response = await apiService.getFavorites(page, 10);
-        const favoritesWithFlag = response.points.map((point) => ({
-          ...point,
-          isFavorite: true,
-        }));
+        const favoritesWithFlag = response.points.map((point) =>
+          withGalleryMedia({
+            ...point,
+            isFavorite: true,
+          })
+        );
 
         if (page === 0) {
           await databaseService.replaceFavorites(

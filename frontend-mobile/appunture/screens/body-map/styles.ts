@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
-    marginBottom: SPACING.xl,
+    marginBottom: SPACING.lg,
   },
   title: {
     fontSize: 24,
@@ -28,31 +28,80 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     lineHeight: 22,
   },
-  bodyMapContainer: {
-    alignItems: "center",
-    marginBottom: SPACING.xl,
+  controls: {
+    marginBottom: SPACING.lg,
   },
-  bodyMap: {
-    width: 300,
-    height: 400,
+  planeToggle: {
+    flexDirection: "row",
     backgroundColor: COLORS.surface,
     borderRadius: 16,
     borderWidth: 1,
     borderColor: COLORS.border,
+    overflow: "hidden",
+    marginBottom: SPACING.md,
+  },
+  planeButton: {
+    flex: 1,
+    paddingVertical: SPACING.sm,
+    alignItems: "center",
+  },
+  planeButtonActive: {
+    backgroundColor: COLORS.primary,
+  },
+  planeButtonText: {
+    fontWeight: "600",
+    color: COLORS.text,
+  },
+  planeButtonTextActive: {
+    color: COLORS.surface,
+  },
+  layerControls: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  layerButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: COLORS.primary,
     justifyContent: "center",
     alignItems: "center",
   },
-  bodyMapPlaceholder: {
+  layerButtonDisabled: {
+    backgroundColor: COLORS.border,
+  },
+  layerInfo: {
+    flex: 1,
+    alignItems: "center",
+    paddingHorizontal: SPACING.sm,
+    marginHorizontal: SPACING.sm,
+  },
+  layerInfoTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: COLORS.text,
+  },
+  layerInfoSubtitle: {
+    fontSize: 13,
+    color: COLORS.textSecondary,
+  },
+  loadingWrapper: {
+    marginTop: SPACING.md,
+    flexDirection: "row",
     alignItems: "center",
   },
-  bodyMapText: {
-    fontSize: 16,
+  loadingText: {
     color: COLORS.textSecondary,
-    marginTop: SPACING.md,
-    textAlign: "center",
+    fontSize: 14,
+    marginLeft: SPACING.sm,
   },
-  regionsContainer: {
-    marginBottom: SPACING.xl,
+  pointsSection: {
+    marginTop: SPACING.lg,
+    backgroundColor: COLORS.surface,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    padding: SPACING.md,
   },
   sectionTitle: {
     fontSize: 20,
@@ -60,32 +109,31 @@ export const styles = StyleSheet.create({
     color: COLORS.text,
     marginBottom: SPACING.md,
   },
-  regionGrid: {
+  pointRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    gap: SPACING.sm,
-  },
-  regionCard: {
-    backgroundColor: COLORS.surface,
-    borderRadius: 12,
-    padding: SPACING.md,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    minWidth: "47%",
+    justifyContent: "space-between",
     alignItems: "center",
+    paddingVertical: SPACING.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
   },
-  regionIcon: {
-    marginBottom: SPACING.sm,
+  pointRowActive: {
+    backgroundColor: COLORS.background,
   },
-  regionName: {
-    fontSize: 14,
+  pointName: {
+    fontSize: 16,
     fontWeight: "600",
     color: COLORS.text,
-    marginBottom: 4,
   },
-  regionCount: {
-    fontSize: 12,
+  pointMeta: {
+    fontSize: 13,
     color: COLORS.textSecondary,
+    marginTop: 2,
+  },
+  emptyListText: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+    textAlign: "center",
   },
   instructionsCard: {
     backgroundColor: COLORS.surface,

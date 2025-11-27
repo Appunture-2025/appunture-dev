@@ -1,0 +1,20 @@
+{
+  "defaults": {
+    "createdBy": "system",
+    "createdAt": "2025-01-01T00:00:00Z",
+    "updatedAt": "2025-01-01T00:00:00Z",
+    "favoriteCount": 0,
+    "viewCount": 0,
+    "categoryFallback": "General",
+    "tags": ["seed-pending"]
+  },
+  "paths": {
+    "tablesDir": "tables",
+    "meridianSummary": "tables/acupuncture_points.csv",
+    "outputDir": "tools/output"
+  },
+  "meridianAliases": {
+    "HE": "HT",
+    "K": "KI"
+  }
+}

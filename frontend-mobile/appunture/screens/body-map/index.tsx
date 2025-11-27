@@ -1,30 +1,126 @@
-import React from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { BodyMap, BodyMapMarker } from "../../components/BodyMap";
+import { usePointsStore } from "../../stores/pointsStore";
+import type { BodyAtlasPlane } from "../../assets/body-map/manifest";
+import { getAtlasLayerById, getLayersByPlane } from "../../utils/bodyMap";
 import { COLORS } from "../../utils/constants";
 import { styles } from "./styles";
 
-const bodyRegions = [
-  { name: "Cabeça", icon: "head", count: 45 },
-  { name: "Pescoço", icon: "body", count: 12 },
-  { name: "Ombros", icon: "body", count: 18 },
-  { name: "Braços", icon: "arm", count: 32 },
-  { name: "Mãos", icon: "hand", count: 24 },
-  { name: "Peito", icon: "body", count: 16 },
-  { name: "Abdômen", icon: "body", count: 28 },
-  { name: "Costas", icon: "body", count: 35 },
-  { name: "Pernas", icon: "leg", count: 42 },
-  { name: "Pés", icon: "foot", count: 26 },
-];
-
 export default function BodyMapScreen() {
   const router = useRouter();
+  const { points, loading, loadPoints } = usePointsStore((state) => ({
+    points: state.points,
+    loading: state.loading,
+    loadPoints: state.loadPoints,
+  }));
+  const [plane, setPlane] = useState<BodyAtlasPlane>("front");
+  const [layerIndex, setLayerIndex] = useState(0);
+  const [selectedPointId, setSelectedPointId] = useState<string | null>(null);
 
-  const handleRegionPress = (region: string) => {
-    router.push(`/search?region=${encodeURIComponent(region)}`);
-  };
+  useEffect(() => {
+    if (!points.length) {
+      loadPoints();
+    }
+  }, [loadPoints, points.length]);
+
+  useEffect(() => {
+    setLayerIndex(0);
+    setSelectedPointId(null);
+  }, [plane]);
+
+  const layers = useMemo(() => getLayersByPlane(plane), [plane]);
+  const activeLayer = layers[layerIndex] ?? getAtlasLayerById();
+  const pointMap = useMemo(
+    () => new Map(points.map((point) => [point.id, point])),
+    [points]
+  );
+
+  const markers = useMemo<BodyMapMarker[]>(() => {
+    if (!activeLayer) {
+      return [];
+    }
+    const isDefaultLayer = layerIndex === 0;
+
+    return points.flatMap((point) => {
+      if (!point.bodyMapCoords?.length) {
+        return [];
+      }
+
+      return point.bodyMapCoords
+        .filter((coord) => {
+          if (!coord.layerId) {
+            return isDefaultLayer;
+          }
+          return coord.layerId === activeLayer.id;
+        })
+        .map((coord, coordIndex) => ({
+          id: `${point.id}-${coord.layerId ?? coordIndex}`,
+          pointId: point.id,
+          label: point.code || point.name,
+          coordinates: { x: coord.x, y: coord.y },
+        }));
+    });
+  }, [activeLayer, layerIndex, points]);
+
+  const visiblePoints = useMemo(() => {
+    const seen = new Set<string>();
+    const subset = [] as typeof points;
+
+    markers.forEach((marker) => {
+      if (seen.has(marker.pointId)) {
+        return;
+      }
+      const point = pointMap.get(marker.pointId);
+      if (point) {
+        seen.add(marker.pointId);
+        subset.push(point);
+      }
+    });
+
+    return subset;
+  }, [markers, pointMap]);
+
+  const handlePlaneChange = useCallback((nextPlane: BodyAtlasPlane) => {
+    setPlane(nextPlane);
+  }, []);
+
+  const handleLayerStep = useCallback(
+    (direction: "prev" | "next") => {
+      setLayerIndex((current) => {
+        if (direction === "prev") {
+          return Math.max(0, current - 1);
+        }
+        return Math.min(layers.length - 1, current + 1);
+      });
+    },
+    [layers.length]
+  );
+
+  const handleMarkerPress = useCallback(
+    (marker: BodyMapMarker) => {
+      setSelectedPointId(marker.pointId);
+      router.push(`/point/${marker.pointId}`);
+    },
+    [router]
+  );
+
+  const handlePointPress = useCallback(
+    (pointId: string) => {
+      setSelectedPointId(pointId);
+      router.push(`/point/${pointId}`);
+    },
+    [router]
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -35,55 +131,116 @@ export default function BodyMapScreen() {
         <View style={styles.header} accessibilityRole="header">
           <Text style={styles.title}>Mapa Corporal</Text>
           <Text style={styles.subtitle}>
-            Explore os pontos de acupuntura organizados por região do corpo
+            Visualize os pontos registrados diretamente sobre as camadas do
+            atlas oficial.
           </Text>
         </View>
 
-        <View style={styles.bodyMapContainer}>
-          <View style={styles.bodyMap}>
-            <View
-              style={styles.bodyMapPlaceholder}
-              accessibilityLabel="Mapa interativo em desenvolvimento"
-            >
-              <Ionicons
-                name="body"
-                size={120}
-                color={COLORS.primary}
-                importantForAccessibility="no-hide-descendants"
-              />
-              <Text style={styles.bodyMapText}>
-                Mapa interativo em desenvolvimento
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.regionsContainer}>
-          <Text style={styles.sectionTitle} accessibilityRole="header">
-            Regiões do Corpo
-          </Text>
-          <View style={styles.regionGrid}>
-            {bodyRegions.map((region) => (
+        <View style={styles.controls}>
+          <View style={styles.planeToggle}>
+            {(["front", "back"] as BodyAtlasPlane[]).map((option) => (
               <TouchableOpacity
-                key={region.name}
-                style={styles.regionCard}
-                onPress={() => handleRegionPress(region.name)}
+                key={option}
+                style={[
+                  styles.planeButton,
+                  plane === option && styles.planeButtonActive,
+                ]}
+                onPress={() => handlePlaneChange(option)}
                 accessibilityRole="button"
-                accessibilityLabel={`Região ${region.name}, ${region.count} pontos`}
-                accessibilityHint="Toque para ver pontos desta região"
+                accessibilityState={{ selected: plane === option }}
               >
-                <Ionicons
-                  name={region.icon as any}
-                  size={32}
-                  color={COLORS.primary}
-                  style={styles.regionIcon}
-                  importantForAccessibility="no-hide-descendants"
-                />
-                <Text style={styles.regionName}>{region.name}</Text>
-                <Text style={styles.regionCount}>{region.count} pontos</Text>
+                <Text
+                  style={[
+                    styles.planeButtonText,
+                    plane === option && styles.planeButtonTextActive,
+                  ]}
+                >
+                  {option === "front" ? "Frente" : "Costas"}
+                </Text>
               </TouchableOpacity>
             ))}
           </View>
+
+          <View style={styles.layerControls}>
+            <TouchableOpacity
+              style={[
+                styles.layerButton,
+                layerIndex === 0 && styles.layerButtonDisabled,
+              ]}
+              onPress={() => handleLayerStep("prev")}
+              disabled={layerIndex === 0}
+              accessibilityLabel="Camada anterior"
+            >
+              <Ionicons name="arrow-back" size={18} color={COLORS.surface} />
+            </TouchableOpacity>
+            <View style={styles.layerInfo}>
+              <Text style={styles.layerInfoTitle}>{activeLayer.label}</Text>
+              <Text style={styles.layerInfoSubtitle}>
+                Camada {layerIndex + 1} de {layers.length}
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={[
+                styles.layerButton,
+                layerIndex === layers.length - 1 && styles.layerButtonDisabled,
+              ]}
+              onPress={() => handleLayerStep("next")}
+              disabled={layerIndex === layers.length - 1}
+              accessibilityLabel="Próxima camada"
+            >
+              <Ionicons name="arrow-forward" size={18} color={COLORS.surface} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <BodyMap
+          layer={activeLayer}
+          plane={plane}
+          markers={markers}
+          selectedPointId={selectedPointId}
+          onMarkerPress={handleMarkerPress}
+        />
+
+        {loading && !markers.length ? (
+          <View style={styles.loadingWrapper}>
+            <ActivityIndicator color={COLORS.primary} />
+            <Text style={styles.loadingText}>Carregando pontos...</Text>
+          </View>
+        ) : null}
+
+        <View style={styles.pointsSection}>
+          <Text style={styles.sectionTitle}>Pontos nesta camada</Text>
+          {visiblePoints.length ? (
+            visiblePoints.map((point) => (
+              <TouchableOpacity
+                key={point.id}
+                style={[
+                  styles.pointRow,
+                  point.id === selectedPointId && styles.pointRowActive,
+                ]}
+                onPress={() => handlePointPress(point.id)}
+                accessibilityRole="button"
+              >
+                <View>
+                  <Text style={styles.pointName}>{point.name}</Text>
+                  <Text style={styles.pointMeta}>
+                    {(point.code && point.code.trim()) || "Sem código"} ·{" "}
+                    {point.meridian}
+                  </Text>
+                </View>
+                <Ionicons
+                  name="chevron-forward"
+                  size={18}
+                  color={COLORS.textSecondary}
+                  importantForAccessibility="no-hide-descendants"
+                />
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text style={styles.emptyListText}>
+              Ainda não há coordenadas cadastradas para esta camada.
+            </Text>
+          )}
         </View>
 
         <View style={styles.instructionsCard} accessibilityRole="summary">
@@ -95,11 +252,11 @@ export default function BodyMapScreen() {
             importantForAccessibility="no-hide-descendants"
           />
           <View style={styles.instructionsContent}>
-            <Text style={styles.instructionsTitle}>Como usar</Text>
+            <Text style={styles.instructionsTitle}>Dicas rápidas</Text>
             <Text style={styles.instructionsText}>
-              Toque em uma região do corpo para ver todos os pontos de
-              acupuntura disponíveis nessa área. Você também pode usar a busca
-              para encontrar pontos específicos.
+              Use o seletor de plano para alternar entre frente e costas. Cada
+              camada agrupa uma faixa específica do atlas. Toque em um marcador
+              ou na lista para abrir os detalhes completos do ponto.
             </Text>
           </View>
         </View>

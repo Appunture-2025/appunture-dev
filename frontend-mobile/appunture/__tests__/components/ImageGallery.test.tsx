@@ -1,33 +1,91 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import ImageGallery from "../../components/ImageGallery";
+import type { GalleryImageSource } from "../../types/media";
+
+jest.mock("react-native-svg", () => ({
+  SvgUri: () => null,
+}));
+
+jest.mock("../../utils/bodyMap", () => ({
+  getSvgAssetUriSync: jest.fn(() => "mock-svg"),
+}));
+
+const makeRemote = (id: string, remoteIndex: number): GalleryImageSource => ({
+  id,
+  type: "remote",
+  uri: `https://example.com/${id}.jpg`,
+  editable: true,
+  remoteIndex,
+});
+
+const makeLocalSvg = (id: string): GalleryImageSource => ({
+  id,
+  type: "local-svg",
+  asset: { uri: `${id}.svg` } as any,
+  editable: false,
+  label: `Atlas ${id}`,
+});
 
 describe("ImageGallery", () => {
-  const images = ["https://example.com/a.jpg", "https://example.com/b.jpg"];
-
-  it("renders carousel when images provided", () => {
+  it("renders carousel when gallery sources are provided", () => {
+    const images = [makeRemote("remote-1", 0), makeLocalSvg("atlas-1")];
     const { getByTestId } = render(<ImageGallery images={images} />);
 
     expect(getByTestId("image-gallery-carousel")).toBeTruthy();
   });
 
-  it("shows add button when editable", () => {
+  it("does not render edit controls for local-only entries", () => {
+    const images = [makeLocalSvg("atlas-only")];
+    const { queryByTestId } = render(<ImageGallery images={images} editable />);
+
+    expect(queryByTestId("delete-button-0")).toBeNull();
+    expect(queryByTestId("move-left-0")).toBeNull();
+  });
+
+  it("fires delete callback with the remote index", () => {
+    const onDeleteImage = jest.fn();
+    const images = [makeRemote("remote-1", 0)];
+    const { getByTestId } = render(
+      <ImageGallery images={images} editable onDeleteImage={onDeleteImage} />
+    );
+
+    fireEvent.press(getByTestId("delete-button-0"));
+    expect(onDeleteImage).toHaveBeenCalledWith(0);
+  });
+
+  it("reorders remote assets using remote indices", () => {
+    const onReorder = jest.fn();
+    const images = [makeRemote("remote-1", 0), makeRemote("remote-2", 1)];
+    const { getByTestId } = render(
+      <ImageGallery images={images} editable onReorder={onReorder} />
+    );
+
+    fireEvent.press(getByTestId("move-left-0"));
+    expect(onReorder).not.toHaveBeenCalled();
+
+    fireEvent.press(getByTestId("move-right-0"));
+    expect(onReorder).toHaveBeenCalledWith(0, 1);
+  });
+
+  it("shows empty-state add button when there are no images", () => {
     const onAddImage = jest.fn();
+    const { getByTestId } = render(
+      <ImageGallery images={[]} editable onAddImage={onAddImage} />
+    );
+
+    fireEvent.press(getByTestId("add-image-button"));
+    expect(onAddImage).toHaveBeenCalledTimes(1);
+  });
+
+  it("renders floating add button when editable", () => {
+    const onAddImage = jest.fn();
+    const images = [makeRemote("remote-1", 0)];
     const { getByTestId } = render(
       <ImageGallery images={images} editable onAddImage={onAddImage} />
     );
 
     fireEvent.press(getByTestId("add-image-floating-button"));
     expect(onAddImage).toHaveBeenCalledTimes(1);
-  });
-
-  it("fires delete callback when delete pressed", () => {
-    const onDeleteImage = jest.fn();
-    const { getByTestId } = render(
-      <ImageGallery images={[images[0]]} editable onDeleteImage={onDeleteImage} />
-    );
-
-    fireEvent.press(getByTestId("delete-button-0"));
-    expect(onDeleteImage).toHaveBeenCalledWith(0);
   });
 });

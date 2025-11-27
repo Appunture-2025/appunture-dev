@@ -1,3 +1,4 @@
+import type { GalleryImageSource } from "./media";
 import type { User, LoginCredentials, RegisterData, UserProfile } from "./user";
 
 // API Types
@@ -19,6 +20,14 @@ export interface Point {
   };
   image_url?: string; // Legacy support
   imageUrls?: string[]; // Backend supports multiple images
+  imageRefs?: string[]; // Local asset references bundled with the app
+  bodyMapCoords?: Array<{
+    layerId?: string;
+    x: number;
+    y: number;
+  }>;
+  gallerySources?: GalleryImageSource[];
+  primaryGalleryImage?: GalleryImageSource | null;
   favoriteCount?: number; // Backend tracks favorites
   created_at?: string;
   updated_at?: string;
