@@ -1,5 +1,4 @@
 import type { GalleryImageSource } from "./media";
-import type { User, LoginCredentials, RegisterData, UserProfile } from "./user";
 
 // API Types
 export interface Point {
@@ -57,19 +56,6 @@ export interface PointWithSymptoms extends Point {
 
 export interface SymptomWithPoints extends Symptom {
   points: Array<Point & { efficacy_score: number }>;
-}
-
-// API Response Types
-export interface LoginResponse {
-  message: string;
-  user: User;
-  token: string;
-}
-
-export interface RegisterResponse {
-  message: string;
-  user: User;
-  token: string;
 }
 
 export interface PointsResponse {
@@ -145,4 +131,4 @@ export interface SymptomPoint {
   efficacy_score: number;
 }
 
-export type { User, LoginCredentials, RegisterData, UserProfile };
+export type { User, LoginCredentials, RegisterData, UserProfile } from "./user";

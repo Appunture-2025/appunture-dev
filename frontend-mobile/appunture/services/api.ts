@@ -10,8 +10,6 @@ import {
   Symptom,
   Note,
   User,
-  LoginResponse,
-  RegisterResponse,
   PointsResponse,
   SymptomsResponse,
   SearchResponse,
@@ -19,8 +17,6 @@ import {
   CategoriesResponse,
   PointWithSymptoms,
   SymptomWithPoints,
-  LoginCredentials,
-  RegisterData,
   UserProfile,
   ApiError,
 } from "../types/api";
@@ -109,23 +105,6 @@ class ApiService {
         return Promise.reject(apiError);
       }
     );
-  }
-
-  // Auth endpoints
-  async login(credentials: LoginCredentials): Promise<LoginResponse> {
-    const response = await this.client.post<LoginResponse>(
-      "/auth/login",
-      credentials
-    );
-    return response.data;
-  }
-
-  async register(userData: RegisterData): Promise<RegisterResponse> {
-    const response = await this.client.post<RegisterResponse>(
-      "/auth/register",
-      userData
-    );
-    return response.data;
   }
 
   async getProfile(): Promise<User> {

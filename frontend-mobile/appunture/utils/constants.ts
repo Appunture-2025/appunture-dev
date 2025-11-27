@@ -11,17 +11,14 @@ const globalContext = globalThis as {
 };
 
 const envVars = globalContext.process?.env ?? {};
-const defaultDevBase = "http://localhost:3000";
-const defaultProdBase = "https://your-production-api.com";
-const isDevBuild =
-  typeof globalContext.__DEV__ === "boolean"
-    ? globalContext.__DEV__
-    : envVars.NODE_ENV !== "production";
+const expoPublicBase =
+  typeof envVars.EXPO_PUBLIC_API_BASE_URL === "string"
+    ? envVars.EXPO_PUBLIC_API_BASE_URL
+    : undefined;
+const configBase =
+  typeof extra?.apiBaseUrl === "string" ? extra.apiBaseUrl : undefined;
 
-const rawApiBase =
-  (typeof extra?.apiBaseUrl === "string" && extra?.apiBaseUrl) ||
-  envVars.EXPO_PUBLIC_API_BASE_URL ||
-  (isDevBuild ? defaultDevBase : defaultProdBase);
+const rawApiBase = expoPublicBase ?? configBase ?? "http://localhost:8080/api";
 
 const normalisedBase = rawApiBase?.endsWith("/api")
   ? rawApiBase

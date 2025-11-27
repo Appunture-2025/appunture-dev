@@ -2,13 +2,12 @@ import { act } from "@testing-library/react-native";
 import { useAuthStore } from "../../stores/authStore";
 import { apiService } from "../../services/api";
 import { firebaseAuth } from "../../services/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 // Mock dependencies
 jest.mock("../../services/api");
 jest.mock("../../services/firebase");
-jest.mock("@react-native-async-storage/async-storage", () =>
-  require("../../__mocks__/async-storage")
-);
+jest.mock("../../config/firebaseConfig");
 
 describe("authStore", () => {
   beforeEach(() => {
@@ -35,11 +34,14 @@ describe("authStore", () => {
       email: "test@example.com",
     };
     const mockToken = "mock-token";
+    const credential = {
+      user: {
+        getIdToken: jest.fn().mockResolvedValue(mockToken),
+      },
+    };
 
-    (apiService.login as jest.Mock).mockResolvedValue({
-      user: mockUser,
-      token: mockToken,
-    });
+    (signInWithEmailAndPassword as jest.Mock).mockResolvedValue(credential);
+    (apiService.getProfile as jest.Mock).mockResolvedValue(mockUser);
 
     await act(async () => {
       await useAuthStore
@@ -51,20 +53,25 @@ describe("authStore", () => {
     expect(state.user).toEqual(mockUser);
     expect(state.token).toBe(mockToken);
     expect(state.isAuthenticated).toBeTruthy();
+    expect(signInWithEmailAndPassword).toHaveBeenCalledWith(
+      firebaseAuth,
+      "test@example.com",
+      "password"
+    );
   });
 
   it("should handle login failure", async () => {
     const errorMessage = "Invalid credentials";
-    (apiService.login as jest.Mock).mockRejectedValue(new Error(errorMessage));
+    (signInWithEmailAndPassword as jest.Mock).mockRejectedValue(
+      new Error(errorMessage)
+    );
 
     await act(async () => {
-      try {
-        await useAuthStore
+      await expect(
+        useAuthStore
           .getState()
-          .login({ email: "test@example.com", password: "wrong" });
-      } catch (e) {
-        // Expected error
-      }
+          .login({ email: "test@example.com", password: "wrong" })
+      ).rejects.toThrow(errorMessage);
     });
 
     const state = useAuthStore.getState();
