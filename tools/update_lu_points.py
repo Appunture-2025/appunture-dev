@@ -1,9 +1,10 @@
 import csv
+from pathlib import Path
 
 
-def update_csv(csv_path, updates):
+def update_csv(csv_path: Path, updates):
     rows = []
-    with open(csv_path, "r", encoding="utf-8-sig") as f:
+    with csv_path.open("r", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         fieldnames = reader.fieldnames
         for row in reader:
@@ -24,7 +25,7 @@ def update_csv(csv_path, updates):
             row["contentStatus"] = "pending-review"
             updated_count += 1
 
-    with open(csv_path, "w", newline="", encoding="utf-8") as f:
+    with csv_path.open("w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
@@ -123,6 +124,6 @@ updates = [
     },
 ]
 
-
 if __name__ == "__main__":
-    update_csv(r"d:\\_repos\\appunture-dev\\tools\\content-work\\points_review.csv", updates)
+    csv_target = Path(__file__).resolve().parent / "output" / "points_review.csv"
+    update_csv(csv_target, updates)
