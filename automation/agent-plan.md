@@ -1,4 +1,4 @@
-# Copilot Workspace Agent – Plano Mestre
+# Copilot Coding Agent – Plano Mestre
 
 ## 1. Contexto do Repositório
 
@@ -10,92 +10,109 @@
   - Seed/Dados ≈60% (enriquecimento pontos, relacionamentos, pipeline import/export Firestore).
 - **Objetivo global**: manter agentes rodando enquanto o time está offline para levar o produto a "pronto para produção" com qualidade, dados e automação alinhados.
 
-## 2. Pré-Requisitos / Setup rápido
+## 2. Como Funciona
 
-1. Instalar CLIs necessários:
-   ```bash
-   npm install -g @githubnext/copilot-workspace-cli gh firebase-tools
-   gh auth login
-   copilot workspace auth login
-   ```
-2. Garantir acesso ao repositório (permissões `repo`, `workflow` e `pull_request`).
-3. Exportar variáveis antes de rodar o agente (local ou CI):
-   ```bash
-   export COPILOT_WORKSPACE_TOKEN=<token>
-   export COPILOT_WORKSPACE_BRANCH="automation/copilot-agent"
-   ```
-4. Executar build rápido para validar ambiente antes de delegar:
-   ```bash
-   (cd backend-java && ./mvnw -q -DskipTests package)
-   (cd frontend-mobile/appunture && npm install)
-   ```
+### Abordagem: GitHub Copilot Coding Agent via Issues
 
-## 3. Guardrails Globais para o Agente
+O **Copilot CLI** (`@github/copilot`) **NÃO funciona em CI/CD** pois requer autenticação OAuth interativa.
 
-- **Sem resets de branch**: trabalhar sempre em branch dedicada `automation/copilot-agent` e criar PRs contra `main`.
-- **Commits atômicos** com prefixo `chore(agent): <resumo>`.
-- **Testes obrigatórios**: `npm test` no mobile + `./mvnw test` no backend + scripts Python relevantes antes de abrir PR.
-- **Sem secrets hardcoded**: utilizar `.env.example` ou instruções na documentação.
-- **Docs sempre atualizados**: quando tocar backend/frontend/seed, atualizar arquivos em `analises/` ou READMEs associados.
-- **Falhas**: se build/teste falhar, registrar no corpo do PR e abrir issue `agent-broken-build`.
+A solução é usar o **GitHub Copilot Coding Agent**, que funciona assim:
 
-## 4. Rotina de Execução
+1. **Workflow cria Issues** com label `copilot-agent` contendo prompts de desenvolvimento
+2. **Você menciona `@github-copilot`** na issue (ou o Agent detecta automaticamente)
+3. **Copilot Coding Agent** processa a issue e cria um PR com as alterações
+4. **Você revisa e faz merge** do PR
 
-### 4.1 Execução manual
+### Pré-Requisitos
 
-1. Atualizar branch `automation/copilot-agent` a partir de `origin/main`.
-2. Rodar agente:
-   ```bash
-   copilot workspace agent --plan automation/agent-plan.md --apply
-   ```
-3. Revisar PRs gerados, executar testes localmente para confirmar, fazer merge quando aprovado.
+1. **Habilitar Copilot Coding Agent no repositório**:
 
-### 4.2 Execução automatizada (GitHub Actions)
+   - Vá em: `Settings` → `Copilot` → `Coding Agent` → Habilitar
+   - [Documentação oficial](https://docs.github.com/en/copilot/using-github-copilot/using-copilot-coding-agent)
 
-- Ver blueprint em `automation/workflows/agent-nightly.md`.
-- Agendar execução diária às 02:00 UTC. Workflow baixa repositório, instala CLIs, roda `copilot workspace agent --plan ...`, publica PR + artefatos (logs, cobertura, seed gerados).
+2. **Permissões do workflow** (já configuradas):
+   - `issues: write` para criar issues
+   - `contents: read` para ler os prompts
+
+## 3. Execução
+
+### Execução Manual (Recomendado inicialmente)
+
+```bash
+# Dispara o workflow manualmente
+gh workflow run copilot-agent-nightly.yml
+
+# Ou com filtro para rodar apenas um prompt
+gh workflow run copilot-agent-nightly.yml -f prompt_filter=backend
+```
+
+### Execução Automática
+
+O workflow roda automaticamente às **02:00 UTC** todos os dias (configurável no cron).
+
+### Após a Execução
+
+1. Acesse as issues criadas com label `copilot-agent`
+2. Se o Copilot não iniciar automaticamente, comente: `@github-copilot please implement this`
+3. Aguarde o PR ser criado
+4. Revise e faça merge
+
+## 4. Guardrails Globais para o Agente
+
+- **Commits atômicos** com prefixo descritivo
+- **Testes obrigatórios**: PRs devem incluir testes
+- **Sem secrets hardcoded**: usar variáveis de ambiente
+- **Docs atualizados**: quando tocar backend/frontend/seed, atualizar READMEs
 
 ## 5. Estrutura de Prompts
 
-O plano inclui módulos especializados. O agente deve consumi-los em sequência configurável:
+Os prompts estão em `automation/prompts/`:
 
-1. `prompts/backend-quality.md`
-2. `prompts/frontend-integration.md`
-3. `prompts/seed-data.md`
-4. `prompts/e2e-integration.md`
-5. `prompts/devops-observability.md`
+1. `backend-quality.md` - Testes JUnit, cobertura, rate limiting
+2. `frontend-integration.md` - Firebase Auth, upload de mídia, testes
+3. `seed-data.md` - Pipeline de dados, normalização, enriquecimento
+4. `e2e-integration.md` - Testes ponta-a-ponta, contratos
+5. `devops-observability.md` - CI/CD, métricas, alertas
 
-> Recomenda-se rodar no máximo **dois prompts por execução** para facilitar revisão. Priorizar conforme pendências críticas do relatório diário.
+## 6. Sequência Recomendada (Ciclo Semanal)
 
-## 6. Sequência Recomendada (Ciclo de 2 semanas)
+| Dia | Foco                   | Prompt               |
+| --- | ---------------------- | -------------------- |
+| Seg | Backend qualidade      | Backend Quality      |
+| Ter | Seed/Dados             | Seed Data            |
+| Qua | Frontend integração    | Frontend Integration |
+| Qui | Integração/E2E         | E2E Integration      |
+| Sex | DevOps/Observabilidade | DevOps Observability |
 
-| Dia          | Foco                                              | Prompt               | Observações                                                   |
-| ------------ | ------------------------------------------------- | -------------------- | ------------------------------------------------------------- |
-| Seg          | Backend qualidade                                 | Backend Quality      | Elevar cobertura >80%, validar rate limit/logs                |
-| Ter          | Seed/Dados                                        | Seed Data            | Normalizar CSVs, exportar NDJSON, validar com backend         |
-| Qua          | Frontend integração                               | Frontend Integration | Ajustar API_BASE_URL, remover endpoints legados, upload mídia |
-| Qui          | Integração/E2E                                    | E2E Integration      | Postman + Detox + alinhamento contratos                       |
-| Sex          | DevOps/Observabilidade                            | DevOps Observability | Workflow CI/CD, métricas, alertas                             |
-| Próx. semana | Repetir ciclo avaliando pendências/pull requests. |
+> Use o filtro `prompt_filter` para rodar apenas um prompt por vez:
+>
+> ```bash
+> gh workflow run copilot-agent-nightly.yml -f prompt_filter=backend
+> ```
 
-## 7. Critérios de Aceitação antes de encerrar execução
+## 7. Troubleshooting
 
-- Todos os testes declarados no prompt executado passam.
-- Documentação pertinente atualizada (README, `analises/*.md`, `STATUS_FINAL_MIGRACAO.md`).
-- Seed ou scripts gerados anexados como artefato ou commitados.
-- Logs do agente salvos no job (GitHub Actions) ou `automation/logs/<data>.txt` se rodar localmente.
+### Issue criada mas Copilot não responde
 
-## 8. Plano de Contingência
+- Verifique se o Copilot Coding Agent está habilitado
+- Comente `@github-copilot` na issue para ativar manualmente
 
-- Se o agente travar em diff grande, abortar com `Ctrl+C`, fazer `git reset --hard HEAD` dentro do workspace temporário e relançar com prompt único.
-- Para conflitos recorrentes, criar sub-branch `automation/copilot-agent/<data>-<prompt>` e abrir PR separado.
-- Manter issue `#copilot-agent-ops` para registrar incidentes, lições e ajustes nos prompts.
+### Workflow falha ao criar issue
 
-## 9. Próximos Passos para o Operador Humano
+- Verifique se o label `copilot-agent` existe
+- Verifique permissões do GITHUB_TOKEN
 
-1. Revisar os arquivos em `automation/prompts/` e ajustar prioridades.
-2. Configurar workflow descrito em `automation/workflows/agent-nightly.md` (ou rodar manualmente conforme necessidade).
-3. Monitorar PRs criados pelo agente, garantindo merge contínuo conforme validações.
+### Copilot cria PR com erros
+
+- Faça review e solicite alterações via comentários
+- Comente `@github-copilot please fix the failing tests`
+
+## 8. Próximos Passos
+
+1. ✅ Workflow criado em `.github/workflows/copilot-agent-nightly.yml`
+2. ⏳ Habilitar Copilot Coding Agent nas configurações do repo
+3. ⏳ Executar workflow manualmente para testar
+4. ⏳ Monitorar issues e PRs criados
 
 ---
 

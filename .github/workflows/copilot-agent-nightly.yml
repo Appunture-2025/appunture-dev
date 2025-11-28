@@ -1,97 +1,140 @@
+# =============================================================================
+# Copilot Coding Agent - Automated Issue Creation
+# =============================================================================
+# Este workflow cria Issues que o GitHub Copilot Coding Agent pode processar.
+# O Copilot Coding Agent funciona via Issues/PRs, NÃO via CLI no CI/CD.
+#
+# Como funciona:
+# 1. Este workflow cria issues com label "copilot-agent"
+# 2. Você (ou o workflow) menciona @github-copilot na issue
+# 3. O Copilot Coding Agent processa e cria um PR automaticamente
+#
+# Pré-requisitos:
+# - Copilot Coding Agent habilitado no repositório (Settings > Copilot > Coding Agent)
+# - Permissões de workflow para criar issues
+# =============================================================================
+
 name: Copilot Agent Nightly
 
 on:
   schedule:
-    - cron: "0 2 * * *"
+    - cron: "0 2 * * *" # Executa às 02:00 UTC diariamente
   workflow_dispatch:
+    inputs:
+      prompt_filter:
+        description: "Filtro para prompts (ex: backend, frontend, ou vazio para todos)"
+        required: false
+        default: ""
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
+  issues: write
 
 jobs:
-  run-agent:
+  create-agent-issues:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install PowerShell
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y powershell
-
-      - name: Install GitHub Copilot CLI
-        run: |
-          npm install -g @github/copilot
-          copilot --version
-
-      - name: Authenticate GitHub CLI
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
-
-      - name: Configure Git user
-        run: |
-          git config user.name "copilot-agent"
-          git config user.email "copilot-agent@users.noreply.github.com"
-
-      - name: Create automation branch
-        run: |
-          git checkout -B automation/copilot-agent
-          git push -u origin automation/copilot-agent --force
-
-      - name: Run Copilot Agent Plan
+      - name: Create or update copilot-agent label
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COPILOT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Lê o plano e executa cada prompt dos módulos
+          gh label create "copilot-agent" \
+            --description "Issues para o Copilot Coding Agent processar" \
+            --color "7057ff" \
+            --force || true
+
+      - name: Create Issues for Copilot Coding Agent
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PROMPT_FILTER: ${{ github.event.inputs.prompt_filter }}
+        run: |
+          DATE=$(date +%Y-%m-%d)
+
           for prompt_file in automation/prompts/*.md; do
-            echo "=== Executando: $prompt_file ==="
+            PROMPT_NAME=$(basename "$prompt_file" .md)
+            
+            # Aplica filtro se especificado
+            if [ -n "$PROMPT_FILTER" ] && [[ "$PROMPT_NAME" != *"$PROMPT_FILTER"* ]]; then
+              echo "Pulando: $PROMPT_NAME (nao corresponde ao filtro)"
+              continue
+            fi
+            
             PROMPT_CONTENT=$(cat "$prompt_file")
-            copilot -p "$PROMPT_CONTENT" --model claude-opus-4.5 || true
+            
+            # Verifica se ja existe issue aberta com esse prompt
+            EXISTING=$(gh issue list --label "copilot-agent" --state open --search "in:title $PROMPT_NAME" --json number --jq '.[0].number // empty')
+            
+            if [ -n "$EXISTING" ]; then
+              echo "Issue ja existe para: $PROMPT_NAME (issue #$EXISTING)"
+              continue
+            fi
+            
+            echo "Criando issue para: $PROMPT_NAME"
+            
+            # Cria arquivo temporario com o body da issue
+            cat > /tmp/issue_body.md << 'ENDOFBODY'
+          ## Tarefa para Copilot Coding Agent
+
+          ENDOFBODY
+            
+            # Adiciona conteudo do prompt
+            echo "" >> /tmp/issue_body.md
+            cat "$prompt_file" >> /tmp/issue_body.md
+            
+            # Adiciona instrucoes
+            cat >> /tmp/issue_body.md << ENDOFINSTRUCTIONS
+
+          ---
+
+          ### Instrucoes para o Agent
+
+          Copilot, por favor execute as tarefas descritas acima neste repositorio.
+          Crie um Pull Request com todas as alteracoes quando concluir.
+
+          ### Contexto
+          - **Prompt**: $PROMPT_NAME
+          - **Data**: $DATE
+          - **Gerado por**: Workflow copilot-agent-nightly
+
+          ### Checklist esperado
+          - [ ] Codigo implementado conforme o prompt
+          - [ ] Testes criados/atualizados
+          - [ ] Documentacao atualizada se necessario
+          - [ ] PR criado com descricao clara
+          ENDOFINSTRUCTIONS
+            
+            gh issue create \
+              --title "[Copilot Agent] $PROMPT_NAME - $DATE" \
+              --body-file /tmp/issue_body.md \
+              --label "copilot-agent" \
+              || echo "Falha ao criar issue para $PROMPT_NAME"
+              
+            # Pequena pausa para evitar rate limiting
+            sleep 2
           done
 
-      - name: Commit and push changes
-        run: |
-          git add -A
-          if git diff --staged --quiet; then
-            echo "Nenhuma alteração para commitar"
-          else
-            git commit -m "chore(agent): aplicar prompts de automação [skip ci]"
-            git push origin automation/copilot-agent
-          fi
-
-      - name: Create Pull Request
+      - name: Summary of created issues
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr create \
-            --title "chore(agent): Alterações automáticas do Copilot Agent" \
-            --body "Este PR foi gerado automaticamente pelo Copilot Agent Nightly.
-
-          ## Prompts executados
-          $(ls automation/prompts/*.md | xargs -I{} basename {})
-
-          ## Revisão necessária
-          - [ ] Verificar alterações no backend
-          - [ ] Verificar alterações no frontend
-          - [ ] Rodar testes localmente
-          " \
-            --base main \
-            --head automation/copilot-agent || echo "PR já existe ou nada a criar"
-
-      - name: Upload Copilot logs
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: copilot-agent-logs
-          path: ~/.config/copilot/logs
-          if-no-files-found: warn
+          echo ""
+          echo "=========================================="
+          echo "📋 RESUMO - Issues para Copilot Agent"
+          echo "=========================================="
+          echo ""
+          gh issue list --label "copilot-agent" --state open --limit 20
+          echo ""
+          echo "=========================================="
+          echo "💡 PRÓXIMOS PASSOS:"
+          echo "=========================================="
+          echo "1. Acesse cada issue criada"
+          echo "2. Verifique se o Copilot Coding Agent está ativo no repo"
+          echo "3. Se necessário, comente '@github-copilot' na issue"
+          echo "4. O Copilot criará PRs automaticamente"
+          echo "==========================================""
