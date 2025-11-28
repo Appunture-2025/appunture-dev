@@ -1,0 +1,1100 @@
+{
+  "info": {
+    "_postman_id": "e2e-appunture-collection",
+    "name": "Appunture E2E Integration Tests",
+    "description": "End-to-end integration tests for Appunture backend API. Tests authentication, points, symptoms, and storage endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Basic Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has status UP', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.eql('UP');",
+                  "});",
+                  "",
+                  "pm.test('Response has timestamp', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.timestamp).to.exist;",
+                  "});",
+                  "",
+                  "pm.test('Response has service name', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.service).to.eql('appunture-backend-firestore');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Liveness Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has alive status', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.eql('ALIVE');",
+                  "    pm.expect(jsonData.alive).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health/liveness",
+              "host": ["{{baseUrl}}"],
+              "path": ["health", "liveness"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Readiness Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 or 503', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 503]);",
+                  "});",
+                  "",
+                  "pm.test('Response has readiness status', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.be.oneOf(['READY', 'NOT_READY']);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health/readiness",
+              "host": ["{{baseUrl}}"],
+              "path": ["health", "readiness"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Sync Firebase User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has user profile data', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('email');",
+                  "});",
+                  "",
+                  "// Store user ID for subsequent tests",
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('userId', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/sync",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "sync"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 or 404', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('Response has profile fields', function () {",
+                  "        const jsonData = pm.response.json();",
+                  "        pm.expect(jsonData).to.have.property('id');",
+                  "        pm.expect(jsonData).to.have.property('email');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User Info",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has firebase info', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('firebase');",
+                  "    pm.expect(jsonData.firebase).to.have.property('uid');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Points",
+      "item": [
+        {
+          "name": "List All Points",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "// Store first point ID for subsequent tests",
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.length > 0 && jsonData[0].id) {",
+                  "    pm.collectionVariables.set('pointId', jsonData[0].id);",
+                  "    if (jsonData[0].code) {",
+                  "        pm.collectionVariables.set('pointCode', jsonData[0].code);",
+                  "    }",
+                  "    if (jsonData[0].meridian) {",
+                  "        pm.collectionVariables.set('meridian', jsonData[0].meridian);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/points",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "points"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Point by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 or 404', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('Response has point data', function () {",
+                  "        const jsonData = pm.response.json();",
+                  "        pm.expect(jsonData).to.have.property('id');",
+                  "        pm.expect(jsonData).to.have.property('code');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/points/{{pointId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "points", "{{pointId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Point by Code",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 or 404', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('Response has correct code', function () {",
+                  "        const jsonData = pm.response.json();",
+                  "        pm.expect(jsonData.code).to.exist;",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/points/code/{{pointCode}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "points", "code", "{{pointCode}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Points by Meridian",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/points/meridian/{{meridian}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "points", "meridian", "{{meridian}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Points",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/points/search?name=VG",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "points", "search"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "VG"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Popular Points",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/points/popular?limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "points", "popular"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Points Statistics",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has statistics', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('totalPoints');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/points/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "points", "stats"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Symptoms",
+      "item": [
+        {
+          "name": "List All Symptoms",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "// Store first symptom ID for subsequent tests",
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.length > 0 && jsonData[0].id) {",
+                  "    pm.collectionVariables.set('symptomId', jsonData[0].id);",
+                  "    if (jsonData[0].category) {",
+                  "        pm.collectionVariables.set('symptomCategory', jsonData[0].category);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/symptoms",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "symptoms"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Symptom by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 or 404', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('Response has symptom data', function () {",
+                  "        const jsonData = pm.response.json();",
+                  "        pm.expect(jsonData).to.have.property('id');",
+                  "        pm.expect(jsonData).to.have.property('name');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/symptoms/{{symptomId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "symptoms", "{{symptomId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Symptoms by Category",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/symptoms/category/{{symptomCategory}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "symptoms", "category", "{{symptomCategory}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Symptoms",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/symptoms/search?name=dor",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "symptoms", "search"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "dor"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Symptom Categories",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/symptoms/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "symptoms", "categories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Popular Symptoms",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/symptoms/popular?limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "symptoms", "popular"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Symptoms Statistics",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has statistics', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('totalSymptoms');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/symptoms/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "symptoms", "stats"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Storage",
+      "item": [
+        {
+          "name": "Get Storage Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has storage status', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('service');",
+                  "    pm.expect(jsonData.service).to.eql('Firebase Storage');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/storage/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "storage", "status"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload File (Mock Test)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Skip upload test if E2E_SKIP_UPLOAD is set",
+                  "const skipUpload = pm.environment.get('skipUpload') === 'true';",
+                  "if (skipUpload) {",
+                  "    console.log('Skipping upload test due to skipUpload flag');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const skipUpload = pm.environment.get('skipUpload') === 'true';",
+                  "",
+                  "if (skipUpload) {",
+                  "    pm.test.skip('Upload test skipped', function () {});",
+                  "} else {",
+                  "    pm.test('Status code is 200, 400, or 503', function () {",
+                  "        pm.expect(pm.response.code).to.be.oneOf([200, 400, 503]);",
+                  "    });",
+                  "",
+                  "    if (pm.response.code === 200) {",
+                  "        pm.test('Response has file URL', function () {",
+                  "            const jsonData = pm.response.json();",
+                  "            pm.expect(jsonData).to.have.property('fileUrl');",
+                  "        });",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "Test file for upload"
+                },
+                {
+                  "key": "folder",
+                  "value": "test-uploads",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/storage/upload",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "storage", "upload"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Favorites",
+      "item": [
+        {
+          "name": "Get User Favorites",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 or 404', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('Response has favorites data', function () {",
+                  "        const jsonData = pm.response.json();",
+                  "        pm.expect(jsonData).to.have.property('points');",
+                  "        pm.expect(jsonData).to.have.property('total');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/favorites?page=0&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "favorites"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Favorite",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 or 404', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/favorites/{{pointId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "favorites", "{{pointId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Favorite",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 or 404', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/favorites/{{pointId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "favorites", "{{pointId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set default values if not already set",
+          "if (!pm.collectionVariables.get('pointId')) {",
+          "    pm.collectionVariables.set('pointId', 'VG20');",
+          "}",
+          "if (!pm.collectionVariables.get('pointCode')) {",
+          "    pm.collectionVariables.set('pointCode', 'VG20');",
+          "}",
+          "if (!pm.collectionVariables.get('meridian')) {",
+          "    pm.collectionVariables.set('meridian', 'DU');",
+          "}",
+          "if (!pm.collectionVariables.get('symptomId')) {",
+          "    pm.collectionVariables.set('symptomId', 'headache');",
+          "}",
+          "if (!pm.collectionVariables.get('symptomCategory')) {",
+          "    pm.collectionVariables.set('symptomCategory', 'Pain');",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "firebase_id_token",
+      "value": "{{PUT_YOUR_TOKEN_HERE}}"
+    },
+    {
+      "key": "pointId",
+      "value": "VG20"
+    },
+    {
+      "key": "pointCode",
+      "value": "VG20"
+    },
+    {
+      "key": "meridian",
+      "value": "DU"
+    },
+    {
+      "key": "symptomId",
+      "value": ""
+    },
+    {
+      "key": "symptomCategory",
+      "value": "Pain"
+    },
+    {
+      "key": "userId",
+      "value": ""
+    }
+  ]
+}

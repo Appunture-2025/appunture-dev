@@ -126,6 +126,32 @@ npm run test:watch
 npm run test:coverage
 ```
 
+### Testes End-to-End (Detox)
+
+O projeto também inclui testes E2E usando Detox para testar fluxos completos da aplicação.
+
+```bash
+# Build para testes E2E
+npm run build:e2e:android   # Android
+npm run build:e2e:ios       # iOS
+
+# Rodar testes E2E
+npm run test:e2e:android    # Android (release)
+npm run test:e2e:ios        # iOS (release)
+
+# Debug mode
+npm run test:e2e:android:debug
+npm run test:e2e:ios:debug
+```
+
+**Fluxos testados:**
+- Login/autenticação Firebase
+- Sincronização de perfil com backend
+- Busca de pontos e sintomas
+- Upload de arquivos (opcional)
+
+Para mais detalhes, veja `e2e/README.md`.
+
 ### Estrutura de Testes
 
 Os testes estão localizados na pasta `__tests__` e seguem a estrutura:
