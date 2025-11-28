@@ -19,54 +19,79 @@ jobs:
         with:
           ref: main
 
-      # Node 22 é OBRIGATÓRIO para a versão atual do Copilot CLI
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      # Instala PowerShell (necessário pois o agent detecta pwsh)
       - name: Install PowerShell
         run: |
           sudo apt-get update
           sudo apt-get install -y powershell
 
-      # Instala o CLI do Copilot (método oficial e suportado)
       - name: Install GitHub Copilot CLI
         run: |
           npm install -g @github/copilot
           copilot --version
 
-      # Autentica no GitHub CLI (necessário para PRs e commits)
       - name: Authenticate GitHub CLI
         run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
-      # REMOVIDO: A etapa "Authenticate Copilot Workspace" com --token não é suportada.
-      # A autenticação acontece automaticamente no passo "Run Copilot Agent Plan"
-      # através da variável de ambiente.
-
-      # Configura identidade do Git
       - name: Configure Git user
         run: |
           git config user.name "copilot-agent"
           git config user.email "copilot-agent@users.noreply.github.com"
 
-      # Executa o Agent Plan
+      - name: Create automation branch
+        run: |
+          git checkout -B automation/copilot-agent
+          git push -u origin automation/copilot-agent --force
+
       - name: Run Copilot Agent Plan
         env:
-          # O CLI lê esta variável automaticamente para autenticação
           COPILOT_WORKSPACE_TOKEN: ${{ secrets.COPILOT_WORKSPACE_TOKEN }}
-          # É boa prática passar o GITHUB_TOKEN também caso o agente precise acessar a API do GH
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COPILOT_WORKSPACE_BRANCH: automation/copilot-agent
-        # CORREÇÃO: O comando não aceita argumentos posicionais. 
-        # Enviamos o conteúdo do plano via STDIN (pipe).
-        run: cat automation/agent-plan.md | copilot workspace agent --model claude-opus-4.5
+        run: |
+          # Lê o plano e executa cada prompt dos módulos
+          for prompt_file in automation/prompts/*.md; do
+            echo "=== Executando: $prompt_file ==="
+            PROMPT_CONTENT=$(cat "$prompt_file")
+            copilot -p "$PROMPT_CONTENT" --model claude-opus-4.5 || true
+          done
 
-      # Faz upload dos logs do Copilot CLI
+      - name: Commit and push changes
+        run: |
+          git add -A
+          if git diff --staged --quiet; then
+            echo "Nenhuma alteração para commitar"
+          else
+            git commit -m "chore(agent): aplicar prompts de automação [skip ci]"
+            git push origin automation/copilot-agent
+          fi
+
+      - name: Create Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --title "chore(agent): Alterações automáticas do Copilot Agent" \
+            --body "Este PR foi gerado automaticamente pelo Copilot Agent Nightly.
+
+          ## Prompts executados
+          $(ls automation/prompts/*.md | xargs -I{} basename {})
+
+          ## Revisão necessária
+          - [ ] Verificar alterações no backend
+          - [ ] Verificar alterações no frontend
+          - [ ] Rodar testes localmente
+          " \
+            --base main \
+            --head automation/copilot-agent || echo "PR já existe ou nada a criar"
+
       - name: Upload Copilot logs
-        if: always()
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: copilot-agent-logs
           path: ~/.config/copilot/logs
+          if-no-files-found: warn
