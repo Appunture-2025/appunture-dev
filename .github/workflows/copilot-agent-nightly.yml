@@ -19,19 +19,25 @@ jobs:
         with:
           ref: main
 
-      # Node.js para instalar o Copilot CLI
+      # Node 22 é OBRIGATÓRIO para a versão atual do Copilot CLI
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
-      # Instala o CLI do Copilot (método oficial)
+      # Instala PowerShell (necessário pois o agent detecta pwsh)
+      - name: Install PowerShell
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y powershell
+
+      # Instala o CLI do Copilot (método oficial e suportado)
       - name: Install GitHub Copilot CLI
         run: |
           npm install -g @github/copilot
           copilot --version
 
-      # Autentica no GitHub (necessário para commits e PRs)
+      # Autentica no GitHub CLI (necessário para PRs e commits)
       - name: Authenticate GitHub CLI
         run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
@@ -41,7 +47,7 @@ jobs:
           COPILOT_WORKSPACE_TOKEN: ${{ secrets.COPILOT_WORKSPACE_TOKEN }}
         run: copilot workspace auth login --token "$COPILOT_WORKSPACE_TOKEN"
 
-      # Configura identidade do Git do agente
+      # Configura identidade do Git
       - name: Configure Git user
         run: |
           git config user.name "copilot-agent"
@@ -54,7 +60,7 @@ jobs:
           COPILOT_WORKSPACE_BRANCH: automation/copilot-agent
         run: copilot workspace agent --plan automation/agent-plan.md --apply --model gpt-5.1-codex-preview
 
-      # Faz upload dos logs
+      # Faz upload dos logs do Copilot CLI
       - name: Upload Copilot logs
         if: always()
         uses: actions/upload-artifact@v4
