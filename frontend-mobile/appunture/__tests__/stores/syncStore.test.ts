@@ -6,6 +6,7 @@
 import { databaseService } from '../../services/database';
 import { apiService } from '../../services/api';
 import { connectivityService } from '../../services/connectivity';
+import { mediaStorageService } from '../../services/storage';
 
 // Mock the dependencies
 jest.mock('../../services/database', () => require('../../services/__mocks__/database'));
@@ -16,6 +17,13 @@ jest.mock('../../config/firebaseConfig');
 jest.mock('../../services/storage', () => ({
   storeLastSync: jest.fn(),
   getLastSync: jest.fn(),
+  mediaStorageService: {
+    uploadImage: jest.fn(),
+    pickImage: jest.fn(),
+    takePicture: jest.fn(),
+    compressImage: jest.fn(),
+    uploadMultipleImages: jest.fn(),
+  },
 }));
 jest.mock('../../stores/authStore', () => ({
   useAuthStore: {
@@ -213,6 +221,37 @@ describe('syncStore', () => {
   });
 
   describe('syncImages', () => {
+    it('should upload image and associate with point when storage upload is enabled', async () => {
+      const imageOps = [
+        {
+          id: 1,
+          point_id: 'point1',
+          image_uri: 'file:///image.jpg',
+          payload: JSON.stringify({ pointId: 'point1', imageUri: 'file:///image.jpg' }),
+          status: 'pending' as const,
+          retry_count: 0,
+          created_at: new Date().toISOString(),
+        },
+      ];
+
+      const uploadedUrl = 'https://storage.example.com/uploaded-image.jpg';
+      
+      (databaseService.getPendingImages as jest.Mock).mockResolvedValue(imageOps);
+      (databaseService.markImageSyncInProgress as jest.Mock).mockResolvedValue(undefined);
+      (databaseService.markImageSyncCompleted as jest.Mock).mockResolvedValue(undefined);
+      (databaseService.countPendingOperations as jest.Mock).mockResolvedValue(0);
+      (databaseService.countPendingImages as jest.Mock).mockResolvedValue(0);
+      (mediaStorageService.uploadImage as jest.Mock).mockResolvedValue(uploadedUrl);
+      (apiService.addImageToPoint as jest.Mock).mockResolvedValue({ point: { id: 'point1' } });
+
+      await useSyncStore.getState().syncImages();
+
+      expect(databaseService.markImageSyncInProgress).toHaveBeenCalledWith(1);
+      expect(mediaStorageService.uploadImage).toHaveBeenCalledWith('file:///image.jpg');
+      expect(apiService.addImageToPoint).toHaveBeenCalledWith('point1', uploadedUrl);
+      expect(databaseService.markImageSyncCompleted).toHaveBeenCalledWith(1);
+    });
+
     it('should process pending images with backoff', async () => {
       const now = Date.now();
       const imageOps = [
@@ -232,6 +271,8 @@ describe('syncStore', () => {
       (databaseService.markImageSyncCompleted as jest.Mock).mockResolvedValue(undefined);
       (databaseService.countPendingOperations as jest.Mock).mockResolvedValue(0);
       (databaseService.countPendingImages as jest.Mock).mockResolvedValue(0);
+      (mediaStorageService.uploadImage as jest.Mock).mockResolvedValue('https://example.com/img.jpg');
+      (apiService.addImageToPoint as jest.Mock).mockResolvedValue({ point: { id: 'point1' } });
 
       await useSyncStore.getState().syncImages();
 
@@ -264,7 +305,8 @@ describe('syncStore', () => {
       ];
 
       (databaseService.getPendingImages as jest.Mock).mockResolvedValue(imageOps);
-      (databaseService.markImageSyncInProgress as jest.Mock).mockRejectedValueOnce(
+      (databaseService.markImageSyncInProgress as jest.Mock).mockResolvedValue(undefined);
+      (mediaStorageService.uploadImage as jest.Mock).mockRejectedValueOnce(
         new Error('upload failed')
       );
       (databaseService.markImageSyncFailed as jest.Mock).mockResolvedValue(undefined);
@@ -273,6 +315,61 @@ describe('syncStore', () => {
 
       await useSyncStore.getState().syncImages();
 
+      expect(databaseService.markImageSyncFailed).toHaveBeenCalledWith(1);
+    });
+
+    it('should still mark as completed when addImageToPoint fails but upload succeeds', async () => {
+      const imageOps = [
+        {
+          id: 1,
+          point_id: 'point1',
+          image_uri: 'file:///image.jpg',
+          payload: JSON.stringify({ pointId: 'point1', imageUri: 'file:///image.jpg' }),
+          status: 'pending' as const,
+          retry_count: 0,
+          created_at: new Date().toISOString(),
+        },
+      ];
+
+      const uploadedUrl = 'https://storage.example.com/uploaded-image.jpg';
+      
+      (databaseService.getPendingImages as jest.Mock).mockResolvedValue(imageOps);
+      (databaseService.markImageSyncInProgress as jest.Mock).mockResolvedValue(undefined);
+      (databaseService.markImageSyncCompleted as jest.Mock).mockResolvedValue(undefined);
+      (databaseService.countPendingOperations as jest.Mock).mockResolvedValue(0);
+      (databaseService.countPendingImages as jest.Mock).mockResolvedValue(0);
+      (mediaStorageService.uploadImage as jest.Mock).mockResolvedValue(uploadedUrl);
+      (apiService.addImageToPoint as jest.Mock).mockRejectedValue(new Error('Point not found'));
+
+      await useSyncStore.getState().syncImages();
+
+      // Should still mark as completed because upload succeeded
+      expect(databaseService.markImageSyncCompleted).toHaveBeenCalledWith(1);
+      expect(databaseService.markImageSyncFailed).not.toHaveBeenCalled();
+    });
+
+    it('should mark images without imageUri as failed', async () => {
+      const imageOps = [
+        {
+          id: 1,
+          point_id: 'point1',
+          image_uri: '',
+          payload: JSON.stringify({ pointId: 'point1' }),
+          status: 'pending' as const,
+          retry_count: 0,
+          created_at: new Date().toISOString(),
+        },
+      ];
+
+      (databaseService.getPendingImages as jest.Mock).mockResolvedValue(imageOps);
+      (databaseService.markImageSyncInProgress as jest.Mock).mockResolvedValue(undefined);
+      (databaseService.markImageSyncFailed as jest.Mock).mockResolvedValue(undefined);
+      (databaseService.countPendingOperations as jest.Mock).mockResolvedValue(0);
+      (databaseService.countPendingImages as jest.Mock).mockResolvedValue(0);
+
+      await useSyncStore.getState().syncImages();
+
+      expect(mediaStorageService.uploadImage).not.toHaveBeenCalled();
       expect(databaseService.markImageSyncFailed).toHaveBeenCalledWith(1);
     });
   });

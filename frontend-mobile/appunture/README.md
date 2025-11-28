@@ -70,14 +70,41 @@ types/
    npm install
    ```
 
-2. **Configurar backend/Firebase**:
+2. **Configurar ambiente**:
 
-   - Atualize os valores de `expo.extra` em `app.json` com as chaves do Firebase (`firebaseApiKey`, `firebaseProjectId`, etc.)
-   - Opcional: defina variáveis de ambiente `EXPO_PUBLIC_*` equivalentes se preferir não commitar as chaves sensíveis
-   - Ajuste `apiBaseUrl` para apontar para a API (o valor final usa automaticamente o sufixo `/api`)
+   Copie o arquivo `.env.example` para `.env` e configure suas variáveis:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   **Variáveis de ambiente disponíveis:**
+
+   | Variável | Descrição | Valor Padrão |
+   |----------|-----------|--------------|
+   | `EXPO_PUBLIC_API_BASE_URL` | URL base do backend Java/Cloud Run | `http://localhost:8080/api` |
+   | `EXPO_PUBLIC_FIREBASE_API_KEY` | Chave da API do Firebase | - |
+   | `EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN` | Domínio de autenticação do Firebase | - |
+   | `EXPO_PUBLIC_FIREBASE_PROJECT_ID` | ID do projeto Firebase | - |
+   | `EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET` | Bucket de storage do Firebase | - |
+   | `EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | ID do sender de mensagens | - |
+   | `EXPO_PUBLIC_FIREBASE_APP_ID` | ID do app Firebase | - |
+   | `EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID` | ID de métricas (opcional) | - |
+   | `EXPO_PUBLIC_FIREBASE_DATABASE_URL` | URL do Realtime Database (opcional) | - |
+   | `EXPO_PUBLIC_ENABLE_STORAGE_UPLOAD` | Habilitar upload de imagens | `true` |
+
+   **Alternativa: Configurar via app.json**
+
+   Os valores também podem ser definidos em `app.json` (seção `expo.extra`), porém as variáveis de ambiente têm prioridade.
+
+3. **Configurar backend/Firebase**:
+
+   - A autenticação usa exclusivamente Firebase Auth client-side
+   - O backend recebe tokens ID do Firebase para validação
+   - Os endpoints `/auth/sync` e `/auth/profile` são usados para sincronizar perfis
    - Certifique-se de que o backend esteja rodando e aceitando tokens do Firebase
 
-3. **Executar app**:
+4. **Executar app**:
    ```bash
    npm start
    ```
@@ -401,15 +428,23 @@ O app pode ser distribuído via:
 
 ### Autenticação (`/auth`)
 
+> **Nota**: A autenticação é feita exclusivamente via Firebase Auth client-side. O app não chama endpoints de login/register no backend. Após autenticação com Firebase, o token ID é usado para sincronizar o perfil com o backend.
+
 | Método | Rota             | Descrição              | Payload                                  | Resposta          |
 | :----- | :--------------- | :--------------------- | :--------------------------------------- | :---------------- |
-| POST   | `/auth/register` | Registrar novo usuário | `{ email, password, name, profession? }` | `{ user, token }` |
-| POST   | `/auth/login`    | Login com email/senha  | `{ email, password }`                    | `{ user, token }` |
-| POST   | `/auth/google`   | Login com Google       | `{ idToken }`                            | `{ user, token }` |
-| POST   | `/auth/apple`    | Login com Apple        | `{ idToken, nonce? }`                    | `{ user, token }` |
-| POST   | `/auth/refresh`  | Atualizar token        | `{ refreshToken }`                       | `{ token }`       |
+| POST   | `/auth/sync`     | Sincronizar usuário Firebase com backend | - (usa token ID no header) | `{ user }` |
+| GET    | `/auth/profile`  | Obter perfil do usuário | - (usa token ID no header) | `{ user }` |
+| PUT    | `/auth/profile`  | Atualizar perfil       | `{ name?, profession? }` | `{ user }` |
+| GET    | `/auth/favorites` | Listar favoritos       | - | `{ points }` |
+| POST   | `/auth/favorites/{pointId}` | Adicionar favorito | - | `void` |
+| DELETE | `/auth/favorites/{pointId}` | Remover favorito | - | `void` |
 
-### Usuário (`/users`)
+### Storage (`/storage`)
+
+| Método | Rota                | Descrição              | Payload                    | Resposta          |
+| :----- | :------------------ | :--------------------- | :------------------------- | :---------------- |
+| POST   | `/storage/upload`   | Upload de imagem       | `FormData { file: Blob }`  | `{ url: string }` |
+| DELETE | `/storage/{fileName}` | Deletar imagem       | -                          | `void`            |
 
 | Método | Rota                            | Descrição                | Payload                  | Resposta  |
 | :----- | :------------------------------ | :----------------------- | :----------------------- | :-------- |

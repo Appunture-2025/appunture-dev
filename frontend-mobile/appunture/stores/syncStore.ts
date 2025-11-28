@@ -10,8 +10,9 @@ import { SyncState } from "../types/user";
 import { databaseService } from "../services/database";
 import { apiService } from "../services/api";
 import { connectivityService } from "../services/connectivity";
-import { storeLastSync, getLastSync } from "../services/storage";
+import { storeLastSync, getLastSync, mediaStorageService } from "../services/storage";
 import { useAuthStore } from "./authStore";
+import { ENABLE_STORAGE_UPLOAD } from "../utils/constants";
 
 const BASE_DELAY = 1000; // 1 second
 const BACKOFF_MULTIPLIER = 2;
@@ -540,6 +541,7 @@ export const useSyncStore = create<SyncStore>((set, get) => {
       }
 
       const pendingImages = await databaseService.getPendingImages(50);
+      let uploadedCount = 0;
 
       for (const imageOp of pendingImages) {
         try {
@@ -558,12 +560,72 @@ export const useSyncStore = create<SyncStore>((set, get) => {
 
           await databaseService.markImageSyncInProgress(imageOp.id);
 
-          // TODO: Implementar upload real para Firebase Storage
+          // Check if storage upload is enabled
+          if (!ENABLE_STORAGE_UPLOAD) {
+            // Storage upload disabled - mark as completed without uploading
+            await databaseService.markImageSyncCompleted(imageOp.id);
+            uploadedCount += 1;
+            continue;
+          }
+
+          // Parse the payload to get image details
+          const payload = imageOp.payload
+            ? safeParse<{ pointId?: string; imageUri?: string }>(
+                imageOp.payload,
+                "image"
+              )
+            : { pointId: imageOp.point_id, imageUri: imageOp.image_uri };
+
+          const imageUri = payload.imageUri ?? imageOp.image_uri;
+          const pointId = payload.pointId ?? imageOp.point_id;
+
+          if (!imageUri) {
+            console.warn(`Skipping image sync ${imageOp.id}: no imageUri`);
+            await databaseService.markImageSyncFailed(imageOp.id);
+            continue;
+          }
+
+          // Upload the image using mediaStorageService
+          const uploadedUrl = await mediaStorageService.uploadImage(imageUri);
+
+          // Validate upload succeeded and returned a valid URL
+          if (!uploadedUrl || typeof uploadedUrl !== "string") {
+            console.warn(
+              `Image upload for ${imageOp.id} returned invalid URL:`,
+              uploadedUrl
+            );
+            await databaseService.markImageSyncFailed(imageOp.id);
+            continue;
+          }
+
+          // If the image is associated with a point, add it to the point
+          if (pointId) {
+            try {
+              await apiService.addImageToPoint(pointId, uploadedUrl);
+            } catch (addError) {
+              console.warn(
+                `Image uploaded but failed to associate with point ${pointId}:`,
+                addError
+              );
+              // Still mark as completed since upload succeeded
+            }
+          }
+
           await databaseService.markImageSyncCompleted(imageOp.id);
+          uploadedCount += 1;
         } catch (error) {
           console.warn(`Falha ao sincronizar imagem ${imageOp.id}`, error);
           await databaseService.markImageSyncFailed(imageOp.id);
         }
+      }
+
+      if (uploadedCount > 0) {
+        set({
+          notificationMessage:
+            uploadedCount === 1
+              ? "1 imagem sincronizada"
+              : `${uploadedCount} imagens sincronizadas`,
+        });
       }
 
       await get().refreshPendingOperations();

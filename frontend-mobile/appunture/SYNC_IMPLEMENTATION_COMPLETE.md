@@ -167,26 +167,50 @@ npm run test:coverage # With coverage report
 - Existing sync operations are not affected
 - Backward compatible with existing favorite sync functionality
 
+## Image Upload Implementation (Updated)
+
+The image upload functionality has been fully implemented with the following features:
+
+### Upload Flow
+1. Images are queued in the `image_sync_queue` table when added offline
+2. When online, `syncImages()` processes pending images
+3. Images are compressed via `mediaStorageService.compressImage()`
+4. Upload is performed using `mediaStorageService.uploadImage()` → `/storage/upload` endpoint
+5. Uploaded image URL is associated with the point via `apiService.addImageToPoint()`
+6. On success, the queue entry is marked as completed
+
+### Feature Flag
+A feature flag `ENABLE_STORAGE_UPLOAD` can be used to disable image uploads:
+- Set via `EXPO_PUBLIC_ENABLE_STORAGE_UPLOAD=false` environment variable
+- Or via `enableStorageUpload: false` in `app.json` (expo.extra)
+- When disabled, images are stored locally only and not uploaded
+
+### Error Handling
+- If upload fails, the operation is retried with exponential backoff
+- If point association fails after upload, the image is still marked as completed
+- Maximum 5 retries before marking as permanently failed
+- Users can manually retry or clear failed operations in the sync status screen
+
 ## Future Enhancements (Optional)
-While the requirements are 100% complete, potential future improvements could include:
-1. Actual image upload implementation (currently stubbed)
-2. Progress tracking for large image uploads
-3. Image compression before upload
-4. Batch image synchronization
-5. Advanced conflict resolution strategies (3-way merge)
-6. Sync priority queue for critical operations
+While the core requirements are complete, potential future improvements could include:
+1. Progress tracking for large image uploads (UI indicator)
+2. Batch image synchronization
+3. Advanced conflict resolution strategies (3-way merge)
+4. Sync priority queue for critical operations
 
 ## Performance Considerations
 - Exponential backoff prevents API hammering during network issues
 - Image sync is batched with configurable limits (default: 50)
 - Database indexes optimize queue queries
 - Concurrent sync operations handled gracefully
+- Image compression reduces upload size and bandwidth usage
 
 ## Summary
 All requirements from the problem statement have been successfully implemented:
 - ✅ Exponential backoff retry strategy
-- ✅ Image synchronization support
+- ✅ Image synchronization with real upload support
 - ✅ Conflict resolution (last-write-wins with timestamps)
 - ✅ Unit tests for syncStore
+- ✅ Feature flag for upload fallback
 
-The offline sync feature is now at 100% completion with robust error handling, retry logic, and comprehensive test coverage.
+The offline sync feature is now at 100% completion with robust error handling, retry logic, real image upload, and comprehensive test coverage.

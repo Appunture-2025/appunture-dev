@@ -6,6 +6,8 @@ import { databaseService } from "../../services/database";
 // Mock dependencies
 jest.mock("../../services/api");
 jest.mock("../../services/database");
+jest.mock("../../services/firebase");
+jest.mock("../../config/firebaseConfig");
 jest.mock("../../stores/authStore", () => ({
   useAuthStore: {
     getState: jest.fn(() => ({ user: { id: "123" } })),

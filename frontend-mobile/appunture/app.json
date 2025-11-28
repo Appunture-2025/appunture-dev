@@ -39,15 +39,16 @@
     },
     "scheme": "appunture",
     "extra": {
-      "apiBaseUrl": "http://localhost:3000",
-      "firebaseApiKey": "YOUR_FIREBASE_API_KEY",
-      "firebaseAuthDomain": "YOUR_FIREBASE_AUTH_DOMAIN",
-      "firebaseProjectId": "YOUR_FIREBASE_PROJECT_ID",
-      "firebaseStorageBucket": "YOUR_FIREBASE_STORAGE_BUCKET",
-      "firebaseMessagingSenderId": "YOUR_FIREBASE_SENDER_ID",
-      "firebaseAppId": "YOUR_FIREBASE_APP_ID",
-      "firebaseMeasurementId": "YOUR_FIREBASE_MEASUREMENT_ID",
-      "firebaseDatabaseUrl": "YOUR_FIREBASE_DATABASE_URL"
+      "apiBaseUrl": "http://localhost:8080/api",
+      "firebaseApiKey": "your-firebase-api-key",
+      "firebaseAuthDomain": "your-project.firebaseapp.com",
+      "firebaseProjectId": "your-firebase-project-id",
+      "firebaseStorageBucket": "your-project.appspot.com",
+      "firebaseMessagingSenderId": "your-sender-id",
+      "firebaseAppId": "your-firebase-app-id",
+      "firebaseMeasurementId": "your-measurement-id",
+      "firebaseDatabaseUrl": "https://your-project.firebaseio.com",
+      "enableStorageUpload": true
     }
   }
 }

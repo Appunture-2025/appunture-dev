@@ -26,6 +26,20 @@ const normalisedBase = rawApiBase?.endsWith("/api")
 
 export const API_BASE_URL = normalisedBase;
 
+/**
+ * Feature flag to enable/disable image upload functionality.
+ * When disabled, images are stored locally only and not uploaded to Firebase Storage.
+ * Default: true (enabled)
+ */
+const enableStorageUploadEnv = envVars.EXPO_PUBLIC_ENABLE_STORAGE_UPLOAD;
+const enableStorageUploadConfig = extra?.enableStorageUpload;
+export const ENABLE_STORAGE_UPLOAD =
+  enableStorageUploadEnv !== undefined
+    ? enableStorageUploadEnv !== "false"
+    : enableStorageUploadConfig !== undefined
+    ? Boolean(enableStorageUploadConfig)
+    : true;
+
 export const COLORS = {
   primary: "#007aff",
   secondary: "#5856d6",
