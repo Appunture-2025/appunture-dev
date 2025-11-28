@@ -94,7 +94,7 @@ public class SeedDataService {
                     // Check if point already exists by code
                     Optional<FirestorePoint> existing = pointService.findByCode(point.getCode());
                     if (existing.isEmpty()) {
-                        pointService.save(point);
+                        pointService.createPoint(point);
                         count++;
                     }
                 } catch (Exception e) {
@@ -135,7 +135,7 @@ public class SeedDataService {
                     // Check if symptom already exists by ID
                     Optional<FirestoreSymptom> existing = symptomService.findById(symptom.getId());
                     if (existing.isEmpty()) {
-                        symptomService.save(symptom);
+                        symptomService.createSymptom(symptom);
                         count++;
                     }
                 } catch (Exception e) {
