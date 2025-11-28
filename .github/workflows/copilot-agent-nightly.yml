@@ -59,7 +59,7 @@ jobs:
           # É boa prática passar o GITHUB_TOKEN também caso o agente precise acessar a API do GH
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COPILOT_WORKSPACE_BRANCH: automation/copilot-agent
-        run: copilot workspace agent --plan automation/agent-plan.md --apply --model gpt-5.1-codex-preview
+        run: copilot workspace agent --plan automation/agent-plan.md --apply --model gpt-5.1-codex
 
       # Faz upload dos logs do Copilot CLI
       - name: Upload Copilot logs
