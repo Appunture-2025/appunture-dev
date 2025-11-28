@@ -49,8 +49,8 @@ jobs:
 
       - name: Run Copilot Agent Plan
         env:
-          COPILOT_WORKSPACE_TOKEN: ${{ secrets.COPILOT_WORKSPACE_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COPILOT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Lê o plano e executa cada prompt dos módulos
           for prompt_file in automation/prompts/*.md; do
