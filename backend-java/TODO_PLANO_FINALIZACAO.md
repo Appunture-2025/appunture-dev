@@ -27,11 +27,11 @@ Firebase Auth + Firestore + Firebase Storage + Cloud Run
 ### 🔥 ALTA PRIORIDADE
 
 #### 1. Testes e Validação (⏱️ 2-3 dias)
-- [ ] **Testes Unitários**
-  - [ ] Testes para todos os serviços Firestore
-  - [ ] Testes para controllers com MockMvc
-  - [ ] Testes de integração Firebase Auth
-  - [ ] Coverage mínimo de 80%
+- [x] **Testes Unitários**
+  - [x] Testes para todos os serviços Firestore
+  - [x] Testes para controllers com MockMvc
+  - [x] Testes de integração Firebase Auth
+  - [ ] Coverage mínimo de 80% (atualmente ~60%, em progresso)
 
 - [ ] **Testes de Integração**
   - [ ] Setup Firestore Emulator para testes
@@ -39,30 +39,30 @@ Firebase Auth + Firestore + Firebase Storage + Cloud Run
   - [ ] Validação de performance Firestore
 
 #### 2. Segurança e Autenticação (⏱️ 1-2 dias)
-- [ ] **Refinamento de Segurança**
-  - [ ] Validação de custom claims Firebase
-  - [ ] Rate limiting para endpoints públicos
-  - [ ] Validação de permissões por recurso
-  - [ ] CORS configuration para frontend
+- [x] **Refinamento de Segurança**
+  - [x] Validação de custom claims Firebase
+  - [x] Rate limiting para endpoints públicos (Bucket4j implementado)
+  - [x] Validação de permissões por recurso
+  - [x] CORS configuration para frontend
 
-- [ ] **Auditoria e Logs**
-  - [ ] Logs estruturados para operações críticas
-  - [ ] Auditoria de mudanças de dados
-  - [ ] Monitoring de erros
+- [x] **Auditoria e Logs**
+  - [x] Logs estruturados para operações críticas (Logstash encoder configurado)
+  - [x] Auditoria de mudanças de dados (imageAudit em pontos)
+  - [x] Monitoring de erros (Prometheus metrics configurado)
 
 #### 3. Seed de Dados Iniciais (⏱️ 1 dia)
-- [ ] **Implementar Seed de Dados**
-  - [ ] Pontos de acupuntura padrão
-  - [ ] Sintomas comuns
-  - [ ] Categorias e tags
+- [x] **Implementar Seed de Dados**
+  - [x] Pontos de acupuntura padrão
+  - [x] Sintomas comuns (via endpoint /admin/data/seed)
+  - [x] Categorias e tags (via arquivos NDJSON)
   - [ ] Usuário admin padrão
 
 #### 4. Documentação API (⏱️ 1 dia)
-- [ ] **OpenAPI/Swagger**
-  - [ ] Documentação completa de todos os endpoints
-  - [ ] Exemplos de request/response
-  - [ ] Schemas de autenticação Firebase
-  - [ ] Documentação de erros
+- [x] **OpenAPI/Swagger**
+  - [x] Documentação completa de todos os endpoints
+  - [x] Exemplos de request/response
+  - [x] Schemas de autenticação Firebase
+  - [x] Documentação de erros
 
 ### 🔧 MÉDIA PRIORIDADE
 

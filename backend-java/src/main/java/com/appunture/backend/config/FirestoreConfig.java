@@ -89,7 +89,7 @@ public class FirestoreConfig {
     }
 
     @Bean
-    public Bucket firebaseStorageBucket() {
+    public Bucket firebaseStorageBucketClient() {
         if (!firebaseEnabled) {
             log.warn("Firebase Storage desabilitado - retornando null");
             return null;

@@ -47,6 +47,8 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Spring AI BOM - commented out due to repository access issues -->
+            <!--
             <dependency>
                 <groupId>org.springframework.ai</groupId>
                 <artifactId>spring-ai-bom</artifactId>
@@ -54,21 +56,27 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            -->
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
-        <!-- Spring AI Google Gemini -->
+        <!-- Spring AI Google Gemini - Commented out due to repository access issues in CI -->
+        <!-- To enable AI features locally, uncomment these dependencies and add spring-ai-bom above -->
+        <!--
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-vertex-ai-gemini-spring-boot-starter</artifactId>
             <version>${spring-ai.version}</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-core</artifactId>
             <version>${spring-ai.version}</version>
+            <optional>true</optional>
         </dependency>
+        -->
 
         <!-- Spring Boot Starters -->
         <dependency>

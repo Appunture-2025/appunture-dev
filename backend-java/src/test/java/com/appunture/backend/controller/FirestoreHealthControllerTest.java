@@ -3,12 +3,15 @@ package com.appunture.backend.controller;
 import com.appunture.backend.service.FirestorePointService;
 import com.appunture.backend.service.FirestoreSymptomService;
 import com.appunture.backend.service.FirestoreUserService;
+import com.google.cloud.firestore.Firestore;
+import com.google.firebase.auth.FirebaseAuth;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Map;
 
@@ -16,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class FirestoreHealthControllerTest {
 
     @Autowired
@@ -29,6 +33,12 @@ class FirestoreHealthControllerTest {
 
     @MockBean
     private FirestoreSymptomService symptomService;
+
+    @MockBean
+    private FirebaseAuth firebaseAuth;
+
+    @MockBean
+    private Firestore firestore;
 
     @Test
     void healthCheckReturnsUpStatus() {

@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: appunture-backend-test
+  main:
+    allow-bean-definition-overriding: true
+
+# Disable Firebase for tests
+app:
+  firebase:
+    enabled: false
+  security:
+    cors:
+      allowed-origin-patterns:
+        - http://localhost:*
+        - http://127.0.0.1:*
+    rate-limit:
+      enabled: false
+
+firebase:
+  project-id: test-project
+  storage:
+    bucket: test-bucket
+
+logging:
+  level:
+    root: WARN
+    com.appunture: DEBUG

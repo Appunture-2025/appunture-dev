@@ -402,12 +402,66 @@ logging:
 # Executar todos os testes
 mvn test
 
-# Executar com coverage
+# Executar com coverage e gerar relatório JaCoCo
 mvn test jacoco:report
+
+# Visualizar relatório de cobertura (após mvn test)
+# Abrir target/site/jacoco/index.html no navegador
 
 # Testes de integração
 mvn verify -P integration-tests
 ```
+
+### Perfil de Teste
+
+Os testes utilizam o perfil `test` configurado em `src/test/resources/application-test.yml`:
+
+- Firebase desabilitado (usa mocks)
+- Rate limiting desabilitado
+- CORS permissivo para localhost
+- Bean definition overriding permitido
+
+### Cobertura de Código
+
+O projeto usa JaCoCo para análise de cobertura. A meta é manter cobertura > 80%.
+
+```bash
+# Ver relatório de cobertura
+mvn test jacoco:report
+open target/site/jacoco/index.html
+```
+
+### Testes por Camada
+
+- **Controllers**: Testes de integração com `@SpringBootTest` e `@MockBean`
+- **Services**: Testes unitários com Mockito (`@ExtendWith(MockitoExtension.class)`)
+- **Security**: Testes para filtros de autenticação e rate limiting
+- **Seed**: Testes para importação de dados iniciais
+
+## 🔒 Rate Limiting
+
+O sistema possui rate limiting configurável via `application.yml`:
+
+```yaml
+app:
+  security:
+    rate-limit:
+      enabled: true
+      capacity: 200         # Máximo de tokens no bucket
+      refill-tokens: 200    # Tokens reabastecidos
+      refill-duration: PT1M # Período de reabastecimento (1 minuto)
+      strategy: AUTO        # AUTO, PER_IP ou PER_USER
+      excluded-paths:
+        - /api/health/**
+        - /v3/api-docs/**
+        - /swagger-ui/**
+        - /actuator/**
+```
+
+Headers de resposta incluem informações de rate limit:
+- `X-RateLimit-Limit`: Limite total
+- `X-RateLimit-Remaining`: Requisições restantes
+- `Retry-After`: Segundos para aguardar (quando bloqueado)
 
 ## 🐳 Docker
 

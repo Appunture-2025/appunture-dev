@@ -2,6 +2,8 @@ package com.appunture.backend.controller;
 
 import com.appunture.backend.model.firestore.FirestorePoint;
 import com.appunture.backend.service.FirestorePointService;
+import com.google.cloud.firestore.Firestore;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class FirestorePointControllerTest {
 
     @Autowired
@@ -29,6 +34,12 @@ class FirestorePointControllerTest {
 
     @MockBean
     private FirestorePointService pointService;
+
+    @MockBean
+    private FirebaseAuth firebaseAuth;
+
+    @MockBean
+    private Firestore firestore;
 
     private FirebaseToken firebaseToken;
 
@@ -62,6 +73,7 @@ class FirestorePointControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void createPointReturnsCreated() {
         FirestorePoint payload = FirestorePoint.builder().code("VG20").name("Baihui").build();
         FirestorePoint saved = FirestorePoint.builder().id("doc-1").code("VG20").createdBy("admin-uid").build();
@@ -76,6 +88,7 @@ class FirestorePointControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void createPointReturnsBadRequestOnValidationError() {
         FirestorePoint payload = FirestorePoint.builder().code("VG20").build();
         when(pointService.createPoint(any(FirestorePoint.class))).thenThrow(new IllegalArgumentException("invalid"));
@@ -86,6 +99,7 @@ class FirestorePointControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void updatePointReturnsOk() {
         FirestorePoint updates = FirestorePoint.builder().name("Updated").build();
         FirestorePoint updated = FirestorePoint.builder().id("VG20").name("Updated").build();

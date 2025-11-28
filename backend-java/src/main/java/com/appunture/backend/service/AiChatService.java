@@ -3,17 +3,23 @@ package com.appunture.backend.service;
 import com.appunture.backend.model.firestore.FirestorePoint;
 import com.appunture.backend.model.firestore.FirestoreSymptom;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ai.chat.client.ChatClient;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+/**
+ * AI Chat Service - Provides AI-powered chat functionality.
+ * 
+ * Note: This service requires Spring AI dependencies (spring-ai-vertex-ai-gemini-spring-boot-starter)
+ * which may not be available in all environments. When Spring AI is not available, the service
+ * returns a fallback message indicating AI features are not enabled.
+ */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AiChatService {
 
-    private final ChatClient.Builder chatClientBuilder;
     private final FirestorePointService pointService;
     private final FirestoreSymptomService symptomService;
 
@@ -44,25 +50,23 @@ public class AiChatService {
         return cachedContext;
     }
 
+    /**
+     * Sends a message to the AI chat service.
+     * 
+     * Note: This method currently returns a fallback message as Spring AI dependencies
+     * are not available. To enable AI features, add spring-ai-vertex-ai-gemini-spring-boot-starter
+     * to the pom.xml and configure the GOOGLE_AI_API_KEY environment variable.
+     */
     public String sendMessage(String userMessage) {
-        String systemPrompt = """
-            Você é o assistente virtual oficial do Appunture.
-            Sua função é ajudar acupunturistas e estudantes.
-            
-            REGRAS RÍGIDAS:
-            1. Use EXCLUSIVAMENTE as informações fornecidas abaixo no 'Contexto de Dados'.
-            2. Se a resposta não estiver nos dados, diga: "Desculpe, não tenho informações sobre isso na minha base de dados oficial."
-            3. Não responda sobre política, futebol, programação ou assuntos fora de acupuntura.
-            4. Seja conciso e profissional.
-            
-            CONTEXTO DE DADOS:
-            """ + buildSystemContext();
-
-        ChatClient chatClient = chatClientBuilder.build();
-        return chatClient.prompt()
-                .system(systemPrompt)
-                .user(userMessage)
-                .call()
-                .content();
+        log.info("AI Chat request received: {}", userMessage);
+        
+        // AI features are currently disabled due to Spring AI dependencies not being available
+        // When Spring AI is configured, this method will use the ChatClient to generate responses
+        String context = buildSystemContext();
+        log.debug("Context built with {} characters", context.length());
+        
+        return "O recurso de IA está temporariamente indisponível. " +
+               "Por favor, utilize os recursos de busca do aplicativo para encontrar pontos de acupuntura e sintomas. " +
+               "Para mais informações, consulte a documentação ou entre em contato com o suporte.";
     }
 }

@@ -6,6 +6,8 @@ import com.appunture.backend.exception.RateLimitExceededException;
 import com.appunture.backend.model.firestore.FirestoreUser;
 import com.appunture.backend.service.FirebaseAuthService;
 import com.appunture.backend.service.FirestoreUserService;
+import com.google.cloud.firestore.Firestore;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class FirestoreAuthControllerTest {
 
     @Autowired
@@ -36,6 +40,12 @@ class FirestoreAuthControllerTest {
 
     @MockBean
     private FirebaseAuthService firebaseAuthService;
+
+    @MockBean
+    private FirebaseAuth firebaseAuth;
+
+    @MockBean
+    private Firestore firestore;
 
     private FirebaseToken firebaseToken;
 
