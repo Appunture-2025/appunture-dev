@@ -1,0 +1,230 @@
+name: Frontend CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'frontend-mobile/appunture/**'
+      - '.github/workflows/frontend-ci.yml'
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'frontend-mobile/appunture/**'
+      - '.github/workflows/frontend-ci.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: frontend-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+  checks: write
+  pull-requests: write
+
+env:
+  NODE_VERSION: '20'
+  WORKING_DIRECTORY: frontend-mobile/appunture
+
+jobs:
+  lint-and-test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Jest tests
+        run: npm test -- --coverage --coverageReporters=json-summary --coverageReporters=lcov --coverageReporters=text
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jest-coverage
+          path: ${{ env.WORKING_DIRECTORY }}/coverage/
+          retention-days: 30
+
+      - name: Add coverage to PR
+        uses: davelosert/vitest-coverage-report-action@v2
+        if: github.event_name == 'pull_request'
+        with:
+          json-summary-path: ${{ env.WORKING_DIRECTORY }}/coverage/coverage-summary.json
+          json-final-path: ${{ env.WORKING_DIRECTORY }}/coverage/coverage-final.json
+          vite-config-path: ''
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
+        continue-on-error: true
+
+  build-web:
+    name: Build Web
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web export
+        run: npx expo export --platform web
+        env:
+          EXPO_PUBLIC_API_BASE_URL: ${{ secrets.API_BASE_URL || 'https://appunture-backend-XXXXX.run.app/api' }}
+        continue-on-error: true
+
+      - name: Upload web build
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: web-build
+          path: ${{ env.WORKING_DIRECTORY }}/dist/
+          retention-days: 7
+
+  eas-build:
+    name: EAS Build (Preview)
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/package-lock.json
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: EAS Build (Android Preview)
+        if: secrets.EXPO_TOKEN != ''
+        run: eas build --platform android --profile preview --non-interactive
+        continue-on-error: true
+
+      - name: EAS Build (iOS Preview)
+        if: secrets.EXPO_TOKEN != ''
+        run: eas build --platform ios --profile preview --non-interactive
+        continue-on-error: true
+
+  detox-tests:
+    name: E2E Tests (Detox)
+    needs: lint-and-test
+    runs-on: macos-latest
+    if: github.event_name == 'pull_request'
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+    continue-on-error: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Detox CLI
+        run: npm install -g detox-cli
+
+      - name: Install applesimutils
+        run: |
+          brew tap wix/brew
+          brew install applesimutils
+
+      - name: Build Detox (iOS)
+        run: npm run build:e2e:ios
+        continue-on-error: true
+
+      - name: Run Detox tests (iOS)
+        run: npm run test:e2e:ios
+        continue-on-error: true
+
+      - name: Upload Detox artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: detox-artifacts
+          path: ${{ env.WORKING_DIRECTORY }}/artifacts/
+          retention-days: 7
+
+  notify-failure:
+    name: Notify on Failure
+    needs: [lint-and-test, build-web]
+    runs-on: ubuntu-latest
+    if: failure() && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Create issue on failure
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Frontend CI Failed - ${{ github.sha }}',
+              body: `## Frontend CI Failure Report
+              
+              **Commit:** ${{ github.sha }}
+              **Branch:** ${{ github.ref }}
+              **Actor:** @${{ github.actor }}
+              **Run:** [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+              
+              Please investigate the CI failure and take corrective action.
+              `,
+              labels: ['frontend', 'bug', 'ci-failure']
+            });

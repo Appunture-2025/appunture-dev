@@ -1,0 +1,202 @@
+name: Seed Data Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'tools/**'
+      - 'tables/**'
+      - '.github/workflows/seed-pipeline.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'tools/**'
+      - 'tables/**'
+      - '.github/workflows/seed-pipeline.yml'
+  workflow_dispatch:
+    inputs:
+      skip_validation:
+        description: 'Skip validation step'
+        required: false
+        default: 'false'
+        type: boolean
+      allow_missing:
+        description: 'Allow missing required fields'
+        required: false
+        default: 'false'
+        type: boolean
+
+concurrency:
+  group: seed-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: write
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  run-seed-pipeline:
+    name: Run Seed Pipeline
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: |
+          pip install pandas pyyaml
+
+      - name: Create output directory
+        run: mkdir -p tools/output
+
+      - name: Run normalize_points.py
+        run: python tools/normalize_points.py
+        continue-on-error: true
+
+      - name: Run include_missing_meridians.py
+        run: python tools/include_missing_meridians.py
+        continue-on-error: true
+
+      - name: Run enrichment scripts
+        run: |
+          for script in tools/update_*.py; do
+            if [ -f "$script" ]; then
+              echo "Running $(basename $script)..."
+              python "$script" || true
+            fi
+          done
+
+      - name: Run validation
+        if: ${{ github.event.inputs.skip_validation != 'true' }}
+        run: |
+          if [ -f "tools/output/points_review.csv" ]; then
+            python tools/validate_points_review.py --file tools/output/points_review.csv
+          else
+            echo "Warning: points_review.csv not found, skipping validation"
+          fi
+        continue-on-error: ${{ github.event.inputs.allow_missing == 'true' }}
+
+      - name: Export to JSON/NDJSON
+        run: |
+          ARGS="--input tools/output/points_review.csv --json tools/output/points_seed.json --ndjson tools/output/points_seed.ndjson --config tools/seed_config.json"
+          if [ "${{ github.event.inputs.allow_missing }}" = "true" ]; then
+            ARGS="$ARGS --allow-missing"
+          fi
+          if [ -f "tools/output/points_review.csv" ]; then
+            python tools/export_points_review.py $ARGS
+          fi
+        continue-on-error: true
+
+      - name: Generate symptoms and categories seed
+        run: |
+          if [ -f "tools/output/points_review.csv" ]; then
+            python tools/generate_symptoms_seed.py --input tools/output/points_review.csv --output-dir tools/output
+          fi
+        continue-on-error: true
+
+      - name: Version outputs
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          VERSION_DIR="data/processed/$DATE"
+          mkdir -p "$VERSION_DIR"
+          
+          # Copy available files
+          for file in points_seed.json points_seed.ndjson points_review.csv symptoms_seed.json symptoms_seed.ndjson categories_seed.json categories_seed.ndjson; do
+            if [ -f "tools/output/$file" ]; then
+              cp "tools/output/$file" "$VERSION_DIR/"
+            fi
+          done
+          
+          echo "VERSION_DIR=$VERSION_DIR" >> $GITHUB_ENV
+          echo "DATE=$DATE" >> $GITHUB_ENV
+
+      - name: Upload seed artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: seed-data-${{ env.DATE }}
+          path: |
+            tools/output/points_seed.json
+            tools/output/points_seed.ndjson
+            tools/output/points_review.csv
+            tools/output/symptoms_seed.json
+            tools/output/symptoms_seed.ndjson
+            tools/output/categories_seed.json
+            tools/output/categories_seed.ndjson
+          retention-days: 90
+          if-no-files-found: warn
+
+      - name: Upload versioned data
+        uses: actions/upload-artifact@v4
+        with:
+          name: versioned-seed-${{ env.DATE }}
+          path: ${{ env.VERSION_DIR }}/
+          retention-days: 365
+          if-no-files-found: warn
+
+      - name: Generate pipeline summary
+        run: |
+          echo "## 🌱 Seed Pipeline Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** ${{ env.DATE }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Version Directory:** \`${{ env.VERSION_DIR }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Generated Files" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| File | Size |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|------|" >> $GITHUB_STEP_SUMMARY
+          for file in tools/output/*.json tools/output/*.ndjson tools/output/*.csv; do
+            if [ -f "$file" ]; then
+              size=$(ls -lh "$file" | awk '{print $5}')
+              name=$(basename "$file")
+              echo "| $name | $size |" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "1. Download the artifacts from this run" >> $GITHUB_STEP_SUMMARY
+          echo "2. Review the generated data" >> $GITHUB_STEP_SUMMARY
+          echo "3. Copy seed files to \`backend-java/src/main/resources/seed/\`" >> $GITHUB_STEP_SUMMARY
+          echo "4. Run \`POST /api/admin/data/seed\` to populate the database" >> $GITHUB_STEP_SUMMARY
+
+  update-backend-seed:
+    name: Update Backend Seed Files
+    needs: run-seed-pipeline
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download seed artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: seed-data-${{ needs.run-seed-pipeline.outputs.date || '' }}
+          path: temp-seed/
+        continue-on-error: true
+
+      - name: Copy to backend resources
+        run: |
+          mkdir -p backend-java/src/main/resources/seed
+          
+          for file in points_seed.ndjson symptoms_seed.ndjson categories_seed.ndjson; do
+            if [ -f "temp-seed/$file" ]; then
+              cp "temp-seed/$file" "backend-java/src/main/resources/seed/"
+              echo "Copied $file to backend seed directory"
+            fi
+          done
+        continue-on-error: true

@@ -9,6 +9,7 @@ groups:
         annotations:
           summary: "P95 acima de 1s no backend"
           description: "Latência P95 excedeu 1s por 5 minutos consecutivos. Verifique Firestore ou integrações externas."
+
       - alert: AppuntureErrorSpike
         expr: sum(rate(http_server_requests_seconds_count{status=~"5..",uri!~"/actuator.*"}[5m])) > 0.5
         for: 3m
@@ -17,6 +18,7 @@ groups:
         annotations:
           summary: "Taxa de erros 5xx acima do limite"
           description: "Mais de 0.5 req/s retornando 5xx. Inspecione logs estruturados no Cloud Run."
+
       - alert: RateLimitRejections
         expr: sum(rate(app_rate_limit_rejections_total[5m])) > 0.2
         for: 2m
@@ -25,3 +27,50 @@ groups:
         annotations:
           summary: "Rejeições por rate limit detectadas"
           description: "Usuários estão batendo no bucket. Avalie aumentar capacidade ou investigar abuso."
+
+  - name: appunture-sync-storage
+    rules:
+      - alert: AuthSyncFailures
+        expr: sum(rate(http_server_requests_seconds_count{uri="/auth/sync",status=~"5.."}[5m])) / sum(rate(http_server_requests_seconds_count{uri="/auth/sync"}[5m])) > 0.05
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Taxa de falha de auth/sync acima de 5%"
+          description: "Sincronização de usuários está falhando. Verifique Firebase Auth e conectividade."
+
+      - alert: StorageUploadSlow
+        expr: histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{uri=~"/storage/.*",method="POST"}[5m])) by (le)) > 5
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Upload de arquivos lento (P95 > 5s)"
+          description: "Uploads para Firebase Storage estão lentos. Verificar tamanho de arquivos e rede."
+
+      - alert: HighOfflineQueueSize
+        expr: app_offline_queue_size > 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Fila offline acima de 10 itens"
+          description: "Fila de operações offline está crescendo. Verificar conectividade do cliente mobile."
+
+      - alert: StorageUploadFailures
+        expr: sum(rate(http_server_requests_seconds_count{uri=~"/storage/.*",method="POST",status=~"5.."}[5m])) > 0.1
+        for: 3m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Falhas de upload detectadas"
+          description: "Uploads para storage estão falhando. Verificar quotas Firebase e permissões."
+
+      - alert: FavoriteSyncFailures
+        expr: sum(rate(http_server_requests_seconds_count{uri=~"/auth/favorites.*",status=~"5.."}[5m])) > 0.1
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Falhas na sincronização de favoritos"
+          description: "Operações de favoritos estão falhando. Verificar Firestore e autenticação."
