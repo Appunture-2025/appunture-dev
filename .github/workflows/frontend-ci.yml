@@ -64,14 +64,35 @@ jobs:
           path: ${{ env.WORKING_DIRECTORY }}/coverage/
           retention-days: 30
 
-      - name: Add coverage to PR
-        uses: davelosert/vitest-coverage-report-action@v2
+      - name: Add coverage comment to PR
         if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
         with:
-          json-summary-path: ${{ env.WORKING_DIRECTORY }}/coverage/coverage-summary.json
-          json-final-path: ${{ env.WORKING_DIRECTORY }}/coverage/coverage-final.json
-          vite-config-path: ''
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = '${{ env.WORKING_DIRECTORY }}/coverage/coverage-summary.json';
+            
+            if (fs.existsSync(path)) {
+              const coverage = JSON.parse(fs.readFileSync(path, 'utf8'));
+              const total = coverage.total;
+              
+              const body = `## 📊 Jest Coverage Report
+              
+              | Metric | Coverage |
+              |--------|----------|
+              | Lines | ${total.lines.pct}% |
+              | Statements | ${total.statements.pct}% |
+              | Functions | ${total.functions.pct}% |
+              | Branches | ${total.branches.pct}% |
+              `;
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }
         continue-on-error: true
 
       - name: TypeScript check

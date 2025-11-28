@@ -45,7 +45,14 @@ jobs:
     name: Run Seed Pipeline
     runs-on: ubuntu-latest
 
+    outputs:
+      date: ${{ steps.set-date.outputs.date }}
+
     steps:
+      - name: Set date
+        id: set-date
+        run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_OUTPUT
+
       - name: Checkout code
         uses: actions/checkout@v4
 

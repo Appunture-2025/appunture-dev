@@ -93,7 +93,8 @@
     },
     {
       "type": "gauge",
-      "title": "Offline Queue Size (Simulated)",
+      "title": "Offline Queue Size",
+      "description": "Number of pending sync operations from mobile clients. Metric requires custom instrumentation via app_offline_queue_size.",
       "id": 3,
       "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
       "datasource": {

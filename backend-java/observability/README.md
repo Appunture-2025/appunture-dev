@@ -85,24 +85,29 @@ O backend expõe métricas via Spring Boot Actuator + Micrometer:
 
 ## 📋 Runbook de Operações
 
+> **Nota:** Nos comandos abaixo, substitua `PROJECT_ID` pelo ID real do seu projeto GCP (ex: `appunture-tcc`) e `XXXXX` pelo hash gerado pelo Cloud Run.
+
 ### Deploy Manual do Backend
 
 ```bash
-# 1. Build da imagem
+# 1. Defina seu PROJECT_ID (substitua pelo seu ID real)
+export PROJECT_ID=seu-projeto-gcp
+
+# 2. Build da imagem
 cd backend-java
-docker build -t gcr.io/PROJECT_ID/appunture-backend:latest .
+docker build -t gcr.io/$PROJECT_ID/appunture-backend:latest .
 
-# 2. Push para Container Registry
-docker push gcr.io/PROJECT_ID/appunture-backend:latest
+# 3. Push para Container Registry
+docker push gcr.io/$PROJECT_ID/appunture-backend:latest
 
-# 3. Deploy no Cloud Run
+# 4. Deploy no Cloud Run
 gcloud run deploy appunture-backend \
-  --image gcr.io/PROJECT_ID/appunture-backend:latest \
+  --image gcr.io/$PROJECT_ID/appunture-backend:latest \
   --platform managed \
   --region us-central1 \
   --allow-unauthenticated
 
-# 4. Verificar saúde
+# 5. Verificar saúde (substitua XXXXX pelo hash do seu serviço)
 curl https://appunture-backend-XXXXX.run.app/health
 ```
 
