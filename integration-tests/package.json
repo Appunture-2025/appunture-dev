@@ -1,0 +1,20 @@
+{
+  "name": "appunture-integration-tests",
+  "version": "1.0.0",
+  "description": "End-to-end integration tests for Appunture API using Newman",
+  "private": true,
+  "scripts": {
+    "test:e2e:api": "newman run postman/appunture.postman_collection.json -e postman/dev.postman_environment.json --reporters cli,json --reporter-json-export ./reports/newman-results.json",
+    "test:e2e:api:dev": "newman run postman/appunture.postman_collection.json -e postman/dev.postman_environment.json --reporters cli,json --reporter-json-export ./reports/newman-dev-results.json",
+    "test:e2e:api:homolog": "newman run postman/appunture.postman_collection.json -e postman/homolog.postman_environment.json --reporters cli,json --reporter-json-export ./reports/newman-homolog-results.json",
+    "test:e2e:api:health": "newman run postman/appunture.postman_collection.json -e postman/dev.postman_environment.json --folder 'Health Check' --reporters cli",
+    "pretest:e2e:api": "mkdir -p reports"
+  },
+  "devDependencies": {
+    "newman": "^6.2.1",
+    "newman-reporter-htmlextra": "^1.23.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
