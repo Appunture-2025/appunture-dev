@@ -59,8 +59,9 @@ jobs:
           # É boa prática passar o GITHUB_TOKEN também caso o agente precise acessar a API do GH
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COPILOT_WORKSPACE_BRANCH: automation/copilot-agent
-        # CORREÇÃO: Removida a flag --apply que não é suportada.
-        run: copilot workspace agent automation/agent-plan.md --model claude-opus-4.5
+        # CORREÇÃO: O comando não aceita argumentos posicionais. 
+        # Enviamos o conteúdo do plano via STDIN (pipe).
+        run: cat automation/agent-plan.md | copilot workspace agent --model claude-opus-4.5
 
       # Faz upload dos logs do Copilot CLI
       - name: Upload Copilot logs
