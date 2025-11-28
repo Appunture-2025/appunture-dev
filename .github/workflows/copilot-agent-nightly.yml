@@ -19,33 +19,40 @@ jobs:
         with:
           ref: main
 
-      # Necessário para usar o GH CLI
+      # Instala o CLI correto do Copilot Workspace (binário oficial)
+      - name: Install Copilot Workspace CLI
+        run: |
+          curl -L https://github.com/github/copilot-cli/releases/latest/download/copilot-linux-amd64 -o /usr/local/bin/copilot
+          chmod +x /usr/local/bin/copilot
+          copilot --version
+
+      # Autentica no GitHub (necessário para commits e PRs)
       - name: Authenticate GitHub CLI
         run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
-      # Instala o Copilot Workspace como extensão oficial do GH CLI
-      - name: Install Copilot Workspace (GH Extension)
-        run: gh extension install github/gh-copilot
-
+      # Autentica no Copilot Workspace
       - name: Authenticate Copilot Workspace
         env:
           COPILOT_WORKSPACE_TOKEN: ${{ secrets.COPILOT_WORKSPACE_TOKEN }}
-        run: gh copilot workspace auth login --token "$COPILOT_WORKSPACE_TOKEN"
+        run: copilot workspace auth login --token "$COPILOT_WORKSPACE_TOKEN"
 
+      # Configura identidade do Git do agente
       - name: Configure Git user
         run: |
           git config user.name "copilot-agent"
           git config user.email "copilot-agent@users.noreply.github.com"
 
+      # Executa o Agent Plan
       - name: Run Copilot Agent Plan
         env:
           COPILOT_WORKSPACE_TOKEN: ${{ secrets.COPILOT_WORKSPACE_TOKEN }}
           COPILOT_WORKSPACE_BRANCH: automation/copilot-agent
-        run: gh copilot workspace agent --plan automation/agent-plan.md --apply
+        run: copilot workspace agent --plan automation/agent-plan.md --apply --model gpt-5.1-codex-preview
 
+      # Faz upload dos logs (novo local do CLI)
       - name: Upload Copilot logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: copilot-agent-logs
-          path: ~/.config/gh-copilot/logs
+          path: ~/.config/copilot/logs
