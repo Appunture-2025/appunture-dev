@@ -2,7 +2,6 @@ package com.appunture.backend.service;
 
 import com.appunture.backend.model.firestore.FirestorePoint;
 import com.appunture.backend.model.firestore.FirestoreSymptom;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,11 +26,6 @@ class SeedDataServiceTest {
 
     @InjectMocks
     private SeedDataService seedDataService;
-
-    @BeforeEach
-    void setUp() {
-        // Setup is handled by Mockito annotations
-    }
 
     @Test
     void importAllSeedData_ShouldReturnSuccessResult() throws Exception {
