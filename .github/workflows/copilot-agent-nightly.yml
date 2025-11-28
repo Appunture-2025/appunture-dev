@@ -1,0 +1,50 @@
+name: Copilot Agent Nightly
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Copilot Workspace CLI
+        run: npm install -g @githubnext/copilot-workspace-cli
+
+      - name: Authenticate Copilot Workspace
+        env:
+          COPILOT_WORKSPACE_TOKEN: ${{ secrets.COPILOT_WORKSPACE_TOKEN }}
+        run: copilot workspace auth login --token "$COPILOT_WORKSPACE_TOKEN"
+
+      - name: Configure Git user
+        run: |
+          git config user.name "copilot-agent"
+          git config user.email "copilot-agent@users.noreply.github.com"
+
+      - name: Run Copilot Agent Plan
+        env:
+          COPILOT_WORKSPACE_TOKEN: ${{ secrets.COPILOT_WORKSPACE_TOKEN }}
+          COPILOT_WORKSPACE_BRANCH: automation/copilot-agent
+        run: copilot workspace agent --plan automation/agent-plan.md --apply
+
+      - name: Upload Copilot logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: copilot-agent-logs
+          path: ~/.config/copilot-workspace/logs
