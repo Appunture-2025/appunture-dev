@@ -24,8 +24,7 @@ jobs:
           node-version: 20
 
       - name: Install Copilot Workspace CLI
-        run: npm install -g github-copilot-workspace@latest
-
+        run: npm install -g @github/copilot-workspace
       - name: Authenticate Copilot Workspace
         env:
           COPILOT_WORKSPACE_TOKEN: ${{ secrets.COPILOT_WORKSPACE_TOKEN }}
