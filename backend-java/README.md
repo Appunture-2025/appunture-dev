@@ -165,6 +165,7 @@ GET    /admin/users        # Gerenciar usuários
 PUT    /admin/users/{id}/role   # Alterar role
 DELETE /admin/users/{id}   # Deletar usuário
 GET    /admin/stats        # Estatísticas
+POST   /admin/data/seed    # Carregar dados iniciais (seed)
 ```
 
 ### 🏥 Health Checks
@@ -175,6 +176,98 @@ GET /health/detailed      # Status detalhado
 GET /health/readiness     # Readiness probe
 GET /health/liveness      # Liveness probe
 ```
+
+## 🌱 Seed Data (Dados Iniciais)
+
+O sistema possui um pipeline completo para geração e importação de dados iniciais de pontos de acupuntura, sintomas e categorias.
+
+### Arquivos de Seed
+
+Os dados de seed estão localizados em `src/main/resources/seed/`:
+
+| Arquivo | Descrição | Registros |
+|---------|-----------|-----------|
+| `points_seed.ndjson` | Pontos de acupuntura (361 pontos) | ~361 |
+| `symptoms_seed.ndjson` | Sintomas extraídos das indicações | ~600+ |
+| `categories_seed.ndjson` | Categorias de sintomas | ~13 |
+
+### Pipeline de Geração
+
+Para regenerar os dados de seed a partir dos CSVs fonte:
+
+```bash
+# Na raiz do projeto
+cd tools
+
+# Executar pipeline completo
+./run_seed_pipeline.sh
+
+# Ou executar etapas individuais:
+python3 normalize_points.py           # Normaliza CSVs
+python3 include_missing_meridians.py  # Adiciona GV/CV
+python3 update_*.py                   # Enriquece descrições
+python3 validate_points_review.py     # Valida dados
+python3 export_points_review.py       # Gera JSON/NDJSON
+python3 generate_symptoms_seed.py     # Gera sintomas/categorias
+```
+
+### Importação via API (Desenvolvimento)
+
+Para popular o banco com dados iniciais em ambiente de desenvolvimento:
+
+```bash
+# 1. Inicie o backend
+mvn spring-boot:run
+
+# 2. Obtenha um token de admin do Firebase Auth
+
+# 3. Execute o seed via API
+curl -X POST http://localhost:8080/api/admin/data/seed \
+  -H "Authorization: Bearer <ADMIN_TOKEN>" \
+  -H "Content-Type: application/json"
+
+# 4. Verifique os dados
+curl http://localhost:8080/api/points?limit=5
+curl http://localhost:8080/api/symptoms?limit=5
+```
+
+### Importação via GCP (Produção)
+
+Para importar diretamente no Firestore em produção:
+
+```bash
+# 1. Configure as credenciais GCP
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json
+
+# 2. Use o gcloud CLI para importar
+# Primeiro, faça upload dos arquivos para um bucket GCS
+gsutil cp src/main/resources/seed/*.ndjson gs://your-bucket/seed/
+
+# 3. Importe no Firestore
+gcloud firestore import gs://your-bucket/seed/
+
+# Alternativa: Use o Firebase CLI
+firebase emulators:start --import=./seed-data
+```
+
+### Versionamento de Dados
+
+Os dados processados são versionados por data em `data/processed/<YYYY-MM-DD>/`:
+
+```
+data/processed/2025-11-28/
+├── points_seed.json        # JSON formatado (para revisão)
+├── points_seed.ndjson      # NDJSON (para Firestore)
+├── points_review.csv       # CSV intermediário
+├── symptoms_seed.json      # Sintomas JSON
+├── symptoms_seed.ndjson    # Sintomas NDJSON
+├── categories_seed.json    # Categorias JSON
+└── categories_seed.ndjson  # Categorias NDJSON
+```
+
+### Backup
+
+Os CSVs originais são mantidos em `tables/raw/` como backup.
 
 ## 🧰 Coleções e Contratos
 
