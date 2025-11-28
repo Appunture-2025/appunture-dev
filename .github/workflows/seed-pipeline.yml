@@ -5,27 +5,27 @@ on:
     branches:
       - main
     paths:
-      - 'tools/**'
-      - 'tables/**'
-      - '.github/workflows/seed-pipeline.yml'
+      - "tools/**"
+      - "tables/**"
+      - ".github/workflows/seed-pipeline.yml"
   pull_request:
     branches:
       - main
     paths:
-      - 'tools/**'
-      - 'tables/**'
-      - '.github/workflows/seed-pipeline.yml'
+      - "tools/**"
+      - "tables/**"
+      - ".github/workflows/seed-pipeline.yml"
   workflow_dispatch:
     inputs:
       skip_validation:
-        description: 'Skip validation step'
+        description: "Skip validation step"
         required: false
-        default: 'false'
+        default: false
         type: boolean
       allow_missing:
-        description: 'Allow missing required fields'
+        description: "Allow missing required fields"
         required: false
-        default: 'false'
+        default: false
         type: boolean
 
 concurrency:
@@ -38,7 +38,7 @@ permissions:
   pull-requests: write
 
 env:
-  PYTHON_VERSION: '3.11'
+  PYTHON_VERSION: "3.11"
 
 jobs:
   run-seed-pipeline:
@@ -60,7 +60,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'pip'
+          cache: "pip"
 
       - name: Install Python dependencies
         run: |
@@ -119,14 +119,14 @@ jobs:
           DATE=$(date +%Y-%m-%d)
           VERSION_DIR="data/processed/$DATE"
           mkdir -p "$VERSION_DIR"
-          
+
           # Copy available files
           for file in points_seed.json points_seed.ndjson points_review.csv symptoms_seed.json symptoms_seed.ndjson categories_seed.json categories_seed.ndjson; do
             if [ -f "tools/output/$file" ]; then
               cp "tools/output/$file" "$VERSION_DIR/"
             fi
           done
-          
+
           echo "VERSION_DIR=$VERSION_DIR" >> $GITHUB_ENV
           echo "DATE=$DATE" >> $GITHUB_ENV
 
@@ -199,7 +199,7 @@ jobs:
       - name: Copy to backend resources
         run: |
           mkdir -p backend-java/src/main/resources/seed
-          
+
           for file in points_seed.ndjson symptoms_seed.ndjson categories_seed.ndjson; do
             if [ -f "temp-seed/$file" ]; then
               cp "temp-seed/$file" "backend-java/src/main/resources/seed/"

@@ -1,64 +1,15 @@
-name: Copilot Agent Nightly
+# =============================================================================
+# ARQUIVO OBSOLETO - APENAS PARA REFERÊNCIA
+# =============================================================================
+# O workflow oficial está em: .github/workflows/copilot-agent-nightly.yml
+#
+# Este arquivo foi mantido apenas como documentação/backup.
+# NÃO USAR - O Copilot CLI não funciona em CI/CD headless.
+# =============================================================================
 
-on:
-  schedule:
-    - cron: "0 2 * * *"
-  workflow_dispatch:
-
-permissions:
-  contents: write
-  pull-requests: write
-  issues: write
-
-concurrency:
-  group: copilot-agent
-  cancel-in-progress: false
-
-jobs:
-  run-agent:
-    runs-on: ubuntu-latest
-    timeout-minutes: 90
-    
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Configure Git user
-        run: |
-          git config user.name "copilot-agent"
-          git config user.email "copilot-agent@users.noreply.github.com"
-
-      - name: Install Copilot Workspace CLI
-        run: npm install -g @github/copilot-workspace
-        continue-on-error: true
-
-      - name: Authenticate Copilot Workspace
-        if: env.COPILOT_WORKSPACE_TOKEN != ''
-        env:
-          COPILOT_WORKSPACE_TOKEN: ${{ secrets.COPILOT_WORKSPACE_TOKEN }}
-        run: copilot workspace auth login --token "$COPILOT_WORKSPACE_TOKEN"
-        continue-on-error: true
-
-      - name: Run Copilot Agent Plan
-        if: env.COPILOT_WORKSPACE_TOKEN != ''
-        env:
-          COPILOT_WORKSPACE_TOKEN: ${{ secrets.COPILOT_WORKSPACE_TOKEN }}
-          COPILOT_WORKSPACE_BRANCH: automation/copilot-agent
-        run: copilot-workspace agent --plan automation/agent-plan.md --apply
-        continue-on-error: true
-
-      - name: Upload Copilot logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: copilot-agent-logs-${{ github.run_number }}
-          path: ~/.config/copilot-workspace/logs
-          retention-days: 30
-          if-no-files-found: ignore
+# O workflow correto usa a abordagem de criar Issues:
+# 1. Cria issues com label "copilot-agent"
+# 2. O Copilot Coding Agent detecta e processa
+# 3. PRs são criados automaticamente
+#
+# Veja: .github/workflows/copilot-agent-nightly.yml

@@ -6,15 +6,15 @@ on:
       - main
       - develop
     paths:
-      - 'frontend-mobile/appunture/**'
-      - '.github/workflows/frontend-ci.yml'
+      - "frontend-mobile/appunture/**"
+      - ".github/workflows/frontend-ci.yml"
   pull_request:
     branches:
       - main
       - develop
     paths:
-      - 'frontend-mobile/appunture/**'
-      - '.github/workflows/frontend-ci.yml'
+      - "frontend-mobile/appunture/**"
+      - ".github/workflows/frontend-ci.yml"
   workflow_dispatch:
 
 concurrency:
@@ -28,7 +28,7 @@ permissions:
   pull-requests: write
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: "20"
   WORKING_DIRECTORY: frontend-mobile/appunture
 
 jobs:
@@ -47,7 +47,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/package-lock.json
 
       - name: Install dependencies
@@ -71,7 +71,7 @@ jobs:
           script: |
             const fs = require('fs');
             const path = '${{ env.WORKING_DIRECTORY }}/coverage/coverage-summary.json';
-            
+
             if (fs.existsSync(path)) {
               const coverage = JSON.parse(fs.readFileSync(path, 'utf8'));
               const total = coverage.total;
@@ -116,7 +116,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/package-lock.json
 
       - name: Install dependencies
@@ -153,7 +153,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/package-lock.json
 
       - name: Setup Expo
@@ -166,12 +166,16 @@ jobs:
         run: npm ci
 
       - name: EAS Build (Android Preview)
-        if: secrets.EXPO_TOKEN != ''
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        if: env.EXPO_TOKEN != ''
         run: eas build --platform android --profile preview --non-interactive
         continue-on-error: true
 
       - name: EAS Build (iOS Preview)
-        if: secrets.EXPO_TOKEN != ''
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        if: env.EXPO_TOKEN != ''
         run: eas build --platform ios --profile preview --non-interactive
         continue-on-error: true
 
@@ -193,7 +197,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/package-lock.json
 
       - name: Install dependencies
