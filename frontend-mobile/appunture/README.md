@@ -1,5 +1,7 @@
 # Appunture Mobile
 
+[![Frontend CI](https://github.com/Appunture-2025/appunture-dev/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/Appunture-2025/appunture-dev/actions/workflows/frontend-ci.yml)
+
 Aplicativo móvel React Native + Expo para consulta de pontos de acupuntura.
 
 ## 🚀 Funcionalidades
@@ -542,6 +544,79 @@ O frontend utiliza essas coordenadas para posicionar os marcadores sobre a image
 - **iOS**: 12.0+
 - **Expo**: SDK 53+
 - **React Native**: 0.79+
+
+## 🔄 CI/CD Pipeline
+
+O projeto utiliza GitHub Actions para automação de builds e testes.
+
+### Workflows Disponíveis
+
+| Workflow | Trigger | Descrição |
+|----------|---------|-----------|
+| `frontend-ci.yml` | Push/PR em `main`/`develop` | Lint, testes Jest, build web, EAS builds |
+
+### Pipeline de Build
+
+```mermaid
+graph LR
+    A[Push/PR] --> B[npm ci]
+    B --> C[Jest Tests]
+    C --> D[TypeScript Check]
+    D --> E{main branch?}
+    E -->|Sim| F[Web Export]
+    F --> G[EAS Build Preview]
+    E -->|Não| H[Upload Coverage]
+```
+
+### Artefatos Gerados
+
+- **jest-coverage**: Relatório de cobertura de testes
+- **web-build**: Build web exportado
+- **detox-artifacts**: Resultados de testes E2E
+
+### Build Manual
+
+```bash
+# Build web
+npx expo export --platform web
+
+# Build Android (requer EAS CLI)
+eas build --platform android --profile preview
+
+# Build iOS (requer EAS CLI)
+eas build --platform ios --profile preview
+```
+
+## 📊 Observabilidade Mobile
+
+Para monitoramento do app mobile, recomendamos:
+
+### Sentry (Recomendado)
+
+```bash
+npm install sentry-expo
+```
+
+Configurar em `app.json`:
+```json
+{
+  "expo": {
+    "plugins": ["sentry-expo"]
+  }
+}
+```
+
+### Métricas Rastreadas
+
+| Evento | Descrição |
+|--------|-----------|
+| `sync_started` | Início de sincronização |
+| `sync_completed` | Sincronização bem-sucedida |
+| `sync_failed` | Falha de sincronização |
+| `upload_completed` | Upload de imagem concluído |
+| `offline_queue_size` | Tamanho da fila offline |
+
+Veja mais em [`backend-java/observability/README.md`](../../backend-java/observability/README.md).
 
 ## 🎯 Próximas Features
 

@@ -1,5 +1,6 @@
 # 🚀 Appunture Backend - Java Spring Boot
 
+[![Backend CI](https://github.com/Appunture-2025/appunture-dev/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/Appunture-2025/appunture-dev/actions/workflows/backend-ci.yml)
 [![Tests](https://img.shields.io/badge/Tests-mvn%20test-0d9488?logo=apache-maven)](#-testes)
 [![Coverage](https://img.shields.io/badge/Coverage-60%25%2B-brightgreen?logo=jacoco)](target/site/jacoco/index.html)
 
@@ -528,12 +529,75 @@ git commit -m "fix: corrigir autenticação Firebase"
 git push origin feature/nova-funcionalidade
 ```
 
+## 🔄 CI/CD Pipeline
+
+O projeto utiliza GitHub Actions para automação de builds, testes e deploys.
+
+### Workflows Disponíveis
+
+| Workflow | Trigger | Descrição |
+|----------|---------|-----------|
+| `backend-ci.yml` | Push/PR em `main`/`develop` | Build, testes, cobertura JaCoCo |
+| `seed-pipeline.yml` | Push em `tools/` ou `tables/` | Geração de dados de seed |
+
+### Pipeline de Build
+
+```mermaid
+graph LR
+    A[Push/PR] --> B[Build]
+    B --> C[Tests]
+    C --> D[JaCoCo Report]
+    D --> E{main branch?}
+    E -->|Sim| F[Docker Build]
+    F --> G[Deploy Cloud Run]
+    E -->|Não| H[Upload Artifacts]
+```
+
+### Deploy Manual
+
+```bash
+# Deploy para Cloud Run (requer gcloud configurado)
+cd backend-java
+./deploy.sh
+```
+
+### Artefatos Gerados
+
+- **JaCoCo Report**: Relatório de cobertura de código (download via GitHub Actions)
+- **backend-jar**: JAR da aplicação para deploy manual
+
+## 📊 Observabilidade
+
+A documentação completa de observabilidade está em [`observability/README.md`](observability/README.md).
+
+### Dashboards Grafana
+
+- **Appunture Backend**: Latência, erros, rate limiting
+- **Appunture Sync & Storage**: Auth, sync, storage operations
+
+### Alertas Configurados
+
+| Alerta | Severidade | Threshold |
+|--------|------------|-----------|
+| `AppuntureHighLatencyP95` | Warning | P95 > 1s por 5min |
+| `AppuntureErrorSpike` | Critical | 5xx > 0.5 req/s por 3min |
+| `RateLimitRejections` | Warning | Rejeições > 0.2 req/s |
+| `HighOfflineQueueSize` | Critical | Fila > 10 por 5min |
+
+### Métricas
+
+```bash
+# Verificar métricas localmente
+curl http://localhost:8080/actuator/prometheus
+```
+
 ## 📚 Recursos Adicionais
 
 - [Firebase Documentation](https://firebase.google.com/docs)
 - [Spring Boot Reference](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
 - [Cloud Run Documentation](https://cloud.google.com/run/docs)
 - [OpenAPI Specification](https://swagger.io/specification/)
+- [Observability README](observability/README.md)
 
 ## 🤝 Contribuição
 
