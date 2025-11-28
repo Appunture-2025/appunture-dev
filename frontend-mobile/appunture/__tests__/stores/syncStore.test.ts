@@ -348,7 +348,7 @@ describe('syncStore', () => {
       expect(databaseService.markImageSyncFailed).not.toHaveBeenCalled();
     });
 
-    it('should skip images without imageUri', async () => {
+    it('should mark images without imageUri as failed', async () => {
       const imageOps = [
         {
           id: 1,
@@ -363,14 +363,14 @@ describe('syncStore', () => {
 
       (databaseService.getPendingImages as jest.Mock).mockResolvedValue(imageOps);
       (databaseService.markImageSyncInProgress as jest.Mock).mockResolvedValue(undefined);
-      (databaseService.markImageSyncCompleted as jest.Mock).mockResolvedValue(undefined);
+      (databaseService.markImageSyncFailed as jest.Mock).mockResolvedValue(undefined);
       (databaseService.countPendingOperations as jest.Mock).mockResolvedValue(0);
       (databaseService.countPendingImages as jest.Mock).mockResolvedValue(0);
 
       await useSyncStore.getState().syncImages();
 
       expect(mediaStorageService.uploadImage).not.toHaveBeenCalled();
-      expect(databaseService.markImageSyncCompleted).toHaveBeenCalledWith(1);
+      expect(databaseService.markImageSyncFailed).toHaveBeenCalledWith(1);
     });
   });
 

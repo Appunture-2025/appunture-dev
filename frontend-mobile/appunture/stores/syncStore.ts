@@ -581,15 +581,25 @@ export const useSyncStore = create<SyncStore>((set, get) => {
 
           if (!imageUri) {
             console.warn(`Skipping image sync ${imageOp.id}: no imageUri`);
-            await databaseService.markImageSyncCompleted(imageOp.id);
+            await databaseService.markImageSyncFailed(imageOp.id);
             continue;
           }
 
           // Upload the image using mediaStorageService
           const uploadedUrl = await mediaStorageService.uploadImage(imageUri);
 
+          // Validate upload succeeded and returned a valid URL
+          if (!uploadedUrl || typeof uploadedUrl !== "string") {
+            console.warn(
+              `Image upload for ${imageOp.id} returned invalid URL:`,
+              uploadedUrl
+            );
+            await databaseService.markImageSyncFailed(imageOp.id);
+            continue;
+          }
+
           // If the image is associated with a point, add it to the point
-          if (pointId && uploadedUrl) {
+          if (pointId) {
             try {
               await apiService.addImageToPoint(pointId, uploadedUrl);
             } catch (addError) {
