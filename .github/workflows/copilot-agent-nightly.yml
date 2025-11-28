@@ -19,11 +19,16 @@ jobs:
         with:
           ref: main
 
-      # Instala o CLI correto do Copilot Workspace (binário oficial)
-      - name: Install Copilot Workspace CLI
+      # Node.js para instalar o Copilot CLI
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Instala o CLI do Copilot (método oficial)
+      - name: Install GitHub Copilot CLI
         run: |
-          curl -L https://github.com/github/copilot-cli/releases/latest/download/copilot-linux-amd64 -o /usr/local/bin/copilot
-          chmod +x /usr/local/bin/copilot
+          npm install -g @github/copilot
           copilot --version
 
       # Autentica no GitHub (necessário para commits e PRs)
@@ -49,7 +54,7 @@ jobs:
           COPILOT_WORKSPACE_BRANCH: automation/copilot-agent
         run: copilot workspace agent --plan automation/agent-plan.md --apply --model gpt-5.1-codex-preview
 
-      # Faz upload dos logs (novo local do CLI)
+      # Faz upload dos logs
       - name: Upload Copilot logs
         if: always()
         uses: actions/upload-artifact@v4
