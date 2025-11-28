@@ -4,8 +4,8 @@
     "name": "Cardiovascular",
     "description": "Categoria de sintomas: Cardiovascular",
     "symptomCount": 19,
-    "createdAt": "2025-11-28T10:12:15.401901+00:00",
-    "updatedAt": "2025-11-28T10:12:15.401901+00:00",
+    "createdAt": "2025-11-28T10:20:22.242783+00:00",
+    "updatedAt": "2025-11-28T10:20:22.242783+00:00",
     "createdBy": "system"
   },
   {
@@ -13,8 +13,8 @@
     "name": "Digestivo",
     "description": "Categoria de sintomas: Digestivo",
     "symptomCount": 29,
-    "createdAt": "2025-11-28T10:12:15.401901+00:00",
-    "updatedAt": "2025-11-28T10:12:15.401901+00:00",
+    "createdAt": "2025-11-28T10:20:22.242783+00:00",
+    "updatedAt": "2025-11-28T10:20:22.242783+00:00",
     "createdBy": "system"
   },
   {
@@ -22,8 +22,8 @@
     "name": "Dor e Musculoesquelético",
     "description": "Categoria de sintomas: Dor e Musculoesquelético",
     "symptomCount": 196,
-    "createdAt": "2025-11-28T10:12:15.401901+00:00",
-    "updatedAt": "2025-11-28T10:12:15.401901+00:00",
+    "createdAt": "2025-11-28T10:20:22.242783+00:00",
+    "updatedAt": "2025-11-28T10:20:22.242783+00:00",
     "createdBy": "system"
   },
   {
@@ -31,8 +31,8 @@
     "name": "Febre e Sistema Imune",
     "description": "Categoria de sintomas: Febre e Sistema Imune",
     "symptomCount": 14,
-    "createdAt": "2025-11-28T10:12:15.401901+00:00",
-    "updatedAt": "2025-11-28T10:12:15.401901+00:00",
+    "createdAt": "2025-11-28T10:20:22.242783+00:00",
+    "updatedAt": "2025-11-28T10:20:22.242783+00:00",
     "createdBy": "system"
   },
   {
@@ -40,8 +40,8 @@
     "name": "Geral e Energético",
     "description": "Categoria de sintomas: Geral e Energético",
     "symptomCount": 8,
-    "createdAt": "2025-11-28T10:12:15.401901+00:00",
-    "updatedAt": "2025-11-28T10:12:15.401901+00:00",
+    "createdAt": "2025-11-28T10:20:22.242783+00:00",
+    "updatedAt": "2025-11-28T10:20:22.242783+00:00",
     "createdBy": "system"
   },
   {
@@ -49,8 +49,8 @@
     "name": "Nariz e Garganta",
     "description": "Categoria de sintomas: Nariz e Garganta",
     "symptomCount": 14,
-    "createdAt": "2025-11-28T10:12:15.401901+00:00",
-    "updatedAt": "2025-11-28T10:12:15.401901+00:00",
+    "createdAt": "2025-11-28T10:20:22.242783+00:00",
+    "updatedAt": "2025-11-28T10:20:22.242783+00:00",
     "createdBy": "system"
   },
   {
@@ -58,8 +58,8 @@
     "name": "Neurológico e Mental",
     "description": "Categoria de sintomas: Neurológico e Mental",
     "symptomCount": 39,
-    "createdAt": "2025-11-28T10:12:15.401901+00:00",
-    "updatedAt": "2025-11-28T10:12:15.401901+00:00",
+    "createdAt": "2025-11-28T10:20:22.242783+00:00",
+    "updatedAt": "2025-11-28T10:20:22.242783+00:00",
     "createdBy": "system"
   },
   {
@@ -67,8 +67,8 @@
     "name": "Olhos e Visão",
     "description": "Categoria de sintomas: Olhos e Visão",
     "symptomCount": 14,
-    "createdAt": "2025-11-28T10:12:15.401901+00:00",
-    "updatedAt": "2025-11-28T10:12:15.401901+00:00",
+    "createdAt": "2025-11-28T10:20:22.242783+00:00",
+    "updatedAt": "2025-11-28T10:20:22.242783+00:00",
     "createdBy": "system"
   },
   {
@@ -76,8 +76,8 @@
     "name": "Outros",
     "description": "Categoria de sintomas: Outros",
     "symptomCount": 225,
-    "createdAt": "2025-11-28T10:12:15.401901+00:00",
-    "updatedAt": "2025-11-28T10:12:15.401901+00:00",
+    "createdAt": "2025-11-28T10:20:22.242783+00:00",
+    "updatedAt": "2025-11-28T10:20:22.242783+00:00",
     "createdBy": "system"
   },
   {
@@ -85,8 +85,8 @@
     "name": "Ouvidos e Audição",
     "description": "Categoria de sintomas: Ouvidos e Audição",
     "symptomCount": 5,
-    "createdAt": "2025-11-28T10:12:15.401901+00:00",
-    "updatedAt": "2025-11-28T10:12:15.401901+00:00",
+    "createdAt": "2025-11-28T10:20:22.242783+00:00",
+    "updatedAt": "2025-11-28T10:20:22.242783+00:00",
     "createdBy": "system"
   },
   {
@@ -94,8 +94,8 @@
     "name": "Pele e Dermatológico",
     "description": "Categoria de sintomas: Pele e Dermatológico",
     "symptomCount": 14,
-    "createdAt": "2025-11-28T10:12:15.401901+00:00",
-    "updatedAt": "2025-11-28T10:12:15.401901+00:00",
+    "createdAt": "2025-11-28T10:20:22.242783+00:00",
+    "updatedAt": "2025-11-28T10:20:22.242783+00:00",
     "createdBy": "system"
   },
   {
@@ -103,8 +103,8 @@
     "name": "Respiratório",
     "description": "Categoria de sintomas: Respiratório",
     "symptomCount": 21,
-    "createdAt": "2025-11-28T10:12:15.401901+00:00",
-    "updatedAt": "2025-11-28T10:12:15.401901+00:00",
+    "createdAt": "2025-11-28T10:20:22.242783+00:00",
+    "updatedAt": "2025-11-28T10:20:22.242783+00:00",
     "createdBy": "system"
   },
   {
@@ -112,8 +112,8 @@
     "name": "Urogenital",
     "description": "Categoria de sintomas: Urogenital",
     "symptomCount": 24,
-    "createdAt": "2025-11-28T10:12:15.401901+00:00",
-    "updatedAt": "2025-11-28T10:12:15.401901+00:00",
+    "createdAt": "2025-11-28T10:20:22.242783+00:00",
+    "updatedAt": "2025-11-28T10:20:22.242783+00:00",
     "createdBy": "system"
   }
 ]

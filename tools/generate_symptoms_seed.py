@@ -12,41 +12,71 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Set
 
+# Configuration constants
+MIN_SYMPTOM_LENGTH = 3
+MAX_SYMPTOM_LENGTH = 100
+MAX_SYMPTOM_ID_LENGTH = 50
 
-# Category mappings for symptoms
-CATEGORY_MAPPINGS = {
-    # Pain/Musculoskeletal
-    r"dor|dolor|pain|artralgia|mialgia|rigidez|tensão|contratura|paralisia|atrofia|fraqueza|dormência": "Dor e Musculoesquelético",
-    # Respiratory
-    r"tosse|asma|dispneia|falta de ar|respirat|pulmão|pneumo|bronqu|estertores": "Respiratório",
-    # Digestive
-    r"vômito|náusea|diarr|constipação|distensão abdom|digestivo|estômago|intestin|gastral|gástric|borborigmo|anorexia": "Digestivo",
-    # Neurological/Mental
-    r"cefal|enxaqueca|tontura|vertigem|epilep|convuls|síncope|delírio|mania|ansied|depres|insônia|sonho|irritabil": "Neurológico e Mental",
-    # Cardiovascular
-    r"palpita|cardía|pressão|hipertens|taquicard|bradica|edema": "Cardiovascular",
-    # Eyes
-    r"ocular|olho|visão|visual|cegueira|lacrim|conjuntiv|blefarit": "Olhos e Visão",
-    # Ears
-    r"ouvid|surdez|zumbido|otorr|otite|audição": "Ouvidos e Audição",
-    # Nose/Throat
-    r"nariz|nasal|epistaxe|rino|garganta|laringe|faringe|amígdal|disfagia": "Nariz e Garganta",
-    # Urogenital
-    r"urin|micção|disúria|reten|bexiga|prósta|genital|menstr|amenorr|dismenorr|útero|ovár|vaginal|impo|ejaculação": "Urogenital",
-    # Skin
-    r"pele|cutân|eczema|urticár|coceira|prurido|acne|erupção|herpes": "Pele e Dermatológico",
-    # Fever/Immune
-    r"febre|calafrio|sudor|infecç|inflama|gripe|resfr": "Febre e Sistema Imune",
-    # General
-    r"fadiga|cansaço|fraqueza geral|yang|yin|qi|sangue|essência": "Geral e Energético",
+# Category keyword patterns - organized for maintainability
+CATEGORY_KEYWORDS = {
+    "Dor e Musculoesquelético": [
+        "dor", "dolor", "pain", "artralgia", "mialgia", "rigidez",
+        "tensão", "contratura", "paralisia", "atrofia", "fraqueza", "dormência"
+    ],
+    "Respiratório": [
+        "tosse", "asma", "dispneia", "falta de ar", "respirat",
+        "pulmão", "pneumo", "bronqu", "estertores"
+    ],
+    "Digestivo": [
+        "vômito", "náusea", "diarr", "constipação", "distensão abdom",
+        "digestivo", "estômago", "intestin", "gastral", "gástric", "borborigmo", "anorexia"
+    ],
+    "Neurológico e Mental": [
+        "cefal", "enxaqueca", "tontura", "vertigem", "epilep", "convuls",
+        "síncope", "delírio", "mania", "ansied", "depres", "insônia", "sonho", "irritabil"
+    ],
+    "Cardiovascular": [
+        "palpita", "cardía", "pressão", "hipertens", "taquicard", "bradica", "edema"
+    ],
+    "Olhos e Visão": [
+        "ocular", "olho", "visão", "visual", "cegueira", "lacrim", "conjuntiv", "blefarit"
+    ],
+    "Ouvidos e Audição": [
+        "ouvid", "surdez", "zumbido", "otorr", "otite", "audição"
+    ],
+    "Nariz e Garganta": [
+        "nariz", "nasal", "epistaxe", "rino", "garganta", "laringe",
+        "faringe", "amígdal", "disfagia"
+    ],
+    "Urogenital": [
+        "urin", "micção", "disúria", "reten", "bexiga", "prósta",
+        "genital", "menstr", "amenorr", "dismenorr", "útero", "ovár",
+        "vaginal", "impo", "ejaculação"
+    ],
+    "Pele e Dermatológico": [
+        "pele", "cutân", "eczema", "urticár", "coceira", "prurido",
+        "acne", "erupção", "herpes"
+    ],
+    "Febre e Sistema Imune": [
+        "febre", "calafrio", "sudor", "infecç", "inflama", "gripe", "resfr"
+    ],
+    "Geral e Energético": [
+        "fadiga", "cansaço", "fraqueza geral", "yang", "yin", "qi", "sangue", "essência"
+    ],
 }
+
+# Build compiled regex patterns from keywords
+CATEGORY_PATTERNS: Dict[str, re.Pattern] = {}
+for category, keywords in CATEGORY_KEYWORDS.items():
+    pattern = "|".join(re.escape(kw) if not any(c in kw for c in "[]()") else kw for kw in keywords)
+    CATEGORY_PATTERNS[category] = re.compile(pattern, re.IGNORECASE)
 
 
 def categorize_symptom(symptom: str) -> str:
     """Determine category for a symptom based on keywords."""
     symptom_lower = symptom.lower()
-    for pattern, category in CATEGORY_MAPPINGS.items():
-        if re.search(pattern, symptom_lower):
+    for category, pattern in CATEGORY_PATTERNS.items():
+        if pattern.search(symptom_lower):
             return category
     return "Outros"
 
@@ -63,8 +93,8 @@ def extract_symptoms_from_indications(indications: str) -> List[str]:
     symptoms: List[str] = []
     for part in parts:
         part = part.strip()
-        # Clean up and filter
-        if len(part) > 3 and len(part) < 100:
+        # Clean up and filter by length bounds
+        if MIN_SYMPTOM_LENGTH < len(part) < MAX_SYMPTOM_LENGTH:
             # Capitalize first letter
             part = part[0].upper() + part[1:] if part else part
             symptoms.append(part)
@@ -85,7 +115,7 @@ def generate_symptom_id(name: str) -> str:
     id_str = re.sub(r'[ñ]', 'n', id_str)
     id_str = re.sub(r'[^a-z0-9\s]', '', id_str)
     id_str = re.sub(r'\s+', '_', id_str)
-    return id_str[:50]  # Limit length
+    return id_str[:MAX_SYMPTOM_ID_LENGTH]
 
 
 def main() -> None:

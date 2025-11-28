@@ -39,6 +39,32 @@ SKIP_ENRICHMENT=false
 SKIP_VALIDATE=false
 ALLOW_MISSING=false
 
+# Help function
+show_help() {
+    cat << 'EOF'
+Appunture Seed Data Pipeline
+This script runs the complete data normalization and seed generation pipeline.
+
+Usage:
+  ./tools/run_seed_pipeline.sh [options]
+
+Options:
+  --skip-normalize    Skip the initial CSV normalization step
+  --skip-enrichment   Skip the update_*.py enrichment scripts
+  --skip-validate     Skip validation (not recommended)
+  --allow-missing     Export even with missing required fields
+  -h, --help          Show this help message
+
+Output:
+  - tools/output/points_seed.json       Formatted JSON for inspection
+  - tools/output/points_seed.ndjson     NDJSON for Firestore import
+  - tools/output/symptoms_seed.json     Symptoms seed JSON
+  - tools/output/symptoms_seed.ndjson   Symptoms seed NDJSON
+  - tools/output/categories_seed.json   Categories seed JSON
+  - data/processed/<date>/              Versioned copy of all artifacts
+EOF
+}
+
 # Parse arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -59,7 +85,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         -h|--help)
-            head -25 "$0" | tail -24
+            show_help
             exit 0
             ;;
         *)
