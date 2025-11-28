@@ -5,6 +5,7 @@ import com.appunture.backend.service.FirebaseAuthService;
 import com.appunture.backend.service.FirestorePointService;
 import com.appunture.backend.service.FirestoreSymptomService;
 import com.appunture.backend.service.FirestoreUserService;
+import com.appunture.backend.service.SeedDataService;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,6 +37,7 @@ public class FirestoreAdminController {
     private final FirestorePointService pointService;
     private final FirestoreSymptomService symptomService;
     private final FirebaseAuthService firebaseAuthService;
+    private final SeedDataService seedDataService;
 
     @GetMapping("/dashboard")
     @Operation(summary = "Get admin dashboard", description = "Returns general statistics for admin dashboard")
@@ -268,31 +270,25 @@ public class FirestoreAdminController {
     }
 
     @PostMapping("/data/seed")
-    @Operation(summary = "Seed initial data", description = "Creates initial data for development/testing")
+    @Operation(summary = "Seed initial data", description = "Imports initial seed data from NDJSON files for points and symptoms")
     @SecurityRequirement(name = "firebase")
     public ResponseEntity<Map<String, Object>> seedData(@AuthenticationPrincipal FirebaseToken token) {
         try {
-            log.debug("Iniciando seed de dados inicial");
+            log.info("Admin {} iniciando seed de dados", token.getEmail());
             
-            // Verificar se já existem dados
-            if (pointService.count() > 0 || symptomService.count() > 0) {
-                return ResponseEntity.badRequest().body(Map.of(
-                    "error", "Dados já existem no sistema"
-                ));
+            Map<String, Object> result = seedDataService.importAllSeedData();
+            
+            if (Boolean.TRUE.equals(result.get("success"))) {
+                return ResponseEntity.ok(result);
+            } else {
+                return ResponseEntity.badRequest().body(result);
             }
-            
-            // TODO: Implementar seed de dados iniciais
-            // Por enquanto, retornar sucesso vazio
-            Map<String, Object> result = Map.of(
-                "message", "Seed de dados não implementado ainda",
-                "pointsCreated", 0,
-                "symptomsCreated", 0
-            );
-            
-            return ResponseEntity.ok(result);
         } catch (Exception e) {
             log.error("Erro ao fazer seed de dados: {}", e.getMessage(), e);
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body(Map.of(
+                "success", false,
+                "error", e.getMessage()
+            ));
         }
     }
 
