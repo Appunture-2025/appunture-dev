@@ -1,102 +1,163 @@
-# Copilot Workspace Agent – Plano Mestre
+# Copilot Coding Agent – Plano Mestre
+
+> **Última atualização**: 28/11/2025 - Code Review completo realizado
 
 ## 1. Contexto do Repositório
 
-- **Nome**: `appunture-dev` · **Branch principal**: `main` · Subpastas chave: `backend-java`, `frontend-mobile/appunture`, `tools`, `tables`, `analises`.
-- **Estado atual** (27/11/2025) segundo `analises/ANALISE_*_27NOV2025.md` e `analises/PLANO_IMPLEMENTACAO_FINAL_27NOV2025.md`:
-  - Backend Java ≈85% concluído (faltam testes, seed endpoint, CI/CD, observabilidade real, rate limiting).
-  - Frontend Mobile ≈70% (ajustes API, autenticação Firebase completa, upload de mídia, testes UI/e2e, branding/builds).
-  - Integração ≈50% (contratos de autenticação, ambientes alinhados, upload real, testes ponta-a-ponta, observabilidade compartilhada).
-  - Seed/Dados ≈60% (enriquecimento pontos, relacionamentos, pipeline import/export Firestore).
-- **Objetivo global**: manter agentes rodando enquanto o time está offline para levar o produto a "pronto para produção" com qualidade, dados e automação alinhados.
+- **Nome**: `appunture-dev` · **Branch principal**: `main`
+- **Subpastas chave**: `backend-java`, `frontend-mobile/appunture`, `tools`, `tables`, `analises`
 
-## 2. Pré-Requisitos / Setup rápido
+### Estado Atual (28/11/2025)
 
-1. Instalar CLIs necessários:
+| Módulo          | Progresso | Status                                           |
+| --------------- | --------- | ------------------------------------------------ |
+| Backend Java    | ≈90%      | ✅ CI/CD criado, JaCoCo, deploy Cloud Run        |
+| Frontend Mobile | ≈85%      | ✅ Firebase Auth, upload mídia, E2E Detox        |
+| Integração      | ≈70%      | ✅ Contratos alinhados, Postman collections      |
+| Seed/Dados      | ≈80%      | ✅ Pipeline automatizado, NDJSON gerado          |
+| DevOps          | ✅        | Workflows backend-ci, frontend-ci, seed-pipeline |
+
+## 2. Como Funciona o Copilot Coding Agent
+
+> ⚠️ **IMPORTANTE**: O Copilot CLI NÃO funciona em CI/CD headless.  
+> Usamos o **Copilot Coding Agent** via Issues do GitHub.
+
+### Fluxo de Execução
+
+```
+┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│ Workflow cria   │ --> │ Copilot Coding   │ --> │ PR criado       │
+│ Issues com      │     │ Agent detecta e  │     │ automaticamente │
+│ label           │     │ processa         │     │                 │
+└─────────────────┘     └──────────────────┘     └─────────────────┘
+```
+
+### Pré-Requisitos
+
+1. **Habilitar Copilot Coding Agent**:
+
+   - `Settings` → `Copilot` → `Coding Agent` → Habilitar
+
+2. **Executar workflow**:
    ```bash
-   npm install -g @githubnext/copilot-workspace-cli gh firebase-tools
-   gh auth login
-   copilot workspace auth login
-   ```
-2. Garantir acesso ao repositório (permissões `repo`, `workflow` e `pull_request`).
-3. Exportar variáveis antes de rodar o agente (local ou CI):
-   ```bash
-   export COPILOT_WORKSPACE_TOKEN=<token>
-   export COPILOT_WORKSPACE_BRANCH="automation/copilot-agent"
-   ```
-4. Executar build rápido para validar ambiente antes de delegar:
-   ```bash
-   (cd backend-java && ./mvnw -q -DskipTests package)
-   (cd frontend-mobile/appunture && npm install)
+   gh workflow run copilot-agent-nightly.yml
+   # Ou com filtro:
+   gh workflow run copilot-agent-nightly.yml -f prompt_filter=backend
    ```
 
-## 3. Guardrails Globais para o Agente
+## 3. Workflows CI/CD Criados
 
-- **Sem resets de branch**: trabalhar sempre em branch dedicada `automation/copilot-agent` e criar PRs contra `main`.
-- **Commits atômicos** com prefixo `chore(agent): <resumo>`.
-- **Testes obrigatórios**: `npm test` no mobile + `./mvnw test` no backend + scripts Python relevantes antes de abrir PR.
-- **Sem secrets hardcoded**: utilizar `.env.example` ou instruções na documentação.
-- **Docs sempre atualizados**: quando tocar backend/frontend/seed, atualizar arquivos em `analises/` ou READMEs associados.
-- **Falhas**: se build/teste falhar, registrar no corpo do PR e abrir issue `agent-broken-build`.
+| Arquivo                     | Trigger                 | Função                                  |
+| --------------------------- | ----------------------- | --------------------------------------- |
+| `backend-ci.yml`            | push/PR backend-java    | Build, testes, JaCoCo, deploy Cloud Run |
+| `frontend-ci.yml`           | push/PR frontend-mobile | Jest, TypeScript, EAS, Detox            |
+| `seed-pipeline.yml`         | push tools/tables       | Normalização, validação, NDJSON         |
+| `copilot-agent-nightly.yml` | cron 02:00 UTC          | Cria issues para Copilot Agent          |
 
-## 4. Rotina de Execução
+## 4. Estrutura de Prompts
 
-### 4.1 Execução manual
+### Prompts Originais (Gerais)
 
-1. Atualizar branch `automation/copilot-agent` a partir de `origin/main`.
-2. Rodar agente:
-   ```bash
-   copilot workspace agent --plan automation/agent-plan.md --apply
-   ```
-3. Revisar PRs gerados, executar testes localmente para confirmar, fazer merge quando aprovado.
+```text
+automation/prompts/
+├── backend-quality.md      # Testes JUnit, cobertura, rate limiting
+├── frontend-integration.md # Firebase Auth, upload, testes
+├── seed-data.md            # Pipeline dados, NDJSON, Firestore
+├── e2e-integration.md      # Postman, Detox, contratos
+└── devops-observability.md # CI/CD, métricas, alertas
+```
 
-### 4.2 Execução automatizada (GitHub Actions)
+### Tasks Específicas (Novas - 28/11/2025)
 
-- Ver blueprint em `automation/workflows/agent-nightly.md`.
-- Agendar execução diária às 02:00 UTC. Workflow baixa repositório, instala CLIs, roda `copilot workspace agent --plan ...`, publica PR + artefatos (logs, cobertura, seed gerados).
+| Task | Arquivo                             | Descrição                                         | Prioridade |
+| ---- | ----------------------------------- | ------------------------------------------------- | ---------- |
+| 01   | `task-01-backend-test-coverage.md`  | Aumentar cobertura JUnit para 80%+                | P0         |
+| 02   | `task-02-google-signin.md`          | Implementar Google Sign-In no frontend            | P0         |
+| 03   | `task-03-apple-signin.md`           | Implementar Apple Sign-In (obrigatório App Store) | P0         |
+| 04   | `task-04-profile-photo-upload.md`   | Upload de foto de perfil com expo-image-picker    | P1         |
+| 05   | `task-05-remove-console-logs.md`    | Criar logger condicional, remover console.\*      | P1         |
+| 06   | `task-06-frontend-test-coverage.md` | Aumentar cobertura Jest para 70%+                 | P1         |
+| 07   | `task-07-postman-newman-ci.md`      | Integrar Postman/Newman no CI                     | P2         |
+| 08   | `task-08-fcm-notifications.md`      | Implementar Push Notifications FCM                | P2         |
+| 09   | `task-09-admin-dashboard.md`        | Dashboard web para administradores                | P2         |
+| 10   | `task-10-production-checklist.md`   | Checklist completo de produção                    | P0         |
 
-## 5. Estrutura de Prompts
+### Tasks de Análise & Code Review (28/11/2025)
 
-O plano inclui módulos especializados. O agente deve consumi-los em sequência configurável:
+| Task | Arquivo                            | Descrição                                 | Prioridade |
+| ---- | ---------------------------------- | ----------------------------------------- | ---------- |
+| 11   | `task-11-security-audit.md`        | Auditoria de segurança e vulnerabilidades | P0         |
+| 12   | `task-12-code-quality-review.md`   | Análise de qualidade e refatoração        | P1         |
+| 13   | `task-13-api-contract-review.md`   | Revisão de contratos API e documentação   | P1         |
+| 14   | `task-14-performance-analysis.md`  | Análise de performance e otimização       | P1         |
+| 15   | `task-15-accessibility-review.md`  | Revisão de acessibilidade (a11y/WCAG)     | P2         |
+| 16   | `task-16-error-handling-review.md` | Revisão de tratamento de erros            | P1         |
+| 17   | `task-17-documentation-review.md`  | Melhoria da documentação                  | P2         |
+| 18   | `task-18-test-quality-review.md`   | Revisão de qualidade dos testes           | P1         |
 
-1. `prompts/backend-quality.md`
-2. `prompts/frontend-integration.md`
-3. `prompts/seed-data.md`
-4. `prompts/e2e-integration.md`
-5. `prompts/devops-observability.md`
+### Executar Tasks Específicas
 
-> Recomenda-se rodar no máximo **dois prompts por execução** para facilitar revisão. Priorizar conforme pendências críticas do relatório diário.
+```bash
+# Executar todas as tasks (cria múltiplas issues)
+gh workflow run copilot-agent-nightly.yml -f prompt_filter=task
 
-## 6. Sequência Recomendada (Ciclo de 2 semanas)
+# Executar task específica (manual - criar issue)
+gh issue create --title "Task 02: Google Sign-In" \
+  --body-file automation/prompts/task-02-google-signin.md \
+  --label "copilot-agent"
 
-| Dia          | Foco                                              | Prompt               | Observações                                                   |
-| ------------ | ------------------------------------------------- | -------------------- | ------------------------------------------------------------- |
-| Seg          | Backend qualidade                                 | Backend Quality      | Elevar cobertura >80%, validar rate limit/logs                |
-| Ter          | Seed/Dados                                        | Seed Data            | Normalizar CSVs, exportar NDJSON, validar com backend         |
-| Qua          | Frontend integração                               | Frontend Integration | Ajustar API_BASE_URL, remover endpoints legados, upload mídia |
-| Qui          | Integração/E2E                                    | E2E Integration      | Postman + Detox + alinhamento contratos                       |
-| Sex          | DevOps/Observabilidade                            | DevOps Observability | Workflow CI/CD, métricas, alertas                             |
-| Próx. semana | Repetir ciclo avaliando pendências/pull requests. |
+# Executar tasks de análise
+gh issue create --title "Task 11: Security Audit" \
+  --body-file automation/prompts/task-11-security-audit.md \
+  --label "copilot-agent,security,audit"
 
-## 7. Critérios de Aceitação antes de encerrar execução
+gh issue create --title "Task 12: Code Quality Review" \
+  --body-file automation/prompts/task-12-code-quality-review.md \
+  --label "copilot-agent,code-quality"
+```
 
-- Todos os testes declarados no prompt executado passam.
-- Documentação pertinente atualizada (README, `analises/*.md`, `STATUS_FINAL_MIGRACAO.md`).
-- Seed ou scripts gerados anexados como artefato ou commitados.
-- Logs do agente salvos no job (GitHub Actions) ou `automation/logs/<data>.txt` se rodar localmente.
+## 5. Sequência Recomendada
 
-## 8. Plano de Contingência
+| Dia | Foco     | Comando                                                               |
+| --- | -------- | --------------------------------------------------------------------- |
+| Seg | Backend  | `gh workflow run copilot-agent-nightly.yml -f prompt_filter=backend`  |
+| Ter | Seed     | `gh workflow run copilot-agent-nightly.yml -f prompt_filter=seed`     |
+| Qua | Frontend | `gh workflow run copilot-agent-nightly.yml -f prompt_filter=frontend` |
+| Qui | E2E      | `gh workflow run copilot-agent-nightly.yml -f prompt_filter=e2e`      |
+| Sex | DevOps   | `gh workflow run copilot-agent-nightly.yml -f prompt_filter=devops`   |
 
-- Se o agente travar em diff grande, abortar com `Ctrl+C`, fazer `git reset --hard HEAD` dentro do workspace temporário e relançar com prompt único.
-- Para conflitos recorrentes, criar sub-branch `automation/copilot-agent/<data>-<prompt>` e abrir PR separado.
-- Manter issue `#copilot-agent-ops` para registrar incidentes, lições e ajustes nos prompts.
+## 6. Troubleshooting
 
-## 9. Próximos Passos para o Operador Humano
+### Issue criada mas Copilot não responde
 
-1. Revisar os arquivos em `automation/prompts/` e ajustar prioridades.
-2. Configurar workflow descrito em `automation/workflows/agent-nightly.md` (ou rodar manualmente conforme necessidade).
-3. Monitorar PRs criados pelo agente, garantindo merge contínuo conforme validações.
+1. Verifique se Copilot Coding Agent está habilitado
+2. Comente `@github-copilot please implement this` na issue
+
+### Workflow falha
+
+```bash
+# Verificar logs
+gh run list --workflow=copilot-agent-nightly.yml
+gh run view <run-id> --log
+```
+
+### PR com erros
+
+Comente na PR: `@github-copilot please fix the failing tests`
+
+## 7. Guardrails
+
+- ✅ Commits atômicos com prefixo descritivo
+- ✅ Testes obrigatórios antes de merge
+- ✅ Sem secrets hardcoded (usar `.env.example`)
+- ✅ Documentação sempre atualizada
+
+## 8. Métricas de Sucesso
+
+- [ ] Backend: Cobertura JaCoCo >= 80%
+- [ ] Frontend: Jest passa, TypeScript sem erros
+- [ ] E2E: Detox login.e2e.ts, sync.e2e.ts, upload.e2e.ts passam
+- [ ] Seed: NDJSON gerado e validado
+- [ ] CI/CD: Todos os workflows verdes
 
 ---
-
-**Comando principal**: `copilot workspace agent --plan automation/agent-plan.md --apply`

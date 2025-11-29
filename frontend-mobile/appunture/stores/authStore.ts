@@ -13,6 +13,9 @@ import {
   OAuthProvider,
 } from "firebase/auth";
 import { User, AuthState, LoginCredentials, RegisterData } from "../types/user";
+import { createLogger } from "../utils/logger";
+
+const authLogger = createLogger("Auth");
 import { apiService } from "../services/api";
 import { firebaseAuth } from "../services/firebase";
 import {
@@ -23,6 +26,16 @@ import {
   getStoredToken,
   getStoredUserData,
 } from "../services/storage";
+import { signInWithGoogle, GoogleAuthConfig } from "../services/googleAuth";
+import { signInWithApple, isAppleSignInAvailable } from "../services/appleAuth";
+
+// Google OAuth Configuration - loaded from environment
+const googleAuthConfig: GoogleAuthConfig = {
+  webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || "",
+  iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+  androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
+  expoClientId: process.env.EXPO_PUBLIC_GOOGLE_EXPO_CLIENT_ID,
+};
 
 interface AuthStore extends AuthState {
   // Actions
@@ -89,25 +102,50 @@ export const useAuthStore = create<AuthStore>()(
         try {
           set({ isLoading: true });
 
-          // For web, use signInWithPopup
-          // For mobile, we need Google Sign-In library
-          // This is a placeholder implementation
-          // In production, use @react-native-google-signin/google-signin for mobile
+          // Check if Google Sign-In is configured
+          if (!googleAuthConfig.webClientId) {
+            throw new Error(
+              "Google Sign-In não configurado. " +
+                "Configure EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID no arquivo .env"
+            );
+          }
 
-          throw new Error(
-            "Google Sign-In requer configuração adicional. " +
-              "Para React Native, instale @react-native-google-signin/google-signin. " +
-              "Para web, use signInWithPopup do Firebase Auth."
+          // Perform Google Sign-In using expo-auth-session
+          const googleResult = await signInWithGoogle(googleAuthConfig);
+
+          // Create Firebase credential from Google ID Token
+          const credential = GoogleAuthProvider.credential(
+            googleResult.idToken,
+            googleResult.accessToken
           );
 
-          // Example web implementation:
-          // const provider = new GoogleAuthProvider();
-          // const result = await signInWithPopup(firebaseAuth, provider);
-          // const idToken = await result.user.getIdToken(true);
-          // await storeToken(idToken);
-          // const profile = await apiService.syncFirebaseUser();
-          // await storeUserData(profile);
-          // set({ user: profile, token: idToken, isAuthenticated: true, isLoading: false });
+          // Sign in to Firebase with Google credential
+          const userCredential = await signInWithCredential(
+            firebaseAuth,
+            credential
+          );
+
+          // Get Firebase ID Token for backend API
+          const idToken = await userCredential.user.getIdToken(true);
+          await storeToken(idToken);
+
+          // Sync user profile with backend
+          let profile: User | null = null;
+          try {
+            profile = await apiService.getProfile();
+          } catch (error) {
+            // User doesn't exist in backend yet, sync from Firebase
+            profile = await apiService.syncFirebaseUser();
+          }
+
+          await storeUserData(profile);
+
+          set({
+            user: profile,
+            token: idToken,
+            isAuthenticated: true,
+            isLoading: false,
+          });
         } catch (error) {
           set({ isLoading: false });
           throw error;
@@ -118,33 +156,63 @@ export const useAuthStore = create<AuthStore>()(
         try {
           set({ isLoading: true });
 
-          // For iOS, use Apple Sign-In
-          // This is a placeholder implementation
-          // In production, use expo-apple-authentication or native modules
+          // Check if Apple Sign-In is available (iOS only)
+          const isAvailable = await isAppleSignInAvailable();
+          if (!isAvailable) {
+            throw new Error(
+              "Apple Sign-In está disponível apenas em dispositivos iOS 13 ou superior."
+            );
+          }
 
-          throw new Error(
-            "Apple Sign-In requer configuração adicional. " +
-              "Para iOS, use expo-apple-authentication. " +
-              "Disponível apenas em dispositivos Apple."
+          // Perform Apple Sign-In
+          const appleResult = await signInWithApple();
+
+          // Create Firebase credential from Apple identity token
+          const provider = new OAuthProvider("apple.com");
+          const credential = provider.credential({
+            idToken: appleResult.identityToken,
+            rawNonce: undefined, // PKCE is handled by expo-apple-authentication
+          });
+
+          // Sign in to Firebase with Apple credential
+          const userCredential = await signInWithCredential(
+            firebaseAuth,
+            credential
           );
 
-          // Example iOS implementation:
-          // const credential = await AppleAuthentication.signInAsync({
-          //   requestedScopes: [
-          //     AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-          //     AppleAuthentication.AppleAuthenticationScope.EMAIL,
-          //   ],
-          // });
-          // const provider = new OAuthProvider('apple.com');
-          // const oauthCredential = provider.credential({
-          //   idToken: credential.identityToken!,
-          // });
-          // const result = await signInWithCredential(firebaseAuth, oauthCredential);
-          // const idToken = await result.user.getIdToken(true);
-          // await storeToken(idToken);
-          // const profile = await apiService.syncFirebaseUser();
-          // await storeUserData(profile);
-          // set({ user: profile, token: idToken, isAuthenticated: true, isLoading: false });
+          // Update display name if provided by Apple (only on first sign-in)
+          if (appleResult.user?.fullName) {
+            const { givenName, familyName } = appleResult.user.fullName;
+            const displayName = [givenName, familyName]
+              .filter(Boolean)
+              .join(" ");
+
+            if (displayName && userCredential.user) {
+              await updateFirebaseProfile(userCredential.user, { displayName });
+            }
+          }
+
+          // Get Firebase ID Token for backend API
+          const idToken = await userCredential.user.getIdToken(true);
+          await storeToken(idToken);
+
+          // Sync user profile with backend
+          let profile: User | null = null;
+          try {
+            profile = await apiService.getProfile();
+          } catch (error) {
+            // User doesn't exist in backend yet, sync from Firebase
+            profile = await apiService.syncFirebaseUser();
+          }
+
+          await storeUserData(profile);
+
+          set({
+            user: profile,
+            token: idToken,
+            isAuthenticated: true,
+            isLoading: false,
+          });
         } catch (error) {
           set({ isLoading: false });
           throw error;
@@ -201,7 +269,7 @@ export const useAuthStore = create<AuthStore>()(
             isLoading: false,
           });
         } catch (error) {
-          console.error("Logout error:", error);
+          authLogger.error("Logout error:", error);
           // Even if there's an error, clear the state
           set({
             user: null,
@@ -271,7 +339,7 @@ export const useAuthStore = create<AuthStore>()(
             isLoading: false,
           });
         } catch (error) {
-          console.error("Load stored auth error:", error);
+          authLogger.error("Load stored auth error:", error);
           set({ isLoading: false });
         }
       },

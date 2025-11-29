@@ -10,9 +10,14 @@ import { SyncState } from "../types/user";
 import { databaseService } from "../services/database";
 import { apiService } from "../services/api";
 import { connectivityService } from "../services/connectivity";
-import { storeLastSync, getLastSync, mediaStorageService } from "../services/storage";
+import {
+  storeLastSync,
+  getLastSync,
+  mediaStorageService,
+} from "../services/storage";
 import { useAuthStore } from "./authStore";
 import { ENABLE_STORAGE_UPLOAD } from "../utils/constants";
+import { syncLogger as logger } from "../utils/logger";
 
 const BASE_DELAY = 1000; // 1 second
 const BACKOFF_MULTIPLIER = 2;
@@ -53,7 +58,9 @@ const toLocalPoint = (point: Point, timestamp: string): LocalPoint => ({
   indications: point.indications,
   contraindications: point.contraindications,
   image_path: point.image_url ?? point.imageUrls?.[0],
-  coordinates: point.coordinates ? JSON.stringify(point.coordinates) : undefined,
+  coordinates: point.coordinates
+    ? JSON.stringify(point.coordinates)
+    : undefined,
   favorite_count: point.favoriteCount,
   synced: true,
   last_sync: timestamp,
@@ -127,18 +134,26 @@ export const useSyncStore = create<SyncStore>((set, get) => {
 
     const userId = payload.userId ?? getCurrentUserId();
     const pointId = payload.pointId;
-    const action = payload.action ?? (operation.operation === "DELETE" ? "REMOVE" : "ADD");
+    const action =
+      payload.action ?? (operation.operation === "DELETE" ? "REMOVE" : "ADD");
 
     if (!userId || !pointId) {
-      throw new Error("Payload de favorito inválido - userId ou pointId ausente");
+      throw new Error(
+        "Payload de favorito inválido - userId ou pointId ausente"
+      );
     }
 
     const shouldFavorite = action === "ADD";
 
     try {
       const remoteFavorites = await apiService.getFavorites();
-      const isRemoteFavorite = remoteFavorites.points.some((point) => point.id === pointId);
-      const conflictWinner = resolveConflict(payload.timestamp, payload.remoteTimestamp);
+      const isRemoteFavorite = remoteFavorites.points.some(
+        (point) => point.id === pointId
+      );
+      const conflictWinner = resolveConflict(
+        payload.timestamp,
+        payload.remoteTimestamp
+      );
 
       if (conflictWinner === "remote") {
         await databaseService.setFavoriteStatus({
@@ -213,20 +228,29 @@ export const useSyncStore = create<SyncStore>((set, get) => {
       let remoteTimestamp: string | undefined;
       try {
         const remotePoint = await apiService.getPoint(pointData.id);
-        remoteTimestamp = remotePoint.point.updatedAt ?? remotePoint.point.updated_at;
+        remoteTimestamp =
+          remotePoint.point.updatedAt ?? remotePoint.point.updated_at;
 
         const winner = resolveConflict(payload.timestamp, remoteTimestamp);
         if (winner === "remote") {
           const now = new Date().toISOString();
-          await databaseService.upsertPoint(toLocalPoint(remotePoint.point, now));
+          await databaseService.upsertPoint(
+            toLocalPoint(remotePoint.point, now)
+          );
           await databaseService.markPointSynced(remotePoint.point.id, now);
           return;
         }
       } catch (error) {
-        console.warn(`Não foi possível recuperar ponto remoto ${pointData.id} para reconciliação`, error);
+        logger.warn(
+          `Não foi possível recuperar ponto remoto ${pointData.id} para reconciliação`,
+          error
+        );
       }
 
-      const response = await apiService.updatePoint(pointData.id, pointData as Point);
+      const response = await apiService.updatePoint(
+        pointData.id,
+        pointData as Point
+      );
       const updatedPoint = response.point;
       const now = new Date().toISOString();
       await databaseService.upsertPoint(toLocalPoint(updatedPoint, now));
@@ -264,7 +288,9 @@ export const useSyncStore = create<SyncStore>((set, get) => {
 
       const response = await apiService.createSymptom(symptomData as Symptom);
       const now = new Date().toISOString();
-      await databaseService.upsertSymptom(toLocalSymptom(response.symptom, now));
+      await databaseService.upsertSymptom(
+        toLocalSymptom(response.symptom, now)
+      );
       await databaseService.markSymptomSynced(response.symptom.id, now);
       return;
     }
@@ -282,17 +308,27 @@ export const useSyncStore = create<SyncStore>((set, get) => {
 
         if (winner === "remote") {
           const now = new Date().toISOString();
-          await databaseService.upsertSymptom(toLocalSymptom(remote.symptom, now));
+          await databaseService.upsertSymptom(
+            toLocalSymptom(remote.symptom, now)
+          );
           await databaseService.markSymptomSynced(remote.symptom.id, now);
           return;
         }
       } catch (error) {
-        console.warn(`Não foi possível recuperar sintoma remoto ${symptomData.id} para reconciliação`, error);
+        logger.warn(
+          `Não foi possível recuperar sintoma remoto ${symptomData.id} para reconciliação`,
+          error
+        );
       }
 
-      const response = await apiService.updateSymptom(symptomData.id, symptomData as Symptom);
+      const response = await apiService.updateSymptom(
+        symptomData.id,
+        symptomData as Symptom
+      );
       const now = new Date().toISOString();
-      await databaseService.upsertSymptom(toLocalSymptom(response.symptom, now));
+      await databaseService.upsertSymptom(
+        toLocalSymptom(response.symptom, now)
+      );
       await databaseService.markSymptomSynced(response.symptom.id, now);
       return;
     }
@@ -308,7 +344,9 @@ export const useSyncStore = create<SyncStore>((set, get) => {
       return;
     }
 
-    throw new Error(`Operação de sintoma não suportada: ${operation.operation}`);
+    throw new Error(
+      `Operação de sintoma não suportada: ${operation.operation}`
+    );
   };
 
   const handleNoteOperation = async (operation: SyncOperation) => {
@@ -323,7 +361,11 @@ export const useSyncStore = create<SyncStore>((set, get) => {
     }>(operation.data, "note");
 
     const rawAction = payload.action ?? operation.operation;
-    if (rawAction !== "CREATE" && rawAction !== "UPDATE" && rawAction !== "DELETE") {
+    if (
+      rawAction !== "CREATE" &&
+      rawAction !== "UPDATE" &&
+      rawAction !== "DELETE"
+    ) {
       throw new Error(`Ação de nota inválida: ${String(rawAction)}`);
     }
     const action = rawAction;
@@ -331,7 +373,9 @@ export const useSyncStore = create<SyncStore>((set, get) => {
     const userId = payload.userId ?? getCurrentUserId();
 
     if (!userId) {
-      throw new Error("Não é possível sincronizar nota sem usuário autenticado");
+      throw new Error(
+        "Não é possível sincronizar nota sem usuário autenticado"
+      );
     }
 
     if (action === "CREATE") {
@@ -352,7 +396,9 @@ export const useSyncStore = create<SyncStore>((set, get) => {
       } catch (error) {
         const apiError = error as ApiError;
         if (apiError?.status === 404) {
-          console.warn("Endpoint de notas indisponível. Marcando operação como sincronizada localmente.");
+          logger.warn(
+            "Endpoint de notas indisponível. Marcando operação como sincronizada localmente."
+          );
           if (payload.noteId !== undefined) {
             await databaseService.markNoteSynced(payload.noteId);
           }
@@ -378,7 +424,9 @@ export const useSyncStore = create<SyncStore>((set, get) => {
       } catch (error) {
         const apiError = error as ApiError;
         if (apiError?.status === 404) {
-          console.warn("Endpoint de notas indisponível. Atualização aplicada somente localmente.");
+          logger.warn(
+            "Endpoint de notas indisponível. Atualização aplicada somente localmente."
+          );
           await databaseService.markNoteSynced(payload.noteId);
         } else {
           throw error instanceof Error ? error : new Error(String(error));
@@ -424,14 +472,19 @@ export const useSyncStore = create<SyncStore>((set, get) => {
     } catch (error) {
       const apiError = error as ApiError;
       if (apiError?.status === 404) {
-        console.warn("Endpoint de histórico de busca indisponível. Mantendo sincronizado apenas localmente.");
+        logger.warn(
+          "Endpoint de histórico de busca indisponível. Mantendo sincronizado apenas localmente."
+        );
         return;
       }
       throw error instanceof Error ? error : new Error(String(error));
     }
   };
 
-  const handlers: Record<SyncEntityType, (operation: SyncOperation) => Promise<void>> = {
+  const handlers: Record<
+    SyncEntityType,
+    (operation: SyncOperation) => Promise<void>
+  > = {
     favorite: handleFavoriteOperation,
     point: handlePointOperation,
     symptom: handleSymptomOperation,
@@ -502,17 +555,23 @@ export const useSyncStore = create<SyncStore>((set, get) => {
     syncPoints: async () => {
       const response = await apiService.getPoints({ limit: 1000 });
       const now = new Date().toISOString();
-      const localPoints = response.points.map((point) => toLocalPoint(point, now));
+      const localPoints = response.points.map((point) =>
+        toLocalPoint(point, now)
+      );
 
       await databaseService.upsertPoints(localPoints);
-      await databaseService.removePointsNotIn(localPoints.map((point) => point.id));
+      await databaseService.removePointsNotIn(
+        localPoints.map((point) => point.id)
+      );
       await databaseService.updateSyncStatus("points", "success");
     },
 
     syncSymptoms: async () => {
       const response = await apiService.getSymptoms();
       const now = new Date().toISOString();
-      const localSymptoms = response.symptoms.map((symptom) => toLocalSymptom(symptom, now));
+      const localSymptoms = response.symptoms.map((symptom) =>
+        toLocalSymptom(symptom, now)
+      );
 
       await databaseService.upsertSymptoms(localSymptoms);
       await databaseService.updateSyncStatus("symptoms", "success");
@@ -580,7 +639,7 @@ export const useSyncStore = create<SyncStore>((set, get) => {
           const pointId = payload.pointId ?? imageOp.point_id;
 
           if (!imageUri) {
-            console.warn(`Skipping image sync ${imageOp.id}: no imageUri`);
+            logger.warn(`Skipping image sync ${imageOp.id}: no imageUri`);
             await databaseService.markImageSyncFailed(imageOp.id);
             continue;
           }
@@ -590,7 +649,7 @@ export const useSyncStore = create<SyncStore>((set, get) => {
 
           // Validate upload succeeded and returned a valid URL
           if (!uploadedUrl || typeof uploadedUrl !== "string") {
-            console.warn(
+            logger.warn(
               `Image upload for ${imageOp.id} returned invalid URL:`,
               uploadedUrl
             );
@@ -603,7 +662,7 @@ export const useSyncStore = create<SyncStore>((set, get) => {
             try {
               await apiService.addImageToPoint(pointId, uploadedUrl);
             } catch (addError) {
-              console.warn(
+              logger.warn(
                 `Image uploaded but failed to associate with point ${pointId}:`,
                 addError
               );
@@ -614,7 +673,7 @@ export const useSyncStore = create<SyncStore>((set, get) => {
           await databaseService.markImageSyncCompleted(imageOp.id);
           uploadedCount += 1;
         } catch (error) {
-          console.warn(`Falha ao sincronizar imagem ${imageOp.id}`, error);
+          logger.warn(`Falha ao sincronizar imagem ${imageOp.id}`, error);
           await databaseService.markImageSyncFailed(imageOp.id);
         }
       }
@@ -639,7 +698,10 @@ export const useSyncStore = create<SyncStore>((set, get) => {
       set({ queueProcessing: true, syncInProgress: true });
 
       try {
-        const operations = await databaseService.getQueuedOperations(undefined, QUEUE_FETCH_LIMIT);
+        const operations = await databaseService.getQueuedOperations(
+          undefined,
+          QUEUE_FETCH_LIMIT
+        );
         if (operations.length === 0) {
           return;
         }
@@ -667,8 +729,11 @@ export const useSyncStore = create<SyncStore>((set, get) => {
             await databaseService.markOperationCompleted(operation.id);
             processedCount += 1;
           } catch (error) {
-            const message = error instanceof Error ? error.message : String(error);
-            console.warn(`Falha ao processar operação ${operation.id}: ${message}`);
+            const message =
+              error instanceof Error ? error.message : String(error);
+            logger.warn(
+              `Falha ao processar operação ${operation.id}: ${message}`
+            );
             await databaseService.markOperationFailed(operation.id, message);
           }
         }
@@ -697,7 +762,7 @@ export const useSyncStore = create<SyncStore>((set, get) => {
 
         set({ pendingOperations, pendingImages });
       } catch (error) {
-        console.warn("Falha ao atualizar contadores de sincronização", error);
+        logger.warn("Falha ao atualizar contadores de sincronização", error);
         set({ pendingOperations: 0, pendingImages: 0 });
       }
     },
@@ -719,7 +784,9 @@ export const useSyncStore = create<SyncStore>((set, get) => {
 
     retryAllFailed: async () => {
       const failed = get().failedOperations;
-      await Promise.all(failed.map((operation) => databaseService.resetOperation(operation.id)));
+      await Promise.all(
+        failed.map((operation) => databaseService.resetOperation(operation.id))
+      );
       await get().refreshFailedOperations();
       await get().refreshPendingOperations();
     },
@@ -732,7 +799,9 @@ export const useSyncStore = create<SyncStore>((set, get) => {
 
     clearAllFailedOperations: async () => {
       const failed = get().failedOperations;
-      await Promise.all(failed.map((operation) => databaseService.removeOperation(operation.id)));
+      await Promise.all(
+        failed.map((operation) => databaseService.removeOperation(operation.id))
+      );
       await get().refreshFailedOperations();
       await get().refreshPendingOperations();
     },
@@ -770,7 +839,7 @@ connectivityService.onChange(async (isOnline) => {
     try {
       await store.processSyncQueue();
     } catch (error) {
-      console.error("Erro ao processar fila após reconexão", error);
+      logger.error("Erro ao processar fila após reconexão", error);
     }
   }
 });

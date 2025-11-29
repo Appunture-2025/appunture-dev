@@ -6,15 +6,15 @@ on:
       - main
       - develop
     paths:
-      - 'backend-java/**'
-      - '.github/workflows/backend-ci.yml'
+      - "backend-java/**"
+      - ".github/workflows/backend-ci.yml"
   pull_request:
     branches:
       - main
       - develop
     paths:
-      - 'backend-java/**'
-      - '.github/workflows/backend-ci.yml'
+      - "backend-java/**"
+      - ".github/workflows/backend-ci.yml"
   workflow_dispatch:
 
 concurrency:
@@ -28,7 +28,7 @@ permissions:
   pull-requests: write
 
 env:
-  JAVA_VERSION: '17'
+  JAVA_VERSION: "17"
   REGISTRY: gcr.io
   IMAGE_NAME: appunture-backend
 
@@ -48,8 +48,8 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'temurin'
-          cache: 'maven'
+          distribution: "temurin"
+          cache: "maven"
 
       - name: Cache Maven packages
         uses: actions/cache@v4
@@ -85,7 +85,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: 60
           min-coverage-changed-files: 80
-          title: 'Backend Code Coverage'
+          title: "Backend Code Coverage"
           update-comment: true
 
       - name: Package application
@@ -149,7 +149,7 @@ jobs:
             --concurrency 80 \
             --timeout 300 \
             --quiet
-          
+
           URL=$(gcloud run services describe ${{ env.IMAGE_NAME }} --platform managed --region us-central1 --format 'value(status.url)')
           echo "url=$URL" >> $GITHUB_OUTPUT
 
@@ -159,6 +159,23 @@ jobs:
           sleep 30
           curl -f "${{ steps.deploy.outputs.url }}/health" || exit 1
           echo "Deployment successful!"
+
+      - name: Trigger Integration Tests
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Trigger integration tests workflow
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'integration-tests.yml',
+              ref: 'main',
+              inputs: {
+                environment: 'staging'
+              }
+            });
+            console.log('Integration tests triggered');
 
       - name: Create issue on failure
         if: failure()

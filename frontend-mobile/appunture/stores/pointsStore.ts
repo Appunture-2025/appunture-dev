@@ -6,7 +6,9 @@ import { databaseService } from "../services/database";
 import { buildPointGallerySources } from "../utils/pointMedia";
 import { useAuthStore } from "./authStore";
 import { useSyncStore } from "./syncStore";
+import { createLogger } from "../utils/logger";
 
+const pointsLogger = createLogger("Points");
 const LOCAL_USER_ID = "local";
 
 const parseCoordinates = (value?: string | null) => {
@@ -72,7 +74,7 @@ const getActiveFavoriteIds = async (userId: string): Promise<Set<string>> => {
         .map((favorite) => favorite.point_id)
     );
   } catch (error) {
-    console.warn("Failed to load favorite ids:", error);
+    pointsLogger.warn("Failed to load favorite ids:", error);
     return new Set<string>();
   }
 };
@@ -106,7 +108,7 @@ const loadLocalFavorites = async (userId: string): Promise<Point[]> => {
 
     return points;
   } catch (error) {
-    console.error("Failed to load local favorites:", error);
+    pointsLogger.error("Failed to load local favorites:", error);
     return [];
   }
 };
@@ -228,7 +230,7 @@ export const usePointsStore = create<PointsState>((set, get) => {
           loading: false,
         });
       } catch (error: any) {
-        console.error("Load points error:", error);
+        pointsLogger.error("Load points error:", error);
 
         try {
           await get().getLocalPoints();
@@ -268,7 +270,7 @@ export const usePointsStore = create<PointsState>((set, get) => {
           loading: false,
         });
       } catch (error: any) {
-        console.error("Load point error:", error);
+        pointsLogger.error("Load point error:", error);
 
         try {
           await get().getLocalPoint(id);
@@ -296,7 +298,7 @@ export const usePointsStore = create<PointsState>((set, get) => {
           loading: false,
         });
       } catch (error) {
-        console.error("Search points error:", error);
+        pointsLogger.error("Search points error:", error);
         const message =
           error instanceof Error ? error.message : "Failed to search points";
         set({
@@ -334,7 +336,7 @@ export const usePointsStore = create<PointsState>((set, get) => {
           loading: false,
         });
       } catch (error) {
-        console.error("Search point by code error:", error);
+        pointsLogger.error("Search point by code error:", error);
         const message =
           error instanceof Error ? error.message : "Failed to find point";
         set({
@@ -357,7 +359,7 @@ export const usePointsStore = create<PointsState>((set, get) => {
           loading: false,
         });
       } catch (error) {
-        console.error("Load points by meridian error:", error);
+        pointsLogger.error("Load points by meridian error:", error);
         const message =
           error instanceof Error
             ? error.message
@@ -382,7 +384,7 @@ export const usePointsStore = create<PointsState>((set, get) => {
           loading: false,
         });
       } catch (error) {
-        console.error("Load popular points error:", error);
+        pointsLogger.error("Load popular points error:", error);
         const message =
           error instanceof Error
             ? error.message
@@ -405,7 +407,7 @@ export const usePointsStore = create<PointsState>((set, get) => {
           loading: false,
         });
       } catch (error) {
-        console.error("Load meridians error:", error);
+        pointsLogger.error("Load meridians error:", error);
         const message =
           error instanceof Error ? error.message : "Failed to load meridians";
         set({
@@ -470,7 +472,7 @@ export const usePointsStore = create<PointsState>((set, get) => {
           searchResults: applyFavoriteFlags(state.searchResults, favoriteIds),
         }));
       } catch (error) {
-        console.warn(
+        pointsLogger.warn(
           "Failed to load favorites from API, using local cache:",
           error
         );
@@ -564,7 +566,7 @@ export const usePointsStore = create<PointsState>((set, get) => {
           await syncStore.refreshPendingOperations();
         }
       } catch (error) {
-        console.error("Toggle favorite error:", error);
+        pointsLogger.error("Toggle favorite error:", error);
         revertCollectionsForFavorite(
           pointId,
           originalSnapshot,
@@ -604,7 +606,7 @@ export const usePointsStore = create<PointsState>((set, get) => {
           loading: false,
         });
       } catch (error) {
-        console.error("Get local points error:", error);
+        pointsLogger.error("Get local points error:", error);
         set({ loading: false });
         throw error;
       }
@@ -634,7 +636,7 @@ export const usePointsStore = create<PointsState>((set, get) => {
           loading: false,
         });
       } catch (error) {
-        console.error("Get local point error:", error);
+        pointsLogger.error("Get local point error:", error);
         set({ loading: false });
         throw error;
       }
@@ -648,7 +650,7 @@ export const usePointsStore = create<PointsState>((set, get) => {
         await syncStore.syncPoints();
         await get().getLocalPoints();
       } catch (error) {
-        console.error("Sync points error:", error);
+        pointsLogger.error("Sync points error:", error);
         const message =
           error instanceof Error ? error.message : "Failed to sync points";
         set({

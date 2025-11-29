@@ -4,8 +4,25 @@ import { apiService } from "../../services/api";
 import { databaseService } from "../../services/database";
 
 // Mock dependencies
-jest.mock("../../services/api");
-jest.mock("../../services/database");
+jest.mock("../../services/api", () => ({
+  apiService: {
+    getPoints: jest.fn(),
+    searchPoints: jest.fn(),
+    getPointsByMeridian: jest.fn(),
+    toggleFavorite: jest.fn(),
+  },
+}));
+jest.mock("../../services/database", () => ({
+  databaseService: {
+    getPoints: jest.fn(),
+    getFavorites: jest.fn().mockResolvedValue([]),
+    searchPoints: jest.fn(),
+    getPointsByMeridian: jest.fn(),
+    savePoints: jest.fn(),
+    init: jest.fn(),
+    close: jest.fn(),
+  },
+}));
 jest.mock("../../services/firebase");
 jest.mock("../../config/firebaseConfig");
 jest.mock("../../stores/authStore", () => ({
@@ -76,7 +93,10 @@ describe("pointsStore", () => {
       },
     ];
 
-    (apiService.searchPoints as jest.Mock).mockResolvedValue(mockPoints);
+    // API returns { points: [...] } not just array
+    (apiService.searchPoints as jest.Mock).mockResolvedValue({
+      points: mockPoints,
+    });
 
     await act(async () => {
       await usePointsStore.getState().searchPoints("Alpha");
@@ -99,7 +119,10 @@ describe("pointsStore", () => {
       },
     ];
 
-    (apiService.getPointsByMeridian as jest.Mock).mockResolvedValue(mockPoints);
+    // API returns { points: [...] } not just array
+    (apiService.getPointsByMeridian as jest.Mock).mockResolvedValue({
+      points: mockPoints,
+    });
 
     await act(async () => {
       await usePointsStore.getState().loadPointsByMeridian("Lung");

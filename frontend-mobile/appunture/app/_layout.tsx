@@ -6,6 +6,10 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { databaseService } from "../services/database";
 import { useAuthStore } from "../stores/authStore";
 import { useSyncStore } from "../stores/syncStore";
+import { useNotifications } from "../hooks/useNotifications";
+import { createLogger } from "../utils/logger";
+
+const logger = createLogger("RootLayout");
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,6 +25,9 @@ export default function RootLayout() {
   const loadLastSync = useSyncStore((state: any) => state.loadLastSync);
   const checkConnection = useSyncStore((state: any) => state.checkConnection);
   const processSyncQueue = useSyncStore((state: any) => state.processSyncQueue);
+
+  // Inicializa push notifications
+  const { pushToken, hasPermission } = useNotifications();
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -40,13 +47,13 @@ export default function RootLayout() {
         // Auto-sync if online and has pending operations
         if (isOnline) {
           processSyncQueue().catch((error: any) => {
-            console.warn("Auto-sync failed on app start:", error);
+            logger.warn("Auto-sync failed on app start:", error);
           });
         }
 
-        console.log("App initialized successfully");
+        logger.info("App initialized successfully");
       } catch (error) {
-        console.error("App initialization error:", error);
+        logger.error("App initialization error:", error);
       }
     };
 

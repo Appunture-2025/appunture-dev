@@ -1,6 +1,9 @@
 import { create } from "zustand";
 import { Symptom, SymptomWithPoints } from "../types/api";
 import { apiService } from "../services/api";
+import { createLogger } from "../utils/logger";
+
+const symptomsLogger = createLogger("Symptoms");
 
 interface SymptomsState {
   symptoms: Symptom[];
@@ -154,7 +157,7 @@ export const useSymptomsStore = create<SymptomsState>((set, get) => ({
     try {
       await apiService.incrementSymptomUse(symptomId);
     } catch (error: any) {
-      console.error("Failed to increment symptom use:", error);
+      symptomsLogger.error("Failed to increment symptom use:", error);
     }
   },
 
