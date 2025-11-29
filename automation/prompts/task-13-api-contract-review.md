@@ -1,6 +1,7 @@
 # Task 13: API Contract Review & Documentation
 
 ## Objetivo
+
 Revisar contratos de API, garantir consistência entre backend e frontend, e melhorar documentação OpenAPI.
 
 ## Escopo
@@ -8,12 +9,14 @@ Revisar contratos de API, garantir consistência entre backend e frontend, e mel
 ### 1. Análise de Endpoints Existentes
 
 #### Backend (`backend-java/src/main/java/.../controller/`)
+
 - [ ] Listar todos os endpoints públicos
 - [ ] Verificar consistência de nomenclatura (REST conventions)
 - [ ] Analisar responses (status codes, error format)
 - [ ] Revisar DTOs de request/response
 
 #### Endpoints a Revisar
+
 ```
 GET    /api/v1/points
 GET    /api/v1/points/{id}
@@ -33,12 +36,14 @@ GET    /admin/...
 ### 2. Consistência Backend ↔ Frontend
 
 #### Comparar Tipos
+
 - [ ] `Point` - backend DTO vs frontend type
 - [ ] `Meridian` - backend DTO vs frontend type
 - [ ] `User` - backend DTO vs frontend type
 - [ ] `Pagination` - formato consistente
 
 #### Verificar
+
 ```typescript
 // Frontend espera:
 interface Point {
@@ -56,12 +61,14 @@ interface Point {
 ### 3. Documentação OpenAPI
 
 #### Atualizar `openapi/openapi.yaml`
+
 - [ ] Todos os endpoints documentados
 - [ ] Schemas atualizados
 - [ ] Examples adicionados
 - [ ] Error responses documentados
 
 #### Validação
+
 ```bash
 # Validar OpenAPI spec
 npx @redocly/cli lint openapi/openapi.yaml
@@ -70,6 +77,7 @@ npx @redocly/cli lint openapi/openapi.yaml
 ### 4. Error Handling Consistente
 
 #### Formato Padrão de Erro
+
 ```json
 {
   "error": {
@@ -82,6 +90,7 @@ npx @redocly/cli lint openapi/openapi.yaml
 ```
 
 #### Verificar
+
 - [ ] Todos os controllers usam formato padrão
 - [ ] Frontend trata todos os códigos de erro
 - [ ] Mensagens são user-friendly
@@ -89,6 +98,7 @@ npx @redocly/cli lint openapi/openapi.yaml
 ### 5. Paginação & Filtering
 
 #### Padrão de Paginação
+
 ```json
 {
   "data": [...],
@@ -102,6 +112,7 @@ npx @redocly/cli lint openapi/openapi.yaml
 ```
 
 #### Verificar
+
 - [ ] Todos os endpoints de lista suportam paginação
 - [ ] Query params consistentes (`page`, `pageSize`, `sort`)
 - [ ] Defaults sensatos (pageSize=20, max=100)
@@ -109,11 +120,13 @@ npx @redocly/cli lint openapi/openapi.yaml
 ## Critérios de Aceitação
 
 1. **Documentação Atualizada**:
+
    - `openapi/openapi.yaml` completo e validado
    - README com exemplos de uso da API
    - Postman collection sincronizada
 
 2. **Tipos Sincronizados**:
+
    - Script de geração de tipos do OpenAPI
    - Frontend types gerados automaticamente
    - Zero mismatches backend/frontend
@@ -141,24 +154,29 @@ npx @redocly/cli build-docs openapi/openapi.yaml -o docs/api.html
 # API_CONTRACT_REVIEW.md
 
 ## Endpoints Analisados
-| Endpoint | Status | Issues |
-|----------|--------|--------|
-| GET /points | ✅ | - |
-| POST /auth | ⚠️ | Missing error schema |
+
+| Endpoint    | Status | Issues               |
+| ----------- | ------ | -------------------- |
+| GET /points | ✅     | -                    |
+| POST /auth  | ⚠️     | Missing error schema |
 
 ## Inconsistências Encontradas
+
 1. `Point.location` vs `Point.anatomicalLocation`
 2. Pagination format differs on /admin endpoints
 
 ## Correções Aplicadas
+
 - Padronizado todos os endpoints
 - Gerado types automáticos
 
 ## OpenAPI Diff
+
 +50 linhas de documentação
 +12 schemas
 +8 examples
 ```
 
 ## Labels
+
 `api`, `documentation`, `contracts`, `copilot-agent`, `priority:medium`

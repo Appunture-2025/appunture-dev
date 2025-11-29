@@ -69,31 +69,31 @@ automation/prompts/
 
 ### Tasks Específicas (Novas - 28/11/2025)
 
-| Task | Arquivo | Descrição | Prioridade |
-|------|---------|-----------|------------|
-| 01 | `task-01-backend-test-coverage.md` | Aumentar cobertura JUnit para 80%+ | P0 |
-| 02 | `task-02-google-signin.md` | Implementar Google Sign-In no frontend | P0 |
-| 03 | `task-03-apple-signin.md` | Implementar Apple Sign-In (obrigatório App Store) | P0 |
-| 04 | `task-04-profile-photo-upload.md` | Upload de foto de perfil com expo-image-picker | P1 |
-| 05 | `task-05-remove-console-logs.md` | Criar logger condicional, remover console.* | P1 |
-| 06 | `task-06-frontend-test-coverage.md` | Aumentar cobertura Jest para 70%+ | P1 |
-| 07 | `task-07-postman-newman-ci.md` | Integrar Postman/Newman no CI | P2 |
-| 08 | `task-08-fcm-notifications.md` | Implementar Push Notifications FCM | P2 |
-| 09 | `task-09-admin-dashboard.md` | Dashboard web para administradores | P2 |
-| 10 | `task-10-production-checklist.md` | Checklist completo de produção | P0 |
+| Task | Arquivo                             | Descrição                                         | Prioridade |
+| ---- | ----------------------------------- | ------------------------------------------------- | ---------- |
+| 01   | `task-01-backend-test-coverage.md`  | Aumentar cobertura JUnit para 80%+                | P0         |
+| 02   | `task-02-google-signin.md`          | Implementar Google Sign-In no frontend            | P0         |
+| 03   | `task-03-apple-signin.md`           | Implementar Apple Sign-In (obrigatório App Store) | P0         |
+| 04   | `task-04-profile-photo-upload.md`   | Upload de foto de perfil com expo-image-picker    | P1         |
+| 05   | `task-05-remove-console-logs.md`    | Criar logger condicional, remover console.\*      | P1         |
+| 06   | `task-06-frontend-test-coverage.md` | Aumentar cobertura Jest para 70%+                 | P1         |
+| 07   | `task-07-postman-newman-ci.md`      | Integrar Postman/Newman no CI                     | P2         |
+| 08   | `task-08-fcm-notifications.md`      | Implementar Push Notifications FCM                | P2         |
+| 09   | `task-09-admin-dashboard.md`        | Dashboard web para administradores                | P2         |
+| 10   | `task-10-production-checklist.md`   | Checklist completo de produção                    | P0         |
 
 ### Tasks de Análise & Code Review (28/11/2025)
 
-| Task | Arquivo | Descrição | Prioridade |
-|------|---------|-----------|------------|
-| 11 | `task-11-security-audit.md` | Auditoria de segurança e vulnerabilidades | P0 |
-| 12 | `task-12-code-quality-review.md` | Análise de qualidade e refatoração | P1 |
-| 13 | `task-13-api-contract-review.md` | Revisão de contratos API e documentação | P1 |
-| 14 | `task-14-performance-analysis.md` | Análise de performance e otimização | P1 |
-| 15 | `task-15-accessibility-review.md` | Revisão de acessibilidade (a11y/WCAG) | P2 |
-| 16 | `task-16-error-handling-review.md` | Revisão de tratamento de erros | P1 |
-| 17 | `task-17-documentation-review.md` | Melhoria da documentação | P2 |
-| 18 | `task-18-test-quality-review.md` | Revisão de qualidade dos testes | P1 |
+| Task | Arquivo                            | Descrição                                 | Prioridade |
+| ---- | ---------------------------------- | ----------------------------------------- | ---------- |
+| 11   | `task-11-security-audit.md`        | Auditoria de segurança e vulnerabilidades | P0         |
+| 12   | `task-12-code-quality-review.md`   | Análise de qualidade e refatoração        | P1         |
+| 13   | `task-13-api-contract-review.md`   | Revisão de contratos API e documentação   | P1         |
+| 14   | `task-14-performance-analysis.md`  | Análise de performance e otimização       | P1         |
+| 15   | `task-15-accessibility-review.md`  | Revisão de acessibilidade (a11y/WCAG)     | P2         |
+| 16   | `task-16-error-handling-review.md` | Revisão de tratamento de erros            | P1         |
+| 17   | `task-17-documentation-review.md`  | Melhoria da documentação                  | P2         |
+| 18   | `task-18-test-quality-review.md`   | Revisão de qualidade dos testes           | P1         |
 
 ### Executar Tasks Específicas
 
