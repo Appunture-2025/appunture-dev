@@ -178,8 +178,9 @@ interface ApiError {
 ### Backend
 
 1. ✅ Todos os controllers usam Swagger/OpenAPI annotations
-2. ✅ GlobalExceptionHandler implementado
-3. ⚠️ Considerar adicionar campos que frontend espera:
+2. ✅ GlobalExceptionHandler atualizado para usar ErrorResponse padronizado
+3. ✅ ErrorResponse DTO criado em `/backend-java/src/main/java/.../dto/common/ErrorResponse.java`
+4. ⚠️ Considerar adicionar campos que frontend espera:
    - `contraindications` em FirestorePoint
    - `functions` em FirestorePoint (descrição funcional)
 
@@ -223,10 +224,12 @@ A collection Postman foi atualizada em:
 
 1. `/openapi/openapi.yaml` - Especificação OpenAPI 3.0.3 completa
 2. `/API_CONTRACT_REVIEW.md` - Este documento
+3. `/backend-java/src/main/java/.../dto/common/ErrorResponse.java` - DTO padronizado para erros
 
 ### Arquivos Atualizados
 
-1. `/backend-java/openapi/appunture-backend.postman_collection.json` - Atualizado com mais endpoints
+1. `/backend-java/openapi/appunture-backend.postman_collection.json` - Collection completa com todos os endpoints organizados
+2. `/backend-java/src/main/java/.../exception/GlobalExceptionHandler.java` - Atualizado para usar ErrorResponse
 
 ## Próximos Passos
 

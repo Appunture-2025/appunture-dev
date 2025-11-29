@@ -1,5 +1,7 @@
 package com.appunture.backend.exception;
 
+import com.appunture.backend.dto.common.ErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -11,48 +13,61 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidation(MethodArgumentNotValidException ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", Instant.now());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
-        Map<String, String> errors = new HashMap<>();
-        for (FieldError fe : ex.getBindingResult().getFieldErrors()) {
-            errors.put(fe.getField(), fe.getDefaultMessage());
-        }
-        body.put("errors", errors);
-        return ResponseEntity.badRequest().body(body);
+    public ResponseEntity<ErrorResponse> handleValidation(
+            MethodArgumentNotValidException ex,
+            HttpServletRequest request) {
+        String fieldErrors = ex.getBindingResult().getFieldErrors().stream()
+                .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+        
+        ErrorResponse response = ErrorResponse.of(
+                "VALIDATION_ERROR",
+                fieldErrors,
+                request.getRequestURI()
+        );
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<?> handleBadCredentials(BadCredentialsException ex) {
-        return build(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleBadCredentials(
+            BadCredentialsException ex,
+            HttpServletRequest request) {
+        return build(HttpStatus.UNAUTHORIZED, "INVALID_CREDENTIALS", ex.getMessage(), request);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException ex) {
-        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(
+            IllegalArgumentException ex,
+            HttpServletRequest request) {
+        return build(HttpStatus.BAD_REQUEST, "BAD_REQUEST", ex.getMessage(), request);
     }
 
     @ExceptionHandler(RateLimitExceededException.class)
-    public ResponseEntity<?> handleRateLimitExceeded(RateLimitExceededException ex) {
-        return build(HttpStatus.TOO_MANY_REQUESTS, ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleRateLimitExceeded(
+            RateLimitExceededException ex,
+            HttpServletRequest request) {
+        return build(HttpStatus.TOO_MANY_REQUESTS, "RATE_LIMIT_EXCEEDED", ex.getMessage(), request);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGeneric(Exception ex) {
-        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error");
+    public ResponseEntity<ErrorResponse> handleGeneric(
+            Exception ex,
+            HttpServletRequest request) {
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "Unexpected error", request);
     }
 
-    private ResponseEntity<?> build(HttpStatus status, String message) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", Instant.now());
-        body.put("status", status.value());
-        body.put("message", message);
-        return ResponseEntity.status(status).body(body);
+    private ResponseEntity<ErrorResponse> build(
+            HttpStatus status, 
+            String code, 
+            String message,
+            HttpServletRequest request) {
+        ErrorResponse response = ErrorResponse.of(code, message, request.getRequestURI());
+        return ResponseEntity.status(status).body(response);
     }
 }
