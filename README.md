@@ -1,0 +1,213 @@
+# 🏥 Appunture
+
+[![Backend CI](https://github.com/Appunture-2025/appunture-dev/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/Appunture-2025/appunture-dev/actions/workflows/backend-ci.yml)
+[![Frontend CI](https://github.com/Appunture-2025/appunture-dev/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/Appunture-2025/appunture-dev/actions/workflows/frontend-ci.yml)
+
+> Sistema completo de consulta e gerenciamento de pontos de acupuntura - um aplicativo móvel moderno para estudantes, profissionais e pacientes.
+
+## 📋 Visão Geral
+
+Appunture é uma plataforma digital completa para democratizar o acesso ao conhecimento em acupuntura, oferecendo:
+
+- 🔍 **Consulta rápida** de pontos e indicações
+- 🤖 **Assistente inteligente** para recomendações baseadas em sintomas
+- 🗺️ **Mapa corporal interativo** para localização visual de pontos
+- ❤️ **Sistema de favoritos** para acesso rápido
+- 📱 **Funcionamento offline** usando sincronização inteligente
+- 👨‍💼 **Painel administrativo** para gestão de conteúdo
+
+## 🏗️ Arquitetura
+
+```mermaid
+graph TB
+    subgraph "Mobile App"
+        A[React Native + Expo]
+        B[SQLite Local]
+    end
+    
+    subgraph "Admin Panel"
+        C[React + Vite + TailwindCSS]
+    end
+    
+    subgraph "Backend"
+        D[Spring Boot 3.2.5]
+        E[Firebase Admin SDK]
+    end
+    
+    subgraph "Google Cloud"
+        F[Cloud Run]
+        G[Firestore]
+        H[Firebase Auth]
+        I[Firebase Storage]
+    end
+    
+    A --> D
+    A --> H
+    A --> B
+    C --> D
+    C --> H
+    D --> G
+    D --> H
+    D --> I
+    D --> F
+```
+
+## 📁 Estrutura do Projeto
+
+```
+appunture-dev/
+├── backend-java/          # API REST (Spring Boot + Firebase)
+│   ├── src/               # Código fonte Java
+│   ├── openapi/           # Documentação OpenAPI/Swagger
+│   └── observability/     # Dashboards Grafana + Prometheus
+│
+├── frontend-mobile/       # Aplicativo móvel
+│   └── appunture/         # React Native + Expo
+│
+├── frontend-admin/        # Painel administrativo
+│   └── src/               # React + TypeScript + Vite
+│
+├── docs/                  # Documentação adicional
+│   ├── adr/               # Architecture Decision Records
+│   └── setup/             # Guias de configuração
+│
+├── tools/                 # Scripts e utilitários
+└── integration-tests/     # Testes de integração E2E
+```
+
+## 🚀 Quick Start
+
+### Pré-requisitos
+
+- **Java 17+** e **Maven 3.8+** (backend)
+- **Node.js 18+** e **npm** (frontend)
+- **Expo CLI** (`npm install -g @expo/cli`)
+- Conta **Google Cloud/Firebase** configurada
+
+### 1. Configurar Firebase
+
+```bash
+# 1. Crie um projeto no Firebase Console: https://console.firebase.google.com
+# 2. Habilite: Firebase Auth, Firestore, Storage
+# 3. Baixe o service-account-key.json
+# 4. Configure as variáveis de ambiente:
+
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
+export FIREBASE_PROJECT_ID=seu-project-id
+export FIREBASE_STORAGE_BUCKET=seu-project-id.appspot.com
+```
+
+### 2. Iniciar o Backend
+
+```bash
+cd backend-java
+mvn spring-boot:run
+
+# API disponível em: http://localhost:8080
+# Swagger UI: http://localhost:8080/swagger-ui.html
+```
+
+### 3. Iniciar o App Móvel
+
+```bash
+cd frontend-mobile/appunture
+npm install
+npm start
+
+# Escaneie o QR code com Expo Go
+```
+
+### 4. Iniciar o Painel Admin (opcional)
+
+```bash
+cd frontend-admin
+npm install
+npm run dev
+
+# Admin disponível em: http://localhost:5173
+```
+
+## 📚 Documentação
+
+| Documento | Descrição |
+|-----------|-----------|
+| [Backend README](backend-java/README.md) | API REST, endpoints, configuração |
+| [Mobile README](frontend-mobile/appunture/README.md) | App React Native, stores, sincronização |
+| [Admin README](frontend-admin/README.md) | Painel administrativo, componentes |
+| [Architecture Decisions](docs/adr/) | ADRs - decisões arquiteturais |
+| [Local Development](docs/setup/local-development.md) | Guia completo de setup local |
+| [Integration Guide](docs/integration.md) | Contratos de API e integração |
+| [Contributing](CONTRIBUTING.md) | Como contribuir |
+
+## 🧪 Testes
+
+```bash
+# Backend - Testes unitários e integração
+cd backend-java
+mvn test
+
+# Frontend Mobile - Testes Jest
+cd frontend-mobile/appunture
+npm test
+
+# Frontend Admin - Testes
+cd frontend-admin
+npm test
+```
+
+## 💰 Custos (Free Tier Firebase)
+
+O projeto foi arquitetado para funcionar **100% gratuito** dentro dos limites do Firebase:
+
+| Serviço | Limite Gratuito | Uso Típico TCC |
+|---------|-----------------|----------------|
+| Firestore | 50k reads/dia | ~5k (10%) |
+| Firebase Auth | Ilimitado | ✅ |
+| Storage | 5GB total | ~500MB (10%) |
+| Cloud Run | 2M requests/mês | ~50k (2.5%) |
+
+## 🔒 Segurança
+
+- ✅ Autenticação via Firebase Auth (Email/Google/Apple)
+- ✅ Tokens JWT verificados no backend
+- ✅ CORS configurado por ambiente (dev/prod)
+- ✅ Rate limiting implementado
+- ✅ Firestore Security Rules
+
+## 🤝 Contribuição
+
+Veja [CONTRIBUTING.md](CONTRIBUTING.md) para guias de estilo, convenções de commit e processo de PR.
+
+```bash
+# 1. Fork o repositório
+# 2. Crie uma feature branch
+git checkout -b feature/minha-feature
+
+# 3. Faça suas alterações e commit
+git commit -m "feat: descrição da feature"
+
+# 4. Push e abra um PR
+git push origin feature/minha-feature
+```
+
+## 📈 Roadmap
+
+- [x] MVP com busca de pontos e favoritos
+- [x] Sincronização offline-first
+- [x] Painel administrativo
+- [ ] Notificações push
+- [ ] Modo escuro
+- [ ] Múltiplos idiomas
+- [ ] Integração com wearables
+
+## 👥 Equipe
+
+Desenvolvido como projeto de TCC em Sistemas de Informação.
+
+## 📝 Licença
+
+Este projeto é parte de um TCC acadêmico.
+
+---
+
+**Desenvolvido com ❤️ para a comunidade de acupuntura**
