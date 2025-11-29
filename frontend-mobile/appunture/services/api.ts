@@ -5,6 +5,7 @@ import axios, {
   AxiosResponse,
   AxiosHeaders,
 } from "axios";
+import { createLogger } from "../utils/logger";
 import {
   Point,
   Symptom,
@@ -23,6 +24,8 @@ import {
 import { API_BASE_URL } from "../utils/constants";
 import { getStoredToken } from "./storage";
 import { firebaseAuth } from "./firebase";
+
+const apiLogger = createLogger("API");
 
 class ApiService {
   private client: AxiosInstance;
@@ -50,7 +53,7 @@ class ApiService {
           try {
             token = await currentUser.getIdToken();
           } catch (error) {
-            console.warn("Failed to retrieve Firebase ID token", error);
+            apiLogger.warn("Failed to retrieve Firebase ID token", error);
           }
         }
 
@@ -533,7 +536,7 @@ class ApiService {
       });
       return response.data.response;
     } catch (error) {
-      console.error("AI Chat Error:", error);
+      apiLogger.error("AI Chat Error:", error);
       return "Desculpe, estou tendo dificuldades para me conectar ao servidor de inteligência no momento. Por favor, tente novamente mais tarde.";
     }
   }

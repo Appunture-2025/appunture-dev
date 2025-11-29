@@ -38,6 +38,10 @@ public class FirestoreUser {
     private String phoneNumber;
     private boolean emailVerified;
     
+    // FCM Push Notification Token
+    private String fcmToken;
+    private List<String> notificationTopics;
+    
     // Campos para compatibilidade com backend antigo
     private String password; // Mantido para migração, mas não usado (Firebase Auth gerencia)
     

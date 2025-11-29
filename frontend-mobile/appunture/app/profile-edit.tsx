@@ -9,29 +9,111 @@ import {
   Alert,
   ActivityIndicator,
   Platform,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "../stores/authStore";
 import { COLORS, PROFESSIONS } from "../utils/constants";
+import { mediaStorageService } from "../services/storage";
+import { apiService } from "../services/api";
 
 export default function ProfileEditScreen() {
   const router = useRouter();
   const { user, updateProfile, isLoading } = useAuthStore();
-  
+
   const [name, setName] = useState(user?.name || "");
   const [profession, setProfession] = useState(user?.profession || "");
   const [phone, setPhone] = useState(user?.phoneNumber || "");
   const [showProfessionPicker, setShowProfessionPicker] = useState(false);
+  const [profileImageUri, setProfileImageUri] = useState<string | null>(
+    user?.profileImageUrl || null
+  );
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     if (user) {
       setName(user.name || "");
       setProfession(user.profession || "");
       setPhone(user.phoneNumber || "");
+      setProfileImageUri(user.profileImageUrl || null);
     }
   }, [user]);
+
+  const handleSelectPhoto = () => {
+    Alert.alert("Foto de Perfil", "Como deseja adicionar sua foto?", [
+      {
+        text: "Galeria",
+        onPress: handlePickFromGallery,
+      },
+      {
+        text: "Câmera",
+        onPress: handleTakePhoto,
+      },
+      {
+        text: "Cancelar",
+        style: "cancel",
+      },
+    ]);
+  };
+
+  const handlePickFromGallery = async () => {
+    try {
+      const assets = await mediaStorageService.pickImage(false);
+      if (assets.length > 0) {
+        await uploadProfilePhoto(assets[0].uri);
+      }
+    } catch (error: any) {
+      Alert.alert(
+        "Erro",
+        error.message || "Não foi possível selecionar a imagem."
+      );
+    }
+  };
+
+  const handleTakePhoto = async () => {
+    try {
+      const asset = await mediaStorageService.takePicture();
+      if (asset) {
+        await uploadProfilePhoto(asset.uri);
+      }
+    } catch (error: any) {
+      Alert.alert("Erro", error.message || "Não foi possível tirar a foto.");
+    }
+  };
+
+  const uploadProfilePhoto = async (uri: string) => {
+    try {
+      setIsUploadingPhoto(true);
+      setUploadProgress(0);
+
+      // Upload image to Firebase Storage via backend
+      const uploadedUrl = await mediaStorageService.uploadImage(
+        uri,
+        (progress) => setUploadProgress(progress)
+      );
+
+      // Update profile with new image URL
+      await apiService.updateProfile({
+        name: name.trim() || user?.name || "",
+        profileImageUrl: uploadedUrl,
+      });
+
+      setProfileImageUri(uploadedUrl);
+      Alert.alert("Sucesso", "Foto de perfil atualizada!");
+    } catch (error: any) {
+      console.error("Error uploading profile photo:", error);
+      Alert.alert(
+        "Erro",
+        error.message || "Não foi possível fazer upload da foto."
+      );
+    } finally {
+      setIsUploadingPhoto(false);
+      setUploadProgress(0);
+    }
+  };
 
   const handleSave = async () => {
     if (!name.trim()) {
@@ -70,10 +152,7 @@ export default function ProfileEditScreen() {
       >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={handleCancel}
-          >
+          <TouchableOpacity style={styles.backButton} onPress={handleCancel}>
             <Ionicons name="arrow-back" size={24} color={COLORS.text} />
           </TouchableOpacity>
           <Text style={styles.title}>Editar Perfil</Text>
@@ -83,27 +162,31 @@ export default function ProfileEditScreen() {
         {/* Profile Photo Section */}
         <View style={styles.photoSection}>
           <View style={styles.photoContainer}>
-            {user?.profileImageUrl ? (
-              <View style={styles.avatar}>
-                {/* TODO: Add Image component when available */}
-                <Ionicons name="person" size={60} color={COLORS.primary} />
-              </View>
+            {profileImageUri ? (
+              <Image
+                source={{ uri: profileImageUri }}
+                style={styles.avatarImage}
+              />
             ) : (
               <View style={styles.avatar}>
                 <Ionicons name="person" size={60} color={COLORS.primary} />
               </View>
             )}
-            <TouchableOpacity
-              style={styles.changePhotoButton}
-              onPress={() =>
-                Alert.alert(
-                  "Em desenvolvimento",
-                  "O upload de foto de perfil será implementado em breve usando Firebase Storage."
-                )
-              }
-            >
-              <Ionicons name="camera" size={20} color={COLORS.surface} />
-            </TouchableOpacity>
+            {isUploadingPhoto ? (
+              <View style={styles.uploadingOverlay}>
+                <ActivityIndicator color={COLORS.surface} size="small" />
+                <Text style={styles.uploadProgressText}>
+                  {Math.round(uploadProgress * 100)}%
+                </Text>
+              </View>
+            ) : (
+              <TouchableOpacity
+                style={styles.changePhotoButton}
+                onPress={handleSelectPhoto}
+              >
+                <Ionicons name="camera" size={20} color={COLORS.surface} />
+              </TouchableOpacity>
+            )}
           </View>
           <Text style={styles.photoHint}>Toque para alterar a foto</Text>
         </View>
@@ -166,9 +249,7 @@ export default function ProfileEditScreen() {
               />
               <Text style={styles.readOnlyText}>{user?.email}</Text>
             </View>
-            <Text style={styles.hint}>
-              O email não pode ser alterado
-            </Text>
+            <Text style={styles.hint}>O email não pode ser alterado</Text>
           </View>
 
           {/* Profession Field */}
@@ -184,10 +265,7 @@ export default function ProfileEditScreen() {
                 color={COLORS.textSecondary}
               />
               <Text
-                style={[
-                  styles.input,
-                  !profession && styles.placeholderText,
-                ]}
+                style={[styles.input, !profession && styles.placeholderText]}
               >
                 {profession || "Selecione sua profissão"}
               </Text>
@@ -217,9 +295,7 @@ export default function ProfileEditScreen() {
                 keyboardType="phone-pad"
               />
             </View>
-            <Text style={styles.hint}>
-              Disponível em breve
-            </Text>
+            <Text style={styles.hint}>Disponível em breve</Text>
           </View>
 
           {/* Role Display (Read-only) */}
@@ -242,10 +318,7 @@ export default function ProfileEditScreen() {
 
         {/* Action Buttons */}
         <View style={styles.actions}>
-          <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={handleCancel}
-          >
+          <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
             <Text style={styles.cancelButtonText}>Cancelar</Text>
           </TouchableOpacity>
 
@@ -269,9 +342,7 @@ export default function ProfileEditScreen() {
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Selecione sua profissão</Text>
-              <TouchableOpacity
-                onPress={() => setShowProfessionPicker(false)}
-              >
+              <TouchableOpacity onPress={() => setShowProfessionPicker(false)}>
                 <Ionicons name="close" size={24} color={COLORS.text} />
               </TouchableOpacity>
             </View>
@@ -528,5 +599,30 @@ const styles = StyleSheet.create({
   modalItemTextSelected: {
     fontWeight: "600",
     color: COLORS.primary,
+  },
+  avatarImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: COLORS.surface,
+  },
+  uploadingOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  uploadProgressText: {
+    color: COLORS.surface,
+    fontSize: 12,
+    fontWeight: "600",
+    marginTop: 4,
   },
 });

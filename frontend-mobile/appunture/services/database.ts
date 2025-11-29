@@ -10,7 +10,9 @@ import {
   SyncEntityType,
 } from "../types/database";
 import { DATABASE_NAME, DATABASE_VERSION } from "../utils/constants";
+import { createLogger } from "../utils/logger";
 
+const dbLogger = createLogger("Database");
 const MAX_QUEUE_RETRIES = 5;
 
 type RawRow = Record<string, any>;
@@ -21,9 +23,7 @@ class DatabaseService {
   private generateOperationId(prefix?: string): string {
     const random = Math.random().toString(36).slice(2, 10);
     const time = Date.now().toString(36);
-    return [prefix, time, random]
-      .filter(Boolean)
-      .join(":");
+    return [prefix, time, random].filter(Boolean).join(":");
   }
 
   async init(): Promise<void> {
@@ -33,9 +33,9 @@ class DatabaseService {
       await this.db.execAsync("PRAGMA journal_mode = WAL;");
       await this.applyMigrations();
       await this.createIndexes();
-      console.log("Database initialized successfully");
+      dbLogger.info("Database initialized successfully");
     } catch (error) {
-      console.error("Error initializing database:", error);
+      dbLogger.error("Error initializing database:", error);
       throw error;
     }
   }
@@ -81,13 +81,15 @@ class DatabaseService {
 
   private async migrateLegacySchema(): Promise<void> {
     const db = this.getDb();
-    console.log("Migrating local database to schema version 2");
+    dbLogger.info("Migrating local database to schema version 2");
 
     const [points, symptoms, symptomPoints, favorites, notes, syncStatus] =
       await Promise.all([
         db.getAllAsync("SELECT * FROM points") as Promise<Array<RawRow>>,
         db.getAllAsync("SELECT * FROM symptoms") as Promise<Array<RawRow>>,
-        db.getAllAsync("SELECT * FROM symptom_points") as Promise<Array<RawRow>>,
+        db.getAllAsync("SELECT * FROM symptom_points") as Promise<
+          Array<RawRow>
+        >,
         db.getAllAsync("SELECT * FROM favorites") as Promise<Array<RawRow>>,
         db.getAllAsync("SELECT * FROM notes") as Promise<Array<RawRow>>,
         db.getAllAsync("SELECT * FROM sync_status") as Promise<Array<RawRow>>,
@@ -172,7 +174,9 @@ class DatabaseService {
             favorite.synced === 0 ? 0 : 1,
             "UPSERT",
             favorite.created_at ?? new Date().toISOString(),
-            favorite.updated_at ?? favorite.created_at ?? new Date().toISOString(),
+            favorite.updated_at ??
+              favorite.created_at ??
+              new Date().toISOString(),
           ]
         );
       }
@@ -207,7 +211,7 @@ class DatabaseService {
       await db.execAsync("COMMIT");
     } catch (error) {
       await db.execAsync("ROLLBACK");
-      console.error("Failed to migrate legacy schema:", error);
+      dbLogger.error("Failed to migrate legacy schema:", error);
       throw error;
     }
   }
@@ -326,11 +330,15 @@ class DatabaseService {
 
     let needsRecreate = false;
     try {
-      const columns = (await db.getAllAsync("PRAGMA table_info(sync_queue)")) as Array<RawRow>;
+      const columns = (await db.getAllAsync(
+        "PRAGMA table_info(sync_queue)"
+      )) as Array<RawRow>;
       if (columns.length === 0) {
         needsRecreate = true;
       } else {
-        const columnNames = new Set(columns.map((column) => String(column.name)));
+        const columnNames = new Set(
+          columns.map((column) => String(column.name))
+        );
         const requiredColumns = [
           "id",
           "entity_type",
@@ -342,22 +350,33 @@ class DatabaseService {
           "created_at",
         ];
 
-        needsRecreate = requiredColumns.some((column) => !columnNames.has(column));
+        needsRecreate = requiredColumns.some(
+          (column) => !columnNames.has(column)
+        );
 
         if (!needsRecreate) {
           if (!columnNames.has("reference")) {
-            await db.execAsync("ALTER TABLE sync_queue ADD COLUMN reference TEXT");
+            await db.execAsync(
+              "ALTER TABLE sync_queue ADD COLUMN reference TEXT"
+            );
           }
           if (!columnNames.has("last_error")) {
-            await db.execAsync("ALTER TABLE sync_queue ADD COLUMN last_error TEXT");
+            await db.execAsync(
+              "ALTER TABLE sync_queue ADD COLUMN last_error TEXT"
+            );
           }
           if (!columnNames.has("last_attempt")) {
-            await db.execAsync("ALTER TABLE sync_queue ADD COLUMN last_attempt INTEGER");
+            await db.execAsync(
+              "ALTER TABLE sync_queue ADD COLUMN last_attempt INTEGER"
+            );
           }
         }
       }
     } catch (error) {
-      console.warn("Failed to inspect sync_queue schema, recreating table", error);
+      dbLogger.warn(
+        "Failed to inspect sync_queue schema, recreating table",
+        error
+      );
       needsRecreate = true;
     }
 
@@ -502,13 +521,7 @@ class DatabaseService {
       `SELECT * FROM points 
        WHERE name LIKE ? OR chinese_name LIKE ? OR meridian LIKE ? OR location LIKE ? OR indications LIKE ?
        ORDER BY name`,
-      [
-        searchTerm,
-        searchTerm,
-        searchTerm,
-        searchTerm,
-        searchTerm,
-      ]
+      [searchTerm, searchTerm, searchTerm, searchTerm, searchTerm]
     )) as LocalPoint[];
     return result;
   }
@@ -714,16 +727,19 @@ class DatabaseService {
     id?: string;
   }): Promise<string> {
     const db = this.getDb();
-    const operationId = params.id ?? this.generateOperationId(params.entityType);
+    const operationId =
+      params.id ?? this.generateOperationId(params.entityType);
     const timestamp = params.timestamp ?? Date.now();
 
     if (params.reference) {
-      await db.runAsync("DELETE FROM sync_queue WHERE reference = ?", [params.reference]);
+      await db.runAsync("DELETE FROM sync_queue WHERE reference = ?", [
+        params.reference,
+      ]);
     }
 
     await db.runAsync(
       `INSERT INTO sync_queue (id, entity_type, operation, data, reference, timestamp, retry_count, last_error, last_attempt, status, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, 0, NULL, NULL, 'pending', ?)` ,
+       VALUES (?, ?, ?, ?, ?, ?, 0, NULL, NULL, 'pending', ?)`,
       [
         operationId,
         params.entityType,
@@ -750,10 +766,13 @@ class DatabaseService {
       ? `point:local:${params.localId}`
       : undefined;
 
-    const timestampMs = params.timestamp ? Date.parse(params.timestamp) : undefined;
-    const normalizedTimestamp = typeof timestampMs === "number" && Number.isFinite(timestampMs)
-      ? timestampMs
+    const timestampMs = params.timestamp
+      ? Date.parse(params.timestamp)
       : undefined;
+    const normalizedTimestamp =
+      typeof timestampMs === "number" && Number.isFinite(timestampMs)
+        ? timestampMs
+        : undefined;
 
     return this.enqueueSyncOperation({
       entityType: "point",
@@ -778,10 +797,13 @@ class DatabaseService {
       ? `symptom:${params.symptom.id}`
       : undefined;
 
-    const timestampMs = params.timestamp ? Date.parse(params.timestamp) : undefined;
-    const normalizedTimestamp = typeof timestampMs === "number" && Number.isFinite(timestampMs)
-      ? timestampMs
+    const timestampMs = params.timestamp
+      ? Date.parse(params.timestamp)
       : undefined;
+    const normalizedTimestamp =
+      typeof timestampMs === "number" && Number.isFinite(timestampMs)
+        ? timestampMs
+        : undefined;
 
     return this.enqueueSyncOperation({
       entityType: "symptom",
@@ -806,10 +828,13 @@ class DatabaseService {
   }): Promise<string> {
     const reference = params.noteId ? `note:${params.noteId}` : undefined;
 
-    const timestampMs = params.timestamp ? Date.parse(params.timestamp) : undefined;
-    const normalizedTimestamp = typeof timestampMs === "number" && Number.isFinite(timestampMs)
-      ? timestampMs
+    const timestampMs = params.timestamp
+      ? Date.parse(params.timestamp)
       : undefined;
+    const normalizedTimestamp =
+      typeof timestampMs === "number" && Number.isFinite(timestampMs)
+        ? timestampMs
+        : undefined;
 
     return this.enqueueSyncOperation({
       entityType: "note",
@@ -834,10 +859,13 @@ class DatabaseService {
   }): Promise<string> {
     const reference = `search:${params.type}:${params.query}`;
 
-    const timestampMs = params.timestamp ? Date.parse(params.timestamp) : undefined;
-    const normalizedTimestamp = typeof timestampMs === "number" && Number.isFinite(timestampMs)
-      ? timestampMs
+    const timestampMs = params.timestamp
+      ? Date.parse(params.timestamp)
       : undefined;
+    const normalizedTimestamp =
+      typeof timestampMs === "number" && Number.isFinite(timestampMs)
+        ? timestampMs
+        : undefined;
 
     return this.enqueueSyncOperation({
       entityType: "search_history",
@@ -858,8 +886,7 @@ class DatabaseService {
   ): Promise<SyncOperation[]> {
     const db = this.getDb();
     const params: any[] = [];
-    let query =
-      "SELECT * FROM sync_queue WHERE status IN ('pending', 'retry')";
+    let query = "SELECT * FROM sync_queue WHERE status IN ('pending', 'retry')";
 
     if (entityType) {
       query += " AND entity_type = ?";
@@ -899,7 +926,10 @@ class DatabaseService {
     await db.runAsync("DELETE FROM sync_queue WHERE id = ?", [id]);
   }
 
-  async markOperationFailed(id: string, errorMessage?: string | null): Promise<void> {
+  async markOperationFailed(
+    id: string,
+    errorMessage?: string | null
+  ): Promise<void> {
     const db = this.getDb();
     await db.runAsync(
       `UPDATE sync_queue
@@ -939,10 +969,10 @@ class DatabaseService {
 
   async removeFavorite(pointId: string, userId: string): Promise<void> {
     const db = this.getDb();
-    await db.runAsync("DELETE FROM favorites WHERE point_id = ? AND user_id = ?", [
-      pointId,
-      userId,
-    ]);
+    await db.runAsync(
+      "DELETE FROM favorites WHERE point_id = ? AND user_id = ?",
+      [pointId, userId]
+    );
   }
 
   async isFavorite(pointId: string, userId: string): Promise<boolean> {
@@ -981,7 +1011,10 @@ class DatabaseService {
     );
   }
 
-  async markNoteSynced(id: number | string | undefined, synced = true): Promise<void> {
+  async markNoteSynced(
+    id: number | string | undefined,
+    synced = true
+  ): Promise<void> {
     const db = this.getDb();
     if (id === undefined || id === null) {
       return;
@@ -1097,10 +1130,9 @@ class DatabaseService {
     const db = this.getDb();
     const payload = JSON.stringify({ pointId, imageUri });
 
-    await db.runAsync(
-      "DELETE FROM image_sync_queue WHERE point_id = ?",
-      [pointId]
-    );
+    await db.runAsync("DELETE FROM image_sync_queue WHERE point_id = ?", [
+      pointId,
+    ]);
 
     await db.runAsync(
       `INSERT INTO image_sync_queue (point_id, image_uri, payload, status, retry_count)

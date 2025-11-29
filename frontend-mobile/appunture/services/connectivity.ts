@@ -1,4 +1,7 @@
 import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
+import { createLogger } from "../utils/logger";
+
+const connectivityLogger = createLogger("Connectivity");
 
 export type ConnectivityListener = (isOnline: boolean) => void;
 
@@ -12,7 +15,9 @@ class ConnectivityService {
       return;
     }
     this.unsubscribe = NetInfo.addEventListener((state: NetInfoState) => {
-      const isOnline = Boolean(state.isConnected && state.isInternetReachable !== false);
+      const isOnline = Boolean(
+        state.isConnected && state.isInternetReachable !== false
+      );
       this.latestStatus = isOnline;
       this.listeners.forEach((listener) => listener(isOnline));
     });
@@ -42,7 +47,7 @@ class ConnectivityService {
       const state = await NetInfo.fetch();
       return Boolean(state.isConnected && state.isInternetReachable !== false);
     } catch (error) {
-      console.warn("NetInfo fetch failed, assuming offline", error);
+      connectivityLogger.warn("NetInfo fetch failed, assuming offline", error);
       return false;
     }
   }

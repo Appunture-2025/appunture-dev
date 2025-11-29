@@ -288,4 +288,99 @@ public class FirestoreUserService {
 
         return userRepository.save(user);
     }
+
+    /**
+     * Atualiza o FCM token do usuário para push notifications
+     */
+    public void updateFcmToken(String userId, String fcmToken) {
+        log.debug("Atualizando FCM token do usuário: {}", userId);
+        
+        Optional<FirestoreUser> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            throw new IllegalArgumentException("Usuário não encontrado: " + userId);
+        }
+
+        FirestoreUser user = userOpt.get();
+        user.setFcmToken(fcmToken);
+        user.setUpdatedAt(LocalDateTime.now());
+
+        userRepository.save(user);
+        log.info("FCM token atualizado para usuário: {}", userId);
+    }
+
+    /**
+     * Remove o FCM token do usuário
+     */
+    public void removeFcmToken(String userId) {
+        log.debug("Removendo FCM token do usuário: {}", userId);
+        
+        Optional<FirestoreUser> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            throw new IllegalArgumentException("Usuário não encontrado: " + userId);
+        }
+
+        FirestoreUser user = userOpt.get();
+        user.setFcmToken(null);
+        user.setUpdatedAt(LocalDateTime.now());
+
+        userRepository.save(user);
+        log.info("FCM token removido do usuário: {}", userId);
+    }
+
+    /**
+     * Obtém o FCM token do usuário
+     */
+    public String getFcmToken(String userId) {
+        Optional<FirestoreUser> userOpt = userRepository.findById(userId);
+        return userOpt.map(FirestoreUser::getFcmToken).orElse(null);
+    }
+
+    /**
+     * Obtém o FCM token do usuário por Firebase UID
+     */
+    public String getFcmTokenByFirebaseUid(String firebaseUid) {
+        Optional<FirestoreUser> userOpt = userRepository.findByFirebaseUid(firebaseUid);
+        return userOpt.map(FirestoreUser::getFcmToken).orElse(null);
+    }
+
+    /**
+     * Adiciona um tópico de notificação ao usuário
+     */
+    public void addNotificationTopic(String userId, String topic) {
+        log.debug("Adicionando tópico {} ao usuário {}", topic, userId);
+        
+        Optional<FirestoreUser> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            throw new IllegalArgumentException("Usuário não encontrado: " + userId);
+        }
+
+        FirestoreUser user = userOpt.get();
+        if (user.getNotificationTopics() == null) {
+            user.setNotificationTopics(new java.util.ArrayList<>(List.of(topic)));
+        } else if (!user.getNotificationTopics().contains(topic)) {
+            user.getNotificationTopics().add(topic);
+        }
+        user.setUpdatedAt(LocalDateTime.now());
+
+        userRepository.save(user);
+    }
+
+    /**
+     * Remove um tópico de notificação do usuário
+     */
+    public void removeNotificationTopic(String userId, String topic) {
+        log.debug("Removendo tópico {} do usuário {}", topic, userId);
+        
+        Optional<FirestoreUser> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            throw new IllegalArgumentException("Usuário não encontrado: " + userId);
+        }
+
+        FirestoreUser user = userOpt.get();
+        if (user.getNotificationTopics() != null) {
+            user.getNotificationTopics().remove(topic);
+            user.setUpdatedAt(LocalDateTime.now());
+            userRepository.save(user);
+        }
+    }
 }
