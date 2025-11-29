@@ -1,10 +1,14 @@
 package com.appunture.backend.service;
 
+import com.appunture.backend.config.CacheConfig;
 import com.appunture.backend.model.firestore.FirestorePoint;
 import com.appunture.backend.model.firestore.FirestorePoint.ImageAuditEntry;
 import com.appunture.backend.repository.firestore.FirestorePointRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Service responsible for managing acupuncture points in Firestore.
@@ -59,6 +65,7 @@ public class FirestorePointService {
      * @param code The point code (e.g., "VG20", "ST36", "LU-1")
      * @return Optional containing the point if found, empty otherwise
      */
+    @Cacheable(value = CacheConfig.CACHE_POINT_BY_CODE, key = "#code")
     public Optional<FirestorePoint> findByCode(String code) {
         log.debug("Buscando ponto por código: {}", code);
         return pointRepository.findByCode(code);
@@ -69,6 +76,7 @@ public class FirestorePointService {
      *
      * @return List of all points (may be empty if none exist)
      */
+    @Cacheable(value = CacheConfig.CACHE_POINTS)
     public List<FirestorePoint> findAll() {
         log.debug("Listando todos os pontos");
         return pointRepository.findAll();
@@ -80,6 +88,7 @@ public class FirestorePointService {
      * @param meridian The meridian code (e.g., "LU", "ST", "GV")
      * @return List of points in the specified meridian
      */
+    @Cacheable(value = CacheConfig.CACHE_POINTS_BY_MERIDIAN, key = "#meridian")
     public List<FirestorePoint> findByMeridian(String meridian) {
         log.debug("Buscando pontos por meridiano: {}", meridian);
         return pointRepository.findByMeridian(meridian);
@@ -114,6 +123,12 @@ public class FirestorePointService {
      * @return The created point with generated Firestore ID
      * @throws IllegalArgumentException if a point with the same code already exists
      */
+    @Caching(evict = {
+        @CacheEvict(value = CacheConfig.CACHE_POINTS, allEntries = true),
+        @CacheEvict(value = CacheConfig.CACHE_POINTS_BY_MERIDIAN, allEntries = true),
+        @CacheEvict(value = CacheConfig.CACHE_POPULAR_POINTS, allEntries = true),
+        @CacheEvict(value = CacheConfig.CACHE_POINTS_COUNT, allEntries = true)
+    })
     public FirestorePoint createPoint(FirestorePoint point) {
         log.debug("Criando novo ponto: {}", point.getCode());
         
@@ -143,6 +158,12 @@ public class FirestorePointService {
      * @return The updated point
      * @throws IllegalArgumentException if point not found or new code already exists
      */
+    @Caching(evict = {
+        @CacheEvict(value = CacheConfig.CACHE_POINTS, allEntries = true),
+        @CacheEvict(value = CacheConfig.CACHE_POINTS_BY_MERIDIAN, allEntries = true),
+        @CacheEvict(value = CacheConfig.CACHE_POINT_BY_CODE, allEntries = true),
+        @CacheEvict(value = CacheConfig.CACHE_POPULAR_POINTS, allEntries = true)
+    })
     public FirestorePoint updatePoint(String id, FirestorePoint updates) {
         log.debug("Atualizando ponto: {}", id);
         
@@ -208,6 +229,13 @@ public class FirestorePointService {
      * @param id The Firestore document ID of the point to delete
      * @throws IllegalArgumentException if point not found
      */
+    @Caching(evict = {
+        @CacheEvict(value = CacheConfig.CACHE_POINTS, allEntries = true),
+        @CacheEvict(value = CacheConfig.CACHE_POINTS_BY_MERIDIAN, allEntries = true),
+        @CacheEvict(value = CacheConfig.CACHE_POINT_BY_CODE, allEntries = true),
+        @CacheEvict(value = CacheConfig.CACHE_POPULAR_POINTS, allEntries = true),
+        @CacheEvict(value = CacheConfig.CACHE_POINTS_COUNT, allEntries = true)
+    })
     public void deletePoint(String id) {
         log.debug("Deletando ponto: {}", id);
         
@@ -446,6 +474,7 @@ public class FirestorePointService {
      *
      * @return The total number of points
      */
+    @Cacheable(value = CacheConfig.CACHE_POINTS_COUNT)
     public long count() {
         return pointRepository.count();
     }
@@ -456,6 +485,7 @@ public class FirestorePointService {
      * @param limit Maximum number of points to return
      * @return List of popular points sorted by favorite count (descending)
      */
+    @Cacheable(value = CacheConfig.CACHE_POPULAR_POINTS, key = "#limit")
     public List<FirestorePoint> findPopularPoints(int limit) {
         List<FirestorePoint> allPoints = pointRepository.findAll();
         
@@ -476,11 +506,17 @@ public class FirestorePointService {
      * @return List of found points (may contain fewer items if some IDs not found)
      */
     public List<FirestorePoint> findAllByIds(List<String> ids) {
-        log.debug("Buscando {} pontos por ID", ids.size());
-        List<FirestorePoint> points = new ArrayList<>();
-        for (String id : ids) {
-            findById(id).ifPresent(points::add);
+        log.debug("Buscando {} pontos por ID (batch)", ids.size());
+        if (ids.isEmpty()) {
+            return new ArrayList<>();
         }
-        return points;
+        
+        // Use cached findAll and filter - more efficient for repeated calls
+        List<FirestorePoint> allPoints = findAll();
+        Set<String> idSet = ids.stream().collect(Collectors.toSet());
+        
+        return allPoints.stream()
+                .filter(point -> idSet.contains(point.getId()))
+                .collect(Collectors.toList());
     }
 }
