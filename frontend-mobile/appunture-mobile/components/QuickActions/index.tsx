@@ -32,7 +32,7 @@ export const QuickActions: React.FC = () => {
         >
           <View 
             style={[styles.iconContainer, { backgroundColor: `${action.color}15` }]}
-            accessibilityElementsHidden
+            accessibilityElementsHidden={true}
           >
             <FontAwesome name={action.icon as any} size={24} color={action.color} />
           </View>

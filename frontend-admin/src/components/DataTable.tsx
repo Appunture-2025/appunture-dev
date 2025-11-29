@@ -112,7 +112,9 @@ export function DataTable<T extends { id: string | number }>({
                   tabIndex={onRowClick ? 0 : undefined}
                   onKeyDown={(e) => {
                     if (onRowClick && (e.key === 'Enter' || e.key === ' ')) {
-                      e.preventDefault();
+                      if (e.key === ' ') {
+                        e.preventDefault();
+                      }
                       onRowClick(item);
                     }
                   }}

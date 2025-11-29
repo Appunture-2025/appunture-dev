@@ -83,7 +83,7 @@ export function MeridianForm({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-1">
-            Código <span aria-label="obrigatório">*</span>
+            Código <span aria-hidden="true">*</span>
           </label>
           <input
             {...register("code", { required: "Código é obrigatório" })}
@@ -115,7 +115,7 @@ export function MeridianForm({
 
         <div>
           <label htmlFor="nameEn" className="block text-sm font-medium text-gray-700 mb-1">
-            Nome (EN) <span aria-label="obrigatório">*</span>
+            Nome (EN) <span aria-hidden="true">*</span>
           </label>
           <input
             {...register("nameEn", {
@@ -135,7 +135,7 @@ export function MeridianForm({
 
         <div>
           <label htmlFor="namePt" className="block text-sm font-medium text-gray-700 mb-1">
-            Nome (PT) <span aria-label="obrigatório">*</span>
+            Nome (PT) <span aria-hidden="true">*</span>
           </label>
           <input
             {...register("namePt", {

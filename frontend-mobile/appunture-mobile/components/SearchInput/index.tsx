@@ -24,7 +24,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           size={20} 
           color="#6B7280" 
           style={styles.icon} 
-          accessibilityElementsHidden
+          accessibilityElementsHidden={true}
         />
         <TextInput
           style={styles.input}
