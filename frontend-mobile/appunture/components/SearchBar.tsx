@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useState, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS, SPACING } from "../utils/constants";
+import { useDebounce } from "../hooks";
 
 interface SearchBarProps {
   placeholder?: string;
@@ -16,15 +17,49 @@ interface SearchBarProps {
   onChangeText: (text: string) => void;
   onSubmit: () => void;
   loading?: boolean;
+  /** Debounce delay in milliseconds. Set to 0 to disable debouncing. Default: 300ms */
+  debounceDelay?: number;
 }
 
-export default function SearchBar({
+/**
+ * Optimized SearchBar component with built-in debouncing.
+ * Uses React.memo to prevent unnecessary re-renders.
+ */
+function SearchBarComponent({
   placeholder = "Buscar...",
   value,
   onChangeText,
   onSubmit,
   loading = false,
+  debounceDelay = 300,
 }: SearchBarProps) {
+  // Local state for immediate UI feedback
+  const [localValue, setLocalValue] = useState(value);
+
+  // Debounced value for triggering search
+  const debouncedValue = useDebounce(localValue, debounceDelay);
+
+  // Sync local value with external value
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
+  // Trigger onChangeText when debounced value changes
+  useEffect(() => {
+    if (debouncedValue !== value) {
+      onChangeText(debouncedValue);
+    }
+  }, [debouncedValue, onChangeText, value]);
+
+  const handleChangeText = useCallback((text: string) => {
+    setLocalValue(text);
+  }, []);
+
+  const handleClear = useCallback(() => {
+    setLocalValue("");
+    onChangeText("");
+  }, [onChangeText]);
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -38,8 +73,8 @@ export default function SearchBar({
           style={styles.input}
           placeholder={placeholder}
           placeholderTextColor={COLORS.textSecondary}
-          value={value}
-          onChangeText={onChangeText}
+          value={localValue}
+          onChangeText={handleChangeText}
           onSubmitEditing={onSubmit}
           returnKeyType="search"
           editable={!loading}
@@ -53,9 +88,9 @@ export default function SearchBar({
             accessibilityLabel="Buscando..."
           />
         )}
-        {!loading && value.length > 0 && (
+        {!loading && localValue.length > 0 && (
           <TouchableOpacity
-            onPress={() => onChangeText("")}
+            onPress={handleClear}
             accessibilityRole="button"
             accessibilityLabel="Limpar busca"
           >
@@ -70,6 +105,8 @@ export default function SearchBar({
     </View>
   );
 }
+
+const SearchBar = memo(SearchBarComponent);
 
 const styles = StyleSheet.create({
   container: {
@@ -93,3 +130,5 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.xs,
   },
 });
+
+export default SearchBar;

@@ -111,8 +111,24 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // CSRF protection is disabled because this is a stateless REST API using Bearer token authentication.
+                // CSRF attacks rely on browser cookies for session authentication, which this API does not use.
+                // All state-changing requests require a valid Firebase JWT token in the Authorization header.
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // Security Headers
+                .headers(headers -> headers
+                        .contentTypeOptions(contentType -> {}) // X-Content-Type-Options: nosniff
+                        .frameOptions(frame -> frame.deny()) // X-Frame-Options: DENY
+                        .xssProtection(xss -> xss.disable()) // X-XSS-Protection: 0 (modern browsers don't need this)
+                        .httpStrictTransportSecurity(hsts -> hsts
+                                .includeSubDomains(true)
+                                .maxAgeInSeconds(31536000)) // HSTS: 1 year
+                        .referrerPolicy(referrer -> referrer
+                                .policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+                        .permissionsPolicy(permissions -> permissions
+                                .policy("geolocation=(), microphone=(), camera=()"))
+                )
                 .authorizeHttpRequests(auth -> auth
                         // Endpoints públicos
                         .requestMatchers("/api/public/**").permitAll()
@@ -132,4 +148,3 @@ public class SecurityConfig {
         return http.build();
     }
 }
-
