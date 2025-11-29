@@ -82,6 +82,19 @@ automation/prompts/
 | 09 | `task-09-admin-dashboard.md` | Dashboard web para administradores | P2 |
 | 10 | `task-10-production-checklist.md` | Checklist completo de produção | P0 |
 
+### Tasks de Análise & Code Review (28/11/2025)
+
+| Task | Arquivo | Descrição | Prioridade |
+|------|---------|-----------|------------|
+| 11 | `task-11-security-audit.md` | Auditoria de segurança e vulnerabilidades | P0 |
+| 12 | `task-12-code-quality-review.md` | Análise de qualidade e refatoração | P1 |
+| 13 | `task-13-api-contract-review.md` | Revisão de contratos API e documentação | P1 |
+| 14 | `task-14-performance-analysis.md` | Análise de performance e otimização | P1 |
+| 15 | `task-15-accessibility-review.md` | Revisão de acessibilidade (a11y/WCAG) | P2 |
+| 16 | `task-16-error-handling-review.md` | Revisão de tratamento de erros | P1 |
+| 17 | `task-17-documentation-review.md` | Melhoria da documentação | P2 |
+| 18 | `task-18-test-quality-review.md` | Revisão de qualidade dos testes | P1 |
+
 ### Executar Tasks Específicas
 
 ```bash
@@ -92,6 +105,15 @@ gh workflow run copilot-agent-nightly.yml -f prompt_filter=task
 gh issue create --title "Task 02: Google Sign-In" \
   --body-file automation/prompts/task-02-google-signin.md \
   --label "copilot-agent"
+
+# Executar tasks de análise
+gh issue create --title "Task 11: Security Audit" \
+  --body-file automation/prompts/task-11-security-audit.md \
+  --label "copilot-agent,security,audit"
+
+gh issue create --title "Task 12: Code Quality Review" \
+  --body-file automation/prompts/task-12-code-quality-review.md \
+  --label "copilot-agent,code-quality"
 ```
 
 ## 5. Sequência Recomendada
