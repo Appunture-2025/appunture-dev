@@ -15,7 +15,7 @@ interface MenuSectionProps {
 
 export const MenuSection: React.FC<MenuSectionProps> = ({ items }) => {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} accessibilityRole="list">
       {items.map((item, index) => (
         <TouchableOpacity 
           key={index} 
@@ -25,12 +25,15 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ items }) => {
           ]} 
           onPress={item.onPress}
           activeOpacity={0.7}
+          accessibilityLabel={item.title}
+          accessibilityHint="Toque duas vezes para acessar esta opção"
+          accessibilityRole="menuitem"
         >
-          <View style={styles.menuItemLeft}>
+          <View style={styles.menuItemLeft} accessibilityElementsHidden>
             <FontAwesome name={item.icon as any} size={20} color="#6B7280" />
             <Text style={styles.menuItemText}>{item.title}</Text>
           </View>
-          <FontAwesome name="chevron-right" size={16} color="#6B7280" />
+          <FontAwesome name="chevron-right" size={16} color="#6B7280" accessibilityElementsHidden />
         </TouchableOpacity>
       ))}
     </View>

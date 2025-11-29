@@ -29,9 +29,13 @@ export function Login() {
           <p className="text-gray-600 mt-2">Painel Administrativo</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6" aria-label="Formulário de login">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+            <div 
+              className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"
+              role="alert"
+              aria-live="polite"
+            >
               {error}
             </div>
           )}
@@ -51,6 +55,8 @@ export function Login() {
               className="input"
               placeholder="admin@appunture.com"
               required
+              aria-required="true"
+              autoComplete="email"
             />
           </div>
 
@@ -69,18 +75,21 @@ export function Login() {
               className="input"
               placeholder="••••••••"
               required
+              aria-required="true"
+              autoComplete="current-password"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn btn-primary py-3 disabled:opacity-50"
+            className="w-full btn btn-primary py-3 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            aria-busy={loading}
           >
             {loading ? (
               <div className="flex items-center justify-center gap-2">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                Entrando...
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" aria-hidden="true"></div>
+                <span>Entrando...</span>
               </div>
             ) : (
               "Entrar"

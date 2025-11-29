@@ -19,7 +19,13 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <FontAwesome name="search" size={20} color="#6B7280" style={styles.icon} />
+        <FontAwesome 
+          name="search" 
+          size={20} 
+          color="#6B7280" 
+          style={styles.icon} 
+          accessibilityElementsHidden
+        />
         <TextInput
           style={styles.input}
           placeholder={placeholder}
@@ -28,6 +34,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           onChangeText={onChangeText}
           onSubmitEditing={onSubmitEditing}
           returnKeyType="search"
+          accessibilityLabel="Campo de busca"
+          accessibilityHint="Digite para buscar pontos de acupuntura ou sintomas"
         />
       </View>
     </View>

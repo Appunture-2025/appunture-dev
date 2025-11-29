@@ -53,12 +53,13 @@ export function DataTable<T extends { id: string | number }>({
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-full divide-y divide-gray-200" role="table" aria-label="Tabela de dados">
           <thead className="bg-gray-50">
             <tr>
               {columns.map((column) => (
                 <th
                   key={String(column.key)}
+                  scope="col"
                   className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${
                     column.className || ""
                   }`}
@@ -67,7 +68,10 @@ export function DataTable<T extends { id: string | number }>({
                 </th>
               ))}
               {actions && (
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th 
+                  scope="col" 
+                  className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Ações
                 </th>
               )}
@@ -80,8 +84,9 @@ export function DataTable<T extends { id: string | number }>({
                   colSpan={columns.length + (actions ? 1 : 0)}
                   className="px-6 py-12 text-center"
                 >
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+                  <div className="flex items-center justify-center" role="status" aria-label="Carregando dados">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600" aria-hidden="true"></div>
+                    <span className="sr-only">Carregando...</span>
                   </div>
                 </td>
               </tr>
@@ -101,9 +106,18 @@ export function DataTable<T extends { id: string | number }>({
                   onClick={() => onRowClick?.(item)}
                   className={`${
                     onRowClick
-                      ? "cursor-pointer hover:bg-gray-50 transition-colors"
+                      ? "cursor-pointer hover:bg-gray-50 transition-colors focus-within:bg-gray-50"
                       : ""
                   }`}
+                  tabIndex={onRowClick ? 0 : undefined}
+                  onKeyDown={(e) => {
+                    if (onRowClick && (e.key === 'Enter' || e.key === ' ')) {
+                      e.preventDefault();
+                      onRowClick(item);
+                    }
+                  }}
+                  role={onRowClick ? "button" : undefined}
+                  aria-label={onRowClick ? `Ver detalhes do item ${item.id}` : undefined}
                 >
                   {columns.map((column) => (
                     <td
@@ -135,14 +149,16 @@ export function DataTable<T extends { id: string | number }>({
             <button
               onClick={() => pagination.onPageChange?.(pagination.page - 1)}
               disabled={pagination.page === 1}
-              className="btn btn-secondary disabled:opacity-50"
+              className="btn btn-secondary disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              aria-label="Página anterior"
             >
               Anterior
             </button>
             <button
               onClick={() => pagination.onPageChange?.(pagination.page + 1)}
               disabled={pagination.page === totalPages}
-              className="btn btn-secondary disabled:opacity-50"
+              className="btn btn-secondary disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              aria-label="Próxima página"
             >
               Próximo
             </button>
@@ -168,14 +184,16 @@ export function DataTable<T extends { id: string | number }>({
             <div>
               <nav
                 className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-                aria-label="Pagination"
+                aria-label="Paginação"
+                role="navigation"
               >
                 <button
                   onClick={() => pagination.onPageChange?.(pagination.page - 1)}
                   disabled={pagination.page === 1}
-                  className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                  className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  aria-label="Ir para página anterior"
                 >
-                  <ChevronLeftIcon className="h-5 w-5" />
+                  <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
                 </button>
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                   let page: number;
@@ -192,11 +210,13 @@ export function DataTable<T extends { id: string | number }>({
                     <button
                       key={page}
                       onClick={() => pagination.onPageChange?.(page)}
-                      className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                      className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
                         page === pagination.page
                           ? "z-10 bg-primary-50 border-primary-500 text-primary-600"
                           : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
                       }`}
+                      aria-label={`Ir para página ${page}`}
+                      aria-current={page === pagination.page ? "page" : undefined}
                     >
                       {page}
                     </button>
@@ -205,9 +225,10 @@ export function DataTable<T extends { id: string | number }>({
                 <button
                   onClick={() => pagination.onPageChange?.(pagination.page + 1)}
                   disabled={pagination.page === totalPages}
-                  className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                  className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  aria-label="Ir para próxima página"
                 >
-                  <ChevronRightIcon className="h-5 w-5" />
+                  <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
                 </button>
               </nav>
             </div>

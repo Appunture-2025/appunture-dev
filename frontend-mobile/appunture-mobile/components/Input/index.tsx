@@ -27,7 +27,7 @@ export const Input: React.FC<InputProps> = ({
 }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.label} accessibilityRole="text">{label}</Text>
       <TextInput
         style={[styles.input, error ? styles.inputError : null]}
         value={value}
@@ -38,8 +38,19 @@ export const Input: React.FC<InputProps> = ({
         keyboardType={keyboardType}
         autoCapitalize={autoCapitalize}
         autoComplete={autoComplete}
+        accessibilityLabel={label}
+        accessibilityHint={error ? `Erro: ${error}` : undefined}
+        accessibilityState={{ disabled: false }}
       />
-      {error && <Text style={styles.errorText}>{error}</Text>}
+      {error && (
+        <Text 
+          style={styles.errorText} 
+          accessibilityRole="alert"
+          accessibilityLiveRegion="polite"
+        >
+          {error}
+        </Text>
+      )}
     </View>
   );
 };
