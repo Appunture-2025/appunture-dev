@@ -1,6 +1,5 @@
 package com.appunture.backend.model.firestore;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.cloud.firestore.annotation.DocumentId;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,7 +43,6 @@ public class FirestoreUser {
     private List<String> notificationTopics;
     
     // Campos para compatibilidade com backend antigo
-    @JsonIgnore // Security: Never expose password in API responses
     private String password; // Mantido para migração, mas não usado (Firebase Auth gerencia)
     
     // Método de conveniência para verificar se é admin

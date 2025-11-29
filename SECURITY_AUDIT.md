@@ -117,14 +117,14 @@
 
 ### 🟢 [LOW] CSRF Protection Disabled
 
-**Location:** `backend-java/src/main/java/com/appunture/backend/config/SecurityConfig.java:114`  
+**Location:** `backend-java/src/main/java/com/appunture/backend/config/SecurityConfig.java:117`  
 **Description:** CSRF protection is disabled (`.csrf(csrf -> csrf.disable())`).  
 **Risk:** Cross-site request forgery attacks on state-changing operations.  
-**Justification:** ✅ ACCEPTABLE - Using stateless JWT authentication with Firebase tokens; CSRF is not applicable for API-only backends with Bearer token auth.
+**Justification:** ✅ ACCEPTABLE - This is a stateless REST API using Bearer token authentication (Firebase JWT). CSRF attacks rely on browser cookies for session authentication, which this API does not use. All state-changing requests require a valid Firebase JWT token in the Authorization header, making CSRF attacks infeasible.
 
 ### 🟢 [LOW] Swagger/OpenAPI Exposed in Production
 
-**Location:** `backend-java/src/main/java/com/appunture/backend/config/SecurityConfig.java:122`  
+**Location:** `backend-java/src/main/java/com/appunture/backend/config/SecurityConfig.java:134`  
 **Description:** Swagger UI and API docs are publicly accessible.  
 **Risk:** API structure exposed to potential attackers.  
 **Status:** ⚠️ RECOMMENDATION  
