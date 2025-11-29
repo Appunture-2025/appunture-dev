@@ -12,7 +12,7 @@ Este documento resume as melhorias de documentação realizadas no projeto Appun
 |-----------|------------|
 | READMEs atualizados/criados | 4 |
 | ADRs criados | 4 |
-| Guias de setup | 2 |
+| Guias de setup | 4 |
 | Diagramas Mermaid | 3 |
 | Services com JavaDoc | 4 |
 | Hooks com TSDoc | 1 |
@@ -31,7 +31,9 @@ docs/
 │   └── ADR-004-api-structure.md     # Estrutura da API REST
 ├── setup/
 │   ├── local-development.md         # Guia de setup local completo
-│   └── environment-variables.md     # Referência de env vars
+│   ├── environment-variables.md     # Referência de env vars
+│   ├── firebase-setup.md            # Configuração do Firebase
+│   └── troubleshooting.md           # Resolução de problemas comuns
 └── integration.md                   # (existente) Guia de integração
 ```
 
@@ -178,6 +180,24 @@ Stores documentados:
 - Configuração por ambiente (dev/staging/prod)
 - Guia de segurança
 
+### docs/setup/firebase-setup.md ✅ (Novo)
+
+- Criação de projeto Firebase
+- Configuração de Authentication (Email, Google, Apple)
+- Configuração de Firestore e Storage
+- Geração de credenciais (Service Account, Web Config)
+- Regras de segurança (Firestore e Storage)
+- Deploy de regras via Firebase CLI
+
+### docs/setup/troubleshooting.md ✅ (Novo)
+
+- Problemas comuns do Backend (Java/Spring Boot)
+- Problemas comuns do Frontend Mobile (Expo/React Native)
+- Problemas comuns do Frontend Admin (React/Vite)
+- Problemas de Firebase
+- Problemas de Docker e CI/CD
+- Comandos úteis de debug
+
 ---
 
 ## 📊 Diagramas
@@ -235,6 +255,8 @@ Presente em frontend-mobile/appunture/README.md
 - [x] ADRs para decisões arquiteturais
 - [x] Guias de setup local
 - [x] Referência de variáveis de ambiente
+- [x] Guia de configuração Firebase
+- [x] Guia de troubleshooting
 - [x] Diagramas Mermaid
 - [x] CONTRIBUTING.md
 
@@ -244,8 +266,8 @@ Presente em frontend-mobile/appunture/README.md
 
 | Métrica | Valor |
 |---------|-------|
-| Arquivos de documentação | 12 |
-| Linhas de documentação (aprox.) | ~2500 |
+| Arquivos de documentação | 14 |
+| Linhas de documentação (aprox.) | ~3500 |
 | ADRs documentados | 4 |
 | Diagramas Mermaid | 3+ |
 | Services com JavaDoc | 4 |

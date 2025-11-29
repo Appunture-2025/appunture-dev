@@ -136,6 +136,9 @@ npm run dev
 | [Admin README](frontend-admin/README.md) | Painel administrativo, componentes |
 | [Architecture Decisions](docs/adr/) | ADRs - decisões arquiteturais |
 | [Local Development](docs/setup/local-development.md) | Guia completo de setup local |
+| [Firebase Setup](docs/setup/firebase-setup.md) | Configuração do Firebase |
+| [Environment Variables](docs/setup/environment-variables.md) | Referência de variáveis |
+| [Troubleshooting](docs/setup/troubleshooting.md) | Resolução de problemas |
 | [Integration Guide](docs/integration.md) | Contratos de API e integração |
 | [Contributing](CONTRIBUTING.md) | Como contribuir |
 
