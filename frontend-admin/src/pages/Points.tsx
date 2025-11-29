@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import {
   PlusIcon,
   PencilIcon,
@@ -7,7 +8,7 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { useApi } from "../hooks/useApi";
-import { DataTable, ConfirmModal, Column } from "../components";
+import { DataTable, ConfirmModal, Column, ErrorState } from "../components";
 import { getPoints, deletePoint, searchPoints } from "../api/points";
 import type { Point, APIResponse, Pagination } from "../types";
 
@@ -19,7 +20,7 @@ export function Points() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  const { data, isLoading, refetch } = useApi<APIResponse<Point[]>>(
+  const { data, isLoading, error, refetch } = useApi<APIResponse<Point[]>>(
     ["points", page, search],
     () => (search ? searchPoints(search, page, 20) : getPoints(page, 20))
   );
@@ -40,9 +41,11 @@ export function Points() {
     try {
       await deletePoint(deleteId);
       setDeleteId(null);
+      toast.success("Ponto excluído com sucesso!");
       refetch();
     } catch (error) {
       console.error("Failed to delete point:", error);
+      toast.error("Erro ao excluir ponto. Por favor, tente novamente.");
     } finally {
       setDeleting(false);
     }
@@ -92,6 +95,26 @@ export function Points() {
         onPageChange: setPage,
       }
     : undefined;
+
+  // Show error state with retry
+  if (error && !isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-gray-900">
+            Pontos de Acupuntura
+          </h1>
+        </div>
+        <div className="card">
+          <ErrorState
+            title="Erro ao carregar pontos"
+            message="Não foi possível carregar a lista de pontos. Por favor, tente novamente."
+            onRetry={() => refetch()}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

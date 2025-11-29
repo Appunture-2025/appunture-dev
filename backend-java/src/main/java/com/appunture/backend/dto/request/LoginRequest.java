@@ -5,13 +5,17 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Request DTO for user login
+ */
 @Getter
 @Setter
 public class LoginRequest {
-    @Email
-    @NotBlank
+    
+    @Email(message = "Please provide a valid email address")
+    @NotBlank(message = "Email is required")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Password is required")
     private String password;
 }
