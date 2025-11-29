@@ -126,9 +126,9 @@ Crie um arquivo `.env.local` na raiz do projeto:
 
 ```bash
 # Firebase/Google Cloud
-export GOOGLE_APPLICATION_CREDENTIALS=/caminho/para/service-account-key.json
-export FIREBASE_PROJECT_ID=seu-project-id
-export FIREBASE_STORAGE_BUCKET=seu-project-id.appspot.com
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
+export FIREBASE_PROJECT_ID=your-project-id
+export FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
 ```
 
 Carregue as variáveis:
@@ -137,12 +137,14 @@ Carregue as variáveis:
 # Linux/macOS
 source .env.local
 
-# Windows PowerShell
+# Windows PowerShell (run as Administrator if setting system-wide variables)
+# Note: This sets variables for the current session only
 Get-Content .env.local | ForEach-Object { 
     if ($_ -match '^\s*export\s+(.+)=(.+)') { 
-        [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2]) 
+        [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], "Process") 
     } 
 }
+# For permanent user-level variables, replace "Process" with "User"
 ```
 
 ## Backend Setup

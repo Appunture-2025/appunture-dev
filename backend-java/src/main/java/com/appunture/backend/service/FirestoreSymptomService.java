@@ -151,7 +151,8 @@ public class FirestoreSymptomService {
      * @param id The Firestore document ID of the symptom to update
      * @param updates The symptom entity containing fields to update
      * @return The updated symptom
-     * @throws IllegalArgumentException if symptom not found or new name already exists
+     * @throws IllegalArgumentException if symptom is not found (validation phase)
+     *         or if the new name already exists in another symptom (uniqueness check)
      */
     public FirestoreSymptom updateSymptom(String id, FirestoreSymptom updates) {
         log.debug("Atualizando sintoma: {}", id);

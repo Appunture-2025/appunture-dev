@@ -97,7 +97,7 @@ EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID=G-ABCDEF1234
 # Feature Flags
 EXPO_PUBLIC_ENABLE_STORAGE_UPLOAD=true
 
-# Google Sign-In (opcional)
+# Google Sign-In (optional)
 EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=123456789012-abcdef.apps.googleusercontent.com
 ```
 
