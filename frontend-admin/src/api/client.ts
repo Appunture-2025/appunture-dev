@@ -69,9 +69,11 @@ export class ApiError extends Error {
 /**
  * Axios client with interceptors for auth and error handling
  */
+const REQUEST_TIMEOUT_MS = 30000; // 30 seconds timeout
+
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000, // 30 seconds timeout
+  timeout: REQUEST_TIMEOUT_MS,
   headers: {
     "Content-Type": "application/json",
   },
@@ -83,8 +85,7 @@ apiClient.interceptors.request.use(
     const user = auth.currentUser;
     if (user) {
       try {
-        // Force refresh if token is about to expire (within 5 minutes)
-        const token = await user.getIdToken(/* forceRefresh */ false);
+        const token = await user.getIdToken();
         config.headers.Authorization = `Bearer ${token}`;
       } catch (error) {
         console.error("Failed to get auth token:", error);

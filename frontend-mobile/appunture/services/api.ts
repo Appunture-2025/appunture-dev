@@ -76,11 +76,12 @@ class ApiService {
   private retryCount: Map<string, number> = new Map();
   private readonly MAX_RETRIES = 3;
   private readonly RETRY_DELAY_MS = 1000;
+  private readonly REQUEST_TIMEOUT_MS = 30000;
 
   constructor() {
     this.client = axios.create({
       baseURL: API_BASE_URL,
-      timeout: 30000, // 30 seconds timeout
+      timeout: this.REQUEST_TIMEOUT_MS,
       headers: {
         "Content-Type": "application/json",
       },
@@ -119,8 +120,7 @@ class ApiService {
 
         if (currentUser) {
           try {
-            // Force refresh if token might be expired
-            token = await currentUser.getIdToken(/* forceRefresh */ false);
+            token = await currentUser.getIdToken();
           } catch (error) {
             apiLogger.warn("Failed to retrieve Firebase ID token", error);
           }
