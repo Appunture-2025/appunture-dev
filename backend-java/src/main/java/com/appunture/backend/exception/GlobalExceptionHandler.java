@@ -1,8 +1,7 @@
 package com.appunture.backend.exception;
 
-import com.appunture.backend.dto.response.ErrorResponse;
+import com.appunture.backend.dto.common.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,8 +14,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.util.List;
-import java.util.UUID;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -42,25 +42,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleValidation(
             MethodArgumentNotValidException ex,
             HttpServletRequest request) {
+        String fieldErrors = ex.getBindingResult().getFieldErrors().stream()
+                .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
+                .collect(Collectors.joining(", "));
         
-        List<ErrorResponse.FieldError> fieldErrors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(fe -> ErrorResponse.FieldError.builder()
-                        .field(fe.getField())
-                        .message(fe.getDefaultMessage())
-                        .rejectedValue(fe.getRejectedValue())
-                        .build())
-                .collect(Collectors.toList());
-
-        ErrorResponse errorResponse = ErrorResponse.ofValidation(
-                "Validation failed for one or more fields",
-                fieldErrors
+        ErrorResponse response = ErrorResponse.of(
+                "VALIDATION_ERROR",
+                fieldErrors,
+                request.getRequestURI()
         );
-        errorResponse.setPath(request.getRequestURI());
-
-        log.debug("Validation error on {}: {}", request.getRequestURI(), fieldErrors);
-        return ResponseEntity.badRequest().body(errorResponse);
+        return ResponseEntity.badRequest().body(response);
     }
 
     /**
@@ -130,16 +121,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleBadCredentials(
             BadCredentialsException ex,
             HttpServletRequest request) {
-        
-        ErrorResponse errorResponse = ErrorResponse.of(
-                "UNAUTHORIZED",
-                "Invalid credentials",
-                HttpStatus.UNAUTHORIZED.value()
-        );
-        errorResponse.setPath(request.getRequestURI());
-
-        log.debug("Authentication failed: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+        return build(HttpStatus.UNAUTHORIZED, "INVALID_CREDENTIALS", ex.getMessage(), request);
     }
 
     /**
@@ -206,16 +188,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleIllegalArgument(
             IllegalArgumentException ex,
             HttpServletRequest request) {
-        
-        ErrorResponse errorResponse = ErrorResponse.of(
-                "BAD_REQUEST",
-                ex.getMessage(),
-                HttpStatus.BAD_REQUEST.value()
-        );
-        errorResponse.setPath(request.getRequestURI());
-
-        log.debug("Bad request: {}", ex.getMessage());
-        return ResponseEntity.badRequest().body(errorResponse);
+        return build(HttpStatus.BAD_REQUEST, "BAD_REQUEST", ex.getMessage(), request);
     }
 
     /**
@@ -225,16 +198,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleRateLimitExceeded(
             RateLimitExceededException ex,
             HttpServletRequest request) {
-        
-        ErrorResponse errorResponse = ErrorResponse.of(
-                "RATE_LIMIT_EXCEEDED",
-                ex.getMessage(),
-                HttpStatus.TOO_MANY_REQUESTS.value()
-        );
-        errorResponse.setPath(request.getRequestURI());
-
-        log.warn("Rate limit exceeded for {}", request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(errorResponse);
+        return build(HttpStatus.TOO_MANY_REQUESTS, "RATE_LIMIT_EXCEEDED", ex.getMessage(), request);
     }
 
     /**
@@ -245,20 +209,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGeneric(
             Exception ex,
             HttpServletRequest request) {
-        
-        String traceId = UUID.randomUUID().toString().substring(0, 8);
-        
-        ErrorResponse errorResponse = ErrorResponse.of(
-                "INTERNAL_ERROR",
-                "An unexpected error occurred. Please try again later.",
-                HttpStatus.INTERNAL_SERVER_ERROR.value()
-        );
-        errorResponse.setPath(request.getRequestURI());
-        errorResponse.setTraceId(traceId);
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "Unexpected error", request);
+    }
 
-        log.error("Unexpected error [traceId={}] on {}: {}", 
-                traceId, request.getRequestURI(), ex.getMessage(), ex);
-        
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    private ResponseEntity<ErrorResponse> build(
+            HttpStatus status, 
+            String code, 
+            String message,
+            HttpServletRequest request) {
+        ErrorResponse response = ErrorResponse.of(code, message, request.getRequestURI());
+        return ResponseEntity.status(status).body(response);
     }
 }

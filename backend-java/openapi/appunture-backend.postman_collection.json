@@ -3,78 +3,825 @@
     "_postman_id": "fef423c7-7f5f-48fd-9e4a-6351b5f9b1aa",
     "name": "Appunture Backend",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Coleção oficial do backend Spring Boot/Firebase com exemplos de payload e headers."
+    "description": "Coleção oficial do backend Spring Boot/Firebase com exemplos de payload e headers. Documentação completa em /openapi/openapi.yaml"
   },
   "item": [
     {
-      "name": "Listar pontos",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{firebase_id_token}}"
-          }
-        ],
-        "url": {
-          "raw": "{{baseUrl}}/points",
-          "host": ["{{baseUrl}}"],
-          "path": ["points"]
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Health Detailed",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health/detailed",
+              "host": ["{{baseUrl}}"],
+              "path": ["health", "detailed"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Readiness",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health/readiness",
+              "host": ["{{baseUrl}}"],
+              "path": ["health", "readiness"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Liveness",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health/liveness",
+              "host": ["{{baseUrl}}"],
+              "path": ["health", "liveness"]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     },
     {
-      "name": "Adicionar imagem ao ponto",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{admin_id_token}}"
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "profile"]
+            }
           },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"imageUrl\": \"https://storage.googleapis.com/appunture/points/vg20/raw.jpg\",\n  \"thumbnailUrl\": \"https://storage.googleapis.com/appunture/points/vg20/raw_320.jpg\",\n  \"notes\": \"Upload realizado via painel admin\"\n}"
+          "response": []
         },
-        "url": {
-          "raw": "{{baseUrl}}/points/{{pointId}}/images",
-          "host": ["{{baseUrl}}"],
-          "path": ["points", "{{pointId}}", "images"]
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Novo Nome\",\n  \"phoneNumber\": \"+5511999999999\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sync Firebase User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/sync",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "sync"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Favorites",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/favorites?page=0&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "favorites"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Favorite",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/favorites/{{pointId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "favorites", "{{pointId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Favorite",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/favorites/{{pointId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "favorites", "{{pointId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Resend Verification Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/resend-verification",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "resend-verification"]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     },
     {
-      "name": "Remover imagem do ponto",
-      "request": {
-        "method": "DELETE",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{admin_id_token}}"
+      "name": "Points",
+      "item": [
+        {
+          "name": "List All Points",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/points",
+              "host": ["{{baseUrl}}"],
+              "path": ["points"]
+            }
           },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"imageUrl\": \"https://storage.googleapis.com/appunture/points/vg20/raw.jpg\",\n  \"reason\": \"Imagem desatualizada\"\n}"
+          "response": []
         },
-        "url": {
-          "raw": "{{baseUrl}}/points/{{pointId}}/images",
-          "host": ["{{baseUrl}}"],
-          "path": ["points", "{{pointId}}", "images"]
+        {
+          "name": "Get Point by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/points/{{pointId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["points", "{{pointId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Point by Code",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/points/code/VG20",
+              "host": ["{{baseUrl}}"],
+              "path": ["points", "code", "VG20"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Points",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/points/search?name=Baihui",
+              "host": ["{{baseUrl}}"],
+              "path": ["points", "search"],
+              "query": [
+                { "key": "name", "value": "Baihui" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Points by Meridian",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/points/meridian/Du%20Mai",
+              "host": ["{{baseUrl}}"],
+              "path": ["points", "meridian", "Du%20Mai"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Popular Points",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/points/popular?limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["points", "popular"],
+              "query": [
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Point Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/points/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["points", "stats"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Point (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_id_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"VG21\",\n  \"name\": \"Qianding\",\n  \"meridian\": \"Du Mai\",\n  \"location\": \"1.5 cun anterior to VG20\",\n  \"indication\": \"Headache, dizziness\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/points",
+              "host": ["{{baseUrl}}"],
+              "path": ["points"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Image to Point (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_id_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"imageUrl\": \"https://storage.googleapis.com/appunture/points/vg20/raw.jpg\",\n  \"thumbnailUrl\": \"https://storage.googleapis.com/appunture/points/vg20/raw_320.jpg\",\n  \"notes\": \"Upload realizado via painel admin\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/points/{{pointId}}/images",
+              "host": ["{{baseUrl}}"],
+              "path": ["points", "{{pointId}}", "images"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Image from Point (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_id_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"imageUrl\": \"https://storage.googleapis.com/appunture/points/vg20/raw.jpg\",\n  \"reason\": \"Imagem desatualizada\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/points/{{pointId}}/images",
+              "host": ["{{baseUrl}}"],
+              "path": ["points", "{{pointId}}", "images"]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
+    },
+    {
+      "name": "Symptoms",
+      "item": [
+        {
+          "name": "List All Symptoms",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/symptoms",
+              "host": ["{{baseUrl}}"],
+              "path": ["symptoms"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Symptom by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/symptoms/{{symptomId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["symptoms", "{{symptomId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Symptoms",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/symptoms/search?name=headache",
+              "host": ["{{baseUrl}}"],
+              "path": ["symptoms", "search"],
+              "query": [
+                { "key": "name", "value": "headache" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Symptoms by Category",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/symptoms/category/Dor",
+              "host": ["{{baseUrl}}"],
+              "path": ["symptoms", "category", "Dor"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Symptom Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/symptoms/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["symptoms", "categories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Popular Symptoms",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/symptoms/popular?limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["symptoms", "popular"],
+              "query": [
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Storage",
+      "item": [
+        {
+          "name": "Storage Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/storage/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["storage", "status"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload File",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": ""
+                },
+                {
+                  "key": "folder",
+                  "value": "general",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/storage/upload",
+              "host": ["{{baseUrl}}"],
+              "path": ["storage", "upload"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Signed URL",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/storage/signed-url/example.jpg?durationMinutes=60",
+              "host": ["{{baseUrl}}"],
+              "path": ["storage", "signed-url", "example.jpg"],
+              "query": [
+                { "key": "durationMinutes", "value": "60" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "dashboard"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Detailed Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/stats/detailed",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "stats", "detailed"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Admin Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Seed Data",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/data/seed",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "data", "seed"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Register FCM Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{fcm_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/notifications/register-token",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", "register-token"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Notification Settings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/settings",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", "settings"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Subscribe to Topic",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/subscribe/general",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", "subscribe", "general"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chat",
+      "item": [
+        {
+          "name": "Chat with AI",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebase_id_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Quais pontos ajudam com dor de cabeça?\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["chat"]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [
@@ -93,6 +840,14 @@
     {
       "key": "pointId",
       "value": "VG20"
+    },
+    {
+      "key": "symptomId",
+      "value": "headache_001"
+    },
+    {
+      "key": "fcm_token",
+      "value": "{{PUT_YOUR_FCM_TOKEN_HERE}}"
     }
   ]
 }

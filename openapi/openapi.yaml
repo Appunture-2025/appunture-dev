@@ -1,0 +1,1849 @@
+openapi: 3.0.3
+info:
+  title: Appunture API
+  description: |
+    API REST para o aplicativo Appunture - plataforma de referência para pontos de acupuntura.
+    
+    ## Autenticação
+    A API utiliza Firebase Authentication. Inclua o Firebase ID Token no header Authorization:
+    ```
+    Authorization: Bearer <firebase_id_token>
+    ```
+    
+    ## Formato de Erros
+    Todos os endpoints retornam erros em formato padronizado:
+    ```json
+    {
+      "error": {
+        "code": "ERROR_CODE",
+        "message": "Descrição do erro",
+        "timestamp": "2025-11-28T10:00:00Z",
+        "path": "/api/endpoint"
+      }
+    }
+    ```
+    
+    ## Paginação
+    Endpoints de lista suportam paginação com os parâmetros:
+    - `page`: Número da página (começando em 0)
+    - `limit`: Itens por página (default: 20, max: 100)
+    
+  version: 1.0.0
+  contact:
+    name: Appunture Team
+    email: suporte@appunture.dev
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8080/api
+    description: Local Development
+  - url: https://api.appunture.dev/api
+    description: Production
+
+tags:
+  - name: Health
+    description: Endpoints de verificação de saúde do sistema
+  - name: Auth
+    description: Autenticação e perfil do usuário
+  - name: Points
+    description: Operações com pontos de acupuntura
+  - name: Symptoms
+    description: Operações com sintomas
+  - name: Storage
+    description: Upload e gerenciamento de arquivos
+  - name: Notifications
+    description: Gerenciamento de notificações push
+  - name: Admin
+    description: Operações administrativas (requer role ADMIN)
+  - name: Chat
+    description: Chat com IA para consultas sobre acupuntura
+
+components:
+  securitySchemes:
+    firebase:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Firebase ID Token
+
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              description: Código de erro padronizado
+              example: RESOURCE_NOT_FOUND
+            message:
+              type: string
+              description: Mensagem descritiva do erro
+              example: "Point with id 'xyz' not found"
+            timestamp:
+              type: string
+              format: date-time
+              example: "2025-11-28T10:00:00Z"
+            path:
+              type: string
+              example: "/api/points/xyz"
+
+    ValidationError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+          example: 400
+        errors:
+          type: object
+          additionalProperties:
+            type: string
+
+    Point:
+      type: object
+      required:
+        - id
+        - code
+        - name
+        - meridian
+      properties:
+        id:
+          type: string
+          description: ID único do documento Firestore
+          example: "VG20_DOC_123"
+        code:
+          type: string
+          description: Código do ponto de acupuntura
+          example: "VG20"
+        name:
+          type: string
+          description: Nome popular do ponto
+          example: "Baihui (Hundred Meetings)"
+        description:
+          type: string
+          example: "No ápice da cabeça, na interseção das linhas medianas"
+        meridian:
+          type: string
+          example: "Du Mai"
+        location:
+          type: string
+          example: "Topo da cabeça, na linha média"
+        indication:
+          type: string
+          example: "Redução de ansiedade, clareza mental"
+        coordinates:
+          type: object
+          properties:
+            x:
+              type: number
+              format: double
+              example: 0.45
+            y:
+              type: number
+              format: double
+              example: 0.12
+        imageUrls:
+          type: array
+          items:
+            type: string
+            format: uri
+          example: ["https://storage.googleapis.com/appunture/points/vg20/raw.jpg"]
+        imageThumbnailMap:
+          type: object
+          additionalProperties:
+            type: string
+        symptomIds:
+          type: array
+          items:
+            type: string
+          example: ["insomnia", "stress"]
+        tags:
+          type: array
+          items:
+            type: string
+          example: ["calmante", "dormir"]
+        category:
+          type: string
+          example: "Neuro"
+        favoriteCount:
+          type: integer
+          example: 42
+        viewCount:
+          type: integer
+          example: 230
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+
+    PointRequest:
+      type: object
+      required:
+        - code
+        - name
+        - meridian
+      properties:
+        code:
+          type: string
+          example: "VG20"
+        name:
+          type: string
+          example: "Baihui"
+        description:
+          type: string
+        meridian:
+          type: string
+        location:
+          type: string
+        indication:
+          type: string
+        coordinates:
+          type: object
+          properties:
+            x:
+              type: number
+            y:
+              type: number
+        tags:
+          type: array
+          items:
+            type: string
+        category:
+          type: string
+
+    PointImageRequest:
+      type: object
+      required:
+        - imageUrl
+      properties:
+        imageUrl:
+          type: string
+          format: uri
+          example: "https://storage.googleapis.com/appunture/points/vg20/raw.jpg"
+        thumbnailUrl:
+          type: string
+          format: uri
+        generateThumbnail:
+          type: boolean
+          default: true
+        notes:
+          type: string
+
+    PointImageRemovalRequest:
+      type: object
+      required:
+        - imageUrl
+      properties:
+        imageUrl:
+          type: string
+          format: uri
+        reason:
+          type: string
+
+    Symptom:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          example: "headache_001"
+        name:
+          type: string
+          example: "Dor de Cabeça"
+        description:
+          type: string
+        category:
+          type: string
+          example: "Dor"
+        tags:
+          type: array
+          items:
+            type: string
+        pointIds:
+          type: array
+          items:
+            type: string
+        severity:
+          type: integer
+          minimum: 1
+          maximum: 10
+        useCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+
+    SymptomRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        severity:
+          type: integer
+          minimum: 1
+          maximum: 10
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        firebaseUid:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        role:
+          type: string
+          enum: [USER, ADMIN]
+        enabled:
+          type: boolean
+        profileImageUrl:
+          type: string
+          format: uri
+        phoneNumber:
+          type: string
+        emailVerified:
+          type: boolean
+        favoritePointIds:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    UserProfileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        role:
+          type: string
+          enum: [USER, ADMIN]
+        enabled:
+          type: boolean
+        profileImageUrl:
+          type: string
+          format: uri
+        phoneNumber:
+          type: string
+        emailVerified:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        favoritePointIds:
+          type: array
+          items:
+            type: string
+
+    UserProfileUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        phoneNumber:
+          type: string
+        profileImageUrl:
+          type: string
+          format: uri
+
+    FavoritesResponse:
+      type: object
+      properties:
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/Point'
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        hasMore:
+          type: boolean
+
+    FileUploadResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        fileUrl:
+          type: string
+          format: uri
+        fileName:
+          type: string
+        fileSize:
+          type: integer
+          format: int64
+        contentType:
+          type: string
+        folder:
+          type: string
+
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [UP, DOWN]
+        timestamp:
+          type: string
+          format: date-time
+        service:
+          type: string
+        version:
+          type: string
+
+    DashboardResponse:
+      type: object
+      properties:
+        statistics:
+          type: object
+          properties:
+            totalUsers:
+              type: integer
+            totalPoints:
+              type: integer
+            totalSymptoms:
+              type: integer
+        recentUsers:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserProfileResponse'
+        popularPoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/Point'
+        popularSymptoms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Symptom'
+
+    ChatRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: "Quais pontos ajudam com dor de cabeça?"
+
+    ChatResponse:
+      type: object
+      properties:
+        response:
+          type: string
+
+    RegisterTokenRequest:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+
+    NotificationSettingsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        hasToken:
+          type: boolean
+        topics:
+          type: array
+          items:
+            type: string
+
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+
+security:
+  - firebase: []
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Verificação básica de saúde
+      security: []
+      responses:
+        '200':
+          description: Sistema operacional
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: Sistema indisponível
+
+  /health/detailed:
+    get:
+      tags: [Health]
+      summary: Verificação detalhada de saúde
+      security: []
+      responses:
+        '200':
+          description: Status detalhado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /health/readiness:
+    get:
+      tags: [Health]
+      summary: Verificação de prontidão
+      security: []
+      responses:
+        '200':
+          description: Aplicação pronta
+        '503':
+          description: Aplicação não pronta
+
+  /health/liveness:
+    get:
+      tags: [Health]
+      summary: Verificação de vida
+      security: []
+      responses:
+        '200':
+          description: Aplicação viva
+
+  /auth/profile:
+    get:
+      tags: [Auth]
+      summary: Obter perfil do usuário
+      responses:
+        '200':
+          description: Perfil do usuário
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        '401':
+          description: Não autenticado
+        '404':
+          description: Usuário não encontrado
+
+    put:
+      tags: [Auth]
+      summary: Atualizar perfil do usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileUpdateRequest'
+      responses:
+        '200':
+          description: Perfil atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        '400':
+          description: Dados inválidos
+        '401':
+          description: Não autenticado
+
+  /auth/sync:
+    post:
+      tags: [Auth]
+      summary: Sincronizar usuário Firebase
+      responses:
+        '200':
+          description: Usuário sincronizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        '401':
+          description: Não autenticado
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Obter informações do usuário atual
+      responses:
+        '200':
+          description: Informações do usuário
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firebase:
+                    type: object
+                  profile:
+                    $ref: '#/components/schemas/UserProfileResponse'
+        '401':
+          description: Não autenticado
+
+  /auth/favorites:
+    get:
+      tags: [Auth]
+      summary: Listar favoritos do usuário
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Lista de favoritos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoritesResponse'
+        '401':
+          description: Não autenticado
+
+  /auth/favorites/{pointId}:
+    post:
+      tags: [Auth]
+      summary: Adicionar ponto aos favoritos
+      parameters:
+        - name: pointId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ponto adicionado
+        '400':
+          description: Erro
+        '401':
+          description: Não autenticado
+
+    delete:
+      tags: [Auth]
+      summary: Remover ponto dos favoritos
+      parameters:
+        - name: pointId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ponto removido
+        '401':
+          description: Não autenticado
+
+  /auth/resend-verification:
+    post:
+      tags: [Auth]
+      summary: Reenviar email de verificação
+      responses:
+        '200':
+          description: Email reenviado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: Email já verificado
+        '429':
+          description: Limite atingido
+
+  /points:
+    get:
+      tags: [Points]
+      summary: Listar todos os pontos
+      responses:
+        '200':
+          description: Lista de pontos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Point'
+
+    post:
+      tags: [Points]
+      summary: Criar ponto (Admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PointRequest'
+      responses:
+        '201':
+          description: Ponto criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Point'
+        '400':
+          description: Dados inválidos
+        '403':
+          description: Não autorizado
+
+  /points/{id}:
+    get:
+      tags: [Points]
+      summary: Obter ponto por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ponto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Point'
+        '404':
+          description: Ponto não encontrado
+
+    put:
+      tags: [Points]
+      summary: Atualizar ponto (Admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PointRequest'
+      responses:
+        '200':
+          description: Ponto atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Point'
+        '403':
+          description: Não autorizado
+        '404':
+          description: Ponto não encontrado
+
+    delete:
+      tags: [Points]
+      summary: Deletar ponto (Admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Ponto deletado
+        '403':
+          description: Não autorizado
+        '404':
+          description: Ponto não encontrado
+
+  /points/code/{code}:
+    get:
+      tags: [Points]
+      summary: Obter ponto por código
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ponto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Point'
+        '404':
+          description: Ponto não encontrado
+
+  /points/meridian/{meridian}:
+    get:
+      tags: [Points]
+      summary: Listar pontos por meridiano
+      parameters:
+        - name: meridian
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de pontos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Point'
+
+  /points/symptom/{symptomId}:
+    get:
+      tags: [Points]
+      summary: Listar pontos por sintoma
+      parameters:
+        - name: symptomId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de pontos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Point'
+
+  /points/search:
+    get:
+      tags: [Points]
+      summary: Buscar pontos por nome
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Resultados da busca
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Point'
+
+  /points/popular:
+    get:
+      tags: [Points]
+      summary: Obter pontos populares
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Pontos populares
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Point'
+
+  /points/stats:
+    get:
+      tags: [Points]
+      summary: Estatísticas dos pontos
+      responses:
+        '200':
+          description: Estatísticas
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /points/{pointId}/symptoms/{symptomId}:
+    post:
+      tags: [Points]
+      summary: Associar sintoma ao ponto (Admin)
+      parameters:
+        - name: pointId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: symptomId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Associação criada
+        '403':
+          description: Não autorizado
+
+    delete:
+      tags: [Points]
+      summary: Remover associação (Admin)
+      parameters:
+        - name: pointId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: symptomId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Associação removida
+        '403':
+          description: Não autorizado
+
+  /points/{pointId}/images:
+    post:
+      tags: [Points]
+      summary: Adicionar imagem ao ponto (Admin)
+      parameters:
+        - name: pointId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PointImageRequest'
+      responses:
+        '200':
+          description: Imagem adicionada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Point'
+        '400':
+          description: Dados inválidos
+        '403':
+          description: Não autorizado
+
+    delete:
+      tags: [Points]
+      summary: Remover imagem do ponto (Admin)
+      parameters:
+        - name: pointId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PointImageRemovalRequest'
+      responses:
+        '200':
+          description: Imagem removida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Point'
+        '400':
+          description: Imagem não encontrada
+        '403':
+          description: Não autorizado
+
+  /points/{pointId}/coordinates:
+    put:
+      tags: [Points]
+      summary: Atualizar coordenadas (Admin)
+      parameters:
+        - name: pointId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                x:
+                  type: number
+                y:
+                  type: number
+      responses:
+        '200':
+          description: Coordenadas atualizadas
+        '400':
+          description: Dados inválidos
+        '403':
+          description: Não autorizado
+
+  /symptoms:
+    get:
+      tags: [Symptoms]
+      summary: Listar todos os sintomas
+      responses:
+        '200':
+          description: Lista de sintomas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Symptom'
+
+    post:
+      tags: [Symptoms]
+      summary: Criar sintoma (Admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SymptomRequest'
+      responses:
+        '201':
+          description: Sintoma criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Symptom'
+        '400':
+          description: Dados inválidos
+        '403':
+          description: Não autorizado
+
+  /symptoms/{id}:
+    get:
+      tags: [Symptoms]
+      summary: Obter sintoma por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sintoma encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Symptom'
+        '404':
+          description: Sintoma não encontrado
+
+    put:
+      tags: [Symptoms]
+      summary: Atualizar sintoma (Admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SymptomRequest'
+      responses:
+        '200':
+          description: Sintoma atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Symptom'
+        '403':
+          description: Não autorizado
+        '404':
+          description: Sintoma não encontrado
+
+    delete:
+      tags: [Symptoms]
+      summary: Deletar sintoma (Admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Sintoma deletado
+        '403':
+          description: Não autorizado
+        '404':
+          description: Sintoma não encontrado
+
+  /symptoms/name/{name}:
+    get:
+      tags: [Symptoms]
+      summary: Obter sintoma por nome
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sintoma encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Symptom'
+        '404':
+          description: Sintoma não encontrado
+
+  /symptoms/category/{category}:
+    get:
+      tags: [Symptoms]
+      summary: Listar sintomas por categoria
+      parameters:
+        - name: category
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de sintomas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Symptom'
+
+  /symptoms/point/{pointId}:
+    get:
+      tags: [Symptoms]
+      summary: Listar sintomas por ponto
+      parameters:
+        - name: pointId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de sintomas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Symptom'
+
+  /symptoms/search:
+    get:
+      tags: [Symptoms]
+      summary: Buscar sintomas por nome
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Resultados da busca
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Symptom'
+
+  /symptoms/tag/{tag}:
+    get:
+      tags: [Symptoms]
+      summary: Listar sintomas por tag
+      parameters:
+        - name: tag
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de sintomas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Symptom'
+
+  /symptoms/severity:
+    get:
+      tags: [Symptoms]
+      summary: Listar sintomas por severidade
+      parameters:
+        - name: minSeverity
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: maxSeverity
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Lista de sintomas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Symptom'
+
+  /symptoms/popular:
+    get:
+      tags: [Symptoms]
+      summary: Obter sintomas populares
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Sintomas populares
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Symptom'
+
+  /symptoms/categories:
+    get:
+      tags: [Symptoms]
+      summary: Listar categorias
+      responses:
+        '200':
+          description: Lista de categorias
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /symptoms/tags:
+    get:
+      tags: [Symptoms]
+      summary: Listar tags
+      responses:
+        '200':
+          description: Lista de tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /symptoms/stats:
+    get:
+      tags: [Symptoms]
+      summary: Estatísticas dos sintomas
+      responses:
+        '200':
+          description: Estatísticas
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /symptoms/{id}/use:
+    post:
+      tags: [Symptoms]
+      summary: Incrementar contador de uso
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Contador incrementado
+
+  /symptoms/{symptomId}/points/{pointId}:
+    post:
+      tags: [Symptoms]
+      summary: Associar ponto ao sintoma (Admin)
+      parameters:
+        - name: symptomId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: pointId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Associação criada
+        '403':
+          description: Não autorizado
+
+    delete:
+      tags: [Symptoms]
+      summary: Remover associação (Admin)
+      parameters:
+        - name: symptomId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: pointId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Associação removida
+        '403':
+          description: Não autorizado
+
+  /symptoms/{symptomId}/tags:
+    post:
+      tags: [Symptoms]
+      summary: Adicionar tag ao sintoma (Admin)
+      parameters:
+        - name: symptomId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tag:
+                  type: string
+      responses:
+        '200':
+          description: Tag adicionada
+        '400':
+          description: Tag inválida
+        '403':
+          description: Não autorizado
+
+  /storage/upload:
+    post:
+      tags: [Storage]
+      summary: Upload de arquivo
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                folder:
+                  type: string
+                  default: general
+      responses:
+        '200':
+          description: Upload realizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileUploadResponse'
+        '400':
+          description: Erro no upload
+        '503':
+          description: Storage indisponível
+
+  /storage/signed-url/{fileName}:
+    get:
+      tags: [Storage]
+      summary: Gerar URL assinada
+      parameters:
+        - name: fileName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: durationMinutes
+          in: query
+          schema:
+            type: integer
+            default: 60
+      responses:
+        '200':
+          description: URL assinada gerada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  signedUrl:
+                    type: string
+                  expiresIn:
+                    type: string
+
+  /storage/{fileName}:
+    delete:
+      tags: [Storage]
+      summary: Deletar arquivo (Admin)
+      parameters:
+        - name: fileName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Arquivo deletado
+        '400':
+          description: Erro ao deletar
+        '403':
+          description: Não autorizado
+
+  /storage/list:
+    get:
+      tags: [Storage]
+      summary: Listar arquivos (Admin)
+      parameters:
+        - name: prefix
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de arquivos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+                    items:
+                      type: string
+                  count:
+                    type: integer
+
+  /storage/info/{fileName}:
+    get:
+      tags: [Storage]
+      summary: Informações do arquivo
+      parameters:
+        - name: fileName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Informações do arquivo
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /storage/exists/{fileName}:
+    get:
+      tags: [Storage]
+      summary: Verificar se arquivo existe
+      parameters:
+        - name: fileName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Resultado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exists:
+                    type: boolean
+
+  /storage/status:
+    get:
+      tags: [Storage]
+      summary: Status do Firebase Storage
+      security: []
+      responses:
+        '200':
+          description: Status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  available:
+                    type: boolean
+
+  /admin/dashboard:
+    get:
+      tags: [Admin]
+      summary: Dashboard administrativo
+      responses:
+        '200':
+          description: Dados do dashboard
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardResponse'
+        '403':
+          description: Não autorizado
+
+  /admin/users:
+    get:
+      tags: [Admin]
+      summary: Listar todos os usuários
+      responses:
+        '200':
+          description: Lista de usuários
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '403':
+          description: Não autorizado
+
+    post:
+      tags: [Admin]
+      summary: Criar usuário admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                name:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Usuário criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Dados inválidos
+        '403':
+          description: Não autorizado
+
+  /admin/users/{userId}:
+    get:
+      tags: [Admin]
+      summary: Obter detalhes do usuário
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalhes do usuário
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Não autorizado
+        '404':
+          description: Usuário não encontrado
+
+    delete:
+      tags: [Admin]
+      summary: Deletar usuário
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Usuário deletado
+        '403':
+          description: Não autorizado
+        '404':
+          description: Usuário não encontrado
+
+  /admin/users/{userId}/role:
+    put:
+      tags: [Admin]
+      summary: Atualizar role do usuário
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  enum: [USER, ADMIN]
+      responses:
+        '200':
+          description: Role atualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Role inválida
+        '403':
+          description: Não autorizado
+
+  /admin/users/{userId}/enabled:
+    put:
+      tags: [Admin]
+      summary: Alternar status do usuário
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Status alterado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Não autorizado
+        '404':
+          description: Usuário não encontrado
+
+  /admin/stats/detailed:
+    get:
+      tags: [Admin]
+      summary: Estatísticas detalhadas
+      responses:
+        '200':
+          description: Estatísticas
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: Não autorizado
+
+  /admin/data/seed:
+    post:
+      tags: [Admin]
+      summary: Seed de dados iniciais
+      responses:
+        '200':
+          description: Seed realizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '400':
+          description: Erro no seed
+        '403':
+          description: Não autorizado
+
+  /admin/health:
+    get:
+      tags: [Admin]
+      summary: Health check administrativo
+      responses:
+        '200':
+          description: Status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+        '403':
+          description: Não autorizado
+
+  /notifications/register-token:
+    post:
+      tags: [Notifications]
+      summary: Registrar token FCM
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterTokenRequest'
+      responses:
+        '200':
+          description: Token registrado
+        '400':
+          description: Token inválido
+
+  /notifications/unregister-token:
+    delete:
+      tags: [Notifications]
+      summary: Remover token FCM
+      responses:
+        '200':
+          description: Token removido
+
+  /notifications/subscribe/{topic}:
+    post:
+      tags: [Notifications]
+      summary: Inscrever-se em tópico
+      parameters:
+        - name: topic
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Inscrito com sucesso
+        '400':
+          description: Sem token FCM
+
+  /notifications/unsubscribe/{topic}:
+    delete:
+      tags: [Notifications]
+      summary: Cancelar inscrição em tópico
+      parameters:
+        - name: topic
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Inscrição cancelada
+
+  /notifications/settings:
+    get:
+      tags: [Notifications]
+      summary: Configurações de notificação
+      responses:
+        '200':
+          description: Configurações
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationSettingsResponse'
+
+  /chat:
+    post:
+      tags: [Chat]
+      summary: Chat com IA
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: Resposta da IA
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '400':
+          description: Mensagem vazia
