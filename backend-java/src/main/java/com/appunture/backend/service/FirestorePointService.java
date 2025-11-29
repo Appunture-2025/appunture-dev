@@ -21,7 +21,23 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Service para operações com pontos de acupuntura usando Firestore
+ * Service responsible for managing acupuncture points in Firestore.
+ * 
+ * <p>Handles all CRUD operations and search functionality for acupuncture points,
+ * including management of images with audit trail and favorite count tracking.</p>
+ * 
+ * <h2>Main Features:</h2>
+ * <ul>
+ *   <li>CRUD operations for points</li>
+ *   <li>Search by code, meridian, symptom, and name</li>
+ *   <li>Image management with thumbnails and audit log</li>
+ *   <li>Favorite count tracking</li>
+ *   <li>Popular points retrieval</li>
+ * </ul>
+ * 
+ * @see FirestorePoint
+ * @see FirestorePointRepository
+ * @see ThumbnailGenerationService
  */
 @Service
 @RequiredArgsConstructor
@@ -33,7 +49,10 @@ public class FirestorePointService {
     private static final int MAX_AUDIT_ENTRIES = 50;
 
     /**
-     * Busca um ponto por ID
+     * Retrieves a point by its Firestore document ID.
+     *
+     * @param id The Firestore document ID
+     * @return Optional containing the point if found, empty otherwise
      */
     public Optional<FirestorePoint> findById(String id) {
         log.debug("Buscando ponto por ID: {}", id);
@@ -41,7 +60,10 @@ public class FirestorePointService {
     }
 
     /**
-     * Busca um ponto por código
+     * Retrieves a point by its unique acupuncture code.
+     *
+     * @param code The point code (e.g., "VG20", "ST36", "LU-1")
+     * @return Optional containing the point if found, empty otherwise
      */
     @Cacheable(value = CacheConfig.CACHE_POINT_BY_CODE, key = "#code")
     public Optional<FirestorePoint> findByCode(String code) {
@@ -50,7 +72,9 @@ public class FirestorePointService {
     }
 
     /**
-     * Lista todos os pontos
+     * Retrieves all acupuncture points from the database.
+     *
+     * @return List of all points (may be empty if none exist)
      */
     @Cacheable(value = CacheConfig.CACHE_POINTS)
     public List<FirestorePoint> findAll() {
@@ -59,7 +83,10 @@ public class FirestorePointService {
     }
 
     /**
-     * Busca pontos por meridiano
+     * Retrieves all points belonging to a specific meridian.
+     *
+     * @param meridian The meridian code (e.g., "LU", "ST", "GV")
+     * @return List of points in the specified meridian
      */
     @Cacheable(value = CacheConfig.CACHE_POINTS_BY_MERIDIAN, key = "#meridian")
     public List<FirestorePoint> findByMeridian(String meridian) {
@@ -68,7 +95,10 @@ public class FirestorePointService {
     }
 
     /**
-     * Busca pontos por sintoma
+     * Retrieves all points associated with a specific symptom.
+     *
+     * @param symptomId The symptom's Firestore document ID
+     * @return List of points that can treat the specified symptom
      */
     public List<FirestorePoint> findBySymptomId(String symptomId) {
         log.debug("Buscando pontos por sintoma: {}", symptomId);
@@ -76,7 +106,10 @@ public class FirestorePointService {
     }
 
     /**
-     * Busca pontos por nome (busca parcial)
+     * Searches points by partial name match (case-insensitive).
+     *
+     * @param name The search term to match against point names
+     * @return List of points with names containing the search term
      */
     public List<FirestorePoint> findByNameContaining(String name) {
         log.debug("Buscando pontos por nome: {}", name);
@@ -84,7 +117,11 @@ public class FirestorePointService {
     }
 
     /**
-     * Cria um novo ponto
+     * Creates a new acupuncture point.
+     *
+     * @param point The point entity to create (code must be unique)
+     * @return The created point with generated Firestore ID
+     * @throws IllegalArgumentException if a point with the same code already exists
      */
     @Caching(evict = {
         @CacheEvict(value = CacheConfig.CACHE_POINTS, allEntries = true),
@@ -113,7 +150,13 @@ public class FirestorePointService {
     }
 
     /**
-     * Atualiza um ponto existente
+     * Updates an existing acupuncture point.
+     * Only non-null fields in the updates object will be applied.
+     *
+     * @param id The Firestore document ID of the point to update
+     * @param updates The point entity containing fields to update
+     * @return The updated point
+     * @throws IllegalArgumentException if point not found or new code already exists
      */
     @Caching(evict = {
         @CacheEvict(value = CacheConfig.CACHE_POINTS, allEntries = true),
@@ -181,7 +224,10 @@ public class FirestorePointService {
     }
 
     /**
-     * Deleta um ponto
+     * Deletes an acupuncture point.
+     *
+     * @param id The Firestore document ID of the point to delete
+     * @throws IllegalArgumentException if point not found
      */
     @Caching(evict = {
         @CacheEvict(value = CacheConfig.CACHE_POINTS, allEntries = true),
@@ -203,7 +249,11 @@ public class FirestorePointService {
     }
 
     /**
-     * Adiciona sintoma ao ponto
+     * Associates a symptom with an acupuncture point.
+     *
+     * @param pointId The Firestore document ID of the point
+     * @param symptomId The Firestore document ID of the symptom to associate
+     * @throws IllegalArgumentException if point not found
      */
     public void addSymptomToPoint(String pointId, String symptomId) {
         log.debug("Adicionando sintoma {} ao ponto {}", symptomId, pointId);
@@ -222,7 +272,11 @@ public class FirestorePointService {
     }
 
     /**
-     * Remove sintoma do ponto
+     * Removes a symptom association from an acupuncture point.
+     *
+     * @param pointId The Firestore document ID of the point
+     * @param symptomId The Firestore document ID of the symptom to remove
+     * @throws IllegalArgumentException if point not found
      */
     public void removeSymptomFromPoint(String pointId, String symptomId) {
         log.debug("Removendo sintoma {} do ponto {}", symptomId, pointId);
@@ -241,7 +295,17 @@ public class FirestorePointService {
     }
 
     /**
-     * Adiciona imagem ao ponto
+     * Adds an image to a point with optional thumbnail generation and audit logging.
+     *
+     * @param pointId The Firestore document ID of the point
+     * @param imageUrl The URL of the image to add
+     * @param performedBy The user ID who performed this action
+     * @param performedByEmail The email of the user who performed this action
+     * @param notes Optional notes about this image addition
+     * @param generateThumbnail Whether to auto-generate a thumbnail
+     * @param providedThumbnailUrl Optional pre-generated thumbnail URL
+     * @return The updated point with the new image
+     * @throws IllegalArgumentException if point not found
      */
     public FirestorePoint addImageToPoint(String pointId,
                                           String imageUrl,
@@ -277,7 +341,15 @@ public class FirestorePointService {
     }
 
     /**
-     * Remove imagem do ponto com auditoria
+     * Removes an image from a point with audit logging.
+     *
+     * @param pointId The Firestore document ID of the point
+     * @param imageUrl The URL of the image to remove
+     * @param performedBy The user ID who performed this action
+     * @param performedByEmail The email of the user who performed this action
+     * @param notes Optional notes about this image removal
+     * @return The updated point without the removed image
+     * @throws IllegalArgumentException if point or image not found
      */
     public FirestorePoint removeImageFromPoint(String pointId,
                                                String imageUrl,
@@ -344,7 +416,12 @@ public class FirestorePointService {
     }
 
     /**
-     * Atualiza coordenadas do ponto
+     * Updates the coordinates of an acupuncture point on the body map.
+     *
+     * @param pointId The Firestore document ID of the point
+     * @param x The horizontal coordinate (0.0 to 1.0)
+     * @param y The vertical coordinate (0.0 to 1.0)
+     * @throws IllegalArgumentException if point not found
      */
     public void updatePointCoordinates(String pointId, double x, double y) {
         log.debug("Atualizando coordenadas do ponto: {}", pointId);
@@ -363,7 +440,9 @@ public class FirestorePointService {
     }
 
     /**
-     * Incrementa contador de favoritos
+     * Increments the favorite count for a point when a user favorites it.
+     *
+     * @param pointId The Firestore document ID of the point
      */
     public void incrementFavoriteCount(String pointId) {
         log.debug("Incrementando contador de favoritos do ponto: {}", pointId);
@@ -371,7 +450,9 @@ public class FirestorePointService {
     }
 
     /**
-     * Decrementa contador de favoritos
+     * Decrements the favorite count for a point when a user unfavorites it.
+     *
+     * @param pointId The Firestore document ID of the point
      */
     public void decrementFavoriteCount(String pointId) {
         log.debug("Decrementando contador de favoritos do ponto: {}", pointId);
@@ -379,14 +460,19 @@ public class FirestorePointService {
     }
 
     /**
-     * Verifica se existe ponto com código
+     * Checks if a point with the specified code already exists.
+     *
+     * @param code The point code to check
+     * @return true if a point with this code exists, false otherwise
      */
     public boolean existsByCode(String code) {
         return pointRepository.existsByCode(code);
     }
 
     /**
-     * Conta total de pontos
+     * Returns the total count of acupuncture points in the database.
+     *
+     * @return The total number of points
      */
     @Cacheable(value = CacheConfig.CACHE_POINTS_COUNT)
     public long count() {
@@ -394,7 +480,10 @@ public class FirestorePointService {
     }
 
     /**
-     * Busca pontos populares (mais favoritados)
+     * Retrieves the most favorited acupuncture points.
+     *
+     * @param limit Maximum number of points to return
+     * @return List of popular points sorted by favorite count (descending)
      */
     @Cacheable(value = CacheConfig.CACHE_POPULAR_POINTS, key = "#limit")
     public List<FirestorePoint> findPopularPoints(int limit) {
@@ -411,8 +500,10 @@ public class FirestorePointService {
     }
 
     /**
-     * Busca múltiplos pontos por ID usando batch operation otimizada.
-     * Evita N+1 queries buscando todos os pontos necessários de uma vez.
+     * Retrieves multiple points by their Firestore document IDs.
+     *
+     * @param ids List of Firestore document IDs to retrieve
+     * @return List of found points (may contain fewer items if some IDs not found)
      */
     public List<FirestorePoint> findAllByIds(List<String> ids) {
         log.debug("Buscando {} pontos por ID (batch)", ids.size());

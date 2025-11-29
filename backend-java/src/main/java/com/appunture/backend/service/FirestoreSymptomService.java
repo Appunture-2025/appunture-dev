@@ -11,7 +11,22 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Service para operações com sintomas usando Firestore
+ * Service responsible for managing symptoms in Firestore.
+ * 
+ * <p>Handles all CRUD operations and search functionality for symptoms,
+ * including categorization, tagging, and usage tracking for analytics.</p>
+ * 
+ * <h2>Main Features:</h2>
+ * <ul>
+ *   <li>CRUD operations for symptoms</li>
+ *   <li>Search by name, category, and tag</li>
+ *   <li>Association management with acupuncture points</li>
+ *   <li>Usage count tracking for popularity</li>
+ *   <li>Severity-based filtering</li>
+ * </ul>
+ * 
+ * @see FirestoreSymptom
+ * @see FirestoreSymptomRepository
  */
 @Service
 @RequiredArgsConstructor
@@ -21,7 +36,10 @@ public class FirestoreSymptomService {
     private final FirestoreSymptomRepository symptomRepository;
 
     /**
-     * Busca um sintoma por ID
+     * Retrieves a symptom by its Firestore document ID.
+     *
+     * @param id The Firestore document ID
+     * @return Optional containing the symptom if found, empty otherwise
      */
     public Optional<FirestoreSymptom> findById(String id) {
         log.debug("Buscando sintoma por ID: {}", id);
@@ -29,7 +47,10 @@ public class FirestoreSymptomService {
     }
 
     /**
-     * Busca um sintoma por nome
+     * Retrieves a symptom by its exact name.
+     *
+     * @param name The exact symptom name to search for
+     * @return Optional containing the symptom if found, empty otherwise
      */
     public Optional<FirestoreSymptom> findByName(String name) {
         log.debug("Buscando sintoma por nome: {}", name);
@@ -37,7 +58,9 @@ public class FirestoreSymptomService {
     }
 
     /**
-     * Lista todos os sintomas
+     * Retrieves all symptoms from the database.
+     *
+     * @return List of all symptoms (may be empty if none exist)
      */
     public List<FirestoreSymptom> findAll() {
         log.debug("Listando todos os sintomas");
@@ -45,7 +68,10 @@ public class FirestoreSymptomService {
     }
 
     /**
-     * Busca sintomas por categoria
+     * Retrieves all symptoms in a specific category.
+     *
+     * @param category The category name (e.g., "Pain", "Digestive", "Respiratory")
+     * @return List of symptoms in the specified category
      */
     public List<FirestoreSymptom> findByCategory(String category) {
         log.debug("Buscando sintomas por categoria: {}", category);
@@ -53,7 +79,10 @@ public class FirestoreSymptomService {
     }
 
     /**
-     * Busca sintomas por ponto
+     * Retrieves all symptoms associated with a specific acupuncture point.
+     *
+     * @param pointId The Firestore document ID of the point
+     * @return List of symptoms that can be treated by the specified point
      */
     public List<FirestoreSymptom> findByPointId(String pointId) {
         log.debug("Buscando sintomas por ponto: {}", pointId);
@@ -61,7 +90,10 @@ public class FirestoreSymptomService {
     }
 
     /**
-     * Busca sintomas por nome (busca parcial)
+     * Searches symptoms by partial name match (case-insensitive).
+     *
+     * @param name The search term to match against symptom names
+     * @return List of symptoms with names containing the search term
      */
     public List<FirestoreSymptom> findByNameContaining(String name) {
         log.debug("Buscando sintomas por nome: {}", name);
@@ -69,7 +101,10 @@ public class FirestoreSymptomService {
     }
 
     /**
-     * Busca sintomas por tag
+     * Retrieves all symptoms with a specific tag.
+     *
+     * @param tag The tag to search for
+     * @return List of symptoms with the specified tag
      */
     public List<FirestoreSymptom> findByTag(String tag) {
         log.debug("Buscando sintomas por tag: {}", tag);
@@ -77,7 +112,11 @@ public class FirestoreSymptomService {
     }
 
     /**
-     * Cria um novo sintoma
+     * Creates a new symptom.
+     *
+     * @param symptom The symptom entity to create (name must be unique)
+     * @return The created symptom with generated Firestore ID
+     * @throws IllegalArgumentException if a symptom with the same name already exists
      */
     public FirestoreSymptom createSymptom(FirestoreSymptom symptom) {
         log.debug("Criando novo sintoma: {}", symptom.getName());
@@ -106,7 +145,14 @@ public class FirestoreSymptomService {
     }
 
     /**
-     * Atualiza um sintoma existente
+     * Updates an existing symptom.
+     * Only non-null fields in the updates object will be applied.
+     *
+     * @param id The Firestore document ID of the symptom to update
+     * @param updates The symptom entity containing fields to update
+     * @return The updated symptom
+     * @throws IllegalArgumentException if symptom is not found (validation phase)
+     *         or if the new name already exists in another symptom (uniqueness check)
      */
     public FirestoreSymptom updateSymptom(String id, FirestoreSymptom updates) {
         log.debug("Atualizando sintoma: {}", id);
@@ -150,7 +196,10 @@ public class FirestoreSymptomService {
     }
 
     /**
-     * Deleta um sintoma
+     * Deletes a symptom.
+     *
+     * @param id The Firestore document ID of the symptom to delete
+     * @throws IllegalArgumentException if symptom not found
      */
     public void deleteSymptom(String id) {
         log.debug("Deletando sintoma: {}", id);
