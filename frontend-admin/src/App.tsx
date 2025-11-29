@@ -82,34 +82,36 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 
 function AppRoutes() {
   return (
-    <Routes>
-      <Route
-        path="/login"
-        element={
-          <PublicRoute>
-            <Login />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <Layout />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<Dashboard />} />
-        <Route path="points" element={<Points />} />
-        <Route path="points/new" element={<PointEdit />} />
-        <Route path="points/:id" element={<PointEdit />} />
-        <Route path="points/:id/edit" element={<PointEdit />} />
-        <Route path="meridians" element={<Meridians />} />
-        <Route path="meridians/:id" element={<Meridians />} />
-        <Route path="users" element={<Users />} />
-      </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="points" element={<Points />} />
+          <Route path="points/new" element={<PointEdit />} />
+          <Route path="points/:id" element={<PointEdit />} />
+          <Route path="points/:id/edit" element={<PointEdit />} />
+          <Route path="meridians" element={<Meridians />} />
+          <Route path="meridians/:id" element={<Meridians />} />
+          <Route path="users" element={<Users />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Suspense>
   );
 }
 
