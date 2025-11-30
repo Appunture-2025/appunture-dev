@@ -13,11 +13,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSymptomsStore } from "../../stores/symptomsStore";
-import { COLORS, SPACING, SYMPTOM_CATEGORIES } from "../../utils/constants";
+import { SPACING, SYMPTOM_CATEGORIES } from "../../utils/constants";
+import { useThemeColors } from "../../stores/themeStore";
 import SearchBar from "../../components/SearchBar";
 import { Symptom } from "../../types/api";
 
 export default function SymptomsScreen() {
+  const colors = useThemeColors();
   const router = useRouter();
   const {
     symptoms,
@@ -114,7 +116,7 @@ export default function SymptomsScreen() {
         <Ionicons
           name="medical-outline"
           size={24}
-          color={COLORS.primary}
+          color={colors.primary}
           style={styles.symptomIcon}
           importantForAccessibility="no-hide-descendants"
         />
@@ -127,7 +129,7 @@ export default function SymptomsScreen() {
         <Ionicons
           name="chevron-forward"
           size={20}
-          color={COLORS.textSecondary}
+          color={colors.textSecondary}
           importantForAccessibility="no-hide-descendants"
         />
       </View>
@@ -189,7 +191,7 @@ export default function SymptomsScreen() {
       <Ionicons
         name="medical-outline"
         size={64}
-        color={COLORS.textSecondary}
+        color={colors.textSecondary}
         importantForAccessibility="no-hide-descendants"
       />
       <Text style={styles.emptyTitle}>Nenhum sintoma encontrado</Text>
@@ -251,7 +253,7 @@ export default function SymptomsScreen() {
 
       {isLoading && !refreshing && (
         <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color={COLORS.primary} />
+          <ActivityIndicator size="large" color={colors.primary} />
         </View>
       )}
     </SafeAreaView>

@@ -11,7 +11,7 @@ import {
 import { Stack, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useSyncStore } from "../stores/syncStore";
-import { COLORS } from "../utils/constants";
+import { useThemeColors } from "../stores/themeStore";
 import type { SyncOperation } from "../types/database";
 
 const EntityTypeLabels: Record<string, string> = {
@@ -32,14 +32,15 @@ const OperationLabels: Record<string, string> = {
 
 function formatTimestamp(timestamp: number | string): string {
   try {
-    const date = typeof timestamp === "number" 
-      ? new Date(timestamp) 
-      : new Date(parseInt(String(timestamp), 10));
-    
+    const date =
+      typeof timestamp === "number"
+        ? new Date(timestamp)
+        : new Date(parseInt(String(timestamp), 10));
+
     if (isNaN(date.getTime())) {
       return "Data inválida";
     }
-    
+
     return date.toLocaleString("pt-BR", {
       day: "2-digit",
       month: "2-digit",
@@ -61,40 +62,63 @@ function OperationItem({
   onRetry?: () => void;
   onClear?: () => void;
 }) {
-  const entityLabel = EntityTypeLabels[operation.entity_type] || operation.entity_type;
-  const operationLabel = OperationLabels[operation.operation] || operation.operation;
+  const colors = useThemeColors();
+  const entityLabel =
+    EntityTypeLabels[operation.entity_type] || operation.entity_type;
+  const operationLabel =
+    OperationLabels[operation.operation] || operation.operation;
   const isFailed = operation.status === "failed";
 
   return (
-    <View style={[styles.operationCard, isFailed && styles.failedCard]}>
+    <View
+      style={[
+        styles.operationCard,
+        {
+          backgroundColor: colors.background,
+          borderLeftColor: isFailed ? colors.error : colors.primary,
+        },
+      ]}
+    >
       <View style={styles.operationHeader}>
         <View style={styles.operationInfo}>
           <Ionicons
             name={isFailed ? "close-circle" : "time-outline"}
             size={20}
-            color={isFailed ? COLORS.error : COLORS.primary}
+            color={isFailed ? colors.error : colors.primary}
           />
-          <Text style={styles.operationTitle}>
+          <Text style={[styles.operationTitle, { color: colors.text }]}>
             {operationLabel} {entityLabel}
           </Text>
         </View>
         {operation.retry_count > 0 && (
-          <View style={styles.retryBadge}>
-            <Text style={styles.retryText}>
+          <View
+            style={[
+              styles.retryBadge,
+              { backgroundColor: colors.textSecondary },
+            ]}
+          >
+            <Text style={[styles.retryText, { color: colors.surface }]}>
               Tentativa {operation.retry_count}/{5}
             </Text>
           </View>
         )}
       </View>
 
-      <Text style={styles.operationTimestamp}>
+      <Text
+        style={[styles.operationTimestamp, { color: colors.textSecondary }]}
+      >
         {formatTimestamp(operation.timestamp)}
       </Text>
 
       {isFailed && operation.last_error && (
         <View style={styles.errorContainer}>
-          <Text style={styles.errorLabel}>Erro:</Text>
-          <Text style={styles.errorText} numberOfLines={2}>
+          <Text style={[styles.errorLabel, { color: colors.error }]}>
+            Erro:
+          </Text>
+          <Text
+            style={[styles.errorText, { color: colors.error }]}
+            numberOfLines={2}
+          >
             {operation.last_error}
           </Text>
         </View>
@@ -104,20 +128,36 @@ function OperationItem({
         <View style={styles.actionButtons}>
           {onRetry && (
             <TouchableOpacity
-              style={[styles.actionButton, styles.retryButton]}
+              style={[
+                styles.actionButton,
+                styles.retryButton,
+                { backgroundColor: colors.primary },
+              ]}
               onPress={onRetry}
             >
-              <Ionicons name="refresh" size={16} color={COLORS.surface} />
-              <Text style={styles.actionButtonText}>Tentar Novamente</Text>
+              <Ionicons name="refresh" size={16} color={colors.surface} />
+              <Text
+                style={[styles.actionButtonText, { color: colors.surface }]}
+              >
+                Tentar Novamente
+              </Text>
             </TouchableOpacity>
           )}
           {onClear && (
             <TouchableOpacity
-              style={[styles.actionButton, styles.clearButton]}
+              style={[
+                styles.actionButton,
+                styles.clearButton,
+                { backgroundColor: colors.error },
+              ]}
               onPress={onClear}
             >
-              <Ionicons name="trash-outline" size={16} color={COLORS.surface} />
-              <Text style={styles.actionButtonText}>Remover</Text>
+              <Ionicons name="trash-outline" size={16} color={colors.surface} />
+              <Text
+                style={[styles.actionButtonText, { color: colors.surface }]}
+              >
+                Remover
+              </Text>
             </TouchableOpacity>
           )}
         </View>
@@ -128,6 +168,7 @@ function OperationItem({
 
 export default function SyncStatusScreen() {
   const router = useRouter();
+  const colors = useThemeColors();
   const {
     pendingOperations,
     pendingImages,
@@ -154,19 +195,13 @@ export default function SyncStatusScreen() {
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await Promise.all([
-      refreshPendingOperations(),
-      refreshFailedOperations(),
-    ]);
+    await Promise.all([refreshPendingOperations(), refreshFailedOperations()]);
     setRefreshing(false);
   };
 
   const handleSyncNow = async () => {
     if (!isOnline) {
-      Alert.alert(
-        "Sem Conexão",
-        "Conecte-se à internet para sincronizar."
-      );
+      Alert.alert("Sem Conexão", "Conecte-se à internet para sincronizar.");
       return;
     }
 
@@ -174,10 +209,7 @@ export default function SyncStatusScreen() {
       await syncAll();
       Alert.alert("Sucesso", "Sincronização concluída!");
     } catch (error) {
-      Alert.alert(
-        "Erro",
-        "Falha ao sincronizar. Tente novamente."
-      );
+      Alert.alert("Erro", "Falha ao sincronizar. Tente novamente.");
     }
   };
 
@@ -223,40 +255,53 @@ export default function SyncStatusScreen() {
         options={{
           title: "Status de Sincronização",
           headerStyle: {
-            backgroundColor: COLORS.primary,
+            backgroundColor: colors.primary,
           },
-          headerTintColor: COLORS.surface,
+          headerTintColor: colors.surface,
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => router.back()}
               style={{ marginLeft: 8 }}
             >
-              <Ionicons name="arrow-back" size={24} color={COLORS.surface} />
+              <Ionicons name="arrow-back" size={24} color={colors.surface} />
             </TouchableOpacity>
           ),
         }}
       />
 
       <ScrollView
-        style={styles.container}
+        style={[styles.container, { backgroundColor: colors.background }]}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
         }
       >
         {/* Status Card */}
-        <View style={styles.statusCard}>
+        <View
+          style={[
+            styles.statusCard,
+            {
+              backgroundColor: colors.surface,
+              borderBottomColor: colors.border,
+            },
+          ]}
+        >
           <View style={styles.statusRow}>
             <Ionicons
               name={isOnline ? "cloud-done" : "cloud-offline"}
               size={48}
-              color={isOnline ? COLORS.success : COLORS.textSecondary}
+              color={isOnline ? colors.success : colors.textSecondary}
             />
             <View style={styles.statusInfo}>
-              <Text style={styles.statusTitle}>
+              <Text style={[styles.statusTitle, { color: colors.text }]}>
                 {isOnline ? "Online" : "Offline"}
               </Text>
               {lastSync && (
-                <Text style={styles.statusSubtitle}>
+                <Text
+                  style={[
+                    styles.statusSubtitle,
+                    { color: colors.textSecondary },
+                  ]}
+                >
                   Última sincronização: {formatTimestamp(lastSync)}
                 </Text>
               )}
@@ -267,13 +312,15 @@ export default function SyncStatusScreen() {
             <TouchableOpacity
               style={[
                 styles.syncButton,
-                (syncInProgress || totalPending === 0) && styles.syncButtonDisabled,
+                { backgroundColor: colors.primary },
+                (syncInProgress || totalPending === 0) &&
+                  styles.syncButtonDisabled,
               ]}
               onPress={handleSyncNow}
               disabled={syncInProgress || totalPending === 0}
             >
-              <Ionicons name="sync" size={20} color={COLORS.surface} />
-              <Text style={styles.syncButtonText}>
+              <Ionicons name="sync" size={20} color={colors.surface} />
+              <Text style={[styles.syncButtonText, { color: colors.surface }]}>
                 {syncInProgress ? "Sincronizando..." : "Sincronizar Agora"}
               </Text>
             </TouchableOpacity>
@@ -281,30 +328,62 @@ export default function SyncStatusScreen() {
         </View>
 
         {/* Pending Operations Summary */}
-        <View style={styles.section}>
+        <View style={[styles.section, { backgroundColor: colors.surface }]}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Operações Pendentes</Text>
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>{totalPending}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              Operações Pendentes
+            </Text>
+            <View style={[styles.badge, { backgroundColor: colors.primary }]}>
+              <Text style={[styles.badgeText, { color: colors.surface }]}>
+                {totalPending}
+              </Text>
             </View>
           </View>
 
           {totalPending === 0 ? (
             <View style={styles.emptyState}>
-              <Ionicons name="checkmark-circle" size={48} color={COLORS.success} />
-              <Text style={styles.emptyStateText}>
+              <Ionicons
+                name="checkmark-circle"
+                size={48}
+                color={colors.success}
+              />
+              <Text
+                style={[styles.emptyStateText, { color: colors.textSecondary }]}
+              >
                 Todas as operações foram sincronizadas!
               </Text>
             </View>
           ) : (
             <View style={styles.summaryGrid}>
-              <View style={styles.summaryItem}>
-                <Text style={styles.summaryValue}>{pendingOperations}</Text>
-                <Text style={styles.summaryLabel}>Operações</Text>
+              <View
+                style={[
+                  styles.summaryItem,
+                  { backgroundColor: colors.background },
+                ]}
+              >
+                <Text style={[styles.summaryValue, { color: colors.primary }]}>
+                  {pendingOperations}
+                </Text>
+                <Text
+                  style={[styles.summaryLabel, { color: colors.textSecondary }]}
+                >
+                  Operações
+                </Text>
               </View>
-              <View style={styles.summaryItem}>
-                <Text style={styles.summaryValue}>{pendingImages}</Text>
-                <Text style={styles.summaryLabel}>Imagens</Text>
+              <View
+                style={[
+                  styles.summaryItem,
+                  { backgroundColor: colors.background },
+                ]}
+              >
+                <Text style={[styles.summaryValue, { color: colors.primary }]}>
+                  {pendingImages}
+                </Text>
+                <Text
+                  style={[styles.summaryLabel, { color: colors.textSecondary }]}
+                >
+                  Imagens
+                </Text>
               </View>
             </View>
           )}
@@ -312,28 +391,58 @@ export default function SyncStatusScreen() {
 
         {/* Failed Operations */}
         {failedOperations.length > 0 && (
-          <View style={styles.section}>
+          <View style={[styles.section, { backgroundColor: colors.surface }]}>
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Operações Falhadas</Text>
-              <View style={[styles.badge, styles.errorBadge]}>
-                <Text style={styles.badgeText}>{failedOperations.length}</Text>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                Operações Falhadas
+              </Text>
+              <View
+                style={[
+                  styles.badge,
+                  styles.errorBadge,
+                  { backgroundColor: colors.error },
+                ]}
+              >
+                <Text style={[styles.badgeText, { color: colors.surface }]}>
+                  {failedOperations.length}
+                </Text>
               </View>
             </View>
 
             <View style={styles.bulkActions}>
               <TouchableOpacity
-                style={[styles.bulkButton, styles.retryButton]}
+                style={[
+                  styles.bulkButton,
+                  styles.retryButton,
+                  { backgroundColor: colors.primary },
+                ]}
                 onPress={handleRetryAll}
               >
-                <Ionicons name="refresh" size={18} color={COLORS.surface} />
-                <Text style={styles.bulkButtonText}>Tentar Todas</Text>
+                <Ionicons name="refresh" size={18} color={colors.surface} />
+                <Text
+                  style={[styles.bulkButtonText, { color: colors.surface }]}
+                >
+                  Tentar Todas
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.bulkButton, styles.clearButton]}
+                style={[
+                  styles.bulkButton,
+                  styles.clearButton,
+                  { backgroundColor: colors.error },
+                ]}
                 onPress={handleClearAll}
               >
-                <Ionicons name="trash-outline" size={18} color={COLORS.surface} />
-                <Text style={styles.bulkButtonText}>Limpar Todas</Text>
+                <Ionicons
+                  name="trash-outline"
+                  size={18}
+                  color={colors.surface}
+                />
+                <Text
+                  style={[styles.bulkButtonText, { color: colors.surface }]}
+                >
+                  Limpar Todas
+                </Text>
               </TouchableOpacity>
             </View>
 
@@ -354,9 +463,11 @@ export default function SyncStatusScreen() {
         )}
 
         {/* Help Text */}
-        <View style={styles.helpSection}>
-          <Text style={styles.helpTitle}>💡 Dica</Text>
-          <Text style={styles.helpText}>
+        <View style={[styles.helpSection, { backgroundColor: colors.surface }]}>
+          <Text style={[styles.helpTitle, { color: colors.text }]}>
+            💡 Dica
+          </Text>
+          <Text style={[styles.helpText, { color: colors.textSecondary }]}>
             As operações são sincronizadas automaticamente quando você volta a
             ficar online. Operações falhadas podem ser tentadas novamente
             manualmente.

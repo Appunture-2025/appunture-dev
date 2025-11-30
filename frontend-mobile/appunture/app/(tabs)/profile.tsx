@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "../../stores/authStore";
 import { useSyncStore } from "../../stores/syncStore";
-import { COLORS } from "../../utils/constants";
+import { useThemeStore, useThemeColors } from "../../stores/themeStore";
 
 interface SettingsOption {
   id: string;
@@ -29,6 +29,8 @@ export default function ProfileScreen() {
   const router = useRouter();
   const { user, logout } = useAuthStore();
   const { isOnline, lastSync } = useSyncStore();
+  const { mode, setMode, isDark } = useThemeStore();
+  const colors = useThemeColors();
   const [notifications, setNotifications] = useState(true);
   const [offlineMode, setOfflineMode] = useState(false);
 
@@ -41,6 +43,24 @@ export default function ProfileScreen() {
         onPress: logout,
       },
     ]);
+  };
+
+  const handleThemeCycle = () => {
+    // Cycle through: light -> dark -> system -> light
+    const nextMode =
+      mode === "light" ? "dark" : mode === "dark" ? "system" : "light";
+    setMode(nextMode);
+  };
+
+  const getThemeLabel = () => {
+    switch (mode) {
+      case "light":
+        return "Claro";
+      case "dark":
+        return "Escuro";
+      case "system":
+        return "Automático";
+    }
   };
 
   const settings: SettingsOption[] = [
@@ -85,6 +105,14 @@ export default function ProfileScreen() {
       icon: "cloud-offline-outline",
       value: offlineMode,
       onToggle: setOfflineMode,
+    },
+    {
+      id: "theme",
+      title: "Tema",
+      subtitle: `Modo ${getThemeLabel()}`,
+      type: "navigation",
+      icon: isDark ? "moon-outline" : "sunny-outline",
+      onPress: handleThemeCycle,
     },
     {
       id: "favorites",
@@ -135,7 +163,7 @@ export default function ProfileScreen() {
     return (
       <TouchableOpacity
         key={item.id}
-        style={styles.settingItem}
+        style={[styles.settingItem, { borderBottomColor: colors.border }]}
         onPress={item.onPress}
         disabled={isToggle}
         accessibilityRole={isToggle ? "none" : "button"}
@@ -148,13 +176,16 @@ export default function ProfileScreen() {
           <View
             style={[
               styles.iconContainer,
-              item.id === "logout" && styles.logoutIconContainer,
+              { backgroundColor: colors.background },
+              item.id === "logout" && {
+                backgroundColor: isDark ? "#4a2020" : "#fee2e2",
+              },
             ]}
           >
             <Ionicons
               name={item.icon}
               size={24}
-              color={item.id === "logout" ? COLORS.error : COLORS.primary}
+              color={item.id === "logout" ? colors.error : colors.primary}
               importantForAccessibility="no-hide-descendants"
             />
           </View>
@@ -162,13 +193,21 @@ export default function ProfileScreen() {
             <Text
               style={[
                 styles.settingTitle,
-                item.id === "logout" && styles.logoutText,
+                { color: colors.text },
+                item.id === "logout" && { color: colors.error },
               ]}
             >
               {item.title}
             </Text>
             {item.subtitle && (
-              <Text style={styles.settingSubtitle}>{item.subtitle}</Text>
+              <Text
+                style={[
+                  styles.settingSubtitle,
+                  { color: colors.textSecondary },
+                ]}
+              >
+                {item.subtitle}
+              </Text>
             )}
           </View>
         </View>
@@ -178,8 +217,8 @@ export default function ProfileScreen() {
             <Switch
               value={item.value}
               onValueChange={item.onToggle}
-              trackColor={{ false: COLORS.border, true: COLORS.primary }}
-              thumbColor={COLORS.surface}
+              trackColor={{ false: colors.border, true: colors.primary }}
+              thumbColor={colors.surface}
               accessibilityRole="switch"
               accessibilityLabel={item.title}
               accessibilityHint={item.subtitle}
@@ -189,7 +228,7 @@ export default function ProfileScreen() {
             <Ionicons
               name="chevron-forward"
               size={20}
-              color={COLORS.textSecondary}
+              color={colors.textSecondary}
               importantForAccessibility="no-hide-descendants"
             />
           )}
@@ -199,23 +238,28 @@ export default function ProfileScreen() {
   };
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={[styles.container, { backgroundColor: colors.background }]}
+      showsVerticalScrollIndicator={false}
+    >
       {/* User Info */}
       <View
-        style={styles.userCard}
+        style={[styles.userCard, { backgroundColor: colors.surface }]}
         accessibilityRole="header"
         accessibilityLabel={`Perfil de ${user?.name || "Usuário"}`}
       >
-        <View style={styles.avatar}>
+        <View style={[styles.avatar, { backgroundColor: colors.background }]}>
           <Ionicons
             name="person"
             size={40}
-            color={COLORS.primary}
+            color={colors.primary}
             importantForAccessibility="no-hide-descendants"
           />
         </View>
-        <Text style={styles.userName}>{user?.name || "Usuário"}</Text>
-        <Text style={styles.userEmail}>
+        <Text style={[styles.userName, { color: colors.text }]}>
+          {user?.name || "Usuário"}
+        </Text>
+        <Text style={[styles.userEmail, { color: colors.textSecondary }]}>
           {user?.email || "email@exemplo.com"}
         </Text>
 
@@ -226,8 +270,8 @@ export default function ProfileScreen() {
               styles.emailBadge,
               {
                 backgroundColor: user.emailVerified
-                  ? COLORS.success
-                  : COLORS.warning,
+                  ? colors.success
+                  : colors.warning,
               },
             ]}
             accessibilityLabel={
@@ -237,10 +281,10 @@ export default function ProfileScreen() {
             <Ionicons
               name={user.emailVerified ? "checkmark-circle" : "alert-circle"}
               size={14}
-              color={COLORS.surface}
+              color={colors.surface}
               importantForAccessibility="no-hide-descendants"
             />
-            <Text style={styles.emailBadgeText}>
+            <Text style={[styles.emailBadgeText, { color: colors.surface }]}>
               {user.emailVerified ? "Email verificado" : "Email não verificado"}
             </Text>
           </View>
@@ -262,10 +306,10 @@ export default function ProfileScreen() {
           <View
             style={[
               styles.statusIndicator,
-              { backgroundColor: isOnline ? COLORS.success : COLORS.warning },
+              { backgroundColor: isOnline ? colors.success : colors.warning },
             ]}
           />
-          <Text style={styles.syncText}>
+          <Text style={[styles.syncText, { color: colors.textSecondary }]}>
             {isOnline ? "Online" : "Offline"}
             {lastSync && (
               <Text style={styles.lastSync}>
@@ -278,15 +322,23 @@ export default function ProfileScreen() {
       </View>
 
       {/* Settings */}
-      <View style={styles.settingsSection}>
-        <Text style={styles.sectionTitle}>Configurações</Text>
+      <View
+        style={[styles.settingsSection, { backgroundColor: colors.surface }]}
+      >
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>
+          Configurações
+        </Text>
         {settings.map(renderSettingItem)}
       </View>
 
       {/* App Info */}
       <View style={styles.appInfo}>
-        <Text style={styles.appInfoText}>Appunture - Acupuntura Digital</Text>
-        <Text style={styles.versionText}>Versão 1.0.0</Text>
+        <Text style={[styles.appInfoText, { color: colors.textSecondary }]}>
+          Appunture - Acupuntura Digital
+        </Text>
+        <Text style={[styles.versionText, { color: colors.textSecondary }]}>
+          Versão 1.0.0
+        </Text>
       </View>
     </ScrollView>
   );
@@ -295,10 +347,8 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   userCard: {
-    backgroundColor: COLORS.surface,
     margin: 16,
     borderRadius: 12,
     padding: 24,
@@ -313,7 +363,6 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: COLORS.background,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 16,
@@ -321,12 +370,10 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 24,
     fontWeight: "bold",
-    color: COLORS.text,
     marginBottom: 4,
   },
   userEmail: {
     fontSize: 16,
-    color: COLORS.textSecondary,
     marginBottom: 12,
   },
   emailBadge: {
@@ -341,7 +388,6 @@ const styles = StyleSheet.create({
   emailBadgeText: {
     fontSize: 12,
     fontWeight: "500",
-    color: COLORS.surface,
   },
   syncStatus: {
     flexDirection: "row",
@@ -355,14 +401,12 @@ const styles = StyleSheet.create({
   },
   syncText: {
     fontSize: 14,
-    color: COLORS.textSecondary,
     textAlign: "center",
   },
   lastSync: {
     fontSize: 12,
   },
   settingsSection: {
-    backgroundColor: COLORS.surface,
     marginHorizontal: 16,
     borderRadius: 12,
     overflow: "hidden",
@@ -375,7 +419,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: COLORS.text,
     padding: 16,
     paddingBottom: 8,
   },
@@ -386,7 +429,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
   },
   settingLeft: {
     flexDirection: "row",
@@ -397,13 +439,9 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: COLORS.background,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
-  },
-  logoutIconContainer: {
-    backgroundColor: "#fee2e2",
   },
   settingText: {
     flex: 1,
@@ -411,14 +449,9 @@ const styles = StyleSheet.create({
   settingTitle: {
     fontSize: 16,
     fontWeight: "500",
-    color: COLORS.text,
-  },
-  logoutText: {
-    color: COLORS.error,
   },
   settingSubtitle: {
     fontSize: 14,
-    color: COLORS.textSecondary,
     marginTop: 2,
   },
   settingRight: {
@@ -430,11 +463,9 @@ const styles = StyleSheet.create({
   },
   appInfoText: {
     fontSize: 16,
-    color: COLORS.textSecondary,
     marginBottom: 4,
   },
   versionText: {
     fontSize: 14,
-    color: COLORS.textSecondary,
   },
 });

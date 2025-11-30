@@ -10,10 +10,13 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { usePointsStore } from "../../stores/pointsStore";
 import { useAuthStore } from "../../stores/authStore";
-import { COLORS, SPACING } from "../../utils/constants";
+import { useThemeColors, useThemeStore } from "../../stores/themeStore";
+import { SPACING } from "../../utils/constants";
 import PointCard from "../../components/PointCard";
 
 export default function FavoritesScreen() {
+  const colors = useThemeColors();
+  const { isDark } = useThemeStore();
   const {
     favorites,
     loading,
@@ -79,7 +82,7 @@ export default function FavoritesScreen() {
     if (!loading || favorites.length === 0) return null;
     return (
       <View style={{ paddingVertical: 20 }}>
-        <ActivityIndicator size="small" color={COLORS.primary} />
+        <ActivityIndicator size="small" color={colors.primary} />
       </View>
     );
   };
@@ -94,8 +97,10 @@ export default function FavoritesScreen() {
           : "Login necessário. Faça login para salvar seus pontos favoritos."
       }
     >
-      <Text style={styles.emptyTitle}>Nenhum favorito ainda</Text>
-      <Text style={styles.emptyText}>
+      <Text style={[styles.emptyTitle, { color: colors.text }]}>
+        Nenhum favorito ainda
+      </Text>
+      <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
         {isAuthenticated
           ? "Adicione pontos aos favoritos para vê-los aqui."
           : "Faça login para salvar seus pontos favoritos."}
@@ -105,14 +110,18 @@ export default function FavoritesScreen() {
 
   if (!isAuthenticated) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: colors.background }]}
+      >
         <View
           style={styles.authRequired}
           accessibilityRole="alert"
           accessibilityLabel="Login Necessário. Para usar os favoritos, você precisa fazer login."
         >
-          <Text style={styles.authTitle}>Login Necessário</Text>
-          <Text style={styles.authText}>
+          <Text style={[styles.authTitle, { color: colors.text }]}>
+            Login Necessário
+          </Text>
+          <Text style={[styles.authText, { color: colors.textSecondary }]}>
             Para usar os favoritos, você precisa fazer login.
           </Text>
         </View>
@@ -121,10 +130,14 @@ export default function FavoritesScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <View style={styles.header}>
-        <Text style={styles.title}>Meus Favoritos</Text>
-        <Text style={styles.subtitle}>
+        <Text style={[styles.title, { color: colors.text }]}>
+          Meus Favoritos
+        </Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
           {favorites.length} ponto{favorites.length !== 1 ? "s" : ""} favoritado
           {favorites.length !== 1 ? "s" : ""}
         </Text>
@@ -145,8 +158,13 @@ export default function FavoritesScreen() {
       />
 
       {loading && favorites.length === 0 && (
-        <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color={COLORS.primary} />
+        <View
+          style={[
+            styles.loadingOverlay,
+            { backgroundColor: isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)" },
+          ]}
+        >
+          <ActivityIndicator size="large" color={colors.primary} />
         </View>
       )}
     </SafeAreaView>
@@ -156,7 +174,6 @@ export default function FavoritesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   header: {
     padding: SPACING.md,
@@ -165,12 +182,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: COLORS.text,
     marginBottom: SPACING.xs,
   },
   subtitle: {
     fontSize: 14,
-    color: COLORS.textSecondary,
   },
   listContainer: {
     padding: SPACING.md,
@@ -186,13 +201,11 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 20,
     fontWeight: "600",
-    color: COLORS.text,
     marginBottom: SPACING.sm,
     textAlign: "center",
   },
   emptyText: {
     fontSize: 16,
-    color: COLORS.textSecondary,
     textAlign: "center",
     lineHeight: 24,
   },
@@ -205,13 +218,11 @@ const styles = StyleSheet.create({
   authTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    color: COLORS.text,
     marginBottom: SPACING.md,
     textAlign: "center",
   },
   authText: {
     fontSize: 16,
-    color: COLORS.textSecondary,
     textAlign: "center",
     lineHeight: 24,
   },
@@ -221,7 +232,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.1)",
     justifyContent: "center",
     alignItems: "center",
   },

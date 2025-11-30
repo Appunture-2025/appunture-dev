@@ -16,6 +16,7 @@ import {
   Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useThemeColors } from "../stores/themeStore";
 import { COLORS } from "../utils/constants";
 
 /**
@@ -170,40 +171,45 @@ function ErrorScreen({
   title = "Algo deu errado",
   message = "Ocorreu um erro inesperado. Por favor, tente novamente.",
 }: ErrorScreenProps) {
+  const colors = useThemeColors();
   const [showStack, setShowStack] = React.useState(false);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.content}>
         {/* Error Icon */}
         <View style={styles.iconContainer}>
-          <Ionicons name="alert-circle" size={80} color={COLORS.error} />
+          <Ionicons name="alert-circle" size={80} color={colors.error} />
         </View>
 
         {/* Error Title */}
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
 
         {/* Error Message */}
-        <Text style={styles.message}>{message}</Text>
+        <Text style={[styles.message, { color: colors.textSecondary }]}>
+          {message}
+        </Text>
 
         {/* Error Name (in dev mode) */}
         {showDetails && (
-          <Text style={styles.errorName}>
+          <Text style={[styles.errorName, { color: colors.error }]}>
             {error.name}: {error.message}
           </Text>
         )}
 
         {/* Retry Button */}
         {onRetry && (
-          <TouchableOpacity 
-            style={styles.retryButton} 
+          <TouchableOpacity
+            style={[styles.retryButton, { backgroundColor: colors.primary }]}
             onPress={onRetry}
             accessibilityRole="button"
             accessibilityLabel="Tentar novamente"
             accessibilityHint="Tenta recarregar o conteúdo que apresentou erro"
           >
-            <Ionicons name="refresh" size={20} color={COLORS.surface} />
-            <Text style={styles.retryButtonText}>Tentar Novamente</Text>
+            <Ionicons name="refresh" size={20} color={colors.surface} />
+            <Text style={[styles.retryButtonText, { color: colors.surface }]}>
+              Tentar Novamente
+            </Text>
           </TouchableOpacity>
         )}
 
@@ -213,15 +219,24 @@ function ErrorScreen({
             style={styles.detailsToggle}
             onPress={() => setShowStack(!showStack)}
             accessibilityRole="button"
-            accessibilityLabel={showStack ? "Ocultar detalhes do erro" : "Mostrar detalhes do erro"}
+            accessibilityLabel={
+              showStack
+                ? "Ocultar detalhes do erro"
+                : "Mostrar detalhes do erro"
+            }
             accessibilityState={{ expanded: showStack }}
           >
             <Ionicons
               name={showStack ? "chevron-up" : "chevron-down"}
               size={20}
-              color={COLORS.textSecondary}
+              color={colors.textSecondary}
             />
-            <Text style={styles.detailsToggleText}>
+            <Text
+              style={[
+                styles.detailsToggleText,
+                { color: colors.textSecondary },
+              ]}
+            >
               {showStack ? "Ocultar detalhes" : "Mostrar detalhes"}
             </Text>
           </TouchableOpacity>
@@ -229,11 +244,21 @@ function ErrorScreen({
 
         {/* Stack Trace */}
         {showDetails && showStack && errorInfo && (
-          <ScrollView style={styles.stackContainer}>
-            <Text style={styles.stackTitle}>Component Stack:</Text>
-            <Text style={styles.stackText}>{errorInfo.componentStack}</Text>
-            <Text style={styles.stackTitle}>Error Stack:</Text>
-            <Text style={styles.stackText}>{error.stack}</Text>
+          <ScrollView
+            style={[styles.stackContainer, { backgroundColor: colors.surface }]}
+          >
+            <Text style={[styles.stackTitle, { color: colors.text }]}>
+              Component Stack:
+            </Text>
+            <Text style={[styles.stackText, { color: colors.textSecondary }]}>
+              {errorInfo.componentStack}
+            </Text>
+            <Text style={[styles.stackTitle, { color: colors.text }]}>
+              Error Stack:
+            </Text>
+            <Text style={[styles.stackText, { color: colors.textSecondary }]}>
+              {error.stack}
+            </Text>
           </ScrollView>
         )}
       </View>

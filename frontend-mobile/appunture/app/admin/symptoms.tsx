@@ -8,6 +8,7 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
+import { useThemeColors } from "../../stores/themeStore";
 import { COLORS } from "../../utils/constants";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -18,6 +19,7 @@ interface Symptom {
 }
 
 export default function AdminSymptomsScreen() {
+  const colors = useThemeColors();
   const [symptoms, setSymptoms] = useState<Symptom[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -51,36 +53,43 @@ export default function AdminSymptomsScreen() {
   }, []);
 
   const renderItem = ({ item }: { item: Symptom }) => (
-    <View style={styles.card}>
+    <View style={[styles.card, { backgroundColor: colors.surface }]}>
       <View style={styles.info}>
-        <Text style={styles.name}>{item.name}</Text>
-        <Text style={styles.details}>{item.description}</Text>
+        <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
+        <Text style={[styles.details, { color: colors.textSecondary }]}>
+          {item.description}
+        </Text>
       </View>
       <TouchableOpacity
         onPress={() => Alert.alert("Ação", `Editar ${item.name}`)}
       >
-        <Ionicons name="create-outline" size={24} color={COLORS.primary} />
+        <Ionicons name="create-outline" size={24} color={colors.primary} />
       </TouchableOpacity>
     </View>
   );
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Sintomas</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View
+        style={[
+          styles.header,
+          { backgroundColor: colors.surface, borderBottomColor: colors.border },
+        ]}
+      >
+        <Text style={[styles.title, { color: colors.text }]}>Sintomas</Text>
         <TouchableOpacity
-          style={styles.addButton}
+          style={[styles.addButton, { backgroundColor: colors.primary }]}
           onPress={() => Alert.alert("Novo", "Criar novo sintoma")}
         >
-          <Ionicons name="add" size={24} color="#fff" />
+          <Ionicons name="add" size={24} color={colors.surface} />
         </TouchableOpacity>
       </View>
 
@@ -90,7 +99,9 @@ export default function AdminSymptomsScreen() {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
-          <Text style={styles.emptyText}>Nenhum sintoma cadastrado.</Text>
+          <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
+            Nenhum sintoma cadastrado.
+          </Text>
         }
       />
     </View>

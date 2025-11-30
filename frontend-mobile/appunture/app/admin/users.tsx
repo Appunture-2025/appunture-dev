@@ -8,12 +8,13 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
-import { COLORS } from "../../utils/constants";
+import { useThemeColors } from "../../stores/themeStore";
 import { apiService } from "../../services/api";
 import { User } from "../../types/user";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function AdminUsersScreen() {
+  const colors = useThemeColors();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -35,11 +36,17 @@ export default function AdminUsersScreen() {
   }, []);
 
   const renderItem = ({ item }: { item: User }) => (
-    <View style={styles.userCard}>
+    <View style={[styles.userCard, { backgroundColor: colors.surface }]}>
       <View style={styles.userInfo}>
-        <Text style={styles.userName}>{item.name || "Sem nome"}</Text>
-        <Text style={styles.userEmail}>{item.email}</Text>
-        <Text style={styles.userRole}>Role: {item.role}</Text>
+        <Text style={[styles.userName, { color: colors.text }]}>
+          {item.name || "Sem nome"}
+        </Text>
+        <Text style={[styles.userEmail, { color: colors.textSecondary }]}>
+          {item.email}
+        </Text>
+        <Text style={[styles.userRole, { color: colors.primary }]}>
+          Role: {item.role}
+        </Text>
       </View>
       <TouchableOpacity
         onPress={() => Alert.alert("Ação", `Editar ${item.name}`)}
@@ -47,7 +54,7 @@ export default function AdminUsersScreen() {
         <Ionicons
           name="ellipsis-vertical"
           size={24}
-          color={COLORS.textSecondary}
+          color={colors.textSecondary}
         />
       </TouchableOpacity>
     </View>
@@ -55,21 +62,23 @@ export default function AdminUsersScreen() {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <FlatList
         data={users}
         renderItem={renderItem}
         keyExtractor={(item) => item.id?.toString() || item.email}
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
-          <Text style={styles.emptyText}>Nenhum usuário encontrado.</Text>
+          <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
+            Nenhum usuário encontrado.
+          </Text>
         }
       />
     </View>

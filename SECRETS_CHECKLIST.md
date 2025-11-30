@@ -6,13 +6,13 @@
 
 Vá em: `Settings` → `Secrets and variables` → `Actions` → `New repository secret`
 
-| Secret | Valor | Onde obter |
-|--------|-------|------------|
-| `GCP_PROJECT_ID` | `seu-projeto-id` | Console GCP → Home → Project ID |
-| `GCP_SERVICE_ACCOUNT` | (JSON completo) | Firebase → Project Settings → Service accounts → Generate new private key |
-| `FIREBASE_PROJECT_ID` | `seu-projeto-id` | Firebase Console → Project Settings |
-| `FIREBASE_STORAGE_BUCKET` | `seu-projeto-id.appspot.com` | Firebase → Storage |
-| `EXPO_TOKEN` | `expo_xxx...` | [expo.dev](https://expo.dev) → Account Settings → Access Tokens |
+| Secret                    | Valor                        | Onde obter                                                                |
+| ------------------------- | ---------------------------- | ------------------------------------------------------------------------- |
+| `GCP_PROJECT_ID`          | `seu-projeto-id`             | Console GCP → Home → Project ID                                           |
+| `GCP_SERVICE_ACCOUNT`     | (JSON completo)              | Firebase → Project Settings → Service accounts → Generate new private key |
+| `FIREBASE_PROJECT_ID`     | `seu-projeto-id`             | Firebase Console → Project Settings                                       |
+| `FIREBASE_STORAGE_BUCKET` | `seu-projeto-id.appspot.com` | Firebase → Storage                                                        |
+| `EXPO_TOKEN`              | `expo_xxx...`                | [expo.dev](https://expo.dev) → Account Settings → Access Tokens           |
 
 ---
 
@@ -80,12 +80,14 @@ GOOGLE_AI_API_KEY=seu-api-key-gemini
 ## 🚀 Passos para Deploy
 
 ### 1. Configurar Firebase
+
 ```bash
 # Criar projeto em console.firebase.google.com
 # Habilitar: Authentication, Firestore, Storage
 ```
 
 ### 2. Configurar Google Cloud
+
 ```bash
 # Habilitar APIs
 gcloud services enable run.googleapis.com cloudbuild.googleapis.com containerregistry.googleapis.com secretmanager.googleapis.com
@@ -95,6 +97,7 @@ gcloud secrets create firebase-service-account --data-file=service-account.json
 ```
 
 ### 3. Configurar GitHub Secrets
+
 ```bash
 # Via CLI
 gh secret set GCP_PROJECT_ID --body "seu-projeto"
@@ -105,12 +108,14 @@ gh secret set EXPO_TOKEN --body "seu-token-expo"
 ```
 
 ### 4. Fazer Push
+
 ```bash
 git push origin main
 # Os workflows vão executar automaticamente
 ```
 
 ### 5. Obter URL do Backend
+
 ```bash
 # Após o deploy
 gcloud run services describe appunture-backend --region us-central1 --format='value(status.url)'
@@ -118,12 +123,14 @@ gcloud run services describe appunture-backend --region us-central1 --format='va
 ```
 
 ### 6. Atualizar .env com URL do Backend
+
 ```bash
 # Editar os .env com a URL correta
 # Fazer commit e push novamente
 ```
 
 ### 7. Build do App
+
 ```bash
 cd frontend-mobile/appunture
 eas build --platform all --profile production

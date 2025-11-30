@@ -6,8 +6,10 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { databaseService } from "../services/database";
 import { useAuthStore } from "../stores/authStore";
 import { useSyncStore } from "../stores/syncStore";
+import { useThemeStore } from "../stores/themeStore";
 import { useNotifications } from "../hooks/useNotifications";
 import { ErrorBoundary } from "../components/ErrorBoundary";
+import { ThemeProvider } from "../components/ThemeProvider";
 import { createLogger } from "../utils/logger";
 
 const logger = createLogger("RootLayout");
@@ -37,6 +39,7 @@ export default function RootLayout() {
   const loadLastSync = useSyncStore((state: any) => state.loadLastSync);
   const checkConnection = useSyncStore((state: any) => state.checkConnection);
   const processSyncQueue = useSyncStore((state: any) => state.processSyncQueue);
+  const isDark = useThemeStore((state) => state.isDark);
 
   // Inicializa push notifications
   const { pushToken, hasPermission } = useNotifications();
@@ -81,37 +84,39 @@ export default function RootLayout() {
         // In production, send to error reporting service (e.g., Crashlytics, Sentry)
       }}
     >
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <QueryClientProvider client={queryClient}>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="admin" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="point/[id]"
-              options={{
-                title: "Detalhes do Ponto",
-                headerBackTitle: "Voltar",
-              }}
-            />
-            <Stack.Screen
-              name="body-map"
-              options={{
-                title: "Mapa Corporal",
-                presentation: "modal",
-              }}
-            />
-            <Stack.Screen
-              name="modal"
-              options={{
-                presentation: "modal",
-                headerShown: false,
-              }}
-            />
-          </Stack>
-          <StatusBar style="auto" />
-        </QueryClientProvider>
-      </GestureHandlerRootView>
+      <ThemeProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <QueryClientProvider client={queryClient}>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen name="admin" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="point/[id]"
+                options={{
+                  title: "Detalhes do Ponto",
+                  headerBackTitle: "Voltar",
+                }}
+              />
+              <Stack.Screen
+                name="body-map"
+                options={{
+                  title: "Mapa Corporal",
+                  presentation: "modal",
+                }}
+              />
+              <Stack.Screen
+                name="modal"
+                options={{
+                  presentation: "modal",
+                  headerShown: false,
+                }}
+              />
+            </Stack>
+            <StatusBar style={isDark ? "light" : "dark"} />
+          </QueryClientProvider>
+        </GestureHandlerRootView>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

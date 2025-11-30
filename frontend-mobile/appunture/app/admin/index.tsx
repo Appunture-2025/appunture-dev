@@ -8,41 +8,65 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { COLORS } from "../../utils/constants";
+import { useThemeColors } from "../../stores/themeStore";
 
 interface AdminCardProps {
   title: string;
   icon: keyof typeof Ionicons.glyphMap;
   route: string;
   description: string;
+  colors: ReturnType<typeof useThemeColors>;
 }
 
-const AdminCard = ({ title, icon, route, description }: AdminCardProps) => {
+const AdminCard = ({
+  title,
+  icon,
+  route,
+  description,
+  colors,
+}: AdminCardProps) => {
   const router = useRouter();
 
   return (
     <TouchableOpacity
-      style={styles.card}
+      style={[styles.card, { backgroundColor: colors.surface }]}
       onPress={() => router.push(route as any)}
     >
-      <View style={styles.iconContainer}>
-        <Ionicons name={icon} size={32} color={COLORS.primary} />
+      <View
+        style={[styles.iconContainer, { backgroundColor: colors.background }]}
+      >
+        <Ionicons name={icon} size={32} color={colors.primary} />
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.cardTitle}>{title}</Text>
-        <Text style={styles.cardDescription}>{description}</Text>
+        <Text style={[styles.cardTitle, { color: colors.text }]}>{title}</Text>
+        <Text style={[styles.cardDescription, { color: colors.textSecondary }]}>
+          {description}
+        </Text>
       </View>
-      <Ionicons name="chevron-forward" size={24} color={COLORS.textSecondary} />
+      <Ionicons name="chevron-forward" size={24} color={colors.textSecondary} />
     </TouchableOpacity>
   );
 };
 
 export default function AdminDashboard() {
+  const colors = useThemeColors();
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.welcomeText}>Bem-vindo, Administrador</Text>
-        <Text style={styles.subtitle}>Gerencie o conteúdo do aplicativo</Text>
+    <ScrollView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
+      <View
+        style={[
+          styles.header,
+          { backgroundColor: colors.surface, borderBottomColor: colors.border },
+        ]}
+      >
+        <Text style={[styles.welcomeText, { color: colors.text }]}>
+          Bem-vindo, Administrador
+        </Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+          Gerencie o conteúdo do aplicativo
+        </Text>
       </View>
 
       <View style={styles.cardsContainer}>
@@ -51,18 +75,21 @@ export default function AdminDashboard() {
           icon="people"
           route="/admin/users"
           description="Gerenciar usuários e permissões"
+          colors={colors}
         />
         <AdminCard
           title="Pontos"
           icon="location"
           route="/admin/points"
           description="Adicionar, editar ou remover pontos"
+          colors={colors}
         />
         <AdminCard
           title="Sintomas"
           icon="medical"
           route="/admin/symptoms"
           description="Gerenciar sintomas e associações"
+          colors={colors}
         />
       </View>
     </ScrollView>

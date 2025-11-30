@@ -24,23 +24,23 @@ graph TB
         A[React Native + Expo]
         B[SQLite Local]
     end
-    
+
     subgraph "Admin Panel"
         C[React + Vite + TailwindCSS]
     end
-    
+
     subgraph "Backend"
         D[Spring Boot 3.2.5]
         E[Firebase Admin SDK]
     end
-    
+
     subgraph "Google Cloud"
         F[Cloud Run]
         G[Firestore]
         H[Firebase Auth]
         I[Firebase Storage]
     end
-    
+
     A --> D
     A --> H
     A --> B
@@ -145,19 +145,19 @@ npm run dev
 
 ## 📚 Documentação
 
-| Documento | Descrição |
-|-----------|-----------|
-| [🚀 Deploy Guide](DEPLOY_GUIDE.md) | **Guia completo de deploy para produção** |
-| [Backend README](backend-java/README.md) | API REST, endpoints, configuração |
-| [Mobile README](frontend-mobile/appunture/README.md) | App React Native, stores, sincronização |
-| [Admin README](frontend-admin/README.md) | Painel administrativo, componentes |
-| [Architecture Decisions](docs/adr/) | ADRs - decisões arquiteturais |
-| [Local Development](docs/setup/local-development.md) | Guia completo de setup local |
-| [Firebase Setup](docs/setup/firebase-setup.md) | Configuração do Firebase |
-| [Environment Variables](docs/setup/environment-variables.md) | Referência de variáveis |
-| [Troubleshooting](docs/setup/troubleshooting.md) | Resolução de problemas |
-| [Integration Guide](docs/integration.md) | Contratos de API e integração |
-| [Contributing](CONTRIBUTING.md) | Como contribuir |
+| Documento                                                    | Descrição                                 |
+| ------------------------------------------------------------ | ----------------------------------------- |
+| [🚀 Deploy Guide](DEPLOY_GUIDE.md)                           | **Guia completo de deploy para produção** |
+| [Backend README](backend-java/README.md)                     | API REST, endpoints, configuração         |
+| [Mobile README](frontend-mobile/appunture/README.md)         | App React Native, stores, sincronização   |
+| [Admin README](frontend-admin/README.md)                     | Painel administrativo, componentes        |
+| [Architecture Decisions](docs/adr/)                          | ADRs - decisões arquiteturais             |
+| [Local Development](docs/setup/local-development.md)         | Guia completo de setup local              |
+| [Firebase Setup](docs/setup/firebase-setup.md)               | Configuração do Firebase                  |
+| [Environment Variables](docs/setup/environment-variables.md) | Referência de variáveis                   |
+| [Troubleshooting](docs/setup/troubleshooting.md)             | Resolução de problemas                    |
+| [Integration Guide](docs/integration.md)                     | Contratos de API e integração             |
+| [Contributing](CONTRIBUTING.md)                              | Como contribuir                           |
 
 ## 🧪 Testes
 
@@ -179,12 +179,12 @@ npm test
 
 O projeto foi arquitetado para funcionar **100% gratuito** dentro dos limites do Firebase:
 
-| Serviço | Limite Gratuito | Uso Típico TCC |
-|---------|-----------------|----------------|
-| Firestore | 50k reads/dia | ~5k (10%) |
-| Firebase Auth | Ilimitado | ✅ |
-| Storage | 5GB total | ~500MB (10%) |
-| Cloud Run | 2M requests/mês | ~50k (2.5%) |
+| Serviço       | Limite Gratuito | Uso Típico TCC |
+| ------------- | --------------- | -------------- |
+| Firestore     | 50k reads/dia   | ~5k (10%)      |
+| Firebase Auth | Ilimitado       | ✅             |
+| Storage       | 5GB total       | ~500MB (10%)   |
+| Cloud Run     | 2M requests/mês | ~50k (2.5%)    |
 
 ## 🔒 Segurança
 

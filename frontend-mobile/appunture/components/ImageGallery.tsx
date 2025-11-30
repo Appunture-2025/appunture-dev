@@ -24,7 +24,7 @@ import Animated, {
 import { SvgUri } from "react-native-svg";
 import type { GalleryImageSource } from "../types/media";
 import { getSvgAssetUriSync } from "../utils/bodyMap";
-import { COLORS } from "../utils/constants";
+import { useThemeColors } from "../stores/themeStore";
 
 export interface ImageGalleryProps {
   images: GalleryImageSource[];
@@ -49,6 +49,7 @@ export function ImageGallery({
   onDeleteImage,
   onReorder,
 }: ImageGalleryProps) {
+  const colors = useThemeColors();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fullscreenVisible, setFullscreenVisible] = useState(false);
 
@@ -147,31 +148,53 @@ export function ImageGallery({
             <Ionicons
               name="image-outline"
               size={48}
-              color={COLORS.textSecondary}
+              color={colors.textSecondary}
             />
           )}
         </View>
       );
     },
-    []
+    [colors]
   );
 
   if (!resolvedImages.length) {
     return (
-      <View style={styles.emptyContainer} accessibilityRole="none">
-        <Ionicons name="image-outline" size={64} color={COLORS.textSecondary} accessibilityElementsHidden />
-        <Text style={styles.emptyText}>Nenhuma imagem disponível</Text>
+      <View
+        style={[
+          styles.emptyContainer,
+          { backgroundColor: colors.surface, borderColor: colors.border },
+        ]}
+        accessibilityRole="none"
+      >
+        <Ionicons
+          name="image-outline"
+          size={64}
+          color={colors.textSecondary}
+          accessibilityElementsHidden
+        />
+        <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
+          Nenhuma imagem disponível
+        </Text>
         {editable && (
           <TouchableOpacity
             testID="add-image-button"
-            style={styles.emptyAddButton}
+            style={[styles.emptyAddButton, { borderColor: colors.primary }]}
             onPress={onAddImage}
             accessibilityRole="button"
             accessibilityLabel="Adicionar imagem"
             accessibilityHint="Toque para adicionar uma nova imagem à galeria"
           >
-            <Ionicons name="add-circle" size={36} color={COLORS.primary} accessibilityElementsHidden />
-            <Text style={styles.emptyAddButtonText}>Adicionar imagem</Text>
+            <Ionicons
+              name="add-circle"
+              size={36}
+              color={colors.primary}
+              accessibilityElementsHidden
+            />
+            <Text
+              style={[styles.emptyAddButtonText, { color: colors.primary }]}
+            >
+              Adicionar imagem
+            </Text>
           </TouchableOpacity>
         )}
       </View>
@@ -211,9 +234,14 @@ export function ImageGallery({
               key={`${item.id}-${index}`}
               activeOpacity={0.9}
               onPress={openFullscreen}
-              style={styles.carouselImageWrapper}
+              style={[
+                styles.carouselImageWrapper,
+                { backgroundColor: colors.surface },
+              ]}
               accessibilityRole="button"
-              accessibilityLabel={`Imagem ${index + 1} de ${resolvedImages.length}`}
+              accessibilityLabel={`Imagem ${index + 1} de ${
+                resolvedImages.length
+              }`}
               accessibilityHint="Toque para ver em tela cheia"
             >
               {renderGalleryContent(item, styles.carouselImage)}
@@ -234,7 +262,7 @@ export function ImageGallery({
                     <Ionicons
                       name="trash-outline"
                       size={22}
-                      color={COLORS.surface}
+                      color={colors.surface}
                       accessibilityElementsHidden
                     />
                   </TouchableOpacity>
@@ -259,7 +287,7 @@ export function ImageGallery({
                       <Ionicons
                         name="arrow-back"
                         size={20}
-                        color={COLORS.surface}
+                        color={colors.surface}
                         accessibilityElementsHidden
                       />
                     </TouchableOpacity>
@@ -283,7 +311,7 @@ export function ImageGallery({
                       <Ionicons
                         name="arrow-forward"
                         size={20}
-                        color={COLORS.surface}
+                        color={colors.surface}
                         accessibilityElementsHidden
                       />
                     </TouchableOpacity>
@@ -295,13 +323,22 @@ export function ImageGallery({
         }}
       />
 
-      <View style={styles.paginationContainer} accessibilityLabel={`Imagem ${currentIndex + 1} de ${resolvedImages.length}`}>
+      <View
+        style={styles.paginationContainer}
+        accessibilityLabel={`Imagem ${currentIndex + 1} de ${
+          resolvedImages.length
+        }`}
+      >
         {resolvedImages.map((item, index) => (
           <View
             key={item.id}
             style={[
               styles.paginationDot,
-              index === currentIndex && styles.paginationDotActive,
+              { backgroundColor: colors.border },
+              index === currentIndex && {
+                backgroundColor: colors.primary,
+                width: 16,
+              },
             ]}
             accessibilityElementsHidden
           />
@@ -318,7 +355,7 @@ export function ImageGallery({
           <TouchableOpacity
             style={[
               styles.thumbnailWrapper,
-              item.index === currentIndex && styles.thumbnailWrapperActive,
+              item.index === currentIndex && { borderColor: colors.primary },
             ]}
             onPress={() => {
               carouselRef.current?.scrollTo({
@@ -339,14 +376,21 @@ export function ImageGallery({
       {editable && (
         <TouchableOpacity
           testID="add-image-floating-button"
-          style={styles.addButton}
+          style={[styles.addButton, { backgroundColor: colors.primary }]}
           onPress={onAddImage}
           accessibilityRole="button"
           accessibilityLabel="Adicionar imagem"
           accessibilityHint="Adiciona uma nova imagem à galeria"
         >
-          <Ionicons name="add" size={24} color={COLORS.surface} accessibilityElementsHidden />
-          <Text style={styles.addButtonText}>Adicionar imagem</Text>
+          <Ionicons
+            name="add"
+            size={24}
+            color={colors.surface}
+            accessibilityElementsHidden
+          />
+          <Text style={[styles.addButtonText, { color: colors.surface }]}>
+            Adicionar imagem
+          </Text>
         </TouchableOpacity>
       )}
 
@@ -364,7 +408,12 @@ export function ImageGallery({
             accessibilityRole="button"
             accessibilityLabel="Fechar visualização em tela cheia"
           >
-            <Ionicons name="close" size={36} color={COLORS.surface} accessibilityElementsHidden />
+            <Ionicons
+              name="close"
+              size={36}
+              color={colors.surface}
+              accessibilityElementsHidden
+            />
           </TouchableOpacity>
 
           {resolvedImages[currentIndex] && (

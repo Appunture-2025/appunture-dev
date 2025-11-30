@@ -15,7 +15,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { usePointsStore } from "../../stores/pointsStore";
 import { useSymptomsStore } from "../../stores/symptomsStore";
 import { useAuthStore } from "../../stores/authStore";
-import { COLORS, SPACING } from "../../utils/constants";
+import { useThemeColors } from "../../stores/themeStore";
+import { SPACING } from "../../utils/constants";
 import PointCard from "../../components/PointCard";
 import { Point, Symptom } from "../../types/api";
 
@@ -24,6 +25,7 @@ export default function HomeScreen() {
   const { user, isAuthenticated } = useAuthStore();
   const { loadPopularPoints } = usePointsStore();
   const { fetchPopularSymptoms } = useSymptomsStore();
+  const colors = useThemeColors();
 
   const [popularPoints, setPopularPoints] = useState<Point[]>([]);
   const [popularSymptoms, setPopularSymptoms] = useState<Symptom[]>([]);
@@ -88,7 +90,7 @@ export default function HomeScreen() {
 
   const renderSymptom = ({ item }: { item: Symptom }) => (
     <TouchableOpacity
-      style={styles.symptomCard}
+      style={[styles.symptomCard, { backgroundColor: colors.background }]}
       onPress={() => handleSymptomPress(item.id)}
       accessibilityRole="button"
       accessibilityLabel={`Ver detalhes do sintoma ${item.name}${
@@ -98,19 +100,25 @@ export default function HomeScreen() {
       <Ionicons
         name="medical-outline"
         size={24}
-        color={COLORS.primary}
+        color={colors.primary}
         importantForAccessibility="no-hide-descendants"
       />
       <View style={styles.symptomInfo}>
-        <Text style={styles.symptomName}>{item.name}</Text>
+        <Text style={[styles.symptomName, { color: colors.text }]}>
+          {item.name}
+        </Text>
         {item.category && (
-          <Text style={styles.symptomCategory}>{item.category}</Text>
+          <Text
+            style={[styles.symptomCategory, { color: colors.textSecondary }]}
+          >
+            {item.category}
+          </Text>
         )}
       </View>
       <Ionicons
         name="chevron-forward"
         size={20}
-        color={COLORS.textSecondary}
+        color={colors.textSecondary}
         importantForAccessibility="no-hide-descendants"
       />
     </TouchableOpacity>
@@ -118,44 +126,64 @@ export default function HomeScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: colors.background }]}
+      >
         <View
           style={styles.loadingContainer}
           accessibilityRole="alert"
           accessibilityLabel="Carregando dados da tela inicial"
         >
-          <ActivityIndicator size="large" color={COLORS.primary} />
-          <Text style={styles.loadingText}>Carregando...</Text>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
+            Carregando...
+          </Text>
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         {/* Welcome Header */}
-        <View style={styles.welcomeSection} accessibilityRole="header">
-          <Text style={styles.welcomeTitle}>
+        <View
+          style={[styles.welcomeSection, { backgroundColor: colors.primary }]}
+          accessibilityRole="header"
+        >
+          <Text style={[styles.welcomeTitle, { color: colors.surface }]}>
             Bem-vindo{isAuthenticated && user?.name ? `, ${user.name}` : ""}!
           </Text>
-          <Text style={styles.welcomeSubtitle}>
+          <Text style={[styles.welcomeSubtitle, { color: colors.surface }]}>
             Explore pontos de acupuntura e sintomas
           </Text>
         </View>
 
         {/* Quick Actions */}
-        <View style={styles.quickActionsSection}>
-          <Text style={styles.sectionTitle} accessibilityRole="header">
+        <View
+          style={[
+            styles.quickActionsSection,
+            { backgroundColor: colors.surface },
+          ]}
+        >
+          <Text
+            style={[styles.sectionTitle, { color: colors.text }]}
+            accessibilityRole="header"
+          >
             Ações Rápidas
           </Text>
           <View style={styles.quickActionsGrid}>
             <TouchableOpacity
-              style={styles.quickAction}
+              style={[
+                styles.quickAction,
+                { backgroundColor: colors.background },
+              ]}
               onPress={() => router.push("/(tabs)/search")}
               accessibilityRole="button"
               accessibilityLabel="Buscar Pontos"
@@ -164,14 +192,19 @@ export default function HomeScreen() {
               <Ionicons
                 name="search"
                 size={32}
-                color={COLORS.primary}
+                color={colors.primary}
                 importantForAccessibility="no-hide-descendants"
               />
-              <Text style={styles.quickActionText}>Buscar Pontos</Text>
+              <Text style={[styles.quickActionText, { color: colors.text }]}>
+                Buscar Pontos
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.quickAction}
+              style={[
+                styles.quickAction,
+                { backgroundColor: colors.background },
+              ]}
               onPress={() => router.push("/(tabs)/symptoms")}
               accessibilityRole="button"
               accessibilityLabel="Ver Sintomas"
@@ -180,14 +213,19 @@ export default function HomeScreen() {
               <Ionicons
                 name="medical"
                 size={32}
-                color={COLORS.secondary}
+                color={colors.secondary}
                 importantForAccessibility="no-hide-descendants"
               />
-              <Text style={styles.quickActionText}>Ver Sintomas</Text>
+              <Text style={[styles.quickActionText, { color: colors.text }]}>
+                Ver Sintomas
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.quickAction}
+              style={[
+                styles.quickAction,
+                { backgroundColor: colors.background },
+              ]}
               onPress={() => router.push("/body-map")}
               accessibilityRole="button"
               accessibilityLabel="Mapa Corporal"
@@ -196,14 +234,19 @@ export default function HomeScreen() {
               <Ionicons
                 name="body"
                 size={32}
-                color={COLORS.accent}
+                color={colors.accent}
                 importantForAccessibility="no-hide-descendants"
               />
-              <Text style={styles.quickActionText}>Mapa Corporal</Text>
+              <Text style={[styles.quickActionText, { color: colors.text }]}>
+                Mapa Corporal
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.quickAction}
+              style={[
+                styles.quickAction,
+                { backgroundColor: colors.background },
+              ]}
               onPress={() => router.push("/(tabs)/chatbot")}
               accessibilityRole="button"
               accessibilityLabel="Assistente IA"
@@ -212,19 +255,24 @@ export default function HomeScreen() {
               <Ionicons
                 name="chatbubble-ellipses"
                 size={32}
-                color={COLORS.success}
+                color={colors.success}
                 importantForAccessibility="no-hide-descendants"
               />
-              <Text style={styles.quickActionText}>Assistente IA</Text>
+              <Text style={[styles.quickActionText, { color: colors.text }]}>
+                Assistente IA
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
 
         {/* Popular Points */}
         {popularPoints.length > 0 && (
-          <View style={styles.section}>
+          <View style={[styles.section, { backgroundColor: colors.surface }]}>
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle} accessibilityRole="header">
+              <Text
+                style={[styles.sectionTitle, { color: colors.text }]}
+                accessibilityRole="header"
+              >
                 Pontos Populares
               </Text>
               <TouchableOpacity
@@ -232,7 +280,9 @@ export default function HomeScreen() {
                 accessibilityRole="button"
                 accessibilityLabel="Ver todos os pontos populares"
               >
-                <Text style={styles.seeAllText}>Ver todos</Text>
+                <Text style={[styles.seeAllText, { color: colors.primary }]}>
+                  Ver todos
+                </Text>
               </TouchableOpacity>
             </View>
             <FlatList
@@ -248,9 +298,12 @@ export default function HomeScreen() {
 
         {/* Popular Symptoms */}
         {popularSymptoms.length > 0 && (
-          <View style={styles.section}>
+          <View style={[styles.section, { backgroundColor: colors.surface }]}>
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle} accessibilityRole="header">
+              <Text
+                style={[styles.sectionTitle, { color: colors.text }]}
+                accessibilityRole="header"
+              >
                 Sintomas Comuns
               </Text>
               <TouchableOpacity
@@ -258,7 +311,9 @@ export default function HomeScreen() {
                 accessibilityRole="button"
                 accessibilityLabel="Ver todos os sintomas comuns"
               >
-                <Text style={styles.seeAllText}>Ver todos</Text>
+                <Text style={[styles.seeAllText, { color: colors.primary }]}>
+                  Ver todos
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={styles.symptomsList}>
@@ -276,7 +331,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   scrollView: {
     flex: 1,
@@ -292,32 +346,26 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: SPACING.md,
     fontSize: 16,
-    color: COLORS.textSecondary,
   },
   welcomeSection: {
     padding: SPACING.md,
-    backgroundColor: COLORS.primary,
   },
   welcomeTitle: {
     fontSize: 28,
     fontWeight: "bold",
-    color: COLORS.surface,
     marginBottom: SPACING.xs,
   },
   welcomeSubtitle: {
     fontSize: 16,
-    color: COLORS.surface,
     opacity: 0.9,
   },
   quickActionsSection: {
     padding: SPACING.md,
-    backgroundColor: COLORS.surface,
     marginTop: SPACING.md,
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: "600",
-    color: COLORS.text,
     marginBottom: SPACING.md,
   },
   quickActionsGrid: {
@@ -327,7 +375,6 @@ const styles = StyleSheet.create({
   },
   quickAction: {
     width: "48%",
-    backgroundColor: COLORS.background,
     borderRadius: 12,
     padding: SPACING.md,
     alignItems: "center",
@@ -341,13 +388,11 @@ const styles = StyleSheet.create({
   quickActionText: {
     fontSize: 14,
     fontWeight: "600",
-    color: COLORS.text,
     marginTop: SPACING.sm,
     textAlign: "center",
   },
   section: {
     padding: SPACING.md,
-    backgroundColor: COLORS.surface,
     marginTop: SPACING.md,
   },
   sectionHeader: {
@@ -358,7 +403,6 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: 14,
-    color: COLORS.primary,
     fontWeight: "600",
   },
   horizontalList: {
@@ -374,7 +418,6 @@ const styles = StyleSheet.create({
   symptomCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.background,
     borderRadius: 12,
     padding: SPACING.md,
     shadowColor: "#000",
@@ -390,11 +433,9 @@ const styles = StyleSheet.create({
   symptomName: {
     fontSize: 16,
     fontWeight: "600",
-    color: COLORS.text,
     marginBottom: 2,
   },
   symptomCategory: {
     fontSize: 12,
-    color: COLORS.textSecondary,
   },
 });

@@ -11,6 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { usePointsStore } from "../../stores/pointsStore";
+import { useThemeColors } from "../../stores/themeStore";
 import { COLORS } from "../../utils/constants";
 import { MERIDIAN_DATA, getMeridianColor } from "../../utils/meridianData";
 
@@ -18,12 +19,14 @@ interface MeridianCardProps {
   meridianId: string;
   pointCount: number;
   onPress: () => void;
+  colors: ReturnType<typeof useThemeColors>;
 }
 
 const MeridianCard: React.FC<MeridianCardProps> = ({
   meridianId,
   pointCount,
   onPress,
+  colors,
 }) => {
   const meridianInfo = MERIDIAN_DATA[meridianId];
 
@@ -42,44 +45,56 @@ const MeridianCard: React.FC<MeridianCardProps> = ({
     >
       <View style={styles.cardHeader}>
         <View style={styles.meridianInfo}>
-          <Text style={styles.abbreviation}>{meridianInfo.abbreviation}</Text>
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>{pointCount}</Text>
+          <Text style={[styles.abbreviation, { color: colors.text }]}>
+            {meridianInfo.abbreviation}
+          </Text>
+          <View style={[styles.badge, { backgroundColor: colors.primary }]}>
+            <Text style={[styles.badgeText, { color: colors.surface }]}>
+              {pointCount}
+            </Text>
           </View>
         </View>
         <Ionicons
           name="chevron-forward"
           size={24}
-          color={COLORS.textSecondary}
+          color={colors.textSecondary}
           importantForAccessibility="no-hide-descendants"
         />
       </View>
 
-      <Text style={styles.meridianName}>{meridianInfo.name}</Text>
-      <Text style={styles.chineseName}>{meridianInfo.chineseName}</Text>
+      <Text style={[styles.meridianName, { color: colors.text }]}>
+        {meridianInfo.name}
+      </Text>
+      <Text style={[styles.chineseName, { color: colors.textSecondary }]}>
+        {meridianInfo.chineseName}
+      </Text>
 
       <View style={styles.detailsRow}>
         <View style={styles.detailItem}>
           <Ionicons
             name="water-outline"
             size={16}
-            color={COLORS.textSecondary}
+            color={colors.textSecondary}
             importantForAccessibility="no-hide-descendants"
           />
-          <Text style={styles.detailText}>{meridianInfo.element}</Text>
+          <Text style={[styles.detailText, { color: colors.textSecondary }]}>
+            {meridianInfo.element}
+          </Text>
         </View>
         <View style={styles.detailItem}>
           <Ionicons
             name="time-outline"
             size={16}
-            color={COLORS.textSecondary}
+            color={colors.textSecondary}
             importantForAccessibility="no-hide-descendants"
           />
-          <Text style={styles.detailText}>{meridianInfo.hours}</Text>
+          <Text style={[styles.detailText, { color: colors.textSecondary }]}>
+            {meridianInfo.hours}
+          </Text>
         </View>
       </View>
 
-      <Text style={styles.organ} numberOfLines={1}>
+      <Text style={[styles.organ, { color: colors.text }]} numberOfLines={1}>
         {meridianInfo.organ}
       </Text>
     </TouchableOpacity>
@@ -87,6 +102,7 @@ const MeridianCard: React.FC<MeridianCardProps> = ({
 };
 
 export default function MeridiansScreen() {
+  const colors = useThemeColors();
   const router = useRouter();
   const { meridians, loading, loadMeridians } = usePointsStore();
   const [expandedMeridian, setExpandedMeridian] = useState<string | null>(null);
@@ -109,10 +125,14 @@ export default function MeridiansScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: colors.background }]}
+      >
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={COLORS.primary} />
-          <Text style={styles.loadingText}>Carregando meridianos...</Text>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
+            Carregando meridianos...
+          </Text>
         </View>
       </SafeAreaView>
     );
@@ -139,28 +159,30 @@ export default function MeridiansScreen() {
     .filter((m) => m !== null);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Meridianos</Text>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.title, { color: colors.text }]}>Meridianos</Text>
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
             Explore os {meridiansWithInfo.length} meridianos principais da
             acupuntura
           </Text>
         </View>
 
         {/* Info Card */}
-        <View style={styles.infoCard}>
+        <View style={[styles.infoCard, { backgroundColor: colors.surface }]}>
           <Ionicons
             name="information-circle"
             size={24}
-            color={COLORS.primary}
+            color={colors.primary}
           />
-          <Text style={styles.infoText}>
+          <Text style={[styles.infoText, { color: colors.textSecondary }]}>
             Os meridianos são canais de energia (Qi) que percorrem o corpo. Cada
             meridiano está associado a um órgão e possui funções específicas.
           </Text>
@@ -174,19 +196,40 @@ export default function MeridiansScreen() {
                 meridianId={meridian!.id}
                 pointCount={meridian!.pointCount}
                 onPress={() => handleMeridianPress(meridian!.id)}
+                colors={colors}
               />
 
               {/* Expanded Info */}
               {expandedMeridian === meridian!.id && (
-                <View style={styles.expandedInfo}>
-                  <Text style={styles.expandedTitle}>Trajeto:</Text>
-                  <Text style={styles.expandedText}>
+                <View
+                  style={[
+                    styles.expandedInfo,
+                    { backgroundColor: colors.surface },
+                  ]}
+                >
+                  <Text style={[styles.expandedTitle, { color: colors.text }]}>
+                    Trajeto:
+                  </Text>
+                  <Text
+                    style={[
+                      styles.expandedText,
+                      { color: colors.textSecondary },
+                    ]}
+                  >
                     {MERIDIAN_DATA[meridian!.id].path}
                   </Text>
 
-                  <Text style={styles.expandedTitle}>Funções:</Text>
+                  <Text style={[styles.expandedTitle, { color: colors.text }]}>
+                    Funções:
+                  </Text>
                   {MERIDIAN_DATA[meridian!.id].functions.map((func, idx) => (
-                    <Text key={idx} style={styles.expandedText}>
+                    <Text
+                      key={idx}
+                      style={[
+                        styles.expandedText,
+                        { color: colors.textSecondary },
+                      ]}
+                    >
                       • {func}
                     </Text>
                   ))}

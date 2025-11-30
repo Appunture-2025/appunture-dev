@@ -8,7 +8,8 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { COLORS, SPACING } from "../utils/constants";
+import { useThemeColors } from "../stores/themeStore";
+import { SPACING } from "../utils/constants";
 import { useDebounce } from "../hooks";
 
 interface SearchBarProps {
@@ -33,6 +34,7 @@ function SearchBarComponent({
   loading = false,
   debounceDelay = 300,
 }: SearchBarProps) {
+  const colors = useThemeColors();
   // Local state for immediate UI feedback
   const [localValue, setLocalValue] = useState(value);
 
@@ -62,17 +64,22 @@ function SearchBarComponent({
 
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
+      <View
+        style={[
+          styles.inputContainer,
+          { backgroundColor: colors.surface, borderColor: colors.border },
+        ]}
+      >
         <Ionicons
           name="search"
           size={20}
-          color={COLORS.textSecondary}
+          color={colors.textSecondary}
           importantForAccessibility="no-hide-descendants"
         />
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: colors.text }]}
           placeholder={placeholder}
-          placeholderTextColor={COLORS.textSecondary}
+          placeholderTextColor={colors.textSecondary}
           value={localValue}
           onChangeText={handleChangeText}
           onSubmitEditing={onSubmit}
@@ -84,7 +91,7 @@ function SearchBarComponent({
         {loading && (
           <ActivityIndicator
             size="small"
-            color={COLORS.primary}
+            color={colors.primary}
             accessibilityLabel="Buscando..."
           />
         )}
@@ -97,7 +104,7 @@ function SearchBarComponent({
             <Ionicons
               name="close-circle"
               size={20}
-              color={COLORS.textSecondary}
+              color={colors.textSecondary}
             />
           </TouchableOpacity>
         )}
@@ -115,18 +122,15 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.surface,
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
     borderRadius: 25,
     borderWidth: 1,
-    borderColor: COLORS.border,
     gap: SPACING.sm,
   },
   input: {
     flex: 1,
     fontSize: 16,
-    color: COLORS.text,
     paddingVertical: SPACING.xs,
   },
 });

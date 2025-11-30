@@ -9,11 +9,14 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { usePointsStore } from "../../stores/pointsStore";
-import { COLORS, SPACING } from "../../utils/constants";
+import { useThemeColors, useThemeStore } from "../../stores/themeStore";
+import { SPACING } from "../../utils/constants";
 import SearchBar from "../../components/SearchBar";
 import PointCard from "../../components/PointCard";
 
 export default function SearchScreen() {
+  const colors = useThemeColors();
+  const { isDark } = useThemeStore();
   const {
     points,
     searchResults,
@@ -89,7 +92,7 @@ export default function SearchScreen() {
           : "Nenhum ponto disponível."
       }
     >
-      <Text style={styles.emptyText}>
+      <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
         {searchQuery
           ? "Nenhum ponto encontrado para esta busca."
           : "Nenhum ponto disponível."}
@@ -114,7 +117,9 @@ export default function SearchScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <FlatList
         data={displayPoints}
         renderItem={renderPoint}
@@ -128,8 +133,13 @@ export default function SearchScreen() {
       />
 
       {(loading || isSearching) && (
-        <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color={COLORS.primary} />
+        <View
+          style={[
+            styles.loadingOverlay,
+            { backgroundColor: isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)" },
+          ]}
+        >
+          <ActivityIndicator size="large" color={colors.primary} />
         </View>
       )}
     </SafeAreaView>
@@ -139,7 +149,6 @@ export default function SearchScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   listContainer: {
     padding: SPACING.md,
@@ -155,7 +164,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: COLORS.textSecondary,
     textAlign: "center",
   },
   loadingOverlay: {
@@ -164,7 +172,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.1)",
     justifyContent: "center",
     alignItems: "center",
   },

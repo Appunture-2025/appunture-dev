@@ -1,17 +1,14 @@
 import React, { useEffect } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Animated,
-} from "react-native";
+import { View, Text, TouchableOpacity, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { COLORS } from "../../utils/constants";
-import { styles } from "./styles";
+import { useThemeColors } from "../../stores/themeStore";
+import { createStyles } from "./styles";
 
 export default function WelcomeScreen() {
   const router = useRouter();
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   const fadeAnim = new Animated.Value(0);
   const slideAnim = new Animated.Value(50);
 
@@ -42,7 +39,7 @@ export default function WelcomeScreen() {
         ]}
       >
         <View style={styles.logoContainer}>
-          <Ionicons name="medical" size={80} color={COLORS.primary} />
+          <Ionicons name="medical" size={80} color={colors.primary} />
         </View>
 
         <Text style={styles.title}>Bem-vindo ao Appunture</Text>
@@ -55,7 +52,7 @@ export default function WelcomeScreen() {
             <Ionicons
               name="map-outline"
               size={20}
-              color={COLORS.primary}
+              color={colors.primary}
               style={styles.featureIcon}
             />
             <Text style={styles.featureText}>
@@ -66,7 +63,7 @@ export default function WelcomeScreen() {
             <Ionicons
               name="search-outline"
               size={20}
-              color={COLORS.primary}
+              color={colors.primary}
               style={styles.featureIcon}
             />
             <Text style={styles.featureText}>
@@ -77,7 +74,7 @@ export default function WelcomeScreen() {
             <Ionicons
               name="cloud-outline"
               size={20}
-              color={COLORS.primary}
+              color={colors.primary}
               style={styles.featureIcon}
             />
             <Text style={styles.featureText}>

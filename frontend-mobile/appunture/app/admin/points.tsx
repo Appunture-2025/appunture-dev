@@ -8,7 +8,7 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
-import { COLORS } from "../../utils/constants";
+import { useThemeColors } from "../../stores/themeStore";
 import { apiService } from "../../services/api";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -21,6 +21,7 @@ interface Point {
 }
 
 export default function AdminPointsScreen() {
+  const colors = useThemeColors();
   const [points, setPoints] = useState<Point[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -56,36 +57,45 @@ export default function AdminPointsScreen() {
   }, []);
 
   const renderItem = ({ item }: { item: Point }) => (
-    <View style={styles.card}>
+    <View style={[styles.card, { backgroundColor: colors.surface }]}>
       <View style={styles.info}>
-        <Text style={styles.name}>{item.name}</Text>
-        <Text style={styles.details}>{item.category}</Text>
+        <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
+        <Text style={[styles.details, { color: colors.textSecondary }]}>
+          {item.category}
+        </Text>
       </View>
       <TouchableOpacity
         onPress={() => Alert.alert("Ação", `Editar ${item.name}`)}
       >
-        <Ionicons name="create-outline" size={24} color={COLORS.primary} />
+        <Ionicons name="create-outline" size={24} color={colors.primary} />
       </TouchableOpacity>
     </View>
   );
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Pontos de Acupuntura</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View
+        style={[
+          styles.header,
+          { backgroundColor: colors.surface, borderBottomColor: colors.border },
+        ]}
+      >
+        <Text style={[styles.title, { color: colors.text }]}>
+          Pontos de Acupuntura
+        </Text>
         <TouchableOpacity
-          style={styles.addButton}
+          style={[styles.addButton, { backgroundColor: colors.primary }]}
           onPress={() => Alert.alert("Novo", "Criar novo ponto")}
         >
-          <Ionicons name="add" size={24} color="#fff" />
+          <Ionicons name="add" size={24} color={colors.surface} />
         </TouchableOpacity>
       </View>
 
@@ -95,7 +105,9 @@ export default function AdminPointsScreen() {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
-          <Text style={styles.emptyText}>Nenhum ponto cadastrado.</Text>
+          <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
+            Nenhum ponto cadastrado.
+          </Text>
         }
       />
     </View>

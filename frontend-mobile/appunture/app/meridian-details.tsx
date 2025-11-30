@@ -11,11 +11,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { usePointsStore } from "../stores/pointsStore";
-import { COLORS } from "../utils/constants";
+import { useThemeColors } from "../stores/themeStore";
 import { MERIDIAN_DATA } from "../utils/meridianData";
 import { Point } from "../types/api";
 
 export default function MeridianDetailsScreen() {
+  const colors = useThemeColors();
   const { meridianId } = useLocalSearchParams<{ meridianId: string }>();
   const router = useRouter();
   const { points, loading, loadPoints } = usePointsStore();
@@ -48,15 +49,21 @@ export default function MeridianDetailsScreen() {
 
   if (!meridianInfo) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: colors.background }]}
+      >
         <View style={styles.errorContainer}>
-          <Ionicons name="alert-circle" size={64} color={COLORS.error} />
-          <Text style={styles.errorText}>Meridiano não encontrado</Text>
+          <Ionicons name="alert-circle" size={64} color={colors.error} />
+          <Text style={[styles.errorText, { color: colors.text }]}>
+            Meridiano não encontrado
+          </Text>
           <TouchableOpacity
-            style={styles.backButton}
+            style={[styles.backButton, { backgroundColor: colors.primary }]}
             onPress={() => router.back()}
           >
-            <Text style={styles.backButtonText}>Voltar</Text>
+            <Text style={[styles.backButtonText, { color: colors.surface }]}>
+              Voltar
+            </Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -65,17 +72,23 @@ export default function MeridianDetailsScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: colors.background }]}
+      >
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={COLORS.primary} />
-          <Text style={styles.loadingText}>Carregando pontos...</Text>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
+            Carregando pontos...
+          </Text>
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -86,30 +99,38 @@ export default function MeridianDetailsScreen() {
             style={styles.backIconButton}
             onPress={() => router.back()}
           >
-            <Ionicons name="arrow-back" size={24} color={COLORS.text} />
+            <Ionicons name="arrow-back" size={24} color={colors.text} />
           </TouchableOpacity>
 
           <View style={styles.headerContent}>
-            <Text style={styles.abbreviation}>
+            <Text style={[styles.abbreviation, { color: colors.text }]}>
               {meridianInfo.abbreviation}
             </Text>
-            <Text style={styles.meridianName}>{meridianInfo.name}</Text>
-            <Text style={styles.chineseName}>{meridianInfo.chineseName}</Text>
+            <Text style={[styles.meridianName, { color: colors.text }]}>
+              {meridianInfo.name}
+            </Text>
+            <Text style={[styles.chineseName, { color: colors.textSecondary }]}>
+              {meridianInfo.chineseName}
+            </Text>
 
             <View style={styles.statsRow}>
               <View style={styles.statItem}>
-                <Ionicons name="pin" size={20} color={COLORS.text} />
-                <Text style={styles.statText}>
+                <Ionicons name="pin" size={20} color={colors.text} />
+                <Text style={[styles.statText, { color: colors.text }]}>
                   {filteredPoints.length} pontos
                 </Text>
               </View>
               <View style={styles.statItem}>
-                <Ionicons name="water-outline" size={20} color={COLORS.text} />
-                <Text style={styles.statText}>{meridianInfo.element}</Text>
+                <Ionicons name="water-outline" size={20} color={colors.text} />
+                <Text style={[styles.statText, { color: colors.text }]}>
+                  {meridianInfo.element}
+                </Text>
               </View>
               <View style={styles.statItem}>
-                <Ionicons name="time-outline" size={20} color={COLORS.text} />
-                <Text style={styles.statText}>{meridianInfo.hours}</Text>
+                <Ionicons name="time-outline" size={20} color={colors.text} />
+                <Text style={[styles.statText, { color: colors.text }]}>
+                  {meridianInfo.hours}
+                </Text>
               </View>
             </View>
           </View>
@@ -117,31 +138,58 @@ export default function MeridianDetailsScreen() {
 
         {/* Meridian Info */}
         <View style={styles.infoSection}>
-          <Text style={styles.sectionTitle}>Informações</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            Informações
+          </Text>
 
-          <View style={styles.infoCard}>
+          <View style={[styles.infoCard, { backgroundColor: colors.surface }]}>
             <View style={styles.infoRow}>
-              <Ionicons name="body-outline" size={20} color={COLORS.primary} />
+              <Ionicons name="body-outline" size={20} color={colors.primary} />
               <View style={styles.infoContent}>
-                <Text style={styles.infoLabel}>Órgão:</Text>
-                <Text style={styles.infoValue}>{meridianInfo.organ}</Text>
+                <Text style={[styles.infoLabel, { color: colors.text }]}>
+                  Órgão:
+                </Text>
+                <Text
+                  style={[styles.infoValue, { color: colors.textSecondary }]}
+                >
+                  {meridianInfo.organ}
+                </Text>
               </View>
             </View>
 
             <View style={styles.infoRow}>
-              <Ionicons name="git-branch-outline" size={20} color={COLORS.primary} />
+              <Ionicons
+                name="git-branch-outline"
+                size={20}
+                color={colors.primary}
+              />
               <View style={styles.infoContent}>
-                <Text style={styles.infoLabel}>Trajeto:</Text>
-                <Text style={styles.infoValue}>{meridianInfo.path}</Text>
+                <Text style={[styles.infoLabel, { color: colors.text }]}>
+                  Trajeto:
+                </Text>
+                <Text
+                  style={[styles.infoValue, { color: colors.textSecondary }]}
+                >
+                  {meridianInfo.path}
+                </Text>
               </View>
             </View>
 
             <View style={styles.infoRow}>
-              <Ionicons name="settings-outline" size={20} color={COLORS.primary} />
+              <Ionicons
+                name="settings-outline"
+                size={20}
+                color={colors.primary}
+              />
               <View style={styles.infoContent}>
-                <Text style={styles.infoLabel}>Funções:</Text>
+                <Text style={[styles.infoLabel, { color: colors.text }]}>
+                  Funções:
+                </Text>
                 {meridianInfo.functions.map((func, idx) => (
-                  <Text key={idx} style={styles.infoValue}>
+                  <Text
+                    key={idx}
+                    style={[styles.infoValue, { color: colors.textSecondary }]}
+                  >
                     • {func}
                   </Text>
                 ))}
@@ -152,7 +200,7 @@ export default function MeridianDetailsScreen() {
 
         {/* Points List */}
         <View style={styles.pointsSection}>
-          <Text style={styles.sectionTitle}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Pontos ({filteredPoints.length})
           </Text>
 
@@ -161,9 +209,9 @@ export default function MeridianDetailsScreen() {
               <Ionicons
                 name="location-outline"
                 size={48}
-                color={COLORS.textSecondary}
+                color={colors.textSecondary}
               />
-              <Text style={styles.emptyText}>
+              <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
                 Nenhum ponto encontrado para este meridiano
               </Text>
             </View>
@@ -173,24 +221,42 @@ export default function MeridianDetailsScreen() {
                 key={point.id}
                 style={[
                   styles.pointCard,
-                  { borderLeftColor: meridianInfo.color },
+                  {
+                    borderLeftColor: meridianInfo.color,
+                    backgroundColor: colors.surface,
+                  },
                 ]}
                 onPress={() => handlePointPress(point.id)}
                 activeOpacity={0.7}
               >
                 <View style={styles.pointHeader}>
-                  <Text style={styles.pointCode}>{point.code}</Text>
+                  <Text style={[styles.pointCode, { color: colors.primary }]}>
+                    {point.code}
+                  </Text>
                   {point.isFavorite && (
-                    <Ionicons name="heart" size={20} color={COLORS.error} />
+                    <Ionicons name="heart" size={20} color={colors.error} />
                   )}
                 </View>
-                <Text style={styles.pointName}>{point.name}</Text>
+                <Text style={[styles.pointName, { color: colors.text }]}>
+                  {point.name}
+                </Text>
                 {point.chinese_name && (
-                  <Text style={styles.pointChineseName}>
+                  <Text
+                    style={[
+                      styles.pointChineseName,
+                      { color: colors.textSecondary },
+                    ]}
+                  >
                     {point.chinese_name}
                   </Text>
                 )}
-                <Text style={styles.pointLocation} numberOfLines={2}>
+                <Text
+                  style={[
+                    styles.pointLocation,
+                    { color: colors.textSecondary },
+                  ]}
+                  numberOfLines={2}
+                >
                   {point.location}
                 </Text>
               </TouchableOpacity>

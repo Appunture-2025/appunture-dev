@@ -16,6 +16,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { imageCacheService } from "../services/imageCache";
+import { useThemeColors } from "../stores/themeStore";
 import { COLORS } from "../utils/constants";
 
 interface CachedImageProps extends Omit<ImageProps, "source"> {
@@ -70,13 +71,15 @@ export function CachedImage({
   placeholder,
   fallback,
   showLoading = true,
-  loadingColor = COLORS.primary,
+  loadingColor,
   containerStyle,
   style,
   onLoad,
   onError,
   ...props
 }: CachedImageProps) {
+  const colors = useThemeColors();
+  const effectiveLoadingColor = loadingColor ?? colors.primary;
   const [cachedUri, setCachedUri] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -173,11 +176,12 @@ export function CachedImage({
           style={[
             styles.container,
             styles.loadingContainer,
+            { backgroundColor: colors.surface },
             containerDimensions,
             containerStyle,
           ]}
         >
-          <ActivityIndicator color={loadingColor} />
+          <ActivityIndicator color={effectiveLoadingColor} />
         </View>
       );
     }
@@ -197,7 +201,7 @@ export function CachedImage({
       )}
       {isLoading && showLoading && (
         <View style={styles.loadingOverlay}>
-          <ActivityIndicator color={loadingColor} />
+          <ActivityIndicator color={effectiveLoadingColor} />
         </View>
       )}
     </View>

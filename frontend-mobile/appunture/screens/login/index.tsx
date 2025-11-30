@@ -14,12 +14,14 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "../../stores/authStore";
-import { COLORS } from "../../utils/constants";
-import { styles } from "./styles";
+import { useThemeColors } from "../../stores/themeStore";
+import { createStyles } from "./styles";
 import { apiService } from "../../services/api";
 
 export default function LoginScreen() {
   const router = useRouter();
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   const { login, loginWithGoogle, loginWithApple, isLoading } = useAuthStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -132,7 +134,9 @@ export default function LoginScreen() {
       const response = await apiService.resendVerificationEmail();
       setVerificationMessage(
         response?.message ??
-          `Enviamos um novo link de verificação para ${email || "o seu email"}. Verifique sua caixa de entrada e a pasta de spam.`
+          `Enviamos um novo link de verificação para ${
+            email || "o seu email"
+          }. Verifique sua caixa de entrada e a pasta de spam.`
       );
       Alert.alert(
         "Email reenviado",
@@ -140,9 +144,15 @@ export default function LoginScreen() {
       );
     } catch (error: any) {
       if (error?.status === 429) {
-        Alert.alert("Limite atingido", error?.message ?? "Tente novamente em breve.");
+        Alert.alert(
+          "Limite atingido",
+          error?.message ?? "Tente novamente em breve."
+        );
       } else if (error?.status === 400) {
-        Alert.alert("Conta já verificada", error?.message ?? "Sua conta já está ativa.");
+        Alert.alert(
+          "Conta já verificada",
+          error?.message ?? "Sua conta já está ativa."
+        );
         setShowVerificationModal(false);
       } else {
         Alert.alert("Erro", error?.message ?? "Falha ao reenviar email.");
@@ -166,7 +176,9 @@ export default function LoginScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalCard} accessibilityRole="alert">
-            <Text style={styles.modalTitle} accessibilityRole="header">Verifique seu email</Text>
+            <Text style={styles.modalTitle} accessibilityRole="header">
+              Verifique seu email
+            </Text>
             <Text style={styles.modalMessage}>
               {verificationMessage
                 ? verificationMessage
@@ -176,15 +188,26 @@ export default function LoginScreen() {
             </Text>
 
             <TouchableOpacity
-              style={[styles.modalButton, resendingEmail && styles.disabledButton]}
+              style={[
+                styles.modalButton,
+                resendingEmail && styles.disabledButton,
+              ]}
               onPress={handleResendEmail}
               disabled={resendingEmail}
               accessibilityRole="button"
-              accessibilityLabel={resendingEmail ? "Reenviando email" : "Reenviar email de verificação"}
+              accessibilityLabel={
+                resendingEmail
+                  ? "Reenviando email"
+                  : "Reenviar email de verificação"
+              }
               accessibilityState={{ disabled: resendingEmail }}
             >
               {resendingEmail ? (
-                <ActivityIndicator color={COLORS.surface} size="small" accessibilityLabel="Carregando" />
+                <ActivityIndicator
+                  color={colors.surface}
+                  size="small"
+                  accessibilityLabel="Carregando"
+                />
               ) : (
                 <Text style={styles.modalButtonText}>Reenviar email</Text>
               )}
@@ -205,9 +228,11 @@ export default function LoginScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
           <View style={styles.logoContainer} accessibilityElementsHidden>
-            <Ionicons name="medical" size={64} color={COLORS.primary} />
+            <Ionicons name="medical" size={64} color={colors.primary} />
           </View>
-          <Text style={styles.title} accessibilityRole="header">Appunture</Text>
+          <Text style={styles.title} accessibilityRole="header">
+            Appunture
+          </Text>
           <Text style={styles.subtitle}>Acupuntura Digital</Text>
         </View>
 
@@ -216,13 +241,13 @@ export default function LoginScreen() {
             <Ionicons
               name="mail-outline"
               size={20}
-              color={COLORS.textSecondary}
+              color={colors.textSecondary}
               accessibilityElementsHidden
             />
             <TextInput
               style={styles.input}
               placeholder="Email"
-              placeholderTextColor={COLORS.textSecondary}
+              placeholderTextColor={colors.textSecondary}
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -238,13 +263,13 @@ export default function LoginScreen() {
             <Ionicons
               name="lock-closed-outline"
               size={20}
-              color={COLORS.textSecondary}
+              color={colors.textSecondary}
               accessibilityElementsHidden
             />
             <TextInput
               style={styles.input}
               placeholder="Senha"
-              placeholderTextColor={COLORS.textSecondary}
+              placeholderTextColor={colors.textSecondary}
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
@@ -257,13 +282,15 @@ export default function LoginScreen() {
               onPress={() => setShowPassword(!showPassword)}
               style={styles.passwordToggle}
               accessibilityRole="button"
-              accessibilityLabel={showPassword ? "Ocultar senha" : "Mostrar senha"}
+              accessibilityLabel={
+                showPassword ? "Ocultar senha" : "Mostrar senha"
+              }
               accessibilityState={{ checked: showPassword }}
             >
               <Ionicons
                 name={showPassword ? "eye-off-outline" : "eye-outline"}
                 size={20}
-                color={COLORS.textSecondary}
+                color={colors.textSecondary}
                 accessibilityElementsHidden
               />
             </TouchableOpacity>
@@ -289,7 +316,11 @@ export default function LoginScreen() {
             accessibilityState={{ disabled: isLoading }}
           >
             {isLoading ? (
-              <ActivityIndicator color={COLORS.surface} size="small" accessibilityLabel="Carregando" />
+              <ActivityIndicator
+                color={colors.surface}
+                size="small"
+                accessibilityLabel="Carregando"
+              />
             ) : (
               <Text style={styles.loginButtonText}>Entrar</Text>
             )}
@@ -302,7 +333,10 @@ export default function LoginScreen() {
           </View>
 
           {/* Social Login Buttons */}
-          <View style={styles.socialButtonsContainer} accessibilityLabel="Opções de login social">
+          <View
+            style={styles.socialButtonsContainer}
+            accessibilityLabel="Opções de login social"
+          >
             <TouchableOpacity
               style={styles.socialButton}
               onPress={handleGoogleLogin}
@@ -311,7 +345,12 @@ export default function LoginScreen() {
               accessibilityLabel="Entrar com Google"
               accessibilityState={{ disabled: isLoading }}
             >
-              <Ionicons name="logo-google" size={24} color="#DB4437" accessibilityElementsHidden />
+              <Ionicons
+                name="logo-google"
+                size={24}
+                color="#DB4437"
+                accessibilityElementsHidden
+              />
               <Text style={styles.socialButtonText}>Google</Text>
             </TouchableOpacity>
 
@@ -323,7 +362,12 @@ export default function LoginScreen() {
               accessibilityLabel="Entrar com Apple"
               accessibilityState={{ disabled: isLoading }}
             >
-              <Ionicons name="logo-apple" size={24} color={COLORS.text} accessibilityElementsHidden />
+              <Ionicons
+                name="logo-apple"
+                size={24}
+                color={colors.text}
+                accessibilityElementsHidden
+              />
               <Text style={styles.socialButtonText}>Apple</Text>
             </TouchableOpacity>
           </View>

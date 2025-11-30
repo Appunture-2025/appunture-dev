@@ -1,20 +1,21 @@
 import { Tabs } from "expo-router";
 import { View, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { COLORS } from "../../utils/constants";
+import { useThemeColors } from "../../stores/themeStore";
 import { SyncBanner } from "../../components/SyncBanner";
 import { useSyncStore } from "../../stores/syncStore";
 
 function ProfileTabIcon({ color, size }: { color: string; size: number }) {
   const { pendingOperations, pendingImages } = useSyncStore();
+  const colors = useThemeColors();
   const totalPending = pendingOperations + pendingImages;
 
   return (
     <View>
       <Ionicons name="person" size={size} color={color} />
       {totalPending > 0 && (
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>
+        <View style={[styles.badge, { backgroundColor: colors.error }]}>
+          <Text style={[styles.badgeText, { color: colors.surface }]}>
             {totalPending > 99 ? "99+" : totalPending}
           </Text>
         </View>
@@ -24,21 +25,23 @@ function ProfileTabIcon({ color, size }: { color: string; size: number }) {
 }
 
 export default function TabLayout() {
+  const colors = useThemeColors();
+
   return (
     <>
       <SyncBanner />
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: COLORS.primary,
-          tabBarInactiveTintColor: COLORS.textSecondary,
+          tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: colors.textSecondary,
           tabBarStyle: {
-            backgroundColor: COLORS.surface,
-            borderTopColor: COLORS.border,
+            backgroundColor: colors.surface,
+            borderTopColor: colors.border,
           },
           headerStyle: {
-            backgroundColor: COLORS.primary,
+            backgroundColor: colors.primary,
           },
-          headerTintColor: COLORS.surface,
+          headerTintColor: colors.surface,
           headerTitleStyle: {
             fontWeight: "bold",
           },
@@ -124,7 +127,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: -6,
     right: -10,
-    backgroundColor: COLORS.error,
     borderRadius: 10,
     minWidth: 18,
     height: 18,
@@ -133,7 +135,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   badgeText: {
-    color: COLORS.surface,
     fontSize: 10,
     fontWeight: "bold",
   },

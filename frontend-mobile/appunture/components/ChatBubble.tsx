@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useThemeColors } from "../stores/themeStore";
 import { COLORS } from "../utils/constants";
 
 interface ChatBubbleProps {
@@ -16,6 +17,7 @@ export function ChatBubble({
   timestamp,
   onLongPress,
 }: ChatBubbleProps) {
+  const colors = useThemeColors();
   const formattedTime = timestamp.toLocaleTimeString("pt-BR", {
     hour: "2-digit",
     minute: "2-digit",
@@ -38,30 +40,53 @@ export function ChatBubble({
       }
     >
       {!isUser && (
-        <View style={styles.botAvatar} accessibilityElementsHidden>
-          <Ionicons name="medical" size={16} color={COLORS.primary} />
+        <View
+          style={[styles.botAvatar, { backgroundColor: colors.background }]}
+          accessibilityElementsHidden
+        >
+          <Ionicons name="medical" size={16} color={colors.primary} />
         </View>
       )}
 
       <View
-        style={[styles.bubble, isUser ? styles.userBubble : styles.botBubble]}
+        style={[
+          styles.bubble,
+          isUser
+            ? [styles.userBubble, { backgroundColor: colors.primary }]
+            : [
+                styles.botBubble,
+                { backgroundColor: colors.surface, borderColor: colors.border },
+              ],
+        ]}
       >
         <Text
           style={[
             styles.messageText,
-            isUser ? styles.userText : styles.botText,
+            { color: isUser ? colors.surface : colors.text },
           ]}
         >
           {message}
         </Text>
-        <Text style={styles.timestamp} accessibilityElementsHidden>
+        <Text
+          style={[
+            styles.timestamp,
+            {
+              color: isUser ? colors.surface : colors.textSecondary,
+              opacity: isUser ? 0.8 : 1,
+            },
+          ]}
+          accessibilityElementsHidden
+        >
           {formattedTime}
         </Text>
       </View>
 
       {isUser && (
-        <View style={styles.userAvatar} accessibilityElementsHidden>
-          <Ionicons name="person" size={16} color={COLORS.surface} />
+        <View
+          style={[styles.userAvatar, { backgroundColor: colors.primary }]}
+          accessibilityElementsHidden
+        >
+          <Ionicons name="person" size={16} color={colors.surface} />
         </View>
       )}
     </TouchableOpacity>

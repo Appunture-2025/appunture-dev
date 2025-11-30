@@ -10,9 +10,11 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSyncStore } from "../stores/syncStore";
+import { useThemeColors } from "../stores/themeStore";
 import { COLORS } from "../utils/constants";
 
 export function SyncBanner() {
+  const colors = useThemeColors();
   const router = useRouter();
   const {
     syncInProgress,
@@ -56,13 +58,16 @@ export function SyncBanner() {
           styles.notificationToast,
           {
             opacity: fadeAnim,
+            backgroundColor: colors.surface,
           },
         ]}
         accessibilityRole="alert"
         accessibilityLabel={notificationMessage}
       >
-        <Ionicons name="checkmark-circle" size={20} color={COLORS.success} />
-        <Text style={styles.notificationText}>{notificationMessage}</Text>
+        <Ionicons name="checkmark-circle" size={20} color={colors.success} />
+        <Text style={[styles.notificationText, { color: colors.text }]}>
+          {notificationMessage}
+        </Text>
       </Animated.View>
     );
   }
@@ -71,12 +76,16 @@ export function SyncBanner() {
   if (!isOnline) {
     return (
       <View
-        style={[styles.banner, styles.offlineBanner]}
+        style={[
+          styles.banner,
+          styles.offlineBanner,
+          { backgroundColor: colors.textSecondary },
+        ]}
         accessibilityRole="alert"
         accessibilityLabel="Modo Offline. Alterações serão sincronizadas quando conectar."
       >
-        <Ionicons name="cloud-offline" size={20} color={COLORS.surface} />
-        <Text style={styles.bannerText}>
+        <Ionicons name="cloud-offline" size={20} color={colors.surface} />
+        <Text style={[styles.bannerText, { color: colors.surface }]}>
           Modo Offline - Alterações serão sincronizadas quando conectar
         </Text>
       </View>
@@ -87,12 +96,16 @@ export function SyncBanner() {
   if (syncInProgress && totalPending > 0) {
     return (
       <View
-        style={[styles.banner, styles.syncingBanner]}
+        style={[
+          styles.banner,
+          styles.syncingBanner,
+          { backgroundColor: colors.primary },
+        ]}
         accessibilityRole="progressbar"
         accessibilityLabel={`Sincronizando ${totalPending} itens.`}
       >
-        <ActivityIndicator size="small" color={COLORS.surface} />
-        <Text style={styles.bannerText}>
+        <ActivityIndicator size="small" color={colors.surface} />
+        <Text style={[styles.bannerText, { color: colors.surface }]}>
           Sincronizando {totalPending} {totalPending === 1 ? "item" : "itens"}
           ...
         </Text>
@@ -104,19 +117,23 @@ export function SyncBanner() {
   if (failedCount > 0) {
     return (
       <TouchableOpacity
-        style={[styles.banner, styles.failedBanner]}
+        style={[
+          styles.banner,
+          styles.failedBanner,
+          { backgroundColor: colors.error },
+        ]}
         onPress={() => router.push("/sync-status" as any)}
         activeOpacity={0.7}
         accessibilityRole="button"
         accessibilityLabel={`${failedCount} operações falharam. Toque para ver detalhes.`}
         accessibilityHint="Navega para a tela de status de sincronização"
       >
-        <Ionicons name="warning" size={20} color={COLORS.surface} />
-        <Text style={styles.bannerText}>
+        <Ionicons name="warning" size={20} color={colors.surface} />
+        <Text style={[styles.bannerText, { color: colors.surface }]}>
           ⚠️ {failedCount}{" "}
           {failedCount === 1 ? "operação falhou" : "operações falharam"}
         </Text>
-        <Ionicons name="chevron-forward" size={20} color={COLORS.surface} />
+        <Ionicons name="chevron-forward" size={20} color={colors.surface} />
       </TouchableOpacity>
     );
   }
@@ -125,7 +142,14 @@ export function SyncBanner() {
   if (totalPending > 0) {
     return (
       <TouchableOpacity
-        style={[styles.banner, styles.pendingBanner]}
+        style={[
+          styles.banner,
+          styles.pendingBanner,
+          {
+            backgroundColor: colors.background,
+            borderBottomColor: colors.border,
+          },
+        ]}
         onPress={() => router.push("/sync-status" as any)}
         activeOpacity={0.7}
         accessibilityRole="button"
@@ -135,9 +159,9 @@ export function SyncBanner() {
         <Ionicons
           name="cloud-upload-outline"
           size={18}
-          color={COLORS.textSecondary}
+          color={colors.textSecondary}
         />
-        <Text style={styles.pendingText}>
+        <Text style={[styles.pendingText, { color: colors.textSecondary }]}>
           {totalPending} pendente{totalPending > 1 ? "s" : ""}
         </Text>
       </TouchableOpacity>

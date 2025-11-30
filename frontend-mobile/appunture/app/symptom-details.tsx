@@ -13,10 +13,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useSymptomsStore } from "../stores/symptomsStore";
+import { useThemeColors } from "../stores/themeStore";
 import { COLORS, SPACING } from "../utils/constants";
 import PointCard from "../components/PointCard";
 
 export default function SymptomDetailsScreen() {
+  const colors = useThemeColors();
   const router = useRouter();
   const params = useLocalSearchParams();
   const symptomId = params.id as string;
@@ -69,9 +71,14 @@ export default function SymptomDetailsScreen() {
         showFavoriteButton={false}
       />
       {item.efficacy_score !== undefined && (
-        <View style={styles.efficacyBadge}>
-          <Ionicons name="star" size={12} color={COLORS.warning} />
-          <Text style={styles.efficacyText}>
+        <View
+          style={[
+            styles.efficacyBadge,
+            { backgroundColor: colors.warning + "20" },
+          ]}
+        >
+          <Ionicons name="star" size={12} color={colors.warning} />
+          <Text style={[styles.efficacyText, { color: colors.warning }]}>
             Eficácia: {item.efficacy_score}%
           </Text>
         </View>
@@ -81,10 +88,14 @@ export default function SymptomDetailsScreen() {
 
   if (isLoading && !currentSymptom) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: colors.background }]}
+      >
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={COLORS.primary} />
-          <Text style={styles.loadingText}>Carregando sintoma...</Text>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
+            Carregando sintoma...
+          </Text>
         </View>
       </SafeAreaView>
     );
@@ -92,19 +103,25 @@ export default function SymptomDetailsScreen() {
 
   if (!currentSymptom) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: colors.background }]}
+      >
         <View style={styles.errorContainer}>
           <Ionicons
             name="alert-circle-outline"
             size={64}
-            color={COLORS.error}
+            color={colors.error}
           />
-          <Text style={styles.errorText}>Sintoma não encontrado</Text>
+          <Text style={[styles.errorText, { color: colors.error }]}>
+            Sintoma não encontrado
+          </Text>
           <TouchableOpacity
-            style={styles.backButton}
+            style={[styles.backButton, { backgroundColor: colors.primary }]}
             onPress={() => router.back()}
           >
-            <Text style={styles.backButtonText}>Voltar</Text>
+            <Text style={[styles.backButtonText, { color: colors.surface }]}>
+              Voltar
+            </Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -112,39 +129,69 @@ export default function SymptomDetailsScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <ActivityIndicator animating={refreshing} color={COLORS.primary} />
+          <ActivityIndicator animating={refreshing} color={colors.primary} />
         }
       >
         {/* Header */}
-        <View style={styles.header}>
+        <View
+          style={[
+            styles.header,
+            {
+              backgroundColor: colors.surface,
+              borderBottomColor: colors.border,
+            },
+          ]}
+        >
           <TouchableOpacity
             style={styles.backIconButton}
             onPress={() => router.back()}
           >
-            <Ionicons name="arrow-back" size={24} color={COLORS.text} />
+            <Ionicons name="arrow-back" size={24} color={colors.text} />
           </TouchableOpacity>
-          <Text style={styles.title}>{currentSymptom.name}</Text>
+          <Text style={[styles.title, { color: colors.text }]}>
+            {currentSymptom.name}
+          </Text>
         </View>
 
         {/* Category and Tags */}
-        <View style={styles.section}>
+        <View style={[styles.section, { backgroundColor: colors.surface }]}>
           {currentSymptom.category && (
-            <View style={styles.categoryBadge}>
-              <Ionicons name="folder-outline" size={16} color={COLORS.primary} />
-              <Text style={styles.categoryText}>{currentSymptom.category}</Text>
+            <View
+              style={[
+                styles.categoryBadge,
+                { backgroundColor: colors.primary + "20" },
+              ]}
+            >
+              <Ionicons
+                name="folder-outline"
+                size={16}
+                color={colors.primary}
+              />
+              <Text style={[styles.categoryText, { color: colors.primary }]}>
+                {currentSymptom.category}
+              </Text>
             </View>
           )}
           {currentSymptom.tags && currentSymptom.tags.length > 0 && (
             <View style={styles.tagsContainer}>
               {currentSymptom.tags.map((tag, index) => (
-                <View key={index} style={styles.tag}>
-                  <Text style={styles.tagText}>#{tag}</Text>
+                <View
+                  key={index}
+                  style={[styles.tag, { backgroundColor: colors.background }]}
+                >
+                  <Text
+                    style={[styles.tagText, { color: colors.textSecondary }]}
+                  >
+                    #{tag}
+                  </Text>
                 </View>
               ))}
             </View>
@@ -153,10 +200,14 @@ export default function SymptomDetailsScreen() {
 
         {/* Severity */}
         {currentSymptom.severity !== undefined && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Severidade</Text>
+          <View style={[styles.section, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              Severidade
+            </Text>
             <View style={styles.severityContainer}>
-              <View style={styles.severityBar}>
+              <View
+                style={[styles.severityBar, { backgroundColor: colors.border }]}
+              >
                 <View
                   style={[
                     styles.severityFill,
@@ -164,15 +215,15 @@ export default function SymptomDetailsScreen() {
                       width: `${(currentSymptom.severity / 10) * 100}%`,
                       backgroundColor:
                         currentSymptom.severity > 7
-                          ? COLORS.error
+                          ? colors.error
                           : currentSymptom.severity > 4
-                          ? COLORS.warning
-                          : COLORS.success,
+                          ? colors.warning
+                          : colors.success,
                     },
                   ]}
                 />
               </View>
-              <Text style={styles.severityValue}>
+              <Text style={[styles.severityValue, { color: colors.text }]}>
                 {currentSymptom.severity}/10
               </Text>
             </View>
@@ -181,19 +232,25 @@ export default function SymptomDetailsScreen() {
 
         {/* Description */}
         {currentSymptom.description && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Descrição</Text>
-            <Text style={styles.description}>{currentSymptom.description}</Text>
+          <View style={[styles.section, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              Descrição
+            </Text>
+            <Text style={[styles.description, { color: colors.text }]}>
+              {currentSymptom.description}
+            </Text>
           </View>
         )}
 
         {/* Related Points */}
         {currentSymptom.points && currentSymptom.points.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>
+          <View style={[styles.section, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
               Pontos de Acupuntura Relacionados
             </Text>
-            <Text style={styles.sectionSubtitle}>
+            <Text
+              style={[styles.sectionSubtitle, { color: colors.textSecondary }]}
+            >
               {currentSymptom.points.length} ponto
               {currentSymptom.points.length !== 1 ? "s" : ""} pode
               {currentSymptom.points.length !== 1 ? "m" : ""} ajudar com este
@@ -211,12 +268,24 @@ export default function SymptomDetailsScreen() {
 
         {/* Usage Stats */}
         {currentSymptom.useCount !== undefined && (
-          <View style={styles.section}>
-            <View style={styles.statCard}>
-              <Ionicons name="analytics-outline" size={24} color={COLORS.info} />
+          <View style={[styles.section, { backgroundColor: colors.surface }]}>
+            <View
+              style={[styles.statCard, { backgroundColor: colors.background }]}
+            >
+              <Ionicons
+                name="analytics-outline"
+                size={24}
+                color={colors.info}
+              />
               <View style={styles.statInfo}>
-                <Text style={styles.statLabel}>Buscas</Text>
-                <Text style={styles.statValue}>{currentSymptom.useCount}</Text>
+                <Text
+                  style={[styles.statLabel, { color: colors.textSecondary }]}
+                >
+                  Buscas
+                </Text>
+                <Text style={[styles.statValue, { color: colors.text }]}>
+                  {currentSymptom.useCount}
+                </Text>
               </View>
             </View>
           </View>

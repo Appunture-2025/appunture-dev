@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import Markdown from "react-native-markdown-display";
 import { apiService } from "../../services/api";
-import { COLORS } from "../../utils/constants";
+import { useThemeColors, useThemeStore } from "../../stores/themeStore";
 
 interface ChatMessage {
   id: string;
@@ -24,6 +24,8 @@ interface ChatMessage {
 }
 
 export default function ChatBotScreen() {
+  const colors = useThemeColors();
+  const { isDark } = useThemeStore();
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "1",
@@ -35,6 +37,22 @@ export default function ChatBotScreen() {
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
+
+  const markdownStyles = useMemo(
+    () => ({
+      body: {
+        color: colors.text,
+        fontSize: 16,
+      },
+      paragraph: {
+        marginBottom: 10,
+      },
+      list_item: {
+        marginBottom: 5,
+      },
+    }),
+    [colors.text]
+  );
 
   const scrollToBottom = () => {
     setTimeout(() => {
@@ -84,7 +102,12 @@ export default function ChatBotScreen() {
     <View
       style={[
         styles.messageContainer,
-        item.isUser ? styles.userMessage : styles.botMessage,
+        item.isUser
+          ? [styles.userMessage, { backgroundColor: colors.primary }]
+          : [
+              styles.botMessage,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+            ],
       ]}
       accessibilityRole="text"
       accessibilityLabel={`${
@@ -96,7 +119,14 @@ export default function ChatBotScreen() {
       ) : (
         <Markdown style={markdownStyles}>{item.text}</Markdown>
       )}
-      <Text style={styles.timestamp}>
+      <Text
+        style={[
+          styles.timestamp,
+          {
+            color: item.isUser ? "rgba(255,255,255,0.7)" : colors.textSecondary,
+          },
+        ]}
+      >
         {item.timestamp.toLocaleTimeString("pt-BR", {
           hour: "2-digit",
           minute: "2-digit",
@@ -107,7 +137,7 @@ export default function ChatBotScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[styles.container, { backgroundColor: colors.background }]}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
     >
@@ -122,18 +152,28 @@ export default function ChatBotScreen() {
 
       {isLoading && (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="small" color={COLORS.primary} />
-          <Text style={styles.loadingText}>Digitando...</Text>
+          <ActivityIndicator size="small" color={colors.primary} />
+          <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
+            Digitando...
+          </Text>
         </View>
       )}
 
-      <View style={styles.inputContainer}>
+      <View
+        style={[
+          styles.inputContainer,
+          { backgroundColor: colors.surface, borderTopColor: colors.border },
+        ]}
+      >
         <TextInput
-          style={styles.input}
+          style={[
+            styles.input,
+            { backgroundColor: colors.background, color: colors.text },
+          ]}
           value={inputText}
           onChangeText={setInputText}
           placeholder="Digite sua mensagem..."
-          placeholderTextColor={COLORS.textSecondary}
+          placeholderTextColor={colors.textSecondary}
           multiline
           maxLength={500}
           editable={!isLoading}
@@ -143,7 +183,11 @@ export default function ChatBotScreen() {
         <TouchableOpacity
           style={[
             styles.sendButton,
-            (!inputText.trim() || isLoading) && styles.sendButtonDisabled,
+            { backgroundColor: colors.primary },
+            (!inputText.trim() || isLoading) && [
+              styles.sendButtonDisabled,
+              { backgroundColor: colors.border },
+            ],
           ]}
           onPress={handleSendMessage}
           disabled={!inputText.trim() || isLoading}
@@ -155,7 +199,7 @@ export default function ChatBotScreen() {
             name="send"
             size={24}
             color={
-              !inputText.trim() || isLoading ? COLORS.textSecondary : "#fff"
+              !inputText.trim() || isLoading ? colors.textSecondary : "#fff"
             }
             importantForAccessibility="no-hide-descendants"
           />
@@ -165,23 +209,9 @@ export default function ChatBotScreen() {
   );
 }
 
-const markdownStyles = {
-  body: {
-    color: COLORS.text,
-    fontSize: 16,
-  },
-  paragraph: {
-    marginBottom: 10,
-  },
-  list_item: {
-    marginBottom: 5,
-  },
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   messagesList: {
     padding: 16,
@@ -195,15 +225,12 @@ const styles = StyleSheet.create({
   },
   userMessage: {
     alignSelf: "flex-end",
-    backgroundColor: COLORS.primary,
     borderBottomRightRadius: 4,
   },
   botMessage: {
     alignSelf: "flex-start",
-    backgroundColor: COLORS.surface,
     borderBottomLeftRadius: 4,
     borderWidth: 1,
-    borderColor: COLORS.border,
   },
   userMessageText: {
     fontSize: 16,
@@ -212,7 +239,6 @@ const styles = StyleSheet.create({
   },
   timestamp: {
     fontSize: 10,
-    color: "rgba(0,0,0,0.5)",
     alignSelf: "flex-end",
     marginTop: 4,
   },
@@ -225,37 +251,31 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     marginLeft: 8,
-    color: COLORS.textSecondary,
     fontSize: 12,
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     padding: 12,
-    backgroundColor: COLORS.surface,
     borderTopWidth: 1,
-    borderTopColor: COLORS.border,
   },
   input: {
     flex: 1,
-    backgroundColor: COLORS.background,
     borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 8,
     maxHeight: 100,
     marginRight: 12,
     fontSize: 16,
-    color: COLORS.text,
   },
   sendButton: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: COLORS.primary,
     justifyContent: "center",
     alignItems: "center",
   },
   sendButtonDisabled: {
-    backgroundColor: COLORS.border,
+    opacity: 0.6,
   },
 });

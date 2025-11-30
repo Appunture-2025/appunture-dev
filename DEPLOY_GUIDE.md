@@ -18,6 +18,7 @@
 ## 1. Pré-requisitos
 
 ### Contas Necessárias
+
 - [ ] **Google Cloud Platform** - [console.cloud.google.com](https://console.cloud.google.com)
 - [ ] **Firebase** - [console.firebase.google.com](https://console.firebase.google.com)
 - [ ] **Expo** - [expo.dev](https://expo.dev) (grátis)
@@ -25,6 +26,7 @@
 - [ ] **Google Play Console** (opcional para Android) - [play.google.com/console](https://play.google.com/console)
 
 ### Ferramentas Locais
+
 ```bash
 # Node.js 20+
 node --version
@@ -84,13 +86,13 @@ eas --version
 ```javascript
 // Estas são as configurações que você precisa:
 const firebaseConfig = {
-  apiKey: "AIza...",              // FIREBASE_API_KEY
+  apiKey: "AIza...", // FIREBASE_API_KEY
   authDomain: "xxx.firebaseapp.com",
-  projectId: "xxx",               // FIREBASE_PROJECT_ID
+  projectId: "xxx", // FIREBASE_PROJECT_ID
   storageBucket: "xxx.appspot.com", // FIREBASE_STORAGE_BUCKET
-  messagingSenderId: "123...",    // FIREBASE_MESSAGING_SENDER_ID
-  appId: "1:123...",              // FIREBASE_APP_ID
-  measurementId: "G-..."          // FIREBASE_MEASUREMENT_ID (opcional)
+  messagingSenderId: "123...", // FIREBASE_MESSAGING_SENDER_ID
+  appId: "1:123...", // FIREBASE_APP_ID
+  measurementId: "G-...", // FIREBASE_MEASUREMENT_ID (opcional)
 };
 ```
 
@@ -143,11 +145,11 @@ gcloud secrets add-iam-policy-binding firebase-service-account \
 2. Clique em **"Create Credentials"** > **"OAuth client ID"**
 3. Crie 3 client IDs:
 
-| Tipo | Nome | Redirect URIs |
-|------|------|---------------|
-| Web application | Appunture Web | `https://auth.expo.io/@YOUR_EXPO_USERNAME/appunture` |
-| iOS | Appunture iOS | Bundle ID: `com.appunture.mobile` |
-| Android | Appunture Android | Package: `com.appunture.mobile`, SHA-1: seu fingerprint |
+| Tipo            | Nome              | Redirect URIs                                           |
+| --------------- | ----------------- | ------------------------------------------------------- |
+| Web application | Appunture Web     | `https://auth.expo.io/@YOUR_EXPO_USERNAME/appunture`    |
+| iOS             | Appunture iOS     | Bundle ID: `com.appunture.mobile`                       |
+| Android         | Appunture Android | Package: `com.appunture.mobile`, SHA-1: seu fingerprint |
 
 4. Copie os Client IDs gerados
 
@@ -159,24 +161,24 @@ Vá em **Settings** > **Secrets and variables** > **Actions** no seu repositóri
 
 ### 4.1 Secrets Obrigatórios
 
-| Secret | Descrição | Onde obter |
-|--------|-----------|------------|
-| `GCP_PROJECT_ID` | ID do projeto GCP | Console GCP > Home |
-| `GCP_SERVICE_ACCOUNT` | JSON completo do Service Account | Firebase > Project Settings > Service accounts |
-| `FIREBASE_PROJECT_ID` | ID do projeto Firebase | Firebase Console |
-| `FIREBASE_STORAGE_BUCKET` | Bucket do Storage | Firebase > Storage |
-| `EXPO_TOKEN` | Token de acesso do Expo | expo.dev > Account Settings > Access Tokens |
+| Secret                    | Descrição                        | Onde obter                                     |
+| ------------------------- | -------------------------------- | ---------------------------------------------- |
+| `GCP_PROJECT_ID`          | ID do projeto GCP                | Console GCP > Home                             |
+| `GCP_SERVICE_ACCOUNT`     | JSON completo do Service Account | Firebase > Project Settings > Service accounts |
+| `FIREBASE_PROJECT_ID`     | ID do projeto Firebase           | Firebase Console                               |
+| `FIREBASE_STORAGE_BUCKET` | Bucket do Storage                | Firebase > Storage                             |
+| `EXPO_TOKEN`              | Token de acesso do Expo          | expo.dev > Account Settings > Access Tokens    |
 
 ### 4.2 Secrets Opcionais (para produção)
 
-| Secret | Descrição |
-|--------|-----------|
+| Secret              | Descrição                   |
+| ------------------- | --------------------------- |
 | `GOOGLE_AI_API_KEY` | API Key do Gemini (para IA) |
-| `APPLE_ID` | Apple ID para App Store |
-| `APPLE_TEAM_ID` | Team ID da Apple |
-| `ASC_KEY_ID` | App Store Connect Key ID |
-| `ASC_ISSUER_ID` | App Store Connect Issuer ID |
-| `ASC_KEY_P8` | Conteúdo da chave .p8 |
+| `APPLE_ID`          | Apple ID para App Store     |
+| `APPLE_TEAM_ID`     | Team ID da Apple            |
+| `ASC_KEY_ID`        | App Store Connect Key ID    |
+| `ASC_ISSUER_ID`     | App Store Connect Issuer ID |
+| `ASC_KEY_P8`        | Conteúdo da chave .p8       |
 
 ### 4.3 Como adicionar os secrets
 
@@ -262,6 +264,7 @@ code .env
 ```
 
 Preencha o `.env`:
+
 ```dotenv
 EXPO_PUBLIC_API_BASE_URL=https://YOUR_CLOUD_RUN_URL/api
 EXPO_PUBLIC_FIREBASE_API_KEY=your-api-key
@@ -390,17 +393,21 @@ curl https://YOUR_CLOUD_RUN_URL/api/points?page=0&size=10
 ## 🆘 Troubleshooting
 
 ### Erro: "Firebase: Error (auth/unauthorized-domain)"
+
 - Adicione o domínio em Firebase > Authentication > Settings > Authorized domains
 
 ### Erro: "Cloud Run: Container failed to start"
+
 - Verifique os logs: `gcloud run logs read appunture-backend`
 - Verifique se o secret está configurado corretamente
 
 ### Erro: "EAS Build failed"
+
 - Verifique `eas.json` está correto
 - Verifique se o `EXPO_TOKEN` está configurado no GitHub Secrets
 
 ### Erro: "Firestore permission denied"
+
 - Verifique as Security Rules do Firestore
 - Verifique se o token de autenticação está sendo enviado
 
@@ -409,6 +416,7 @@ curl https://YOUR_CLOUD_RUN_URL/api/points?page=0&size=10
 ## 📞 Suporte
 
 Para dúvidas ou problemas:
+
 1. Verifique os logs no Cloud Run/Firebase
 2. Abra uma issue no GitHub
 3. Consulte a documentação oficial:

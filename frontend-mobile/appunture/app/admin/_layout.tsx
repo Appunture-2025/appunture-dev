@@ -1,9 +1,10 @@
 import { Stack, useRouter } from "expo-router";
 import { useEffect } from "react";
-import { COLORS } from "../../utils/constants";
+import { useThemeColors } from "../../stores/themeStore";
 import { useAuthStore } from "../../stores/authStore";
 
 export default function AdminLayout() {
+  const colors = useThemeColors();
   const { user } = useAuthStore();
   const router = useRouter();
 
@@ -21,9 +22,9 @@ export default function AdminLayout() {
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor: COLORS.primary,
+          backgroundColor: colors.primary,
         },
-        headerTintColor: COLORS.surface,
+        headerTintColor: colors.surface,
         headerTitleStyle: {
           fontWeight: "bold",
         },

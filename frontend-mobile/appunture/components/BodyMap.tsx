@@ -18,6 +18,7 @@ import {
   getMarkerPosition,
   getSvgAssetUri,
 } from "../utils/bodyMap";
+import { useThemeColors } from "../stores/themeStore";
 import { COLORS } from "../utils/constants";
 
 export interface BodyMapMarker {
@@ -42,6 +43,7 @@ export function BodyMap({
   selectedPointId,
   onMarkerPress,
 }: BodyMapProps) {
+  const colors = useThemeColors();
   const [svgUri, setSvgUri] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [mapSize, setMapSize] = useState({ width: 0, height: 0 });
@@ -98,21 +100,34 @@ export function BodyMap({
   }, [mapSize.height, mapSize.width, markers]);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: colors.surface, borderColor: colors.border },
+      ]}
+    >
       <View style={styles.layerHeader}>
         <View>
-          <Text style={styles.layerTitle}>{layer.label}</Text>
-          <Text style={styles.layerSubtitle}>
+          <Text style={[styles.layerTitle, { color: colors.text }]}>
+            {layer.label}
+          </Text>
+          <Text style={[styles.layerSubtitle, { color: colors.textSecondary }]}>
             {plane === "front" ? "Plano frontal" : "Plano posterior"}
           </Text>
         </View>
       </View>
 
-      <View style={styles.mapWrapper} onLayout={handleLayout}>
+      <View
+        style={[
+          styles.mapWrapper,
+          { backgroundColor: colors.background, borderColor: colors.border },
+        ]}
+        onLayout={handleLayout}
+      >
         {isLoading && (
           <ActivityIndicator
             style={styles.loader}
-            color={COLORS.primary}
+            color={colors.primary}
             accessibilityLabel="Carregando camada do atlas"
           />
         )}
@@ -142,16 +157,22 @@ export function BodyMap({
             <View
               style={[
                 styles.markerDot,
-                marker.pointId === selectedPointId && styles.markerDotActive,
+                { backgroundColor: colors.accent, borderColor: colors.surface },
+                marker.pointId === selectedPointId && {
+                  backgroundColor: colors.primary,
+                  borderColor: colors.surface,
+                },
               ]}
             />
-            <Text style={styles.markerLabel}>{marker.label}</Text>
+            <Text style={[styles.markerLabel, { color: colors.surface }]}>
+              {marker.label}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
 
       {!markers.length && !isLoading && (
-        <Text style={styles.emptyState}>
+        <Text style={[styles.emptyState, { color: colors.textSecondary }]}>
           Nenhum ponto com coordenadas foi localizado para esta camada.
         </Text>
       )}

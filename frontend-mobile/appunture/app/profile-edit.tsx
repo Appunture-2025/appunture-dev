@@ -15,12 +15,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "../stores/authStore";
+import { useThemeColors } from "../stores/themeStore";
 import { COLORS, PROFESSIONS } from "../utils/constants";
 import { mediaStorageService } from "../services/storage";
 import { apiService } from "../services/api";
 
 export default function ProfileEditScreen() {
   const router = useRouter();
+  const colors = useThemeColors();
   const { user, updateProfile, isLoading } = useAuthStore();
 
   const [name, setName] = useState(user?.name || "");
@@ -145,17 +147,24 @@ export default function ProfileEditScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={handleCancel}>
-            <Ionicons name="arrow-back" size={24} color={COLORS.text} />
+          <TouchableOpacity
+            style={[styles.backButton, { backgroundColor: colors.surface }]}
+            onPress={handleCancel}
+          >
+            <Ionicons name="arrow-back" size={24} color={colors.text} />
           </TouchableOpacity>
-          <Text style={styles.title}>Editar Perfil</Text>
+          <Text style={[styles.title, { color: colors.text }]}>
+            Editar Perfil
+          </Text>
           <View style={styles.placeholder} />
         </View>
 
@@ -165,30 +174,42 @@ export default function ProfileEditScreen() {
             {profileImageUri ? (
               <Image
                 source={{ uri: profileImageUri }}
-                style={styles.avatarImage}
+                style={[
+                  styles.avatarImage,
+                  { backgroundColor: colors.surface },
+                ]}
               />
             ) : (
-              <View style={styles.avatar}>
-                <Ionicons name="person" size={60} color={COLORS.primary} />
+              <View
+                style={[styles.avatar, { backgroundColor: colors.surface }]}
+              >
+                <Ionicons name="person" size={60} color={colors.primary} />
               </View>
             )}
             {isUploadingPhoto ? (
               <View style={styles.uploadingOverlay}>
-                <ActivityIndicator color={COLORS.surface} size="small" />
-                <Text style={styles.uploadProgressText}>
+                <ActivityIndicator color={colors.surface} size="small" />
+                <Text
+                  style={[styles.uploadProgressText, { color: colors.surface }]}
+                >
                   {Math.round(uploadProgress * 100)}%
                 </Text>
               </View>
             ) : (
               <TouchableOpacity
-                style={styles.changePhotoButton}
+                style={[
+                  styles.changePhotoButton,
+                  { backgroundColor: colors.primary },
+                ]}
                 onPress={handleSelectPhoto}
               >
-                <Ionicons name="camera" size={20} color={COLORS.surface} />
+                <Ionicons name="camera" size={20} color={colors.surface} />
               </TouchableOpacity>
             )}
           </View>
-          <Text style={styles.photoHint}>Toque para alterar a foto</Text>
+          <Text style={[styles.photoHint, { color: colors.textSecondary }]}>
+            Toque para alterar a foto
+          </Text>
         </View>
 
         {/* Email Verification Badge */}
@@ -198,17 +219,17 @@ export default function ProfileEditScreen() {
               styles.verificationBadge,
               {
                 backgroundColor: user?.emailVerified
-                  ? COLORS.success
-                  : COLORS.warning,
+                  ? colors.success
+                  : colors.warning,
               },
             ]}
           >
             <Ionicons
               name={user?.emailVerified ? "checkmark-circle" : "alert-circle"}
               size={16}
-              color={COLORS.surface}
+              color={colors.surface}
             />
-            <Text style={styles.verificationText}>
+            <Text style={[styles.verificationText, { color: colors.surface }]}>
               {user?.emailVerified
                 ? "Email verificado"
                 : "Email não verificado"}
@@ -220,17 +241,22 @@ export default function ProfileEditScreen() {
         <View style={styles.form}>
           {/* Name Field */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Nome *</Text>
-            <View style={styles.inputContainer}>
+            <Text style={[styles.label, { color: colors.text }]}>Nome *</Text>
+            <View
+              style={[
+                styles.inputContainer,
+                { backgroundColor: colors.surface, borderColor: colors.border },
+              ]}
+            >
               <Ionicons
                 name="person-outline"
                 size={20}
-                color={COLORS.textSecondary}
+                color={colors.textSecondary}
               />
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: colors.text }]}
                 placeholder="Seu nome completo"
-                placeholderTextColor={COLORS.textSecondary}
+                placeholderTextColor={colors.textSecondary}
                 value={name}
                 onChangeText={setName}
                 autoCapitalize="words"
@@ -240,74 +266,117 @@ export default function ProfileEditScreen() {
 
           {/* Email Field (Read-only) */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Email</Text>
-            <View style={[styles.inputContainer, styles.readOnlyInput]}>
+            <Text style={[styles.label, { color: colors.text }]}>Email</Text>
+            <View
+              style={[
+                styles.inputContainer,
+                styles.readOnlyInput,
+                {
+                  backgroundColor: colors.background,
+                  borderColor: colors.border,
+                },
+              ]}
+            >
               <Ionicons
                 name="mail-outline"
                 size={20}
-                color={COLORS.textSecondary}
+                color={colors.textSecondary}
               />
-              <Text style={styles.readOnlyText}>{user?.email}</Text>
+              <Text
+                style={[styles.readOnlyText, { color: colors.textSecondary }]}
+              >
+                {user?.email}
+              </Text>
             </View>
-            <Text style={styles.hint}>O email não pode ser alterado</Text>
+            <Text style={[styles.hint, { color: colors.textSecondary }]}>
+              O email não pode ser alterado
+            </Text>
           </View>
 
           {/* Profession Field */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Profissão</Text>
+            <Text style={[styles.label, { color: colors.text }]}>
+              Profissão
+            </Text>
             <TouchableOpacity
-              style={styles.inputContainer}
+              style={[
+                styles.inputContainer,
+                { backgroundColor: colors.surface, borderColor: colors.border },
+              ]}
               onPress={() => setShowProfessionPicker(true)}
             >
               <Ionicons
                 name="briefcase-outline"
                 size={20}
-                color={COLORS.textSecondary}
+                color={colors.textSecondary}
               />
               <Text
-                style={[styles.input, !profession && styles.placeholderText]}
+                style={[
+                  styles.input,
+                  { color: profession ? colors.text : colors.textSecondary },
+                ]}
               >
                 {profession || "Selecione sua profissão"}
               </Text>
               <Ionicons
                 name="chevron-down"
                 size={20}
-                color={COLORS.textSecondary}
+                color={colors.textSecondary}
               />
             </TouchableOpacity>
           </View>
 
           {/* Phone Field */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Telefone</Text>
-            <View style={styles.inputContainer}>
+            <Text style={[styles.label, { color: colors.text }]}>Telefone</Text>
+            <View
+              style={[
+                styles.inputContainer,
+                { backgroundColor: colors.surface, borderColor: colors.border },
+              ]}
+            >
               <Ionicons
                 name="call-outline"
                 size={20}
-                color={COLORS.textSecondary}
+                color={colors.textSecondary}
               />
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: colors.text }]}
                 placeholder="(00) 00000-0000"
-                placeholderTextColor={COLORS.textSecondary}
+                placeholderTextColor={colors.textSecondary}
                 value={phone}
                 onChangeText={setPhone}
                 keyboardType="phone-pad"
               />
             </View>
-            <Text style={styles.hint}>Disponível em breve</Text>
+            <Text style={[styles.hint, { color: colors.textSecondary }]}>
+              Disponível em breve
+            </Text>
           </View>
 
           {/* Role Display (Read-only) */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Tipo de conta</Text>
-            <View style={[styles.inputContainer, styles.readOnlyInput]}>
+            <Text style={[styles.label, { color: colors.text }]}>
+              Tipo de conta
+            </Text>
+            <View
+              style={[
+                styles.inputContainer,
+                styles.readOnlyInput,
+                {
+                  backgroundColor: colors.background,
+                  borderColor: colors.border,
+                },
+              ]}
+            >
               <Ionicons
                 name="shield-outline"
                 size={20}
-                color={COLORS.textSecondary}
+                color={colors.textSecondary}
               />
-              <Text style={styles.readOnlyText}>
+              <Text
+                style={[styles.readOnlyText, { color: colors.textSecondary }]}
+              >
                 {user?.role === "admin" || user?.role === "ADMIN"
                   ? "Administrador"
                   : "Usuário"}
@@ -318,19 +387,30 @@ export default function ProfileEditScreen() {
 
         {/* Action Buttons */}
         <View style={styles.actions}>
-          <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
-            <Text style={styles.cancelButtonText}>Cancelar</Text>
+          <TouchableOpacity
+            style={[styles.cancelButton, { borderColor: colors.border }]}
+            onPress={handleCancel}
+          >
+            <Text style={[styles.cancelButtonText, { color: colors.text }]}>
+              Cancelar
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.saveButton, isLoading && styles.disabledButton]}
+            style={[
+              styles.saveButton,
+              { backgroundColor: colors.primary },
+              isLoading && styles.disabledButton,
+            ]}
             onPress={handleSave}
             disabled={isLoading}
           >
             {isLoading ? (
-              <ActivityIndicator color={COLORS.surface} size="small" />
+              <ActivityIndicator color={colors.surface} size="small" />
             ) : (
-              <Text style={styles.saveButtonText}>Salvar</Text>
+              <Text style={[styles.saveButtonText, { color: colors.surface }]}>
+                Salvar
+              </Text>
             )}
           </TouchableOpacity>
         </View>
@@ -339,18 +419,27 @@ export default function ProfileEditScreen() {
       {/* Profession Picker Modal */}
       {showProfessionPicker && (
         <View style={styles.modal}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Selecione sua profissão</Text>
+          <View
+            style={[styles.modalContent, { backgroundColor: colors.surface }]}
+          >
+            <View
+              style={[styles.modalHeader, { borderBottomColor: colors.border }]}
+            >
+              <Text style={[styles.modalTitle, { color: colors.text }]}>
+                Selecione sua profissão
+              </Text>
               <TouchableOpacity onPress={() => setShowProfessionPicker(false)}>
-                <Ionicons name="close" size={24} color={COLORS.text} />
+                <Ionicons name="close" size={24} color={colors.text} />
               </TouchableOpacity>
             </View>
             <ScrollView style={styles.modalList}>
               {PROFESSIONS.map((prof) => (
                 <TouchableOpacity
                   key={prof}
-                  style={styles.modalItem}
+                  style={[
+                    styles.modalItem,
+                    { borderBottomColor: colors.border },
+                  ]}
                   onPress={() => {
                     setProfession(prof);
                     setShowProfessionPicker(false);
@@ -359,7 +448,11 @@ export default function ProfileEditScreen() {
                   <Text
                     style={[
                       styles.modalItemText,
-                      profession === prof && styles.modalItemTextSelected,
+                      { color: colors.text },
+                      profession === prof && {
+                        fontWeight: "600",
+                        color: colors.primary,
+                      },
                     ]}
                   >
                     {prof}
@@ -368,7 +461,7 @@ export default function ProfileEditScreen() {
                     <Ionicons
                       name="checkmark"
                       size={20}
-                      color={COLORS.primary}
+                      color={colors.primary}
                     />
                   )}
                 </TouchableOpacity>
