@@ -17,8 +17,15 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
   onPress,
 }) => {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
-      <FontAwesome name={icon as any} size={24} color={color} />
+    <TouchableOpacity 
+      style={styles.card} 
+      onPress={onPress} 
+      activeOpacity={0.7}
+      accessibilityLabel={`Categoria: ${title}`}
+      accessibilityHint="Toque duas vezes para buscar nesta categoria"
+      accessibilityRole="button"
+    >
+      <FontAwesome name={icon as any} size={24} color={color} accessibilityElementsHidden />
       <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   );

@@ -2,15 +2,23 @@ package com.appunture.backend.dto.point;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Request DTO for adding an image to a point
+ */
 @Getter
 @Setter
 @Schema(name = "PointImageRequest", description = "Payload para adicionar imagem ao ponto Firestore")
 public class PointImageRequest {
 
-    @NotBlank
+    @NotBlank(message = "Image URL is required")
+    @Pattern(
+        regexp = "^https?://.*",
+        message = "Image URL must be a valid HTTP or HTTPS URL"
+    )
     @Schema(description = "URL original da imagem armazenada no Firebase Storage", example = "https://storage.googleapis.com/appunture/points/vg20/raw.jpg")
     private String imageUrl;
 

@@ -25,10 +25,10 @@ export const Header: React.FC<HeaderProps> = ({
         backgroundColor="#FFFFFF"
         translucent={false}
       />
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} accessibilityRole="header">
         <View style={styles.header}>
           {/* Logo e Nome do App */}
-          <View style={styles.logoContainer}>
+          <View style={styles.logoContainer} accessibilityLabel="Appunture - Logo">
             <Logo size="small" showText={false} />
             <Text style={styles.appName}>Appunture</Text>
           </View>
@@ -38,11 +38,15 @@ export const Header: React.FC<HeaderProps> = ({
             style={styles.menuButton} 
             onPress={handleMenuPress}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            accessibilityLabel="Abrir menu de navegação"
+            accessibilityHint="Toque duas vezes para abrir o menu lateral"
+            accessibilityRole="button"
           >
             <FontAwesome 
               name="bars" 
               size={24} 
               color="#1F2937" 
+              accessibilityElementsHidden
             />
           </TouchableOpacity>
         </View>

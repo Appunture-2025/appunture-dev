@@ -27,19 +27,88 @@ import { firebaseAuth } from "./firebase";
 
 const apiLogger = createLogger("API");
 
+/**
+ * Error codes for different types of API errors
+ */
+export const API_ERROR_CODES = {
+  NETWORK_ERROR: "NETWORK_ERROR",
+  TIMEOUT_ERROR: "TIMEOUT_ERROR",
+  UNAUTHORIZED: "UNAUTHORIZED",
+  FORBIDDEN: "FORBIDDEN",
+  NOT_FOUND: "NOT_FOUND",
+  VALIDATION_ERROR: "VALIDATION_ERROR",
+  RATE_LIMIT: "RATE_LIMIT",
+  SERVER_ERROR: "SERVER_ERROR",
+  UNKNOWN: "UNKNOWN",
+} as const;
+
+/**
+ * Get user-friendly error message based on error type
+ */
+export function getErrorMessage(error: ApiError): string {
+  if (!error.status) {
+    return "Não foi possível conectar ao servidor. Verifique sua conexão com a internet.";
+  }
+  
+  switch (error.status) {
+    case 400:
+      return error.message || "Dados inválidos. Por favor, verifique as informações.";
+    case 401:
+      return "Sua sessão expirou. Por favor, faça login novamente.";
+    case 403:
+      return "Você não tem permissão para realizar esta ação.";
+    case 404:
+      return "O recurso solicitado não foi encontrado.";
+    case 429:
+      return "Muitas requisições. Por favor, aguarde um momento.";
+    case 500:
+    case 502:
+    case 503:
+    case 504:
+      return "Erro no servidor. Por favor, tente novamente mais tarde.";
+    default:
+      return error.message || "Ocorreu um erro inesperado. Por favor, tente novamente.";
+  }
+}
+
 class ApiService {
   private client: AxiosInstance;
+  private retryCount: Map<string, number> = new Map();
+  private readonly MAX_RETRIES = 3;
+  private readonly RETRY_DELAY_MS = 1000;
+  private readonly REQUEST_TIMEOUT_MS = 30000;
 
   constructor() {
     this.client = axios.create({
       baseURL: API_BASE_URL,
-      timeout: 10000,
+      timeout: this.REQUEST_TIMEOUT_MS,
       headers: {
         "Content-Type": "application/json",
       },
     });
 
     this.setupInterceptors();
+  }
+
+  /**
+   * Check if error is retryable (network errors, 5xx errors)
+   */
+  private isRetryableError(error: AxiosError): boolean {
+    // Retry on network errors
+    if (!error.response) {
+      return true;
+    }
+    
+    // Retry on server errors (5xx)
+    const status = error.response.status;
+    return status >= 500 && status < 600;
+  }
+
+  /**
+   * Get retry key for a request
+   */
+  private getRetryKey(config: InternalAxiosRequestConfig): string {
+    return `${config.method}:${config.url}`;
   }
 
   private setupInterceptors() {
@@ -78,33 +147,111 @@ class ApiService {
       }
     );
 
-    // Response interceptor to handle errors
+    // Response interceptor to handle errors with retry logic
     this.client.interceptors.response.use(
-      (response: AxiosResponse) => response,
-      (error: AxiosError) => {
+      (response: AxiosResponse) => {
+        // Clear retry count on success
+        if (response.config) {
+          const key = this.getRetryKey(response.config);
+          this.retryCount.delete(key);
+        }
+        return response;
+      },
+      async (error: AxiosError) => {
+        const config = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+        
+        // Handle retryable errors
+        if (config && this.isRetryableError(error) && !config._retry) {
+          const key = this.getRetryKey(config);
+          const currentRetries = this.retryCount.get(key) || 0;
+          
+          if (currentRetries < this.MAX_RETRIES) {
+            this.retryCount.set(key, currentRetries + 1);
+            config._retry = true;
+            
+            // Exponential backoff
+            const delay = this.RETRY_DELAY_MS * Math.pow(2, currentRetries);
+            apiLogger.info(`Retrying request (attempt ${currentRetries + 1}/${this.MAX_RETRIES}) after ${delay}ms`);
+            
+            await new Promise(resolve => setTimeout(resolve, delay));
+            return this.client(config);
+          }
+          
+          // Max retries reached, clear count
+          this.retryCount.delete(key);
+        }
+
+        // Handle 401 - try to refresh token
+        if (error.response?.status === 401) {
+          const currentUser = firebaseAuth.currentUser;
+          if (currentUser && config && !config._retry) {
+            try {
+              config._retry = true;
+              await currentUser.getIdToken(true); // Force refresh
+              return this.client(config);
+            } catch {
+              apiLogger.warn("Token refresh failed");
+            }
+          }
+        }
+
+        // Build standardized error response
         const apiError: ApiError = {
-          error: "Network Error",
-          message: "Failed to connect to server",
+          error: API_ERROR_CODES.UNKNOWN,
+          message: "An unexpected error occurred",
         };
 
         if (error.response) {
           // Server responded with error status
-          const responseData = error.response.data as any;
-          apiError.error = responseData?.error || "Server Error";
+          const responseData = error.response.data as {
+            code?: string;
+            error?: string;
+            message?: string;
+          };
+          apiError.error = responseData?.code || responseData?.error || "Server Error";
           apiError.message = responseData?.message || error.message;
           apiError.status = error.response.status;
+          
+          // Map status to error code
+          switch (error.response.status) {
+            case 400:
+              apiError.error = API_ERROR_CODES.VALIDATION_ERROR;
+              break;
+            case 401:
+              apiError.error = API_ERROR_CODES.UNAUTHORIZED;
+              break;
+            case 403:
+              apiError.error = API_ERROR_CODES.FORBIDDEN;
+              break;
+            case 404:
+              apiError.error = API_ERROR_CODES.NOT_FOUND;
+              break;
+            case 429:
+              apiError.error = API_ERROR_CODES.RATE_LIMIT;
+              break;
+            default:
+              if (error.response.status >= 500) {
+                apiError.error = API_ERROR_CODES.SERVER_ERROR;
+              }
+          }
         } else if (error.request) {
           // Request was made but no response received
-          apiError.error = "Network Error";
-          apiError.message = "No response from server";
+          if (error.code === "ECONNABORTED") {
+            apiError.error = API_ERROR_CODES.TIMEOUT_ERROR;
+            apiError.message = "Request timed out. Please try again.";
+          } else {
+            apiError.error = API_ERROR_CODES.NETWORK_ERROR;
+            apiError.message = "No response from server. Check your internet connection.";
+          }
           apiError.status = undefined;
         } else {
           // Something else happened
-          apiError.error = "Request Error";
+          apiError.error = API_ERROR_CODES.UNKNOWN;
           apiError.message = error.message;
           apiError.status = undefined;
         }
 
+        apiLogger.error(`API Error: ${apiError.error} - ${apiError.message}`);
         return Promise.reject(apiError);
       }
     );

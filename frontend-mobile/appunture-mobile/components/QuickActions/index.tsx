@@ -20,10 +20,20 @@ export const QuickActions: React.FC = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} accessibilityRole="list">
       {actions.map((action, index) => (
-        <TouchableOpacity key={index} style={styles.actionCard} activeOpacity={0.7}>
-          <View style={[styles.iconContainer, { backgroundColor: `${action.color}15` }]}>
+        <TouchableOpacity 
+          key={index} 
+          style={styles.actionCard} 
+          activeOpacity={0.7}
+          accessibilityLabel={`${action.title}. ${action.subtitle}`}
+          accessibilityHint="Toque duas vezes para acessar este recurso"
+          accessibilityRole="button"
+        >
+          <View 
+            style={[styles.iconContainer, { backgroundColor: `${action.color}15` }]}
+            accessibilityElementsHidden={true}
+          >
             <FontAwesome name={action.icon as any} size={24} color={action.color} />
           </View>
           <Text style={styles.actionTitle}>{action.title}</Text>

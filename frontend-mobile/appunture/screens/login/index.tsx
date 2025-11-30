@@ -162,10 +162,11 @@ export default function LoginScreen() {
         transparent
         animationType="fade"
         onRequestClose={() => setShowVerificationModal(false)}
+        accessibilityViewIsModal
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>Verifique seu email</Text>
+          <View style={styles.modalCard} accessibilityRole="alert">
+            <Text style={styles.modalTitle} accessibilityRole="header">Verifique seu email</Text>
             <Text style={styles.modalMessage}>
               {verificationMessage
                 ? verificationMessage
@@ -178,9 +179,12 @@ export default function LoginScreen() {
               style={[styles.modalButton, resendingEmail && styles.disabledButton]}
               onPress={handleResendEmail}
               disabled={resendingEmail}
+              accessibilityRole="button"
+              accessibilityLabel={resendingEmail ? "Reenviando email" : "Reenviar email de verificação"}
+              accessibilityState={{ disabled: resendingEmail }}
             >
               {resendingEmail ? (
-                <ActivityIndicator color={COLORS.surface} size="small" />
+                <ActivityIndicator color={COLORS.surface} size="small" accessibilityLabel="Carregando" />
               ) : (
                 <Text style={styles.modalButtonText}>Reenviar email</Text>
               )}
@@ -189,6 +193,8 @@ export default function LoginScreen() {
             <TouchableOpacity
               style={styles.modalSecondaryButton}
               onPress={() => setShowVerificationModal(false)}
+              accessibilityRole="button"
+              accessibilityLabel="Fechar modal"
             >
               <Text style={styles.modalSecondaryButtonText}>Fechar</Text>
             </TouchableOpacity>
@@ -198,19 +204,20 @@ export default function LoginScreen() {
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
-          <View style={styles.logoContainer}>
+          <View style={styles.logoContainer} accessibilityElementsHidden>
             <Ionicons name="medical" size={64} color={COLORS.primary} />
           </View>
-          <Text style={styles.title}>Appunture</Text>
+          <Text style={styles.title} accessibilityRole="header">Appunture</Text>
           <Text style={styles.subtitle}>Acupuntura Digital</Text>
         </View>
 
-        <View style={styles.form}>
+        <View style={styles.form} accessibilityLabel="Formulário de login">
           <View style={styles.inputContainer}>
             <Ionicons
               name="mail-outline"
               size={20}
               color={COLORS.textSecondary}
+              accessibilityElementsHidden
             />
             <TextInput
               style={styles.input}
@@ -222,6 +229,8 @@ export default function LoginScreen() {
               autoCapitalize="none"
               autoComplete="email"
               textContentType="emailAddress"
+              accessibilityLabel="Email"
+              accessibilityHint="Digite seu endereço de email"
             />
           </View>
 
@@ -230,6 +239,7 @@ export default function LoginScreen() {
               name="lock-closed-outline"
               size={20}
               color={COLORS.textSecondary}
+              accessibilityElementsHidden
             />
             <TextInput
               style={styles.input}
@@ -240,15 +250,21 @@ export default function LoginScreen() {
               secureTextEntry={!showPassword}
               autoComplete="password"
               textContentType="password"
+              accessibilityLabel="Senha"
+              accessibilityHint="Digite sua senha"
             />
             <TouchableOpacity
               onPress={() => setShowPassword(!showPassword)}
               style={styles.passwordToggle}
+              accessibilityRole="button"
+              accessibilityLabel={showPassword ? "Ocultar senha" : "Mostrar senha"}
+              accessibilityState={{ checked: showPassword }}
             >
               <Ionicons
                 name={showPassword ? "eye-off-outline" : "eye-outline"}
                 size={20}
                 color={COLORS.textSecondary}
+                accessibilityElementsHidden
               />
             </TouchableOpacity>
           </View>
@@ -256,6 +272,9 @@ export default function LoginScreen() {
           <TouchableOpacity
             onPress={handleForgotPassword}
             style={styles.forgotPassword}
+            accessibilityRole="button"
+            accessibilityLabel="Esqueci minha senha"
+            accessibilityHint="Abre opções para recuperar sua senha"
           >
             <Text style={styles.forgotPasswordText}>Esqueci minha senha</Text>
           </TouchableOpacity>
@@ -264,28 +283,35 @@ export default function LoginScreen() {
             style={[styles.loginButton, isLoading && styles.disabledButton]}
             onPress={handleLogin}
             disabled={isLoading}
+            accessibilityRole="button"
+            accessibilityLabel={isLoading ? "Entrando" : "Entrar"}
+            accessibilityHint="Faz login com email e senha"
+            accessibilityState={{ disabled: isLoading }}
           >
             {isLoading ? (
-              <ActivityIndicator color={COLORS.surface} size="small" />
+              <ActivityIndicator color={COLORS.surface} size="small" accessibilityLabel="Carregando" />
             ) : (
               <Text style={styles.loginButtonText}>Entrar</Text>
             )}
           </TouchableOpacity>
 
-          <View style={styles.divider}>
+          <View style={styles.divider} accessibilityElementsHidden>
             <View style={styles.dividerLine} />
             <Text style={styles.dividerText}>ou continue com</Text>
             <View style={styles.dividerLine} />
           </View>
 
           {/* Social Login Buttons */}
-          <View style={styles.socialButtonsContainer}>
+          <View style={styles.socialButtonsContainer} accessibilityLabel="Opções de login social">
             <TouchableOpacity
               style={styles.socialButton}
               onPress={handleGoogleLogin}
               disabled={isLoading}
+              accessibilityRole="button"
+              accessibilityLabel="Entrar com Google"
+              accessibilityState={{ disabled: isLoading }}
             >
-              <Ionicons name="logo-google" size={24} color="#DB4437" />
+              <Ionicons name="logo-google" size={24} color="#DB4437" accessibilityElementsHidden />
               <Text style={styles.socialButtonText}>Google</Text>
             </TouchableOpacity>
 
@@ -293,13 +319,16 @@ export default function LoginScreen() {
               style={styles.socialButton}
               onPress={handleAppleLogin}
               disabled={isLoading}
+              accessibilityRole="button"
+              accessibilityLabel="Entrar com Apple"
+              accessibilityState={{ disabled: isLoading }}
             >
-              <Ionicons name="logo-apple" size={24} color={COLORS.text} />
+              <Ionicons name="logo-apple" size={24} color={COLORS.text} accessibilityElementsHidden />
               <Text style={styles.socialButtonText}>Apple</Text>
             </TouchableOpacity>
           </View>
 
-          <View style={styles.divider}>
+          <View style={styles.divider} accessibilityElementsHidden>
             <View style={styles.dividerLine} />
             <Text style={styles.dividerText}>ou</Text>
             <View style={styles.dividerLine} />
@@ -308,6 +337,9 @@ export default function LoginScreen() {
           <TouchableOpacity
             style={styles.registerButton}
             onPress={() => router.push("/register")}
+            accessibilityRole="button"
+            accessibilityLabel="Criar conta"
+            accessibilityHint="Navega para tela de cadastro"
           >
             <Text style={styles.registerButtonText}>Criar conta</Text>
           </TouchableOpacity>
@@ -317,6 +349,9 @@ export default function LoginScreen() {
           <TouchableOpacity
             style={styles.guestButton}
             onPress={() => router.replace("/(tabs)")}
+            accessibilityRole="button"
+            accessibilityLabel="Continuar como visitante"
+            accessibilityHint="Acessa o aplicativo sem fazer login"
           >
             <Text style={styles.guestButtonText}>Continuar como visitante</Text>
           </TouchableOpacity>

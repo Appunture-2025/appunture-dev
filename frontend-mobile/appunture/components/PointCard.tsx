@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useCallback } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
@@ -14,13 +14,26 @@ interface PointCardProps {
   onToggleFavorite?: () => void;
 }
 
-export default function PointCard({
+/**
+ * Memoized PointCard component for optimal FlatList performance.
+ * Uses React.memo to prevent unnecessary re-renders when props haven't changed.
+ */
+function PointCardComponent({
   point,
   onPress,
   showFavoriteButton = false,
   isFavorite = false,
   onToggleFavorite,
 }: PointCardProps) {
+  // Memoize the favorite toggle handler to prevent re-renders
+  const handleToggleFavorite = useCallback(
+    (e: { stopPropagation: () => void }) => {
+      e.stopPropagation();
+      onToggleFavorite?.();
+    },
+    [onToggleFavorite]
+  );
+
   return (
     <View style={styles.container}>
       <Link href={`/point/${point.id}`} asChild>
@@ -64,10 +77,7 @@ export default function PointCard({
             {showFavoriteButton && onToggleFavorite && (
               <TouchableOpacity
                 style={styles.favoriteButton}
-                onPress={(e) => {
-                  e.stopPropagation();
-                  onToggleFavorite();
-                }}
+                onPress={handleToggleFavorite}
                 accessibilityRole="button"
                 accessibilityLabel={
                   isFavorite
@@ -171,3 +181,26 @@ const styles = StyleSheet.create({
     padding: SPACING.xs,
   },
 });
+
+/**
+ * Custom comparison function for React.memo to optimize re-renders.
+ * Only re-renders when relevant props change.
+ */
+function arePropsEqual(prevProps: PointCardProps, nextProps: PointCardProps) {
+  return (
+    prevProps.point.id === nextProps.point.id &&
+    prevProps.point.name === nextProps.point.name &&
+    prevProps.point.meridian === nextProps.point.meridian &&
+    prevProps.point.location === nextProps.point.location &&
+    prevProps.point.indications === nextProps.point.indications &&
+    prevProps.isFavorite === nextProps.isFavorite &&
+    prevProps.showFavoriteButton === nextProps.showFavoriteButton &&
+    prevProps.onPress === nextProps.onPress &&
+    prevProps.onToggleFavorite === nextProps.onToggleFavorite
+  );
+}
+
+// Memoized export for optimal FlatList performance
+const PointCard = memo(PointCardComponent, arePropsEqual);
+
+export default PointCard;

@@ -195,7 +195,13 @@ function ErrorScreen({
 
         {/* Retry Button */}
         {onRetry && (
-          <TouchableOpacity style={styles.retryButton} onPress={onRetry}>
+          <TouchableOpacity 
+            style={styles.retryButton} 
+            onPress={onRetry}
+            accessibilityRole="button"
+            accessibilityLabel="Tentar novamente"
+            accessibilityHint="Tenta recarregar o conteúdo que apresentou erro"
+          >
             <Ionicons name="refresh" size={20} color={COLORS.surface} />
             <Text style={styles.retryButtonText}>Tentar Novamente</Text>
           </TouchableOpacity>
@@ -206,6 +212,9 @@ function ErrorScreen({
           <TouchableOpacity
             style={styles.detailsToggle}
             onPress={() => setShowStack(!showStack)}
+            accessibilityRole="button"
+            accessibilityLabel={showStack ? "Ocultar detalhes do erro" : "Mostrar detalhes do erro"}
+            accessibilityState={{ expanded: showStack }}
           >
             <Ionicons
               name={showStack ? "chevron-up" : "chevron-down"}

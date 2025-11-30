@@ -29,7 +29,12 @@ export function Modal({
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={onClose}>
+      <Dialog 
+        as="div" 
+        className="relative z-50" 
+        onClose={onClose}
+        aria-labelledby="modal-title"
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -39,7 +44,7 @@ export function Modal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
+          <div className="fixed inset-0 bg-black bg-opacity-25" aria-hidden="true" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
@@ -59,15 +64,17 @@ export function Modal({
                 <div className="flex items-center justify-between mb-4">
                   <Dialog.Title
                     as="h3"
+                    id="modal-title"
                     className="text-lg font-semibold leading-6 text-gray-900"
                   >
                     {title}
                   </Dialog.Title>
                   <button
                     onClick={onClose}
-                    className="text-gray-400 hover:text-gray-500 transition-colors"
+                    className="text-gray-400 hover:text-gray-500 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded-lg p-1"
+                    aria-label="Fechar modal"
                   >
-                    <XMarkIcon className="w-6 h-6" />
+                    <XMarkIcon className="w-6 h-6" aria-hidden="true" />
                   </button>
                 </div>
                 {children}
@@ -120,29 +127,31 @@ export function ConfirmModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} size="sm">
-      <div className="flex flex-col items-center text-center">
+      <div className="flex flex-col items-center text-center" role="alertdialog" aria-describedby="confirm-message">
         <div
           className={`w-12 h-12 rounded-full flex items-center justify-center ${variantClasses[variant].icon}`}
+          aria-hidden="true"
         >
           <ExclamationTriangleIcon className="w-6 h-6" />
         </div>
-        <p className="mt-4 text-sm text-gray-600">{message}</p>
+        <p id="confirm-message" className="mt-4 text-sm text-gray-600">{message}</p>
         <div className="mt-6 flex gap-3 w-full">
           <button
             onClick={onClose}
             disabled={loading}
-            className="flex-1 btn btn-secondary disabled:opacity-50"
+            className="flex-1 btn btn-secondary disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
           >
             {cancelLabel}
           </button>
           <button
             onClick={onConfirm}
             disabled={loading}
-            className={`flex-1 btn text-white ${variantClasses[variant].button} disabled:opacity-50`}
+            className={`flex-1 btn text-white ${variantClasses[variant].button} disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2`}
+            aria-busy={loading}
           >
             {loading ? (
-              <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+              <div className="flex items-center justify-center" aria-label="Carregando">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" aria-hidden="true"></div>
               </div>
             ) : (
               confirmLabel
