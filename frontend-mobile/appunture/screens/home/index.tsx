@@ -148,20 +148,24 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Quick Actions */}
-        <View style={styles.section}>
+        <View style={styles.section} accessibilityLabel="Acesso Rápido">
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Acesso Rápido</Text>
+            <Text style={styles.sectionTitle} accessibilityRole="header">Acesso Rápido</Text>
           </View>
-          <View style={styles.quickActionsGrid}>
+          <View style={styles.quickActionsGrid} accessibilityRole="list">
             <TouchableOpacity
               style={styles.quickActionCard}
               onPress={() => router.push("/search")}
+              accessibilityRole="button"
+              accessibilityLabel="Buscar Pontos. Encontre pontos por nome ou código"
+              accessibilityHint="Navega para a tela de busca"
             >
               <Ionicons
                 name="search"
                 size={32}
                 color={COLORS.primary}
                 style={styles.quickActionIcon}
+                accessibilityElementsHidden
               />
               <Text style={styles.quickActionTitle}>Buscar Pontos</Text>
               <Text style={styles.quickActionDescription}>
@@ -172,12 +176,16 @@ export default function HomeScreen() {
             <TouchableOpacity
               style={styles.quickActionCard}
               onPress={() => router.push("/body-map")}
+              accessibilityRole="button"
+              accessibilityLabel="Mapa Corporal. Visualize pontos no corpo humano"
+              accessibilityHint="Navega para o mapa interativo do corpo"
             >
               <Ionicons
                 name="body"
                 size={32}
                 color={COLORS.primary}
                 style={styles.quickActionIcon}
+                accessibilityElementsHidden
               />
               <Text style={styles.quickActionTitle}>Mapa Corporal</Text>
               <Text style={styles.quickActionDescription}>
@@ -188,12 +196,16 @@ export default function HomeScreen() {
             <TouchableOpacity
               style={styles.quickActionCard}
               onPress={() => router.push("/chatbot")}
+              accessibilityRole="button"
+              accessibilityLabel="Assistente. Encontre pontos por sintomas"
+              accessibilityHint="Navega para o assistente virtual"
             >
               <Ionicons
                 name="chatbubble-ellipses"
                 size={32}
                 color={COLORS.primary}
                 style={styles.quickActionIcon}
+                accessibilityElementsHidden
               />
               <Text style={styles.quickActionTitle}>Assistente</Text>
               <Text style={styles.quickActionDescription}>
@@ -204,12 +216,16 @@ export default function HomeScreen() {
             <TouchableOpacity
               style={styles.quickActionCard}
               onPress={() => router.push("/favorites")}
+              accessibilityRole="button"
+              accessibilityLabel="Favoritos. Seus pontos salvos"
+              accessibilityHint="Navega para a lista de favoritos"
             >
               <Ionicons
                 name="heart"
                 size={32}
                 color={COLORS.primary}
                 style={styles.quickActionIcon}
+                accessibilityElementsHidden
               />
               <Text style={styles.quickActionTitle}>Favoritos</Text>
               <Text style={styles.quickActionDescription}>
@@ -220,20 +236,20 @@ export default function HomeScreen() {
         </View>
 
         {/* Statistics */}
-        <View style={styles.section}>
+        <View style={styles.section} accessibilityLabel="Estatísticas">
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Estatísticas</Text>
+            <Text style={styles.sectionTitle} accessibilityRole="header">Estatísticas</Text>
           </View>
-          <View style={styles.statsGrid}>
-            <View style={styles.statCard}>
+          <View style={styles.statsGrid} accessibilityRole="list">
+            <View style={styles.statCard} accessibilityLabel={`${points.length} Pontos Disponíveis`}>
               <Text style={styles.statValue}>{points.length}</Text>
               <Text style={styles.statLabel}>Pontos Disponíveis</Text>
             </View>
-            <View style={styles.statCard}>
+            <View style={styles.statCard} accessibilityLabel={`${meridianStats.length} Meridianos`}>
               <Text style={styles.statValue}>{meridianStats.length}</Text>
               <Text style={styles.statLabel}>Meridianos</Text>
             </View>
-            <View style={styles.statCard}>
+            <View style={styles.statCard} accessibilityLabel={`${points.filter((p) => p.isFavorite).length} Favoritos`}>
               <Text style={styles.statValue}>
                 {points.filter((p) => p.isFavorite).length}
               </Text>
@@ -244,15 +260,19 @@ export default function HomeScreen() {
 
         {/* Recent Points */}
         {recentPoints.length > 0 && (
-          <View style={styles.section}>
+          <View style={styles.section} accessibilityLabel="Pontos Recentes">
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Pontos Recentes</Text>
-              <TouchableOpacity onPress={() => router.push("/search")}>
+              <Text style={styles.sectionTitle} accessibilityRole="header">Pontos Recentes</Text>
+              <TouchableOpacity 
+                onPress={() => router.push("/search")}
+                accessibilityRole="button"
+                accessibilityLabel="Ver todos os pontos"
+              >
                 <Text style={styles.sectionAction}>Ver todos</Text>
               </TouchableOpacity>
             </View>
 
-            <View style={styles.recentPointsList}>
+            <View style={styles.recentPointsList} accessibilityRole="list">
               {recentPoints.map((point) => (
                 <Link
                   key={point.id}
@@ -262,7 +282,12 @@ export default function HomeScreen() {
                   }}
                   asChild
                 >
-                  <TouchableOpacity style={styles.pointCard}>
+                  <TouchableOpacity 
+                    style={styles.pointCard}
+                    accessibilityRole="button"
+                    accessibilityLabel={`${point.name}. Código: ${point.code}. Meridiano: ${point.meridian}`}
+                    accessibilityHint="Toque para ver detalhes do ponto"
+                  >
                     <View style={styles.pointHeader}>
                       <Text style={styles.pointName}>{point.name}</Text>
                       <Text style={styles.pointCode}>{point.code}</Text>
@@ -280,9 +305,9 @@ export default function HomeScreen() {
 
         {/* Sync Section */}
         {isAuthenticated && (
-          <View style={styles.section}>
+          <View style={styles.section} accessibilityLabel="Sincronização">
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Sincronização</Text>
+              <Text style={styles.sectionTitle} accessibilityRole="header">Sincronização</Text>
             </View>
             <View style={styles.syncCard}>
               <View style={styles.syncInfo}>
@@ -302,9 +327,12 @@ export default function HomeScreen() {
                 ]}
                 onPress={handleSync}
                 disabled={!isOnline || syncInProgress}
+                accessibilityRole="button"
+                accessibilityLabel={syncInProgress ? "Sincronizando dados" : isOnline ? "Sincronizar dados" : "Sem conexão"}
+                accessibilityState={{ disabled: !isOnline || syncInProgress }}
               >
                 {syncInProgress ? (
-                  <ActivityIndicator size="small" color={COLORS.surface} />
+                  <ActivityIndicator size="small" color={COLORS.surface} accessibilityLabel="Sincronizando" />
                 ) : (
                   <Text style={styles.syncButtonText}>
                     {isOnline ? "Sincronizar" : "Offline"}
@@ -317,12 +345,13 @@ export default function HomeScreen() {
 
         {/* Empty State */}
         {points.length === 0 && !loading && (
-          <View style={styles.emptyState}>
+          <View style={styles.emptyState} accessibilityLabel="Nenhum ponto encontrado">
             <Ionicons
               name="medical"
               size={64}
               color={COLORS.textSecondary}
               style={styles.emptyStateIcon}
+              accessibilityElementsHidden
             />
             <Text style={styles.emptyStateTitle}>Nenhum ponto encontrado</Text>
             <Text style={styles.emptyStateDescription}>
