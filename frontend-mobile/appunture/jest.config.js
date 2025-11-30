@@ -19,6 +19,7 @@ module.exports = {
     'stores/**/*.ts',
     'services/**/*.ts',
     'components/**/*.tsx',
+    'hooks/**/*.ts',
     '!**/*.d.ts',
     '!**/node_modules/**',
   ],
