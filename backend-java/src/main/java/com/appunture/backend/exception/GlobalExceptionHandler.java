@@ -2,21 +2,18 @@ package com.appunture.backend.exception;
 
 import com.appunture.backend.dto.common.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -62,17 +59,15 @@ public class GlobalExceptionHandler {
             ValidationException ex,
             HttpServletRequest request) {
         
-        ErrorResponse.FieldError fieldError = ErrorResponse.FieldError.builder()
-                .field(ex.getField())
-                .message(ex.getMessage())
-                .rejectedValue(ex.getRejectedValue())
-                .build();
-
-        ErrorResponse errorResponse = ErrorResponse.ofValidation(
-                ex.getMessage(),
-                ex.getField() != null ? List.of(fieldError) : null
+        String message = ex.getField() != null 
+                ? ex.getField() + ": " + ex.getMessage()
+                : ex.getMessage();
+        
+        ErrorResponse errorResponse = ErrorResponse.of(
+                "VALIDATION_ERROR",
+                message,
+                request.getRequestURI()
         );
-        errorResponse.setPath(request.getRequestURI());
 
         log.debug("Business validation error: {}", ex.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
@@ -89,9 +84,8 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.of(
                 "VALIDATION_ERROR",
                 String.format("Required parameter '%s' is missing", ex.getParameterName()),
-                HttpStatus.BAD_REQUEST.value()
+                request.getRequestURI()
         );
-        errorResponse.setPath(request.getRequestURI());
 
         return ResponseEntity.badRequest().body(errorResponse);
     }
@@ -107,9 +101,8 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.of(
                 "VALIDATION_ERROR",
                 String.format("Parameter '%s' has invalid type", ex.getName()),
-                HttpStatus.BAD_REQUEST.value()
+                request.getRequestURI()
         );
-        errorResponse.setPath(request.getRequestURI());
 
         return ResponseEntity.badRequest().body(errorResponse);
     }
@@ -135,9 +128,8 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.of(
                 "UNAUTHORIZED",
                 "Authentication required",
-                HttpStatus.UNAUTHORIZED.value()
+                request.getRequestURI()
         );
-        errorResponse.setPath(request.getRequestURI());
 
         log.debug("Authentication required: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
@@ -154,9 +146,8 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.of(
                 "FORBIDDEN",
                 "Access denied",
-                HttpStatus.FORBIDDEN.value()
+                request.getRequestURI()
         );
-        errorResponse.setPath(request.getRequestURI());
 
         log.warn("Access denied to {}: {}", request.getRequestURI(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
@@ -173,9 +164,8 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.of(
                 "NOT_FOUND",
                 ex.getMessage(),
-                HttpStatus.NOT_FOUND.value()
+                request.getRequestURI()
         );
-        errorResponse.setPath(request.getRequestURI());
 
         log.debug("Resource not found: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
