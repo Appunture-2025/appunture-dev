@@ -16,6 +16,11 @@ export function ChatBubble({
   timestamp,
   onLongPress,
 }: ChatBubbleProps) {
+  const formattedTime = timestamp.toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  
   return (
     <TouchableOpacity
       style={[
@@ -24,9 +29,12 @@ export function ChatBubble({
       ]}
       onLongPress={onLongPress}
       delayLongPress={500}
+      accessibilityRole="text"
+      accessibilityLabel={`${isUser ? "Você" : "Assistente"} disse: ${message}. Enviado às ${formattedTime}`}
+      accessibilityHint={onLongPress ? "Pressione e segure para mais opções" : undefined}
     >
       {!isUser && (
-        <View style={styles.botAvatar}>
+        <View style={styles.botAvatar} accessibilityElementsHidden>
           <Ionicons name="medical" size={16} color={COLORS.primary} />
         </View>
       )}
@@ -42,16 +50,13 @@ export function ChatBubble({
         >
           {message}
         </Text>
-        <Text style={styles.timestamp}>
-          {timestamp.toLocaleTimeString("pt-BR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
+        <Text style={styles.timestamp} accessibilityElementsHidden>
+          {formattedTime}
         </Text>
       </View>
 
       {isUser && (
-        <View style={styles.userAvatar}>
+        <View style={styles.userAvatar} accessibilityElementsHidden>
           <Ionicons name="person" size={16} color={COLORS.surface} />
         </View>
       )}

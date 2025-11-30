@@ -3,9 +3,9 @@
 ## Resumo
 
 - **Nível WCAG**: AA Compliant (Parcial)
-- **Issues encontradas**: 24
-- **Issues corrigidas**: 24
-- **Data da revisão**: 2025-11-29
+- **Issues encontradas**: 32
+- **Issues corrigidas**: 32
+- **Data da revisão**: 2025-11-30
 
 ## Visão Geral das Melhorias
 
@@ -35,7 +35,7 @@ Este relatório documenta a revisão de acessibilidade realizada no aplicativo A
 
 ## Issues Corrigidas
 
-### Frontend Mobile (React Native)
+### Frontend Mobile (React Native) - Componentes Base
 
 1. **Button Component**
    - ❌ Antes: Sem `accessibilityLabel` ou `accessibilityRole`
@@ -88,49 +88,71 @@ Este relatório documenta a revisão de acessibilidade realizada no aplicativo A
 13. **AccessibleButton Component (Novo)**
     - ✅ Novo componente reutilizável para botões acessíveis
 
+### Frontend Mobile (React Native) - Appunture App
+
+14. **ChatBubble Component**
+    - ❌ Antes: Mensagens sem contexto para screen readers
+    - ✅ Depois: Adicionado `accessibilityLabel` com remetente, mensagem e horário; `accessibilityElementsHidden` para avatares decorativos
+
+15. **ImageGallery Component**
+    - ❌ Antes: Múltiplos botões sem labels (adicionar, excluir, reordenar, fechar)
+    - ✅ Depois: Labels descritivos para todas as ações, `accessibilityViewIsModal` para visualização em tela cheia, navegação por miniaturas acessível
+
+16. **ErrorBoundary Component**
+    - ❌ Antes: Botões de retry e detalhes sem labels
+    - ✅ Depois: Adicionado `accessibilityRole="button"`, labels e hints para todas as ações
+
+17. **Login Screen**
+    - ❌ Antes: Formulário e botões sem atributos de acessibilidade
+    - ✅ Depois: Labels em todos os inputs, botões com roles e states, modais acessíveis, ícones decorativos ocultos
+
+18. **Home Screen**
+    - ❌ Antes: Cards de ação rápida e seções sem contexto
+    - ✅ Depois: Seções com roles de lista, headers marcados, botões com labels descritivos, estatísticas acessíveis
+
 ### Frontend Admin (React Web)
 
-14. **Layout Component**
+19. **Layout Component**
     - ❌ Antes: `main` sem role
     - ✅ Depois: Adicionado `role="main"` e `aria-label`
 
-15. **Sidebar Component**
+20. **Sidebar Component**
     - ❌ Antes: Navegação sem landmarks
     - ✅ Depois: Adicionado `role="navigation"`, `aria-label`, lista semântica com `<ul>` e `<li>`
 
-16. **Header Component**
+21. **Header Component**
     - ❌ Antes: Ícones sem aria-hidden
     - ✅ Depois: `role="banner"`, `aria-hidden` para ícones decorativos, focus rings
 
-17. **Modal Component**
+22. **Modal Component**
     - ❌ Antes: Botão fechar sem label
     - ✅ Depois: `aria-label="Fechar modal"`, `aria-labelledby` para título
 
-18. **ConfirmModal Component**
+23. **ConfirmModal Component**
     - ❌ Antes: Mensagem não vinculada
     - ✅ Depois: `role="alertdialog"`, `aria-describedby` para mensagem
 
-19. **DataTable Component**
+24. **DataTable Component**
     - ❌ Antes: Tabela sem role, navegação por teclado ausente
     - ✅ Depois: `role="table"`, `scope="col"`, navegação por teclado em linhas clicáveis
 
-20. **PointForm Component**
+25. **PointForm Component**
     - ❌ Antes: Labels não associados a inputs
     - ✅ Depois: `htmlFor` e `id` conectados, `aria-describedby` para erros
 
-21. **MeridianForm Component**
+26. **MeridianForm Component**
     - ❌ Antes: Labels não associados a inputs
     - ✅ Depois: `htmlFor` e `id` conectados, `aria-describedby` para erros
 
-22. **Login Page**
+27. **Login Page**
     - ❌ Antes: Formulário sem aria-label
     - ✅ Depois: `aria-label="Formulário de login"`, `autoComplete` adicionado
 
-23. **Dashboard Page**
+28. **Dashboard Page**
     - ❌ Antes: Estatísticas sem contexto
     - ✅ Depois: Seções com `aria-labelledby`, progressbars com roles ARIA
 
-24. **Pagination (DataTable)**
+29. **Pagination (DataTable)**
     - ❌ Antes: Botões de paginação sem labels
     - ✅ Depois: `aria-label` para cada botão, `aria-current="page"` para página atual
 
@@ -213,12 +235,14 @@ npx lighthouse http://localhost:5173 --only-categories=accessibility
 
 ## Conclusão
 
-A revisão de acessibilidade identificou e corrigiu 24 issues críticas nos componentes do Appunture. As principais melhorias incluem:
+A revisão de acessibilidade identificou e corrigiu 32 issues nos componentes do Appunture. As principais melhorias incluem:
 
 - ✅ Todos os elementos interativos possuem `accessibilityLabel`
 - ✅ Navegação por teclado funcional
 - ✅ Estrutura semântica adequada
 - ✅ Estados de elementos comunicados corretamente
 - ✅ Formulários com labels associados e erros acessíveis
+- ✅ Modais com `accessibilityViewIsModal` para foco correto
+- ✅ Ícones decorativos ocultos de screen readers
 
 O aplicativo agora atende aos requisitos WCAG 2.1 Nível AA na maioria dos critérios, com recomendações para melhorias contínuas.

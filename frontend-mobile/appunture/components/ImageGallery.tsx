@@ -158,16 +158,19 @@ export function ImageGallery({
 
   if (!resolvedImages.length) {
     return (
-      <View style={styles.emptyContainer}>
-        <Ionicons name="image-outline" size={64} color={COLORS.textSecondary} />
+      <View style={styles.emptyContainer} accessibilityRole="none">
+        <Ionicons name="image-outline" size={64} color={COLORS.textSecondary} accessibilityElementsHidden />
         <Text style={styles.emptyText}>Nenhuma imagem disponível</Text>
         {editable && (
           <TouchableOpacity
             testID="add-image-button"
             style={styles.emptyAddButton}
             onPress={onAddImage}
+            accessibilityRole="button"
+            accessibilityLabel="Adicionar imagem"
+            accessibilityHint="Toque para adicionar uma nova imagem à galeria"
           >
-            <Ionicons name="add-circle" size={36} color={COLORS.primary} />
+            <Ionicons name="add-circle" size={36} color={COLORS.primary} accessibilityElementsHidden />
             <Text style={styles.emptyAddButtonText}>Adicionar imagem</Text>
           </TouchableOpacity>
         )}
@@ -209,6 +212,9 @@ export function ImageGallery({
               activeOpacity={0.9}
               onPress={openFullscreen}
               style={styles.carouselImageWrapper}
+              accessibilityRole="button"
+              accessibilityLabel={`Imagem ${index + 1} de ${resolvedImages.length}`}
+              accessibilityHint="Toque para ver em tela cheia"
             >
               {renderGalleryContent(item, styles.carouselImage)}
               {canEditImage && (
@@ -221,11 +227,15 @@ export function ImageGallery({
                         ? onDeleteImage?.(remoteIndex)
                         : undefined
                     }
+                    accessibilityRole="button"
+                    accessibilityLabel="Excluir imagem"
+                    accessibilityHint="Remove esta imagem da galeria"
                   >
                     <Ionicons
                       name="trash-outline"
                       size={22}
                       color={COLORS.surface}
+                      accessibilityElementsHidden
                     />
                   </TouchableOpacity>
                   <View style={styles.reorderGroup}>
@@ -241,11 +251,16 @@ export function ImageGallery({
                           : undefined
                       }
                       disabled={disableMoveLeft}
+                      accessibilityRole="button"
+                      accessibilityLabel="Mover para esquerda"
+                      accessibilityHint="Move esta imagem para a posição anterior"
+                      accessibilityState={{ disabled: disableMoveLeft }}
                     >
                       <Ionicons
                         name="arrow-back"
                         size={20}
                         color={COLORS.surface}
+                        accessibilityElementsHidden
                       />
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -260,11 +275,16 @@ export function ImageGallery({
                           : undefined
                       }
                       disabled={disableMoveRight}
+                      accessibilityRole="button"
+                      accessibilityLabel="Mover para direita"
+                      accessibilityHint="Move esta imagem para a próxima posição"
+                      accessibilityState={{ disabled: disableMoveRight }}
                     >
                       <Ionicons
                         name="arrow-forward"
                         size={20}
                         color={COLORS.surface}
+                        accessibilityElementsHidden
                       />
                     </TouchableOpacity>
                   </View>
@@ -275,7 +295,7 @@ export function ImageGallery({
         }}
       />
 
-      <View style={styles.paginationContainer}>
+      <View style={styles.paginationContainer} accessibilityLabel={`Imagem ${currentIndex + 1} de ${resolvedImages.length}`}>
         {resolvedImages.map((item, index) => (
           <View
             key={item.id}
@@ -283,6 +303,7 @@ export function ImageGallery({
               styles.paginationDot,
               index === currentIndex && styles.paginationDotActive,
             ]}
+            accessibilityElementsHidden
           />
         ))}
       </View>
@@ -292,6 +313,7 @@ export function ImageGallery({
         data={thumbnails}
         keyExtractor={(item) => `${item.image.id}-${item.index}`}
         contentContainerStyle={styles.thumbnailList}
+        accessibilityLabel="Miniaturas das imagens"
         renderItem={({ item }) => (
           <TouchableOpacity
             style={[
@@ -305,6 +327,9 @@ export function ImageGallery({
               });
               setCurrentIndex(item.index);
             }}
+            accessibilityRole="button"
+            accessibilityLabel={`Ir para imagem ${item.index + 1}`}
+            accessibilityState={{ selected: item.index === currentIndex }}
           >
             {renderGalleryContent(item.image, styles.thumbnailImage, "cover")}
           </TouchableOpacity>
@@ -316,8 +341,11 @@ export function ImageGallery({
           testID="add-image-floating-button"
           style={styles.addButton}
           onPress={onAddImage}
+          accessibilityRole="button"
+          accessibilityLabel="Adicionar imagem"
+          accessibilityHint="Adiciona uma nova imagem à galeria"
         >
-          <Ionicons name="add" size={24} color={COLORS.surface} />
+          <Ionicons name="add" size={24} color={COLORS.surface} accessibilityElementsHidden />
           <Text style={styles.addButtonText}>Adicionar imagem</Text>
         </TouchableOpacity>
       )}
@@ -327,13 +355,16 @@ export function ImageGallery({
         transparent
         animationType="fade"
         onRequestClose={closeFullscreen}
+        accessibilityViewIsModal
       >
         <GestureHandlerRootView style={styles.fullscreenContainer}>
           <TouchableOpacity
             style={styles.closeButton}
             onPress={closeFullscreen}
+            accessibilityRole="button"
+            accessibilityLabel="Fechar visualização em tela cheia"
           >
-            <Ionicons name="close" size={36} color={COLORS.surface} />
+            <Ionicons name="close" size={36} color={COLORS.surface} accessibilityElementsHidden />
           </TouchableOpacity>
 
           {resolvedImages[currentIndex] && (
