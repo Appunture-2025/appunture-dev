@@ -65,35 +65,49 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
       animationType="slide"
       transparent={true}
       onRequestClose={onClose}
+      accessibilityViewIsModal
     >
       <View style={styles.overlay}>
         <TouchableOpacity 
           style={styles.overlayBackground} 
           onPress={onClose}
           activeOpacity={1}
+          accessibilityLabel="Fechar menu"
+          accessibilityHint="Toque para fechar o menu lateral"
+          accessibilityRole="button"
         />
-        <View style={styles.drawer}>
+        <View style={styles.drawer} accessibilityRole="menu">
           <SafeAreaView style={styles.drawerContent}>
             {/* Header do Menu */}
             <View style={styles.drawerHeader}>
-              <Text style={styles.drawerTitle}>Menu</Text>
+              <Text style={styles.drawerTitle} accessibilityRole="header">Menu</Text>
               <TouchableOpacity 
                 style={styles.closeButton}
                 onPress={onClose}
+                accessibilityLabel="Fechar menu"
+                accessibilityHint="Toque duas vezes para fechar o menu"
+                accessibilityRole="button"
               >
-                <FontAwesome name="times" size={24} color="#6B7280" />
+                <FontAwesome name="times" size={24} color="#6B7280" accessibilityElementsHidden />
               </TouchableOpacity>
             </View>
 
             {/* Lista de Itens */}
-            <ScrollView style={styles.menuList} showsVerticalScrollIndicator={false}>
+            <ScrollView 
+              style={styles.menuList} 
+              showsVerticalScrollIndicator={false}
+              accessibilityRole="list"
+            >
               {menuItems.map((item) => (
                 <TouchableOpacity
                   key={item.id}
                   style={styles.menuItem}
                   onPress={() => handleMenuItemPress(item.route)}
+                  accessibilityLabel={`${item.title}. ${item.description}`}
+                  accessibilityHint={item.route !== '#' ? "Toque duas vezes para navegar" : "Funcionalidade em desenvolvimento"}
+                  accessibilityRole="menuitem"
                 >
-                  <View style={styles.menuItemIcon}>
+                  <View style={styles.menuItemIcon} accessibilityElementsHidden>
                     <FontAwesome 
                       name={item.icon as any} 
                       size={20} 
@@ -108,6 +122,7 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
                     name="chevron-right" 
                     size={16} 
                     color="#9CA3AF" 
+                    accessibilityElementsHidden
                   />
                 </TouchableOpacity>
               ))}
@@ -115,7 +130,7 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
 
             {/* Footer */}
             <View style={styles.drawerFooter}>
-              <Text style={styles.footerText}>Appunture v1.0</Text>
+              <Text style={styles.footerText} accessibilityRole="text">Appunture v1.0</Text>
             </View>
           </SafeAreaView>
         </View>

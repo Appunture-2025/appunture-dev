@@ -8,6 +8,7 @@ interface ButtonProps {
   loading?: boolean;
   disabled?: boolean;
   variant?: 'primary' | 'secondary' | 'outline';
+  accessibilityHint?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -16,6 +17,7 @@ export const Button: React.FC<ButtonProps> = ({
   loading = false,
   disabled = false,
   variant = 'primary',
+  accessibilityHint,
 }) => {
   const isDisabled = disabled || loading;
 
@@ -29,6 +31,10 @@ export const Button: React.FC<ButtonProps> = ({
       onPress={onPress}
       disabled={isDisabled}
       activeOpacity={0.8}
+      accessibilityLabel={loading ? `${title}, carregando` : title}
+      accessibilityHint={accessibilityHint}
+      accessibilityRole="button"
+      accessibilityState={{ disabled: isDisabled }}
     >
       {loading ? (
         <ActivityIndicator color={variant === 'outline' ? '#007AFF' : '#FFFFFF'} />
