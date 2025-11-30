@@ -1,9 +1,19 @@
+import { Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import { useAuth, AuthProvider } from "./hooks/useAuth";
 import { Layout, ErrorBoundary, ErrorFallback } from "./components";
 import { Login, Dashboard, Points, PointEdit, Meridians, Users } from "./pages";
+
+// Page loader component for Suspense fallback
+function PageLoader() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+    </div>
+  );
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {

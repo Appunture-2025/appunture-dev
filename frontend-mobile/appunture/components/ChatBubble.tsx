@@ -20,7 +20,7 @@ export function ChatBubble({
     hour: "2-digit",
     minute: "2-digit",
   });
-  
+
   return (
     <TouchableOpacity
       style={[
@@ -30,8 +30,12 @@ export function ChatBubble({
       onLongPress={onLongPress}
       delayLongPress={500}
       accessibilityRole="text"
-      accessibilityLabel={`${isUser ? "Você" : "Assistente"} disse: ${message}. Enviado às ${formattedTime}`}
-      accessibilityHint={onLongPress ? "Pressione e segure para mais opções" : undefined}
+      accessibilityLabel={`${
+        isUser ? "Você" : "Assistente"
+      } disse: ${message}. Enviado às ${formattedTime}`}
+      accessibilityHint={
+        onLongPress ? "Pressione e segure para mais opções" : undefined
+      }
     >
       {!isUser && (
         <View style={styles.botAvatar} accessibilityElementsHidden>
@@ -130,3 +134,5 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
   },
 });
+
+export default ChatBubble;

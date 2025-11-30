@@ -161,6 +161,7 @@ describe("authStore", () => {
           useAuthStore.getState().register({
             email: "existing@example.com",
             password: "password123",
+            name: "Test User",
           })
         ).rejects.toThrow(errorMessage);
       });

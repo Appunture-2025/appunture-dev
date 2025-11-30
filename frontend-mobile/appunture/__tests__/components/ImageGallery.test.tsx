@@ -11,6 +11,55 @@ jest.mock("../../utils/bodyMap", () => ({
   getSvgAssetUriSync: jest.fn(() => "mock-svg"),
 }));
 
+// Mock Carousel to render all items synchronously for testing
+jest.mock("react-native-reanimated-carousel", () => {
+  const React = require("react");
+  const { View, TouchableOpacity } = require("react-native");
+
+  return {
+    __esModule: true,
+    default: React.forwardRef(
+      ({ data, renderItem, testID, ...props }: any, ref: any) => {
+        React.useImperativeHandle(ref, () => ({
+          scrollTo: jest.fn(),
+        }));
+        return (
+          <View testID={testID} {...props}>
+            {data?.map((item: any, index: number) => (
+              <View key={index}>{renderItem({ item, index })}</View>
+            ))}
+          </View>
+        );
+      }
+    ),
+  };
+});
+
+// Mock gesture handler
+jest.mock("react-native-gesture-handler", () => ({
+  GestureHandlerRootView: ({ children }: any) => children,
+  GestureDetector: ({ children }: any) => children,
+  Gesture: {
+    Pinch: () => ({
+      onUpdate: () => ({
+        onEnd: () => ({}),
+      }),
+    }),
+  },
+}));
+
+// Mock reanimated
+jest.mock("react-native-reanimated", () => {
+  const React = require("react");
+  const { View } = require("react-native");
+  return {
+    createAnimatedComponent: (Component: any) => Component,
+    useSharedValue: (initial: any) => ({ value: initial }),
+    useAnimatedStyle: () => ({}),
+    withSpring: (value: any) => value,
+  };
+});
+
 const makeRemote = (id: string, remoteIndex: number): GalleryImageSource => ({
   id,
   type: "remote",
@@ -57,14 +106,20 @@ describe("ImageGallery", () => {
   it("reorders remote assets using remote indices", () => {
     const onReorder = jest.fn();
     const images = [makeRemote("remote-1", 0), makeRemote("remote-2", 1)];
-    const { getByTestId } = render(
+    const { getAllByTestId } = render(
       <ImageGallery images={images} editable onReorder={onReorder} />
     );
 
-    fireEvent.press(getByTestId("move-left-0"));
+    // Get all buttons by testID
+    const moveLeftButtons = getAllByTestId(/^move-left-/);
+    const moveRightButtons = getAllByTestId(/^move-right-/);
+
+    // First item's move-left should be disabled (index 0)
+    fireEvent.press(moveLeftButtons[0]);
     expect(onReorder).not.toHaveBeenCalled();
 
-    fireEvent.press(getByTestId("move-right-0"));
+    // First item's move-right should work
+    fireEvent.press(moveRightButtons[0]);
     expect(onReorder).toHaveBeenCalledWith(0, 1);
   });
 

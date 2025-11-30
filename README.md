@@ -79,25 +79,41 @@ appunture-dev/
 
 ### Pré-requisitos
 
-- **Java 17+** e **Maven 3.8+** (backend)
-- **Node.js 18+** e **npm** (frontend)
-- **Expo CLI** (`npm install -g @expo/cli`)
+- **Java 17+** (backend)
+- **Node.js 20+** (frontend)
+- **Expo CLI** (`npm install -g eas-cli`)
 - Conta **Google Cloud/Firebase** configurada
+
+### Setup Automático
+
+```bash
+# Windows (PowerShell)
+.\setup.ps1
+
+# Linux/Mac
+chmod +x setup.sh && ./setup.sh
+```
+
+### Setup Manual
 
 ### 1. Configurar Firebase
 
-```bash
-# 1. Crie um projeto no Firebase Console: https://console.firebase.google.com
-# 2. Habilite: Firebase Auth, Firestore, Storage
-# 3. Baixe o service-account-key.json
-# 4. Configure as variáveis de ambiente:
+1. Crie um projeto em [console.firebase.google.com](https://console.firebase.google.com)
+2. Habilite: Authentication (Email, Google, Apple), Firestore, Storage
+3. Baixe o service-account-key.json
 
-export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
-export FIREBASE_PROJECT_ID=seu-project-id
-export FIREBASE_STORAGE_BUCKET=seu-project-id.appspot.com
+### 2. Configurar variáveis de ambiente
+
+```bash
+# Copie os templates .env.example para .env em cada pasta:
+cp backend-java/.env.example backend-java/.env
+cp frontend-mobile/appunture/.env.example frontend-mobile/appunture/.env
+cp frontend-admin/.env.example frontend-admin/.env
+
+# Edite cada .env com suas credenciais Firebase
 ```
 
-### 2. Iniciar o Backend
+### 3. Iniciar o Backend
 
 ```bash
 cd backend-java
@@ -131,6 +147,7 @@ npm run dev
 
 | Documento | Descrição |
 |-----------|-----------|
+| [🚀 Deploy Guide](DEPLOY_GUIDE.md) | **Guia completo de deploy para produção** |
 | [Backend README](backend-java/README.md) | API REST, endpoints, configuração |
 | [Mobile README](frontend-mobile/appunture/README.md) | App React Native, stores, sincronização |
 | [Admin README](frontend-admin/README.md) | Painel administrativo, componentes |

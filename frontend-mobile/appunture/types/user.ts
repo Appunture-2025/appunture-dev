@@ -41,6 +41,7 @@ export interface RegisterData {
 export interface UserProfile {
   name: string;
   profession?: string;
+  profileImageUrl?: string;
 }
 
 // App State Types

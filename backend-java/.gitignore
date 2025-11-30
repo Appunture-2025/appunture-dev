@@ -1,1 +1,34 @@
 target/
+*.class
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+*.env.local
+
+# Credentials (NEVER commit these!)
+*.json
+!openapi/*.json
+service-account*.json
+firebase-credentials*.json
+google-credentials*.json
+
+# OS
+.DS_Store
+Thumbs.db
+
