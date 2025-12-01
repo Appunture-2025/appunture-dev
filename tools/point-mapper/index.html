@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appunture - Mapeador de Pontos de Acupuntura</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #1a1a2e;
+        color: #eee;
+        min-height: 100vh;
+      }
+      .header {
+        background: #16213e;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #e94560;
+      }
+      .header h1 {
+        color: #e94560;
+        font-size: 1.5rem;
+      }
+      .header-stats {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+      .stat-badge {
+        background: #0f3460;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+      }
+      .stat-badge.success {
+        background: #1b998b;
+      }
+      .stat-badge.warning {
+        background: #e94560;
+      }
+      .main-container {
+        display: flex;
+        height: calc(100vh - 70px);
+      }
+      .points-panel {
+        width: 350px;
+        background: #16213e;
+        border-right: 1px solid #0f3460;
+        display: flex;
+        flex-direction: column;
+      }
+      .search-box {
+        padding: 15px;
+        border-bottom: 1px solid #0f3460;
+      }
+      .search-box input {
+        width: 100%;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 8px;
+        background: #0f3460;
+        color: #eee;
+        font-size: 1rem;
+      }
+      .search-box input::placeholder {
+        color: #888;
+      }
+      .filter-tabs {
+        display: flex;
+        padding: 10px;
+        gap: 5px;
+        border-bottom: 1px solid #0f3460;
+        flex-wrap: wrap;
+      }
+      .filter-tab {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 15px;
+        background: #0f3460;
+        color: #aaa;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s;
+      }
+      .filter-tab:hover {
+        background: #1a4a7a;
+      }
+      .filter-tab.active {
+        background: #e94560;
+        color: white;
+      }
+      .filter-tab.mapped {
+        background: #1b998b;
+        color: white;
+      }
+      .points-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+      }
+      .point-item {
+        padding: 12px 15px;
+        margin-bottom: 8px;
+        background: #0f3460;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-left: 4px solid transparent;
+      }
+      .point-item:hover {
+        background: #1a4a7a;
+        transform: translateX(5px);
+      }
+      .point-item.selected {
+        background: #e94560;
+        border-left-color: #fff;
+      }
+      .point-item.mapped {
+        border-left-color: #1b998b;
+      }
+      .point-item.mapped::after {
+        content: "✓";
+        float: right;
+        color: #1b998b;
+        font-weight: bold;
+      }
+      .point-code {
+        font-weight: bold;
+        color: #e94560;
+        font-size: 1.1rem;
+      }
+      .point-item.selected .point-code {
+        color: #fff;
+      }
+      .point-item.mapped .point-code {
+        color: #1b998b;
+      }
+      .point-name {
+        font-size: 0.85rem;
+        color: #aaa;
+        margin-top: 3px;
+      }
+      .point-item.selected .point-name {
+        color: #ddd;
+      }
+      .canvas-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: #1a1a2e;
+      }
+      .canvas-toolbar {
+        padding: 10px 20px;
+        background: #16213e;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        border-bottom: 1px solid #0f3460;
+        flex-wrap: wrap;
+      }
+      .view-group {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .view-btn {
+        padding: 6px 10px;
+        border: none;
+        border-radius: 6px;
+        background: #0f3460;
+        color: #eee;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.85rem;
+      }
+      .view-btn:hover {
+        background: #1a4a7a;
+      }
+      .view-btn.active {
+        background: #e94560;
+      }
+      .zoom-controls {
+        display: flex;
+        gap: 5px;
+        margin-left: auto;
+      }
+      .zoom-btn {
+        width: 35px;
+        height: 35px;
+        border: none;
+        border-radius: 8px;
+        background: #0f3460;
+        color: #eee;
+        cursor: pointer;
+        font-size: 1.2rem;
+      }
+      .zoom-btn:hover {
+        background: #1a4a7a;
+      }
+      .canvas-container {
+        flex: 1;
+        overflow: auto;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
+      }
+      .svg-wrapper {
+        position: relative;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        cursor: crosshair;
+      }
+      .svg-wrapper svg {
+        display: block;
+        max-width: 100%;
+        height: auto;
+      }
+      .point-marker {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: #e94560;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        transition: all 0.2s;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 8px;
+        font-weight: bold;
+        color: white;
+      }
+      .point-marker:hover {
+        transform: translate(-50%, -50%) scale(1.3);
+        z-index: 20;
+      }
+      .point-marker.current {
+        background: #ffd700;
+        animation: pulse 1s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+        }
+        50% {
+          box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
+        }
+      }
+      .point-marker .tooltip {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #16213e;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 11px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+        margin-bottom: 5px;
+      }
+      .point-marker:hover .tooltip {
+        opacity: 1;
+      }
+      .details-panel {
+        width: 350px;
+        background: #16213e;
+        border-left: 1px solid #0f3460;
+        display: flex;
+        flex-direction: column;
+      }
+      .details-header {
+        padding: 20px;
+        border-bottom: 1px solid #0f3460;
+      }
+      .details-header h2 {
+        color: #e94560;
+        margin-bottom: 5px;
+      }
+      .details-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+      }
+      .detail-group {
+        margin-bottom: 20px;
+      }
+      .detail-label {
+        font-size: 0.8rem;
+        color: #888;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+      }
+      .detail-value {
+        background: #0f3460;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+      .coordinates-display {
+        display: flex;
+        gap: 10px;
+      }
+      .coord-box {
+        flex: 1;
+        background: #0f3460;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+      }
+      .coord-label {
+        font-size: 0.7rem;
+        color: #888;
+      }
+      .coord-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #1b998b;
+      }
+      .action-buttons {
+        padding: 20px;
+        border-top: 1px solid #0f3460;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .btn {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .btn-primary {
+        background: #e94560;
+        color: white;
+      }
+      .btn-primary:hover {
+        background: #d63850;
+      }
+      .btn-primary:disabled {
+        background: #666;
+        cursor: not-allowed;
+      }
+      .btn-secondary {
+        background: #0f3460;
+        color: #eee;
+      }
+      .btn-secondary:hover {
+        background: #1a4a7a;
+      }
+      .btn-success {
+        background: #1b998b;
+        color: white;
+      }
+      .btn-success:hover {
+        background: #158a7d;
+      }
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #1b998b;
+        color: white;
+        padding: 15px 25px;
+        border-radius: 8px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+      }
+      .toast.error {
+        background: #dc3545;
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+      }
+      .modal {
+        background: #16213e;
+        padding: 30px;
+        border-radius: 15px;
+        max-width: 500px;
+        width: 90%;
+      }
+      .modal h3 {
+        color: #e94560;
+        margin-bottom: 20px;
+      }
+      .modal textarea {
+        width: 100%;
+        height: 300px;
+        background: #0f3460;
+        border: none;
+        border-radius: 8px;
+        color: #eee;
+        padding: 15px;
+        font-family: monospace;
+        font-size: 0.85rem;
+        resize: none;
+      }
+      .modal-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: flex-end;
+      }
+      .progress-bar {
+        height: 4px;
+        background: #0f3460;
+        border-radius: 2px;
+        overflow: hidden;
+        margin-top: 10px;
+      }
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #e94560, #1b998b);
+        transition: width 0.3s;
+      }
+      .instructions {
+        background: #0f3460;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      .instructions h4 {
+        color: #e94560;
+        margin-bottom: 10px;
+      }
+      .instructions ol {
+        padding-left: 20px;
+      }
+      .instructions li {
+        margin-bottom: 5px;
+      }
+      .kbd {
+        background: #1a1a2e;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.85rem;
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0f3460;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #e94560;
+        border-radius: 4px;
+      }
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #888;
+      }
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #0f3460;
+        border-top-color: #e94560;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 15px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <h1>🎯 Appunture Point Mapper</h1>
+      <div class="header-stats">
+        <div class="stat-badge" id="totalPoints">Total: 0</div>
+        <div class="stat-badge success" id="mappedPoints">Mapeados: 0</div>
+        <div class="stat-badge warning" id="remainingPoints">Restantes: 0</div>
+      </div>
+    </header>
+
+    <main class="main-container">
+      <aside class="points-panel">
+        <div class="search-box">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Buscar ponto (ex: ST-36, Zusanli)..."
+          />
+        </div>
+        <div class="filter-tabs">
+          <button class="filter-tab active" data-filter="all">Todos</button>
+          <button class="filter-tab" data-filter="unmapped">
+            Não Mapeados
+          </button>
+          <button class="filter-tab mapped" data-filter="mapped">
+            Mapeados
+          </button>
+          <button class="filter-tab" data-filter="LU">LU</button>
+          <button class="filter-tab" data-filter="LI">LI</button>
+          <button class="filter-tab" data-filter="ST">ST</button>
+          <button class="filter-tab" data-filter="SP">SP</button>
+          <button class="filter-tab" data-filter="HT">HT</button>
+          <button class="filter-tab" data-filter="SI">SI</button>
+          <button class="filter-tab" data-filter="BL">BL</button>
+          <button class="filter-tab" data-filter="KI">KI</button>
+          <button class="filter-tab" data-filter="PC">PC</button>
+          <button class="filter-tab" data-filter="TE">TE</button>
+          <button class="filter-tab" data-filter="GB">GB</button>
+          <button class="filter-tab" data-filter="LR">LR</button>
+          <button class="filter-tab" data-filter="CV">CV</button>
+          <button class="filter-tab" data-filter="GV">GV</button>
+        </div>
+        <div class="points-list" id="pointsList">
+          <div class="loading">
+            <div class="spinner"></div>
+            Carregando pontos...
+          </div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+      </aside>
+
+      <section class="canvas-panel">
+        <div class="canvas-toolbar">
+          <div class="view-group">
+            <span style="color: #888; font-size: 0.8rem; margin-right: 5px;">Frontal:</span>
+            <button class="view-btn active" data-view="front-01">01</button>
+            <button class="view-btn" data-view="front-02">02</button>
+            <button class="view-btn" data-view="front-03">03</button>
+            <button class="view-btn" data-view="front-04">04</button>
+            <button class="view-btn" data-view="front-05">05</button>
+            <button class="view-btn" data-view="front-06">06</button>
+            <button class="view-btn" data-view="front-07">07</button>
+            <button class="view-btn" data-view="front-08">08</button>
+          </div>
+          <div class="view-group">
+            <span style="color: #888; font-size: 0.8rem; margin-right: 5px;">Posterior:</span>
+            <button class="view-btn" data-view="back-01">01</button>
+            <button class="view-btn" data-view="back-02">02</button>
+            <button class="view-btn" data-view="back-03">03</button>
+            <button class="view-btn" data-view="back-04">04</button>
+            <button class="view-btn" data-view="back-05">05</button>
+            <button class="view-btn" data-view="back-06">06</button>
+            <button class="view-btn" data-view="back-07">07</button>
+          </div>
+          <div class="zoom-controls">
+            <button class="zoom-btn" id="zoomOut">−</button>
+            <span id="zoomLevel">100%</span>
+            <button class="zoom-btn" id="zoomIn">+</button>
+            <button class="zoom-btn" id="zoomReset">⟲</button>
+          </div>
+        </div>
+        <div class="canvas-container" id="canvasContainer">
+          <div class="svg-wrapper" id="svgWrapper">
+            <div class="loading">
+              <div class="spinner"></div>
+              Carregando SVG...
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="details-panel">
+        <div class="details-header">
+          <h2 id="selectedPointCode">Selecione um ponto</h2>
+          <p id="selectedPointName" style="color: #888"></p>
+        </div>
+        <div class="details-content">
+          <div class="instructions">
+            <h4>📋 Como usar:</h4>
+            <ol>
+              <li>Selecione um ponto na lista à esquerda</li>
+              <li>Escolha a vista do corpo</li>
+              <li>Clique no SVG para marcar a posição</li>
+              <li>Use <span class="kbd">Ctrl+Z</span> para desfazer</li>
+              <li>Use <span class="kbd">→</span> para próximo ponto</li>
+            </ol>
+          </div>
+          <div class="detail-group">
+            <div class="detail-label">Vista Atual</div>
+            <div class="detail-value" id="currentView">front</div>
+          </div>
+          <div class="detail-group">
+            <div class="detail-label">Coordenadas</div>
+            <div class="coordinates-display">
+              <div class="coord-box">
+                <div class="coord-label">X</div>
+                <div class="coord-value" id="coordX">-</div>
+              </div>
+              <div class="coord-box">
+                <div class="coord-label">Y</div>
+                <div class="coord-value" id="coordY">-</div>
+              </div>
+            </div>
+          </div>
+          <div class="detail-group">
+            <div class="detail-label">Localização WHO</div>
+            <div
+              class="detail-value"
+              id="locationWHO"
+              style="font-size: 0.85rem; max-height: 150px; overflow-y: auto"
+            >
+              -
+            </div>
+          </div>
+          <div class="detail-group">
+            <div class="detail-label">Meridiano</div>
+            <div class="detail-value" id="meridianInfo">-</div>
+          </div>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" id="btnSavePoint" disabled>
+            💾 Salvar Coordenada
+          </button>
+          <button class="btn btn-secondary" id="btnNextPoint">
+            ➡️ Próximo Ponto
+          </button>
+          <button class="btn btn-secondary" id="btnClearPoint">
+            🗑️ Limpar Este Ponto
+          </button>
+          <button class="btn btn-success" id="btnExport">
+            📥 Exportar JSON
+          </button>
+          <button class="btn btn-secondary" id="btnImport">
+            📤 Importar JSON
+          </button>
+        </div>
+      </aside>
+    </main>
+
+    <div class="modal-overlay" id="exportModal" style="display: none">
+      <div class="modal">
+        <h3>📥 Exportar Coordenadas</h3>
+        <textarea id="exportTextarea" readonly></textarea>
+        <div class="modal-buttons">
+          <button class="btn btn-secondary" id="btnCopyExport">
+            📋 Copiar
+          </button>
+          <button class="btn btn-primary" id="btnDownloadExport">
+            💾 Download
+          </button>
+          <button class="btn btn-secondary" id="btnCloseExport">Fechar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="importModal" style="display: none">
+      <div class="modal">
+        <h3>📤 Importar Coordenadas</h3>
+        <textarea
+          id="importTextarea"
+          placeholder="Cole o JSON aqui..."
+        ></textarea>
+        <div class="modal-buttons">
+          <button class="btn btn-primary" id="btnDoImport">Importar</button>
+          <button class="btn btn-secondary" id="btnCloseImport">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Configuração de caminhos - Atlas Corporal (15 SVGs)
+      const SVG_PATHS = {
+        "front-01": "../../frontend-mobile/appunture/assets/body-map/1.svg",
+        "front-02": "../../frontend-mobile/appunture/assets/body-map/2.svg",
+        "front-03": "../../frontend-mobile/appunture/assets/body-map/3.svg",
+        "front-04": "../../frontend-mobile/appunture/assets/body-map/4.svg",
+        "front-05": "../../frontend-mobile/appunture/assets/body-map/5.svg",
+        "front-06": "../../frontend-mobile/appunture/assets/body-map/6.svg",
+        "front-07": "../../frontend-mobile/appunture/assets/body-map/7.svg",
+        "front-08": "../../frontend-mobile/appunture/assets/body-map/8.svg",
+        "back-01": "../../frontend-mobile/appunture/assets/body-map/9.svg",
+        "back-02": "../../frontend-mobile/appunture/assets/body-map/10.svg",
+        "back-03": "../../frontend-mobile/appunture/assets/body-map/11.svg",
+        "back-04": "../../frontend-mobile/appunture/assets/body-map/12.svg",
+        "back-05": "../../frontend-mobile/appunture/assets/body-map/13.svg",
+        "back-06": "../../frontend-mobile/appunture/assets/body-map/14.svg",
+        "back-07": "../../frontend-mobile/appunture/assets/body-map/15.svg",
+      };
+      
+      const SVG_LABELS = {
+        "front-01": "Frontal 01",
+        "front-02": "Frontal 02",
+        "front-03": "Frontal 03",
+        "front-04": "Frontal 04",
+        "front-05": "Frontal 05",
+        "front-06": "Frontal 06",
+        "front-07": "Frontal 07",
+        "front-08": "Frontal 08",
+        "back-01": "Posterior 01",
+        "back-02": "Posterior 02",
+        "back-03": "Posterior 03",
+        "back-04": "Posterior 04",
+        "back-05": "Posterior 05",
+        "back-06": "Posterior 06",
+        "back-07": "Posterior 07",
+      };
+      
+      const POINTS_DATA_PATH =
+        "../../data/processed/2025-11-28/points_seed.json";
+      const STORAGE_KEY = "appunture_point_coordinates";
+
+      // Estado
+      let allPoints = [];
+      let mappedCoordinates = {};
+      let selectedPoint = null;
+      let currentView = "front-01";
+      let tempCoordinate = null;
+      let zoomLevel = 1;
+      let currentFilter = "all";
+
+      // Elementos DOM
+      const elements = {
+        pointsList: document.getElementById("pointsList"),
+        searchInput: document.getElementById("searchInput"),
+        svgWrapper: document.getElementById("svgWrapper"),
+        selectedPointCode: document.getElementById("selectedPointCode"),
+        selectedPointName: document.getElementById("selectedPointName"),
+        currentView: document.getElementById("currentView"),
+        coordX: document.getElementById("coordX"),
+        coordY: document.getElementById("coordY"),
+        locationWHO: document.getElementById("locationWHO"),
+        meridianInfo: document.getElementById("meridianInfo"),
+        btnSavePoint: document.getElementById("btnSavePoint"),
+        totalPoints: document.getElementById("totalPoints"),
+        mappedPoints: document.getElementById("mappedPoints"),
+        remainingPoints: document.getElementById("remainingPoints"),
+        progressFill: document.getElementById("progressFill"),
+        zoomLevel: document.getElementById("zoomLevel"),
+      };
+
+      async function init() {
+        loadFromStorage();
+        await loadPoints();
+        await loadSVG(currentView);
+        setupEventListeners();
+        updateStats();
+        renderPointsList();
+      }
+
+      async function loadPoints() {
+        try {
+          const response = await fetch(POINTS_DATA_PATH);
+          if (!response.ok) throw new Error("Falha ao carregar pontos");
+          allPoints = await response.json();
+
+          // Carregar coordenadas existentes do dataset
+          allPoints.forEach((point) => {
+            if (
+              point.coordinates &&
+              point.coordinates.x !== null &&
+              point.coordinates.y !== null
+            ) {
+              mappedCoordinates[point.code] = {
+                x: point.coordinates.x,
+                y: point.coordinates.y,
+                view: point.coordinates.view || "front",
+                mappedAt:
+                  point.coordinates.mappedAt || new Date().toISOString(),
+              };
+            }
+          });
+
+          console.log(`Carregados ${allPoints.length} pontos`);
+        } catch (error) {
+          console.error("Erro ao carregar pontos:", error);
+          showToast("Erro ao carregar pontos. Verifique o caminho.", true);
+        }
+      }
+
+      async function loadSVG(view) {
+        currentView = view;
+        elements.currentView.textContent = SVG_LABELS[view] || view;
+        elements.svgWrapper.innerHTML =
+          '<div class="loading"><div class="spinner"></div>Carregando SVG...</div>';
+
+        try {
+          const response = await fetch(SVG_PATHS[view]);
+          if (!response.ok) throw new Error(`SVG não encontrado: ${view}`);
+          const svgText = await response.text();
+          elements.svgWrapper.innerHTML = svgText;
+          const svg = elements.svgWrapper.querySelector("svg");
+          if (svg) {
+            svg.style.width = "100%";
+            svg.style.height = "auto";
+            svg.style.maxHeight = "80vh";
+          }
+          renderMarkers();
+          updateViewButtons();
+        } catch (error) {
+          console.error("Erro ao carregar SVG:", error);
+          elements.svgWrapper.innerHTML = `
+                    <svg viewBox="0 0 400 800" style="width: 400px; height: 800px; background: #f0f0f0;">
+                        <rect x="150" y="50" width="100" height="100" rx="50" fill="#ddd" stroke="#999"/>
+                        <rect x="125" y="160" width="150" height="200" rx="20" fill="#ddd" stroke="#999"/>
+                        <rect x="50" y="170" width="70" height="180" rx="15" fill="#ddd" stroke="#999"/>
+                        <rect x="280" y="170" width="70" height="180" rx="15" fill="#ddd" stroke="#999"/>
+                        <rect x="140" y="370" width="50" height="250" rx="10" fill="#ddd" stroke="#999"/>
+                        <rect x="210" y="370" width="50" height="250" rx="10" fill="#ddd" stroke="#999"/>
+                        <text x="200" y="700" text-anchor="middle" fill="#666" font-size="14">SVG "${view}" não encontrado</text>
+                    </svg>
+                `;
+          renderMarkers();
+        }
+      }
+
+      function renderPointsList() {
+        const searchTerm = elements.searchInput.value.toLowerCase();
+        let filtered = allPoints.filter((point) => {
+          const matchSearch =
+            !searchTerm ||
+            point.code.toLowerCase().includes(searchTerm) ||
+            (point.name && point.name.toLowerCase().includes(searchTerm)) ||
+            (point.namePT && point.namePT.toLowerCase().includes(searchTerm));
+          if (!matchSearch) return false;
+          if (currentFilter === "all") return true;
+          if (currentFilter === "mapped") return mappedCoordinates[point.code];
+          if (currentFilter === "unmapped")
+            return !mappedCoordinates[point.code];
+          return (
+            point.code.startsWith(currentFilter + "-") ||
+            point.meridian === currentFilter
+          );
+        });
+
+        filtered.sort((a, b) => {
+          const [mA, nA] = a.code.split("-");
+          const [mB, nB] = b.code.split("-");
+          if (mA !== mB) return mA.localeCompare(mB);
+          return parseInt(nA) - parseInt(nB);
+        });
+
+        elements.pointsList.innerHTML = filtered
+          .map(
+            (point) => `
+                <div class="point-item ${
+                  selectedPoint?.code === point.code ? "selected" : ""
+                } ${mappedCoordinates[point.code] ? "mapped" : ""}"
+                     data-code="${point.code}">
+                    <div class="point-code">${point.code}</div>
+                    <div class="point-name">${
+                      point.namePT || point.name || ""
+                    }</div>
+                </div>
+            `
+          )
+          .join("");
+
+        elements.pointsList.querySelectorAll(".point-item").forEach((item) => {
+          item.addEventListener("click", () => selectPoint(item.dataset.code));
+        });
+      }
+
+      function selectPoint(code) {
+        selectedPoint = allPoints.find((p) => p.code === code);
+        if (!selectedPoint) return;
+
+        tempCoordinate = null;
+        elements.btnSavePoint.disabled = true;
+        elements.selectedPointCode.textContent = selectedPoint.code;
+        elements.selectedPointName.textContent =
+          selectedPoint.namePT || selectedPoint.name || "";
+        elements.locationWHO.textContent =
+          selectedPoint.locationWHO || selectedPoint.location || "-";
+        elements.meridianInfo.textContent =
+          selectedPoint.meridian || selectedPoint.code.split("-")[0];
+
+        const existing = mappedCoordinates[code];
+        if (existing) {
+          elements.coordX.textContent = existing.x.toFixed(2);
+          elements.coordY.textContent = existing.y.toFixed(2);
+          if (existing.view && existing.view !== currentView) {
+            loadSVG(existing.view);
+          }
+        } else {
+          elements.coordX.textContent = "-";
+          elements.coordY.textContent = "-";
+        }
+        renderPointsList();
+        renderMarkers();
+      }
+
+      function renderMarkers() {
+        elements.svgWrapper
+          .querySelectorAll(".point-marker")
+          .forEach((m) => m.remove());
+        const svg = elements.svgWrapper.querySelector("svg");
+        if (!svg) return;
+
+        const rect = svg.getBoundingClientRect();
+        const wrapperRect = elements.svgWrapper.getBoundingClientRect();
+
+        Object.entries(mappedCoordinates).forEach(([code, coord]) => {
+          if (coord.view !== currentView) return;
+          const marker = document.createElement("div");
+          marker.className = `point-marker ${
+            selectedPoint?.code === code ? "current" : ""
+          }`;
+          marker.innerHTML = `<span class="tooltip">${code}</span>`;
+          const x =
+            (coord.x / 100) * rect.width + (rect.left - wrapperRect.left);
+          const y =
+            (coord.y / 100) * rect.height + (rect.top - wrapperRect.top);
+          marker.style.left = `${x}px`;
+          marker.style.top = `${y}px`;
+          marker.dataset.code = code;
+          marker.addEventListener("click", (e) => {
+            e.stopPropagation();
+            selectPoint(code);
+          });
+          elements.svgWrapper.appendChild(marker);
+        });
+
+        if (tempCoordinate && selectedPoint) {
+          const marker = document.createElement("div");
+          marker.className = "point-marker current";
+          marker.innerHTML = `<span class="tooltip">${selectedPoint.code} (novo)</span>`;
+          const x =
+            (tempCoordinate.x / 100) * rect.width +
+            (rect.left - wrapperRect.left);
+          const y =
+            (tempCoordinate.y / 100) * rect.height +
+            (rect.top - wrapperRect.top);
+          marker.style.left = `${x}px`;
+          marker.style.top = `${y}px`;
+          elements.svgWrapper.appendChild(marker);
+        }
+      }
+
+      function setupEventListeners() {
+        elements.svgWrapper.addEventListener("click", handleSVGClick);
+        elements.searchInput.addEventListener("input", renderPointsList);
+
+        document.querySelectorAll(".filter-tab").forEach((tab) => {
+          tab.addEventListener("click", () => {
+            document
+              .querySelectorAll(".filter-tab")
+              .forEach((t) => t.classList.remove("active"));
+            tab.classList.add("active");
+            currentFilter = tab.dataset.filter;
+            renderPointsList();
+          });
+        });
+
+        document.querySelectorAll(".view-btn").forEach((btn) => {
+          btn.addEventListener("click", () => loadSVG(btn.dataset.view));
+        });
+
+        document
+          .getElementById("zoomIn")
+          .addEventListener("click", () => setZoom(zoomLevel + 0.1));
+        document
+          .getElementById("zoomOut")
+          .addEventListener("click", () => setZoom(zoomLevel - 0.1));
+        document
+          .getElementById("zoomReset")
+          .addEventListener("click", () => setZoom(1));
+
+        elements.btnSavePoint.addEventListener("click", saveCurrentPoint);
+        document
+          .getElementById("btnNextPoint")
+          .addEventListener("click", selectNextPoint);
+        document
+          .getElementById("btnClearPoint")
+          .addEventListener("click", clearCurrentPoint);
+        document
+          .getElementById("btnExport")
+          .addEventListener("click", showExportModal);
+        document
+          .getElementById("btnImport")
+          .addEventListener("click", showImportModal);
+
+        document
+          .getElementById("btnCopyExport")
+          .addEventListener("click", copyExport);
+        document
+          .getElementById("btnDownloadExport")
+          .addEventListener("click", downloadExport);
+        document
+          .getElementById("btnCloseExport")
+          .addEventListener(
+            "click",
+            () =>
+              (document.getElementById("exportModal").style.display = "none")
+          );
+        document
+          .getElementById("btnDoImport")
+          .addEventListener("click", doImport);
+        document
+          .getElementById("btnCloseImport")
+          .addEventListener(
+            "click",
+            () =>
+              (document.getElementById("importModal").style.display = "none")
+          );
+
+        document.addEventListener("keydown", handleKeyboard);
+        window.addEventListener("resize", renderMarkers);
+      }
+
+      function handleSVGClick(e) {
+        if (!selectedPoint) {
+          showToast("Selecione um ponto primeiro!", true);
+          return;
+        }
+        const svg = elements.svgWrapper.querySelector("svg");
+        if (!svg) return;
+
+        const rect = svg.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+        tempCoordinate = { x, y, view: currentView };
+        elements.coordX.textContent = x.toFixed(2);
+        elements.coordY.textContent = y.toFixed(2);
+        elements.btnSavePoint.disabled = false;
+        renderMarkers();
+      }
+
+      function handleKeyboard(e) {
+        if (e.ctrlKey && e.key === "z") {
+          e.preventDefault();
+          if (tempCoordinate) {
+            tempCoordinate = null;
+            elements.btnSavePoint.disabled = true;
+            elements.coordX.textContent = "-";
+            elements.coordY.textContent = "-";
+            renderMarkers();
+            showToast("Coordenada desfeita");
+          }
+        }
+        if (e.key === "ArrowRight" && !e.ctrlKey) selectNextPoint();
+        if (e.key === "ArrowLeft" && !e.ctrlKey) selectPrevPoint();
+        if (e.key === "Enter" && tempCoordinate) saveCurrentPoint();
+        if (e.key === "Escape") {
+          tempCoordinate = null;
+          elements.btnSavePoint.disabled = true;
+          renderMarkers();
+        }
+      }
+
+      function saveCurrentPoint() {
+        if (!selectedPoint || !tempCoordinate) return;
+        mappedCoordinates[selectedPoint.code] = {
+          x: tempCoordinate.x,
+          y: tempCoordinate.y,
+          view: tempCoordinate.view,
+          mappedAt: new Date().toISOString(),
+        };
+        saveToStorage();
+        updateStats();
+        tempCoordinate = null;
+        elements.btnSavePoint.disabled = true;
+        renderPointsList();
+        renderMarkers();
+        showToast(`✓ ${selectedPoint.code} salvo!`);
+      }
+
+      function selectNextPoint() {
+        if (!selectedPoint) {
+          if (allPoints.length > 0) selectPoint(allPoints[0].code);
+          return;
+        }
+        const currentIndex = allPoints.findIndex(
+          (p) => p.code === selectedPoint.code
+        );
+        const nextIndex = (currentIndex + 1) % allPoints.length;
+        selectPoint(allPoints[nextIndex].code);
+      }
+
+      function selectPrevPoint() {
+        if (!selectedPoint) return;
+        const currentIndex = allPoints.findIndex(
+          (p) => p.code === selectedPoint.code
+        );
+        const prevIndex =
+          (currentIndex - 1 + allPoints.length) % allPoints.length;
+        selectPoint(allPoints[prevIndex].code);
+      }
+
+      function clearCurrentPoint() {
+        if (!selectedPoint) return;
+        if (mappedCoordinates[selectedPoint.code]) {
+          delete mappedCoordinates[selectedPoint.code];
+          saveToStorage();
+          updateStats();
+          renderPointsList();
+          renderMarkers();
+          showToast(`🗑️ ${selectedPoint.code} removido`);
+        }
+        tempCoordinate = null;
+        elements.btnSavePoint.disabled = true;
+        elements.coordX.textContent = "-";
+        elements.coordY.textContent = "-";
+      }
+
+      function setZoom(level) {
+        zoomLevel = Math.max(0.5, Math.min(3, level));
+        const svg = elements.svgWrapper.querySelector("svg");
+        if (svg) {
+          svg.style.transform = `scale(${zoomLevel})`;
+          svg.style.transformOrigin = "top left";
+        }
+        elements.zoomLevel.textContent = `${Math.round(zoomLevel * 100)}%`;
+        renderMarkers();
+      }
+
+      function updateViewButtons() {
+        document.querySelectorAll(".view-btn").forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.view === currentView);
+        });
+      }
+
+      function saveToStorage() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(mappedCoordinates));
+      }
+
+      function loadFromStorage() {
+        try {
+          const saved = localStorage.getItem(STORAGE_KEY);
+          if (saved) {
+            mappedCoordinates = JSON.parse(saved);
+            console.log(
+              `Carregadas ${
+                Object.keys(mappedCoordinates).length
+              } coordenadas do localStorage`
+            );
+          }
+        } catch (error) {
+          console.error("Erro ao carregar do localStorage:", error);
+        }
+      }
+
+      function showExportModal() {
+        const exportData = {
+          exportedAt: new Date().toISOString(),
+          totalPoints: allPoints.length,
+          mappedCount: Object.keys(mappedCoordinates).length,
+          coordinates: mappedCoordinates,
+        };
+        document.getElementById("exportTextarea").value = JSON.stringify(
+          exportData,
+          null,
+          2
+        );
+        document.getElementById("exportModal").style.display = "flex";
+      }
+
+      function copyExport() {
+        const textarea = document.getElementById("exportTextarea");
+        textarea.select();
+        document.execCommand("copy");
+        showToast("📋 Copiado para clipboard!");
+      }
+
+      function downloadExport() {
+        const content = document.getElementById("exportTextarea").value;
+        const blob = new Blob([content], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `point_coordinates_${
+          new Date().toISOString().split("T")[0]
+        }.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast("💾 Download iniciado!");
+      }
+
+      function showImportModal() {
+        document.getElementById("importTextarea").value = "";
+        document.getElementById("importModal").style.display = "flex";
+      }
+
+      function doImport() {
+        try {
+          const content = document.getElementById("importTextarea").value;
+          const data = JSON.parse(content);
+          const coords = data.coordinates || data;
+          mappedCoordinates = { ...mappedCoordinates, ...coords };
+          saveToStorage();
+          updateStats();
+          renderPointsList();
+          renderMarkers();
+          document.getElementById("importModal").style.display = "none";
+          showToast(`✓ Importadas ${Object.keys(coords).length} coordenadas!`);
+        } catch (error) {
+          showToast("❌ Erro ao importar: JSON inválido", true);
+        }
+      }
+
+      function updateStats() {
+        const total = allPoints.length;
+        const mapped = Object.keys(mappedCoordinates).length;
+        const remaining = total - mapped;
+        const percentage = total > 0 ? (mapped / total) * 100 : 0;
+        elements.totalPoints.textContent = `Total: ${total}`;
+        elements.mappedPoints.textContent = `Mapeados: ${mapped}`;
+        elements.remainingPoints.textContent = `Restantes: ${remaining}`;
+        elements.progressFill.style.width = `${percentage}%`;
+      }
+
+      function showToast(message, isError = false) {
+        const existing = document.querySelector(".toast");
+        if (existing) existing.remove();
+        const toast = document.createElement("div");
+        toast.className = `toast ${isError ? "error" : ""}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+      }
+
+      init();
+    </script>
+  </body>
+</html>

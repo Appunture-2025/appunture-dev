@@ -14,7 +14,7 @@ Appunture é uma plataforma digital completa para democratizar o acesso ao conhe
 - 🗺️ **Mapa corporal interativo** para localização visual de pontos
 - ❤️ **Sistema de favoritos** para acesso rápido
 - 📱 **Funcionamento offline** usando sincronização inteligente
-- 👨‍💼 **Painel administrativo** para gestão de conteúdo
+- 🌙 **Modo escuro** para conforto visual
 
 ## 🏗️ Arquitetura
 
@@ -23,10 +23,6 @@ graph TB
     subgraph "Mobile App"
         A[React Native + Expo]
         B[SQLite Local]
-    end
-
-    subgraph "Admin Panel"
-        C[React + Vite + TailwindCSS]
     end
 
     subgraph "Backend"
@@ -44,8 +40,6 @@ graph TB
     A --> D
     A --> H
     A --> B
-    C --> D
-    C --> H
     D --> G
     D --> H
     D --> I
@@ -58,21 +52,17 @@ graph TB
 appunture-dev/
 ├── backend-java/          # API REST (Spring Boot + Firebase)
 │   ├── src/               # Código fonte Java
-│   ├── openapi/           # Documentação OpenAPI/Swagger
-│   └── observability/     # Dashboards Grafana + Prometheus
+│   └── openapi/           # Documentação OpenAPI/Swagger
 │
 ├── frontend-mobile/       # Aplicativo móvel
 │   └── appunture/         # React Native + Expo
-│
-├── frontend-admin/        # Painel administrativo
-│   └── src/               # React + TypeScript + Vite
 │
 ├── docs/                  # Documentação adicional
 │   ├── adr/               # Architecture Decision Records
 │   └── setup/             # Guias de configuração
 │
 ├── tools/                 # Scripts e utilitários
-└── integration-tests/     # Testes de integração E2E
+└── data/                  # Dados de seed e processados
 ```
 
 ## 🚀 Quick Start
@@ -99,7 +89,7 @@ chmod +x setup.sh && ./setup.sh
 ### 1. Configurar Firebase
 
 1. Crie um projeto em [console.firebase.google.com](https://console.firebase.google.com)
-2. Habilite: Authentication (Email, Google, Apple), Firestore, Storage
+2. Habilite: Authentication (Email, Google), Firestore, Storage
 3. Baixe o service-account-key.json
 
 ### 2. Configurar variáveis de ambiente
@@ -108,7 +98,6 @@ chmod +x setup.sh && ./setup.sh
 # Copie os templates .env.example para .env em cada pasta:
 cp backend-java/.env.example backend-java/.env
 cp frontend-mobile/appunture/.env.example frontend-mobile/appunture/.env
-cp frontend-admin/.env.example frontend-admin/.env
 
 # Edite cada .env com suas credenciais Firebase
 ```
@@ -133,16 +122,6 @@ npm start
 # Escaneie o QR code com Expo Go
 ```
 
-### 4. Iniciar o Painel Admin (opcional)
-
-```bash
-cd frontend-admin
-npm install
-npm run dev
-
-# Admin disponível em: http://localhost:5173
-```
-
 ## 📚 Documentação
 
 | Documento                                                    | Descrição                                 |
@@ -150,7 +129,6 @@ npm run dev
 | [🚀 Deploy Guide](DEPLOY_GUIDE.md)                           | **Guia completo de deploy para produção** |
 | [Backend README](backend-java/README.md)                     | API REST, endpoints, configuração         |
 | [Mobile README](frontend-mobile/appunture/README.md)         | App React Native, stores, sincronização   |
-| [Admin README](frontend-admin/README.md)                     | Painel administrativo, componentes        |
 | [Architecture Decisions](docs/adr/)                          | ADRs - decisões arquiteturais             |
 | [Local Development](docs/setup/local-development.md)         | Guia completo de setup local              |
 | [Firebase Setup](docs/setup/firebase-setup.md)               | Configuração do Firebase                  |
@@ -169,10 +147,6 @@ mvn test
 # Frontend Mobile - Testes Jest
 cd frontend-mobile/appunture
 npm test
-
-# Frontend Admin - Testes
-cd frontend-admin
-npm test
 ```
 
 ## 💰 Custos (Free Tier Firebase)
@@ -188,7 +162,7 @@ O projeto foi arquitetado para funcionar **100% gratuito** dentro dos limites do
 
 ## 🔒 Segurança
 
-- ✅ Autenticação via Firebase Auth (Email/Google/Apple)
+- ✅ Autenticação via Firebase Auth (Email/Google)
 - ✅ Tokens JWT verificados no backend
 - ✅ CORS configurado por ambiente (dev/prod)
 - ✅ Rate limiting implementado
@@ -214,11 +188,10 @@ git push origin feature/minha-feature
 
 - [x] MVP com busca de pontos e favoritos
 - [x] Sincronização offline-first
-- [x] Painel administrativo
-- [ ] Notificações push
-- [ ] Modo escuro
+- [x] Modo escuro
 - [ ] Múltiplos idiomas
 - [ ] Integração com wearables
+- [ ] Painel administrativo web
 
 ## 👥 Equipe
 

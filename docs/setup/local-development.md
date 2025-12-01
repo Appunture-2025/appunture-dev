@@ -8,7 +8,6 @@ Guia completo para configurar o ambiente de desenvolvimento local do Appunture.
 - [Configuração Firebase](#configuração-firebase)
 - [Backend Setup](#backend-setup)
 - [Frontend Mobile Setup](#frontend-mobile-setup)
-- [Frontend Admin Setup](#frontend-admin-setup)
 - [Verificação](#verificação)
 - [Troubleshooting](#troubleshooting)
 
@@ -16,13 +15,13 @@ Guia completo para configurar o ambiente de desenvolvimento local do Appunture.
 
 ### Software Necessário
 
-| Software | Versão Mínima | Verificação |
-|----------|---------------|-------------|
-| Java | 17+ | `java -version` |
-| Maven | 3.8+ | `mvn -version` |
-| Node.js | 18+ | `node -version` |
-| npm | 9+ | `npm -version` |
-| Git | 2.30+ | `git --version` |
+| Software | Versão Mínima | Verificação     |
+| -------- | ------------- | --------------- |
+| Java     | 17+           | `java -version` |
+| Maven    | 3.8+          | `mvn -version`  |
+| Node.js  | 18+           | `node -version` |
+| npm      | 9+            | `npm -version`  |
+| Git      | 2.30+         | `git --version` |
 
 ### Instalação (macOS)
 
@@ -48,8 +47,8 @@ npm install -g @expo/cli
 
 ```powershell
 # Chocolatey
-Set-ExecutionPolicy Bypass -Scope Process -Force; 
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; 
+Set-ExecutionPolicy Bypass -Scope Process -Force;
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
 iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
 # Java 17
@@ -96,18 +95,21 @@ npm install -g @expo/cli
 ### 2. Habilitar Serviços
 
 **Firebase Authentication:**
+
 1. No menu lateral, clique em "Authentication"
 2. Clique em "Começar"
 3. Habilite "E-mail/senha"
 4. (Opcional) Habilite "Google" e "Apple"
 
 **Firestore Database:**
+
 1. No menu lateral, clique em "Firestore Database"
 2. Clique em "Criar banco de dados"
 3. Selecione modo de produção
 4. Escolha uma região (us-central1 recomendado)
 
 **Firebase Storage:**
+
 1. No menu lateral, clique em "Storage"
 2. Clique em "Começar"
 3. Use as regras padrão de produção
@@ -139,10 +141,10 @@ source .env.local
 
 # Windows PowerShell (run as Administrator if setting system-wide variables)
 # Note: This sets variables for the current session only
-Get-Content .env.local | ForEach-Object { 
-    if ($_ -match '^\s*export\s+(.+)=(.+)') { 
-        [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], "Process") 
-    } 
+Get-Content .env.local | ForEach-Object {
+    if ($_ -match '^\s*export\s+(.+)=(.+)') {
+        [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], "Process")
+    }
 }
 # For permanent user-level variables, replace "Process" with "User"
 ```
@@ -266,48 +268,6 @@ npm run web      # Navegador
 EXPO_PUBLIC_API_BASE_URL=http://192.168.1.100:8080/api
 ```
 
-## Frontend Admin Setup
-
-### 1. Navegar para o diretório
-
-```bash
-cd frontend-admin
-```
-
-### 2. Instalar dependências
-
-```bash
-npm install
-```
-
-### 3. Configurar variáveis de ambiente
-
-Copie e edite o arquivo de exemplo:
-
-```bash
-cp .env.example .env.local
-```
-
-Edite `.env.local`:
-
-```bash
-VITE_API_URL=http://localhost:8080/api
-VITE_FIREBASE_API_KEY=AIza...
-VITE_FIREBASE_AUTH_DOMAIN=seu-project.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=seu-project-id
-VITE_FIREBASE_STORAGE_BUCKET=seu-project-id.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
-VITE_FIREBASE_APP_ID=1:123456789:web:abc123
-```
-
-### 4. Executar o admin
-
-```bash
-npm run dev
-
-# Acesse: http://localhost:5173
-```
-
 ## Verificação
 
 ### Checklist de Setup
@@ -321,7 +281,6 @@ npm run dev
 - [ ] Backend responde em http://localhost:8080/health
 - [ ] Swagger UI acessível em http://localhost:8080/swagger-ui.html
 - [ ] App mobile carrega no Expo Go
-- [ ] Admin carrega em http://localhost:5173
 
 ### Executar Stack Completa
 
@@ -337,13 +296,9 @@ cd backend-java && mvn spring-boot:run &
 # Terminal 2: Mobile
 cd frontend-mobile/appunture && npm start &
 
-# Terminal 3: Admin
-cd frontend-admin && npm run dev &
-
 echo "Stack iniciada!"
 echo "Backend: http://localhost:8080"
 echo "Mobile: QR code no terminal"
-echo "Admin: http://localhost:5173"
 ```
 
 ## Troubleshooting

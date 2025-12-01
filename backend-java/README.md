@@ -186,11 +186,11 @@ O sistema possui um pipeline completo para geração e importação de dados ini
 
 Os dados de seed estão localizados em `src/main/resources/seed/`:
 
-| Arquivo | Descrição | Registros |
-|---------|-----------|-----------|
-| `points_seed.ndjson` | Pontos de acupuntura (361 pontos) | ~361 |
-| `symptoms_seed.ndjson` | Sintomas extraídos das indicações | ~600+ |
-| `categories_seed.ndjson` | Categorias de sintomas | ~13 |
+| Arquivo                  | Descrição                         | Registros |
+| ------------------------ | --------------------------------- | --------- |
+| `points_seed.ndjson`     | Pontos de acupuntura (361 pontos) | ~361      |
+| `symptoms_seed.ndjson`   | Sintomas extraídos das indicações | ~600+     |
+| `categories_seed.ndjson` | Categorias de sintomas            | ~13       |
 
 ### Pipeline de Geração
 
@@ -274,7 +274,6 @@ Os CSVs originais são mantidos em `tables/raw/` como backup.
 
 - **Postman/Insomnia**: importe `backend-java/openapi/appunture-backend.postman_collection.json` (variáveis `baseUrl`, `firebase_id_token` e `admin_id_token` já configuradas).
 - **Swagger UI**: disponível em `/swagger-ui.html` com os novos exemplos (`FirestorePoint`, `PointImageRequest`).
-- **Observabilidade**: arquivos prontos em `backend-java/observability/` para provisionar Prometheus/Grafana + alertas.
 
 ## 🔧 Configuração
 
@@ -448,10 +447,10 @@ app:
   security:
     rate-limit:
       enabled: true
-      capacity: 200         # Máximo de tokens no bucket
-      refill-tokens: 200    # Tokens reabastecidos
+      capacity: 200 # Máximo de tokens no bucket
+      refill-tokens: 200 # Tokens reabastecidos
       refill-duration: PT1M # Período de reabastecimento (1 minuto)
-      strategy: AUTO        # AUTO, PER_IP ou PER_USER
+      strategy: AUTO # AUTO, PER_IP ou PER_USER
       excluded-paths:
         - /api/health/**
         - /v3/api-docs/**
@@ -460,6 +459,7 @@ app:
 ```
 
 Headers de resposta incluem informações de rate limit:
+
 - `X-RateLimit-Limit`: Limite total
 - `X-RateLimit-Remaining`: Requisições restantes
 - `Retry-After`: Segundos para aguardar (quando bloqueado)
@@ -535,10 +535,10 @@ O projeto utiliza GitHub Actions para automação de builds, testes e deploys.
 
 ### Workflows Disponíveis
 
-| Workflow | Trigger | Descrição |
-|----------|---------|-----------|
-| `backend-ci.yml` | Push/PR em `main`/`develop` | Build, testes, cobertura JaCoCo |
-| `seed-pipeline.yml` | Push em `tools/` ou `tables/` | Geração de dados de seed |
+| Workflow            | Trigger                       | Descrição                       |
+| ------------------- | ----------------------------- | ------------------------------- |
+| `backend-ci.yml`    | Push/PR em `main`/`develop`   | Build, testes, cobertura JaCoCo |
+| `seed-pipeline.yml` | Push em `tools/` ou `tables/` | Geração de dados de seed        |
 
 ### Pipeline de Build
 
@@ -566,29 +566,16 @@ cd backend-java
 - **JaCoCo Report**: Relatório de cobertura de código (download via GitHub Actions)
 - **backend-jar**: JAR da aplicação para deploy manual
 
-## 📊 Observabilidade
+## 📊 Métricas e Health Check
 
-A documentação completa de observabilidade está em [`observability/README.md`](observability/README.md).
-
-### Dashboards Grafana
-
-- **Appunture Backend**: Latência, erros, rate limiting
-- **Appunture Sync & Storage**: Auth, sync, storage operations
-
-### Alertas Configurados
-
-| Alerta | Severidade | Threshold |
-|--------|------------|-----------|
-| `AppuntureHighLatencyP95` | Warning | P95 > 1s por 5min |
-| `AppuntureErrorSpike` | Critical | 5xx > 0.5 req/s por 3min |
-| `RateLimitRejections` | Warning | Rejeições > 0.2 req/s |
-| `HighOfflineQueueSize` | Critical | Fila > 10 por 5min |
-
-### Métricas
+O backend expõe endpoints de monitoramento via Spring Boot Actuator:
 
 ```bash
-# Verificar métricas localmente
-curl http://localhost:8080/actuator/prometheus
+# Health check
+curl http://localhost:8080/actuator/health
+
+# Métricas
+curl http://localhost:8080/actuator/metrics
 ```
 
 ## 📚 Recursos Adicionais
@@ -597,7 +584,6 @@ curl http://localhost:8080/actuator/prometheus
 - [Spring Boot Reference](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
 - [Cloud Run Documentation](https://cloud.google.com/run/docs)
 - [OpenAPI Specification](https://swagger.io/specification/)
-- [Observability README](observability/README.md)
 
 ## 🤝 Contribuição
 

@@ -6,7 +6,6 @@ Guia de resolução de problemas comuns no desenvolvimento do Appunture.
 
 - [Backend (Java/Spring Boot)](#backend-javaspring-boot)
 - [Frontend Mobile (Expo/React Native)](#frontend-mobile-exporeact-native)
-- [Frontend Admin (React/Vite)](#frontend-admin-reactvite)
 - [Firebase](#firebase)
 - [Docker](#docker)
 - [CI/CD](#cicd)
@@ -20,6 +19,7 @@ Guia de resolução de problemas comuns no desenvolvimento do Appunture.
 **Sintoma**: Aplicação não inicia, erro de credenciais Firebase.
 
 **Solução**:
+
 ```bash
 # Verifique se a variável está definida
 echo $GOOGLE_APPLICATION_CREDENTIALS
@@ -36,6 +36,7 @@ ls -la $GOOGLE_APPLICATION_CREDENTIALS
 **Sintoma**: Erro ao iniciar a aplicação, porta ocupada.
 
 **Solução**:
+
 ```bash
 # Encontre o processo usando a porta
 lsof -i :8080
@@ -52,6 +53,7 @@ mvn spring-boot:run -Dserver.port=8081
 **Sintoma**: Timeouts ou erros de conexão com Firestore.
 
 **Solução**:
+
 1. Verifique conectividade com internet
 2. Confirme que o projeto Firebase está ativo
 3. Verifique se as credenciais estão corretas:
@@ -69,6 +71,7 @@ cat $GOOGLE_APPLICATION_CREDENTIALS | grep project_id
 **Sintoma**: Erros durante `mvn compile` ou `mvn package`.
 
 **Solução**:
+
 ```bash
 # Limpe o cache do Maven
 mvn clean
@@ -89,6 +92,7 @@ mvn clean install
 **Sintoma**: Testes falham com erros de Firebase.
 
 **Solução**:
+
 ```bash
 # Execute com perfil de teste (mocks Firebase)
 mvn test -Dspring.profiles.active=test
@@ -106,6 +110,7 @@ cat src/test/resources/application-test.yml
 **Sintoma**: Expo não inicia, erro no Metro bundler.
 
 **Solução**:
+
 ```bash
 # Limpe o cache do Expo
 npx expo start --clear
@@ -124,6 +129,7 @@ npm cache clean --force
 **Sintoma**: Erro de importação de módulos.
 
 **Solução**:
+
 ```bash
 # Reinstale dependências
 rm -rf node_modules
@@ -143,18 +149,21 @@ cat tsconfig.json
 **Solução**:
 
 **Android Emulator**:
+
 ```typescript
 // Use IP especial do emulador
-const API_URL = 'http://10.0.2.2:8080/api';
+const API_URL = "http://10.0.2.2:8080/api";
 ```
 
 **iOS Simulator**:
+
 ```typescript
 // Use localhost
-const API_URL = 'http://localhost:8080/api';
+const API_URL = "http://localhost:8080/api";
 ```
 
 **Dispositivo físico**:
+
 ```typescript
 // Use IP da máquina na rede local
 const API_URL = 'http://192.168.1.100:8080/api';
@@ -171,13 +180,14 @@ ipconfig
 **Sintoma**: Erro 401 nas chamadas à API.
 
 **Solução**:
+
 ```typescript
 // Force token refresh
 const user = firebaseAuth.currentUser;
 const token = await user?.getIdToken(true); // true = force refresh
 
 // Verifique se o token está sendo enviado
-console.log('Token:', token?.substring(0, 20) + '...');
+console.log("Token:", token?.substring(0, 20) + "...");
 ```
 
 ### ❌ "Android Emulator not detected"
@@ -185,6 +195,7 @@ console.log('Token:', token?.substring(0, 20) + '...');
 **Sintoma**: Expo não encontra emulador Android.
 
 **Solução**:
+
 ```bash
 # Verifique se ADB está funcionando
 adb devices
@@ -203,6 +214,7 @@ adb start-server
 **Sintoma**: Build iOS falha em Macs Apple Silicon.
 
 **Solução**:
+
 ```bash
 # Limpe pods
 cd ios
@@ -221,68 +233,13 @@ pod install
 **Sintoma**: Erros ao acessar banco local.
 
 **Solução**:
+
 ```bash
 # Limpe dados do app
 npx expo start --clear
 
 # No dispositivo/emulador:
 # Settings > Apps > Appunture > Clear Data
-```
-
----
-
-## Frontend Admin (React/Vite)
-
-### ❌ "Vite HMR not working"
-
-**Sintoma**: Hot reload não funciona.
-
-**Solução**:
-```bash
-# Reinicie o servidor
-npm run dev
-
-# Limpe cache
-rm -rf node_modules/.vite
-npm run dev
-```
-
-### ❌ "CORS error"
-
-**Sintoma**: Erros de CORS ao chamar API.
-
-**Solução**:
-1. Verifique se o backend está rodando
-2. Confirme a URL da API no `.env.local`:
-
-```bash
-VITE_API_URL=http://localhost:8080/api
-```
-
-3. Verifique configuração CORS no backend:
-
-```yaml
-# application-dev.yml
-app:
-  security:
-    cors:
-      allowed-origin-patterns:
-        - http://localhost:*
-```
-
-### ❌ "Firebase Auth popup blocked"
-
-**Sintoma**: Popup de login Google/Apple bloqueado.
-
-**Solução**:
-- Permita popups no navegador para localhost
-- Use redirect ao invés de popup:
-
-```typescript
-// Em vez de signInWithPopup, use:
-import { signInWithRedirect, GoogleAuthProvider } from 'firebase/auth';
-
-await signInWithRedirect(auth, new GoogleAuthProvider());
 ```
 
 ---
@@ -294,19 +251,20 @@ await signInWithRedirect(auth, new GoogleAuthProvider());
 **Sintoma**: Erro de permissão ao ler/escrever dados.
 
 **Solução**:
+
 1. Verifique as regras no Firebase Console
 2. Confirme que o usuário está autenticado:
 
 ```typescript
 const user = firebaseAuth.currentUser;
-console.log('User:', user?.uid);
+console.log("User:", user?.uid);
 ```
 
 3. Verifique custom claims (role):
 
 ```typescript
 const token = await user?.getIdTokenResult();
-console.log('Claims:', token?.claims);
+console.log("Claims:", token?.claims);
 ```
 
 ### ❌ "Storage quota exceeded"
@@ -314,6 +272,7 @@ console.log('Claims:', token?.claims);
 **Sintoma**: Uploads falham, erro de quota.
 
 **Solução**:
+
 1. Verifique uso no Firebase Console > Storage
 2. Delete arquivos não utilizados
 3. Upgrade para plano Blaze se necessário
@@ -323,10 +282,10 @@ console.log('Claims:', token?.claims);
 **Sintoma**: Erro de API key inválida.
 
 **Solução**:
+
 1. Regenere a API key no Firebase Console
 2. Atualize em todos os lugares:
    - `.env` (mobile)
-   - `.env.local` (admin)
    - Variáveis de CI/CD
 
 ### ❌ "Auth domain not authorized"
@@ -334,6 +293,7 @@ console.log('Claims:', token?.claims);
 **Sintoma**: Erro ao fazer login, domínio não autorizado.
 
 **Solução**:
+
 1. Firebase Console > Authentication > Settings
 2. Adicione o domínio em "Authorized domains"
 3. Para desenvolvimento local, adicione `localhost`
@@ -347,6 +307,7 @@ console.log('Claims:', token?.claims);
 **Sintoma**: Erro durante docker build.
 
 **Solução**:
+
 ```bash
 # Build com logs detalhados
 docker build --progress=plain -t appunture-backend .
@@ -361,6 +322,7 @@ docker build --no-cache -t appunture-backend .
 **Sintoma**: Container não conecta ao Firebase.
 
 **Solução**:
+
 ```bash
 # Monte o arquivo de credenciais
 docker run -v /path/to/service-account.json:/app/credentials.json \
@@ -377,7 +339,9 @@ docker run -v /path/to/service-account.json:/app/credentials.json \
 **Sintoma**: Workflow falha no GitHub Actions.
 
 **Solução**:
+
 1. Verifique os secrets configurados:
+
    - `FIREBASE_PROJECT_ID`
    - `FIREBASE_SERVICE_ACCOUNT_KEY`
    - `GOOGLE_APPLICATION_CREDENTIALS`
@@ -385,6 +349,7 @@ docker run -v /path/to/service-account.json:/app/credentials.json \
 2. Verifique logs do workflow para detalhes
 
 3. Execute localmente para debug:
+
 ```bash
 # Simule o workflow localmente
 mvn clean test
@@ -397,6 +362,7 @@ npm test
 **Sintoma**: Deploy no Cloud Run falha.
 
 **Solução**:
+
 1. Verifique permissões da service account
 2. Confirme que a imagem Docker está no Container Registry
 3. Verifique logs no Cloud Console

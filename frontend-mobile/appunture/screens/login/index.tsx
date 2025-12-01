@@ -22,7 +22,7 @@ export default function LoginScreen() {
   const router = useRouter();
   const colors = useThemeColors();
   const styles = createStyles(colors);
-  const { login, loginWithGoogle, loginWithApple, isLoading } = useAuthStore();
+  const { login, loginWithGoogle, isLoading } = useAuthStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -73,23 +73,6 @@ export default function LoginScreen() {
         Alert.alert(
           "Erro",
           error.message || "Erro ao fazer login com Google. Tente novamente."
-        );
-      } else {
-        Alert.alert("Em desenvolvimento", error.message);
-      }
-    }
-  };
-
-  const handleAppleLogin = async () => {
-    try {
-      await loginWithApple();
-      router.replace("/(tabs)");
-    } catch (error: any) {
-      // Don't show alert for "not implemented" errors
-      if (!error.message?.includes("configuração adicional")) {
-        Alert.alert(
-          "Erro",
-          error.message || "Erro ao fazer login com Apple. Tente novamente."
         );
       } else {
         Alert.alert("Em desenvolvimento", error.message);
@@ -352,23 +335,6 @@ export default function LoginScreen() {
                 accessibilityElementsHidden
               />
               <Text style={styles.socialButtonText}>Google</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.socialButton}
-              onPress={handleAppleLogin}
-              disabled={isLoading}
-              accessibilityRole="button"
-              accessibilityLabel="Entrar com Apple"
-              accessibilityState={{ disabled: isLoading }}
-            >
-              <Ionicons
-                name="logo-apple"
-                size={24}
-                color={colors.text}
-                accessibilityElementsHidden
-              />
-              <Text style={styles.socialButtonText}>Apple</Text>
             </TouchableOpacity>
           </View>
 

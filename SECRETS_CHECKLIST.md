@@ -39,25 +39,6 @@ EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=123456789-abc.apps.googleusercontent.com
 
 ---
 
-## 🖥️ Frontend Admin (.env)
-
-Arquivo: `frontend-admin/.env`
-
-```dotenv
-# URL do backend
-VITE_API_BASE_URL=https://appunture-backend-XXXXX-uc.a.run.app/api
-
-# Firebase (mesmos valores do mobile)
-VITE_FIREBASE_API_KEY=AIzaSy...
-VITE_FIREBASE_AUTH_DOMAIN=seu-projeto.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=seu-projeto
-VITE_FIREBASE_STORAGE_BUCKET=seu-projeto.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
-VITE_FIREBASE_APP_ID=1:123456789:web:abc123
-```
-
----
-
 ## ⚙️ Backend Java (.env - apenas local)
 
 Arquivo: `backend-java/.env`

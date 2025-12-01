@@ -7,7 +7,6 @@ import { databaseService } from "../services/database";
 import { useAuthStore } from "../stores/authStore";
 import { useSyncStore } from "../stores/syncStore";
 import { useThemeStore } from "../stores/themeStore";
-import { useNotifications } from "../hooks/useNotifications";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import { ThemeProvider } from "../components/ThemeProvider";
 import { createLogger } from "../utils/logger";
@@ -40,9 +39,6 @@ export default function RootLayout() {
   const checkConnection = useSyncStore((state: any) => state.checkConnection);
   const processSyncQueue = useSyncStore((state: any) => state.processSyncQueue);
   const isDark = useThemeStore((state) => state.isDark);
-
-  // Inicializa push notifications
-  const { pushToken, hasPermission } = useNotifications();
 
   useEffect(() => {
     const initializeApp = async () => {

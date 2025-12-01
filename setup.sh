@@ -78,17 +78,6 @@ fi
 npm install --silent 2>/dev/null && echo -e "    ${GREEN}✅ Dependências NPM instaladas${NC}" || echo -e "    ${YELLOW}⚠️  Erro ao instalar dependências NPM${NC}"
 cd ../..
 
-# Frontend Admin
-echo ""
-echo -e "  ${CYAN}🖥️  Frontend Admin...${NC}"
-cd frontend-admin
-if [ ! -f ".env" ]; then
-    cp .env.example .env
-    echo -e "    ${GREEN}📄 Criado .env a partir do template${NC}"
-fi
-npm install --silent 2>/dev/null && echo -e "    ${GREEN}✅ Dependências NPM instaladas${NC}" || echo -e "    ${YELLOW}⚠️  Erro ao instalar dependências NPM${NC}"
-cd ..
-
 # Integration Tests
 echo ""
 echo -e "  ${CYAN}🧪 Integration Tests...${NC}"
@@ -104,7 +93,6 @@ echo -e "${YELLOW}📝 Próximos passos:${NC}"
 echo "   1. Configure os arquivos .env em cada pasta com suas credenciais Firebase"
 echo "   2. Execute o backend: cd backend-java && ./mvnw spring-boot:run"
 echo "   3. Execute o mobile: cd frontend-mobile/appunture && npx expo start"
-echo "   4. Execute o admin: cd frontend-admin && npm run dev"
 echo ""
 echo -e "${CYAN}📖 Consulte DEPLOY_GUIDE.md para instruções completas de deploy${NC}"
 echo ""

@@ -10,7 +10,6 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithCredential,
-  OAuthProvider,
 } from "firebase/auth";
 import { User, AuthState, LoginCredentials, RegisterData } from "../types/user";
 import { createLogger } from "../utils/logger";
@@ -27,7 +26,6 @@ import {
   getStoredUserData,
 } from "../services/storage";
 import { signInWithGoogle, GoogleAuthConfig } from "../services/googleAuth";
-import { signInWithApple, isAppleSignInAvailable } from "../services/appleAuth";
 
 // Google OAuth Configuration - loaded from environment
 const googleAuthConfig: GoogleAuthConfig = {
@@ -41,7 +39,6 @@ interface AuthStore extends AuthState {
   // Actions
   login: (credentials: LoginCredentials) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
-  loginWithApple: () => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => Promise<void>;
   loadStoredAuth: () => Promise<void>;
@@ -124,73 +121,6 @@ export const useAuthStore = create<AuthStore>()(
             firebaseAuth,
             credential
           );
-
-          // Get Firebase ID Token for backend API
-          const idToken = await userCredential.user.getIdToken(true);
-          await storeToken(idToken);
-
-          // Sync user profile with backend
-          let profile: User | null = null;
-          try {
-            profile = await apiService.getProfile();
-          } catch (error) {
-            // User doesn't exist in backend yet, sync from Firebase
-            profile = await apiService.syncFirebaseUser();
-          }
-
-          await storeUserData(profile);
-
-          set({
-            user: profile,
-            token: idToken,
-            isAuthenticated: true,
-            isLoading: false,
-          });
-        } catch (error) {
-          set({ isLoading: false });
-          throw error;
-        }
-      },
-
-      loginWithApple: async () => {
-        try {
-          set({ isLoading: true });
-
-          // Check if Apple Sign-In is available (iOS only)
-          const isAvailable = await isAppleSignInAvailable();
-          if (!isAvailable) {
-            throw new Error(
-              "Apple Sign-In está disponível apenas em dispositivos iOS 13 ou superior."
-            );
-          }
-
-          // Perform Apple Sign-In
-          const appleResult = await signInWithApple();
-
-          // Create Firebase credential from Apple identity token
-          const provider = new OAuthProvider("apple.com");
-          const credential = provider.credential({
-            idToken: appleResult.identityToken,
-            rawNonce: undefined, // PKCE is handled by expo-apple-authentication
-          });
-
-          // Sign in to Firebase with Apple credential
-          const userCredential = await signInWithCredential(
-            firebaseAuth,
-            credential
-          );
-
-          // Update display name if provided by Apple (only on first sign-in)
-          if (appleResult.user?.fullName) {
-            const { givenName, familyName } = appleResult.user.fullName;
-            const displayName = [givenName, familyName]
-              .filter(Boolean)
-              .join(" ");
-
-            if (displayName && userCredential.user) {
-              await updateFirebaseProfile(userCredential.user, { displayName });
-            }
-          }
 
           // Get Firebase ID Token for backend API
           const idToken = await userCredential.user.getIdToken(true);

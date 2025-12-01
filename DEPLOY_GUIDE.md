@@ -10,8 +10,7 @@
 4. [Secrets do GitHub](#secrets-do-github)
 5. [Deploy do Backend](#deploy-do-backend)
 6. [Build do App Mobile](#build-do-app-mobile)
-7. [Deploy do Admin Dashboard](#deploy-do-admin-dashboard)
-8. [Verificação Final](#verificação-final)
+7. [Verificação Final](#verificação-final)
 
 ---
 
@@ -61,7 +60,6 @@ eas --version
 3. Na aba **Sign-in method**, habilite:
    - [x] **Email/Password**
    - [x] **Google** (configure OAuth)
-   - [x] **Apple** (obrigatório para App Store)
 
 ### 2.3 Configurar Firestore
 
@@ -308,58 +306,9 @@ eas submit --platform ios --profile production
 
 ---
 
-## 7. Deploy do Admin Dashboard
+## 7. Verificação Final
 
-### 7.1 Build Local
-
-```bash
-cd frontend-admin
-
-# Instalar dependências
-npm install
-
-# Criar .env
-cp .env.example .env
-# Editar .env com suas configurações
-
-# Build de produção
-npm run build
-```
-
-### 7.2 Deploy no Firebase Hosting (Recomendado)
-
-```bash
-# Instalar Firebase CLI
-npm install -g firebase-tools
-
-# Login
-firebase login
-
-# Inicializar hosting
-firebase init hosting
-# - Public directory: dist
-# - Single-page app: yes
-# - GitHub Actions: no
-
-# Deploy
-firebase deploy --only hosting
-```
-
-### 7.3 Deploy no Vercel (Alternativa)
-
-```bash
-# Instalar Vercel CLI
-npm install -g vercel
-
-# Deploy
-vercel --prod
-```
-
----
-
-## 8. Verificação Final
-
-### 8.1 Checklist de Verificação
+### 7.1 Checklist de Verificação
 
 ```bash
 # 1. Backend funcionando
@@ -372,17 +321,12 @@ curl https://YOUR_CLOUD_RUN_URL/api/points?page=0&size=10
 
 # 3. App Mobile
 # - Instalar APK/IPA no dispositivo
-# - Verificar login com Google/Apple
+# - Verificar login com Google
 # - Verificar listagem de pontos
-# - Verificar upload de imagem
-
-# 4. Admin Dashboard
-# - Acessar URL do hosting
-# - Verificar login admin
-# - Verificar CRUD de pontos
+# - Verificar sincronização offline
 ```
 
-### 8.2 Monitoramento
+### 7.2 Monitoramento
 
 - **Cloud Run Logs**: [console.cloud.google.com/run](https://console.cloud.google.com/run)
 - **Firebase Console**: [console.firebase.google.com](https://console.firebase.google.com)

@@ -438,48 +438,28 @@ TCC usage:
 }
 ```
 
-## 📈 Observabilidade, Dashboards e Alertas
+## 📈 Métricas e Monitoramento
 
-### Stack configurada
+O backend utiliza Spring Boot Actuator com Micrometer para expor métricas e health checks:
 
-| Componente      | Função                                                           | Arquivo/Config                                                                        |
-| --------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| **Prometheus**  | Scrape de métricas Micrometer expostas em `/actuator/prometheus` | `backend-java/observability/prometheus.yml`                                           |
-| **Alert Rules** | Latência P95, erros 5xx e estouro de rate-limit                  | `backend-java/observability/alert-rules.yml`                                          |
-| **Grafana**     | Dashboard opinativo importado automaticamente                    | `backend-java/observability/grafana-dashboard.json` + provisioning em `grafana-*.yml` |
+```bash
+# Health check
+curl http://localhost:8080/actuator/health
 
-Para subir todo o stack local (backend + Prometheus + Grafana):
+# Métricas disponíveis
+curl http://localhost:8080/actuator/metrics
+```
 
-1. `docker compose up backend-java prometheus grafana -d`
-2. Acesse Prometheus em `http://localhost:9090` (alvos já apontam para `backend-java:8080/actuator/prometheus`).
-3. Acesse Grafana em `http://localhost:3000` (usuário/padrão `admin/admin`) e verifique o dashboard **“Appunture Backend Observability”** já provisionado em _Folder > Appunture_.
+Métricas disponíveis:
 
-### Métricas e dashboards
+- Latência de requests HTTP
+- Taxa de erros 5xx
+- Rate limit rejections
+- Métricas JVM (memória, threads, GC)
 
-Os painéis principais do JSON provisionado:
+> **Nota**: Para ambientes de produção, integrar com Google Cloud Monitoring (já incluso no Cloud Run).
 
-- **HTTP P95 Latency**: `histogram_quantile(0.95, rate(http_server_requests_seconds_bucket...))` – thresholds 0.8s (alerta) / 1.2s (crítico).
-- **5xx Error Rate**: `sum(rate(http_server_requests_seconds_count{status=~"5.."}...))` – identifica regressões ou falhas externas.
-- **Rate Limit Rejections**: `sum(rate(app_rate_limit_rejections_total[5m]))` – alimentado pelos novos `Counter`s Micrometer registrados no `RateLimitingFilter`.
-- **Requests per Endpoint**: ranking de rotas para apoiar tuning de cache e índices.
-
-### Alertas Prometheus prontos
-
-| Alerta                    | Critério                                      | Ação sugerida                                                                     |
-| ------------------------- | --------------------------------------------- | --------------------------------------------------------------------------------- |
-| `AppuntureHighLatencyP95` | P95 > 1s por 5 minutos                        | Verificar Firestore quota, Cloud Run cold start ou gargalos de upload.            |
-| `AppuntureErrorSpike`     | Taxa > 0.5 req/s com status 5xx               | Checar logs estruturados (Logback JSON) e integridade dos tokens Firebase.        |
-| `RateLimitRejections`     | `app_rate_limit_rejections_total` > 0.2 req/s | Validar se há abuso/bot ou se o limite precisa ser ajustado no `application.yml`. |
-
-Para integrar com Alertmanager/Slack basta apontar o `prometheus.yml` para a instância desejada (o arquivo já referencia `alert-rules.yml`).
-
-### FAQs
-
-- **Onde ajustar queries?** Abra o JSON em `observability/grafana-dashboard.json` ou edite diretamente no Grafana (provisionamento permite updates pela UI).
-- **Quais variáveis estão disponíveis?** Tags padrão Micrometer `application` e `profile` já são exportadas; use-as como filtros na UI.
-- **Como expandir?** Adicione novos `.json` no mesmo volume e crie novos `providers` em `grafana-dashboard-provisioning.yml`.
-
-#### Cloud Run
+### Cloud Run
 
 ```javascript
 Free tier (monthly):

@@ -81,22 +81,6 @@ if ($LASTEXITCODE -eq 0) {
 }
 Pop-Location
 
-# Frontend Admin
-Write-Host ""
-Write-Host "  🖥️  Frontend Admin..." -ForegroundColor Cyan
-Push-Location frontend-admin
-if (-not (Test-Path ".env")) {
-    Copy-Item ".env.example" ".env"
-    Write-Host "    📄 Criado .env a partir do template" -ForegroundColor Green
-}
-npm install --silent 2>$null
-if ($LASTEXITCODE -eq 0) {
-    Write-Host "    ✅ Dependências NPM instaladas" -ForegroundColor Green
-} else {
-    Write-Host "    ⚠️  Erro ao instalar dependências NPM" -ForegroundColor Yellow
-}
-Pop-Location
-
 # Integration Tests
 Write-Host ""
 Write-Host "  🧪 Integration Tests..." -ForegroundColor Cyan
@@ -117,7 +101,6 @@ Write-Host "📝 Próximos passos:" -ForegroundColor Yellow
 Write-Host "   1. Configure os arquivos .env em cada pasta com suas credenciais Firebase" -ForegroundColor White
 Write-Host "   2. Execute o backend: cd backend-java && ./mvnw spring-boot:run" -ForegroundColor White
 Write-Host "   3. Execute o mobile: cd frontend-mobile/appunture && npx expo start" -ForegroundColor White
-Write-Host "   4. Execute o admin: cd frontend-admin && npm run dev" -ForegroundColor White
 Write-Host ""
 Write-Host "📖 Consulte DEPLOY_GUIDE.md para instruções completas de deploy" -ForegroundColor Cyan
 Write-Host ""

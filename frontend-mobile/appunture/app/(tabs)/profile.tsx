@@ -65,30 +65,6 @@ export default function ProfileScreen() {
 
   const settings: SettingsOption[] = [
     {
-      id: "edit-profile",
-      title: "Editar perfil",
-      subtitle: "Alterar nome, foto e informações",
-      type: "navigation",
-      icon: "create-outline",
-      onPress: () => {
-        router.push("/profile-edit");
-      },
-    },
-    ...(user?.role === "ADMIN"
-      ? [
-          {
-            id: "admin",
-            title: "Painel Admin",
-            subtitle: "Gerenciar conteúdo",
-            type: "navigation" as const,
-            icon: "shield-checkmark-outline" as keyof typeof Ionicons.glyphMap,
-            onPress: () => {
-              router.push("/admin");
-            },
-          },
-        ]
-      : []),
-    {
       id: "notifications",
       title: "Notificações",
       subtitle: "Receber notificações push",

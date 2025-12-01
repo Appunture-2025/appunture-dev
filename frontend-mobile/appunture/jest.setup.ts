@@ -7,22 +7,18 @@ jest.mock("react-native/Libraries/Animated/NativeAnimatedHelper");
 jest.mock("expo-image-picker", () => ({
   launchImageLibraryAsync: jest.fn(),
   launchCameraAsync: jest.fn(),
-  requestMediaLibraryPermissionsAsync: jest
-    .fn()
-    .mockResolvedValue({
-      status: "granted",
-      granted: true,
-      canAskAgain: true,
-      expires: "never",
-    }),
-  requestCameraPermissionsAsync: jest
-    .fn()
-    .mockResolvedValue({
-      status: "granted",
-      granted: true,
-      canAskAgain: true,
-      expires: "never",
-    }),
+  requestMediaLibraryPermissionsAsync: jest.fn().mockResolvedValue({
+    status: "granted",
+    granted: true,
+    canAskAgain: true,
+    expires: "never",
+  }),
+  requestCameraPermissionsAsync: jest.fn().mockResolvedValue({
+    status: "granted",
+    granted: true,
+    canAskAgain: true,
+    expires: "never",
+  }),
   MediaTypeOptions: {
     Images: "Images",
     Videos: "Videos",
@@ -110,28 +106,6 @@ jest.mock("expo-auth-session/providers/google", () => ({
   useIdTokenAuthRequest: jest.fn(() => [null, null, jest.fn()]),
 }));
 
-// Mock expo-apple-authentication
-jest.mock("expo-apple-authentication", () => ({
-  isAvailableAsync: jest.fn().mockResolvedValue(true),
-  signInAsync: jest.fn(),
-  getCredentialStateAsync: jest.fn(),
-  AppleAuthenticationScope: {
-    FULL_NAME: 0,
-    EMAIL: 1,
-  },
-  AppleAuthenticationCredentialState: {
-    REVOKED: 0,
-    AUTHORIZED: 1,
-    NOT_FOUND: 2,
-    TRANSFERRED: 3,
-  },
-  AppleAuthenticationUserDetectionStatus: {
-    UNSUPPORTED: 0,
-    UNKNOWN: 1,
-    LIKELY_REAL: 2,
-  },
-}));
-
 // Mock expo-crypto
 jest.mock("expo-crypto", () => ({
   digestStringAsync: jest.fn().mockResolvedValue("mockedhash"),
@@ -151,6 +125,4 @@ jest.mock("expo-router", () => ({
   usePathname: jest.fn(() => "/"),
 }));
 
-// Mock expo-notifications (usando arquivo __mocks__/expo-notifications.ts)
-// Mock expo-device (usando arquivo __mocks__/expo-device.ts)
 // Mock expo-constants (usando arquivo __mocks__/expo-constants.ts)
