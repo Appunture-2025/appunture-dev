@@ -89,6 +89,7 @@ As coordenadas são salvas como **porcentagem** (0-100) relativa ao SVG:
 O atlas contém **15 SVGs** em `frontend-mobile/appunture/assets/body-map/`:
 
 ### Frontal (8 imagens)
+
 - `front-01` → `1.svg`
 - `front-02` → `2.svg`
 - `front-03` → `3.svg`
@@ -99,6 +100,7 @@ O atlas contém **15 SVGs** em `frontend-mobile/appunture/assets/body-map/`:
 - `front-08` → `8.svg`
 
 ### Posterior (7 imagens)
+
 - `back-01` → `9.svg`
 - `back-02` → `10.svg`
 - `back-03` → `11.svg`
