@@ -570,26 +570,46 @@
             <span style="color: #888; font-size: 0.8rem; margin-right: 5px"
               >Meridianos:</span
             >
-            <button class="view-btn active" data-view="LU" title="Lung">LU</button>
-            <button class="view-btn" data-view="LI" title="Large Intestine">LI</button>
-            <button class="view-btn" data-view="ST" title="Stomach (1/2)">ST</button>
-            <button class="view-btn" data-view="ST2" title="Stomach (2/2)">ST2</button>
+            <button class="view-btn active" data-view="LU" title="Lung">
+              LU
+            </button>
+            <button class="view-btn" data-view="LI" title="Large Intestine">
+              LI
+            </button>
+            <button class="view-btn" data-view="ST" title="Stomach (1/2)">
+              ST
+            </button>
+            <button class="view-btn" data-view="ST2" title="Stomach (2/2)">
+              ST2
+            </button>
             <button class="view-btn" data-view="SP" title="Spleen">SP</button>
             <button class="view-btn" data-view="HT" title="Heart">HT</button>
-            <button class="view-btn" data-view="SI" title="Small Intestine">SI</button>
+            <button class="view-btn" data-view="SI" title="Small Intestine">
+              SI
+            </button>
             <button class="view-btn" data-view="BL" title="Bladder">BL</button>
             <button class="view-btn" data-view="KI" title="Kidney">KI</button>
-            <button class="view-btn" data-view="P" title="Pericardium">P</button>
-            <button class="view-btn" data-view="TW" title="Triple Warmer">TW</button>
-            <button class="view-btn" data-view="GB" title="Gallbladder">GB</button>
+            <button class="view-btn" data-view="P" title="Pericardium">
+              P
+            </button>
+            <button class="view-btn" data-view="TW" title="Triple Warmer">
+              TW
+            </button>
+            <button class="view-btn" data-view="GB" title="Gallbladder">
+              GB
+            </button>
             <button class="view-btn" data-view="LV" title="Liver">LV</button>
           </div>
           <div class="view-group">
             <span style="color: #888; font-size: 0.8rem; margin-right: 5px"
               >Extra:</span
             >
-            <button class="view-btn" data-view="GV" title="Governing Vessel">GV</button>
-            <button class="view-btn" data-view="CV" title="Conception Vessel">CV</button>
+            <button class="view-btn" data-view="GV" title="Governing Vessel">
+              GV
+            </button>
+            <button class="view-btn" data-view="CV" title="Conception Vessel">
+              CV
+            </button>
           </div>
           <div class="zoom-controls">
             <button class="zoom-btn" id="zoomOut">−</button>
@@ -712,40 +732,40 @@
       // Configuração de caminhos - SVGs por Meridiano
       const SVG_PATHS = {
         // 12 Meridianos Primários
-        "LU": "../../frontend-mobile/appunture/assets/body-map/LU.svg",
-        "LI": "../../frontend-mobile/appunture/assets/body-map/LI.svg",
-        "ST": "../../frontend-mobile/appunture/assets/body-map/ST.svg",
-        "ST2": "../../frontend-mobile/appunture/assets/body-map/ST2.svg",
-        "SP": "../../frontend-mobile/appunture/assets/body-map/SP.svg",
-        "HT": "../../frontend-mobile/appunture/assets/body-map/HT.svg",
-        "SI": "../../frontend-mobile/appunture/assets/body-map/SI.svg",
-        "BL": "../../frontend-mobile/appunture/assets/body-map/BL.svg",
-        "KI": "../../frontend-mobile/appunture/assets/body-map/KI.svg",
-        "P": "../../frontend-mobile/appunture/assets/body-map/P.svg",
-        "TW": "../../frontend-mobile/appunture/assets/body-map/TW.svg",
-        "GB": "../../frontend-mobile/appunture/assets/body-map/GB.svg",
-        "LV": "../../frontend-mobile/appunture/assets/body-map/LV.svg",
+        LU: "../../frontend-mobile/appunture/assets/body-map/LU.svg",
+        LI: "../../frontend-mobile/appunture/assets/body-map/LI.svg",
+        ST: "../../frontend-mobile/appunture/assets/body-map/ST.svg",
+        ST2: "../../frontend-mobile/appunture/assets/body-map/ST2.svg",
+        SP: "../../frontend-mobile/appunture/assets/body-map/SP.svg",
+        HT: "../../frontend-mobile/appunture/assets/body-map/HT.svg",
+        SI: "../../frontend-mobile/appunture/assets/body-map/SI.svg",
+        BL: "../../frontend-mobile/appunture/assets/body-map/BL.svg",
+        KI: "../../frontend-mobile/appunture/assets/body-map/KI.svg",
+        P: "../../frontend-mobile/appunture/assets/body-map/P.svg",
+        TW: "../../frontend-mobile/appunture/assets/body-map/TW.svg",
+        GB: "../../frontend-mobile/appunture/assets/body-map/GB.svg",
+        LV: "../../frontend-mobile/appunture/assets/body-map/LV.svg",
         // 2 Vasos Extraordinários
-        "GV": "../../frontend-mobile/appunture/assets/body-map/GV.svg",
-        "CV": "../../frontend-mobile/appunture/assets/body-map/CV.svg",
+        GV: "../../frontend-mobile/appunture/assets/body-map/GV.svg",
+        CV: "../../frontend-mobile/appunture/assets/body-map/CV.svg",
       };
 
       const SVG_LABELS = {
-        "LU": "LU - Lung (Pulmão)",
-        "LI": "LI - Large Intestine (Intestino Grosso)",
-        "ST": "ST - Stomach (Estômago) 1/2",
-        "ST2": "ST - Stomach (Estômago) 2/2",
-        "SP": "SP - Spleen (Baço)",
-        "HT": "HT - Heart (Coração)",
-        "SI": "SI - Small Intestine (Intestino Delgado)",
-        "BL": "BL - Bladder (Bexiga)",
-        "KI": "KI - Kidney (Rim)",
-        "P": "P - Pericardium (Pericárdio)",
-        "TW": "TW - Triple Warmer (Triplo Aquecedor)",
-        "GB": "GB - Gallbladder (Vesícula Biliar)",
-        "LV": "LV - Liver (Fígado)",
-        "GV": "GV - Governing Vessel (Vaso Governador)",
-        "CV": "CV - Conception Vessel (Vaso Concepção)",
+        LU: "LU - Lung (Pulmão)",
+        LI: "LI - Large Intestine (Intestino Grosso)",
+        ST: "ST - Stomach (Estômago) 1/2",
+        ST2: "ST - Stomach (Estômago) 2/2",
+        SP: "SP - Spleen (Baço)",
+        HT: "HT - Heart (Coração)",
+        SI: "SI - Small Intestine (Intestino Delgado)",
+        BL: "BL - Bladder (Bexiga)",
+        KI: "KI - Kidney (Rim)",
+        P: "P - Pericardium (Pericárdio)",
+        TW: "TW - Triple Warmer (Triplo Aquecedor)",
+        GB: "GB - Gallbladder (Vesícula Biliar)",
+        LV: "LV - Liver (Fígado)",
+        GV: "GV - Governing Vessel (Vaso Governador)",
+        CV: "CV - Conception Vessel (Vaso Concepção)",
       };
 
       const POINTS_DATA_PATH =
