@@ -1,62 +1,68 @@
 % Pacotes básicos 
 % ----------------------------------------------------------
-%\usepackage{lmodern}			% Usa a fonte Latin Modern			
 \usepackage[T1]{fontenc}		% Selecao de codigos de fonte.
 \usepackage[utf8]{inputenc}		% Codificacao do documento (conversão automática dos acentos)
 \usepackage{lastpage}			% Usado pela Ficha catalográfica
 \usepackage{indentfirst}		% Indenta o primeiro parágrafo de cada seção.
-
-%\usepackage{microtype} 			% para melhorias de justificação 
 
 \usepackage{ifthen}		    	% para montar condicionais
 \usepackage[brazil]{babel}		% para utilizar termos em portugues
 \usepackage[final]{pdfpages}    % para incluir páginas de arquivos pdf
 \usepackage{amsmath}			% simbolos matematicos
 
-% Pacotes de citações BibLaTeX
+% Pacote para listagens de código
 % ----------------------------------------------------------
-\usepackage[style=abnt,
-	backref=true,
-	backend=biber,
-	citecounter=true,
-	backrefstyle=three, 
- 	repeatfields=true,
-	url=true,
-	maxbibnames=99,
-    mincitenames=1,
-    maxcitenames=2,
-    backref=true,
-    hyperref=true,
-    giveninits=true,
-    uniquename=false,
-    uniquelist=false]{biblatex}
+\usepackage{listings}
+\usepackage{xcolor}
 
-% Norma NBR10.520/2023 - Sobrenomes em minúsculas
-\renewcommand*{\mkbibnamefamily}[1]{#1}%
-
-% Espaçamento entre os itens nas referências (espço de uma linha simples)
-% ----------------------------------------------------------
-\setlength\bibitemsep{\baselineskip}
-
-% Texto padrão para as referências
-% ----------------------------------------------------------
-\DefineBibliographyStrings{brazil}{%
-	 backrefpage  = {Citado \arabic{citecounter} vez na página},		% originally "cited on page"
-	 backrefpages = {Citado \arabic{citecounter} vezes nas páginas},	% originally "cited on pages"
-	 urlfrom      = {Dispon\'ivel em},
+% Configuração do listings para código
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{orange},
+    showstringspaces=false,
+    tabsize=2,
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+             {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+             {ã}{{\~a}}1 {õ}{{\~o}}1 {Ã}{{\~A}}1 {Õ}{{\~O}}1
+             {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1
+             {à}{{\`a}}1 {À}{{\`A}}1
 }
 
-% Ajusta indentação de Referencias no ToC
-% ----------------------------------------------------------
-\defbibheading{bay}[\bibname]{%
-  \chapter*{#1}%
-  \markboth{#1}{#1}%
-  \addcontentsline{toc}{chapter}
-  %{\protect\numberline{}\bibname}
-  {\bibname}
+% Linguagem JSON para listings
+\lstdefinelanguage{json}{
+    basicstyle=\ttfamily\footnotesize,
+    morestring=[b]",
+    stringstyle=\color{orange},
 }
 
-% Formatando o avançao dos títulos no sumário 
+% Ambiente quadro (similar a tabela)
+% ----------------------------------------------------------
+\usepackage{float}
+\newfloat{quadro}{htbp}{loq}[chapter]
+\floatname{quadro}{Quadro}
+\newcommand{\listofquadrosname}{Lista de Quadros}
+\newlistof{listofquadros}{loq}{\listofquadrosname}
+\newlistentry{quadro}{loq}{0}
+\renewcommand{\cftquadroname}{QUADRO\space}
+\renewcommand*{\cftquadroaftersnum}{\hfill--\hfill}
+
+% ===========================================================
+% CITAÇÕES - Usando abntex2cite (NATIVO do abnTeX2)
+% ===========================================================
+% [alf] = estilo autor-data (alfabético)
+% [num] = estilo numérico
+% Comandos disponíveis: \cite{}, \citeonline{}, \citeauthor{}, \citeyear{}
+\usepackage[alf]{abntex2cite}
+
+% Formatando o avanço dos títulos no sumário 
 % ----------------------------------------------------------
 \makeatletter
 	\pretocmd{\chapter}{\addtocontents{toc}{\protect\addvspace{-12\p@}}}{}{}
@@ -80,62 +86,15 @@
 }
 \makeatother
 
-% Para retirar os símbolos <> da URL  
-% ----------------------------------------------------------
-\DeclareFieldFormat{illustrated}{\addspace #1\isdot}%
-%\DeclareFieldFormat{url}{\bibstring{urlform}\addcolon\addspace<\url{#1}>}%
-%\DeclareFieldFormat{url}{\bibstring{urlfrom}\addcolon\addspace<\url{#1}>}%
-\DeclareFieldFormat{url}{\bibstring{urlfrom}\addcolon \space\addspace{#1}} 
-% remove <> em urls de acordo com abnt-6023:2018	
-
-% Ajustar o espaço para a formatação da data
-% ----------------------------------------------------------
-\DeclareFieldFormat{urldate}{\bibstring{urlseen}\addcolon\addspace #1}%
-\DeclareFieldFormat*{note}{\addspace #1}%
-
 % Para ajustar o tamanho da fonte do número da primeira página do capítulo
-% comando utilizado na parte textual 
 % ----------------------------------------------------------
-\makepagestyle{chapfirst}% Just for the first page of a chapter
+\makepagestyle{chapfirst}
 \makeoddhead{chapfirst}{}{}{\footnotesize{\thepage}}
 
-%%criar um novo estilo de cabeçalhos e rodapés
+% Criar um novo estilo de cabeçalhos e rodapés
 \makepagestyle{simplestextual}
-  %%cabeçalhos
-  \makeevenhead{simplestextual} %%pagina par
-     {}{}{\footnotesize \thepage}
-     
-  \makeoddhead{simplestextual} %%pagina ímpar ou com oneside
-     {}{}{\footnotesize \thepage}
-  %\makeheadrule{simplestextual}{\textwidth}{\normalrulethickness} %linha
-  %% rodapé
-  \makeevenfoot{simplestextual}
-     {}{}{} %%pagina par
-      
-  \makeoddfoot{simplestextual} %%pagina ímpar ou com oneside
-     {}{}{}
-     
-% Define a formatação dos capítulos póstextuais numerados
-% ----------------------------------------------------------
-%\newcommand{\refap}[1]{\hyperref[#1]{Apêndice~\ref{#1}}} 	% Referência apÊndices
-
-
-
- %%%%%%%%%%% NBR 10520/23
-
- % Norma NBR10.520/2023 - Sobrenomes em minúsculas
-\renewcommand*{\mkbibnamefamily}[1]{#1}%
-
-%fullcite com todos autores e não como cite
-\makeatletter
-\newcommand{\tempmaxup}[1]{\def\blx@maxcitenames{99}#1}
-\makeatother
-
-\DeclareCiteCommand{\fullcite}[\tempmaxup]
-{\usebibmacro{prenote}}
-{\usedriver
-	{}
-	{\thefield{entrytype}}}
-{\multicitedelim}
-{\usebibmacro{postnote}}
+  \makeevenhead{simplestextual}{}{}{\footnotesize \thepage}
+  \makeoddhead{simplestextual}{}{}{\footnotesize \thepage}
+  \makeevenfoot{simplestextual}{}{}{}
+  \makeoddfoot{simplestextual}{}{}{}
 

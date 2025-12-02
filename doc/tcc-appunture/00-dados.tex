@@ -11,11 +11,11 @@
 %----------------------------------------------------------------------------- 
 \providecommand{\terCapa}{Sim}
 \providecommand{\terFolhaRosto}{Sim}
-\providecommand{\terTermoAprovacao}{Sim}
+\providecommand{\terTermoAprovacao}{Nao}
 \providecommand{\terDedicatoria}{Nao}
 \providecommand{\terFichaCatalografica}{Nao}
 \providecommand{\terEpigrafe}{Nao}
-\providecommand{\terAgradecimentos}{Sim}
+\providecommand{\terAgradecimentos}{Nao}
 \providecommand{\terErrata}{Nao}
 \providecommand{\terListaFiguras}{Sim}
 \providecommand{\terListaQuadros}{Sim}
@@ -50,7 +50,8 @@
 \scoorientadora{}
 
 % ----------------------------------------------------------
-\addbibresource{referencias.bib}
+% Arquivo de referências (usado pelo abntex2cite com bibtex)
+% O comando \bibliography{referencias} está no main.tex
 
 % ----------------------------------------------------------
 \instituicao{Universidade Federal do Paraná}
@@ -77,17 +78,17 @@
 
 % ----------------------------------------------------------
 % Assinaturas do Termo de Aprovação
-\newcommand{\AssinaAprovacao}{
-   \assinatura{Prof. Dr. Paulo Sobreira Moraes \\ Orientador - UFPR}
-   \assinatura{Professor(a) Avaliador(a) 1 \\ UFPR}
-   \assinatura{Professor(a) Avaliador(a) 2 \\ UFPR}
-      
-   \begin{center}
-    \vspace*{0.5cm}
-    \imprimirlocal, \imprimirDataDefesa.
-    \vspace*{1cm}
-  \end{center}
-}
+%\newcommand{\AssinaAprovacao}{
+ %  \assinatura{Prof. Dr. Paulo Sobreira Moraes \\ Orientador - UFPR}
+  % \assinatura{Professor(a) Avaliador(a) 1 \\ UFPR}
+   %\assinatura{Professor(a) Avaliador(a) 2 \\ UFPR}
+    %  
+   %\begin{center}
+    %\vspace*{0.5cm}
+    %\imprimirlocal, \imprimirDataDefesa.
+    %\vspace*{1cm}
+  %\end{center}
+%}
 
 % ----------------------------------------------------------
 % Epígrafe
@@ -122,21 +123,27 @@ Developed with an ``offline-first'' architecture using React Native and Java Spr
 
 \newcommand{\KeywordsTexto}{Acupuncture; Health Education; Mobile Application; Digital Atlas; Traditional Chinese Medicine.}
 
+% Resumos em outros idiomas (francês e espanhol) - deixar vazio se não usar
+\newcommand{\Resume}{}
+\newcommand{\Motscles}{}
+\newcommand{\Resumen}{}
+\newcommand{\Palabrasclave}{}
+
 % ----------------------------------------------------------
 % Agradecimentos
-\newcommand{\AgradecimentosTexto}{
-Agradecemos primeiramente a Deus por nos dar força e sabedoria para concluir este trabalho.
+%\newcommand{\AgradecimentosTexto}{
+%Agradecemos primeiramente a Deus por nos dar força e sabedoria para concluir este trabalho.
 
-Ao nosso orientador, Prof. Dr. Paulo Sobreira Moraes, pela orientação, paciência e dedicação durante todo o desenvolvimento deste projeto.
+%Ao nosso orientador, Prof. Dr. Paulo Sobreira Moraes, pela orientação, paciência e dedicação durante todo o desenvolvimento deste projeto.
 
-À Universidade Federal do Paraná, pela oportunidade de formação e pelo ambiente propício ao aprendizado e à pesquisa.
+%À Universidade Federal do Paraná, pela oportunidade de formação e pelo ambiente propício ao aprendizado e à pesquisa.
 
-Aos nossos familiares e amigos, pelo apoio incondicional e compreensão nos momentos de ausência.
+%Aos nossos familiares e amigos, pelo apoio incondicional e compreensão nos momentos de ausência.
 
-A todos os profissionais da área de acupuntura que contribuíram com suas experiências e conhecimentos para a construção deste aplicativo.
+%A todos os profissionais da área de acupuntura que contribuíram com suas experiências e conhecimentos para a construção deste aplicativo.
 
-Por fim, agradecemos a todos que, direta ou indiretamente, contribuíram para a realização deste trabalho.
-}
+%Por fim, agradecemos a todos que, direta ou indiretamente, contribuíram para a realização deste trabalho.
+%}
 
 % ----------------------------------------------------------
 % Dedicatória

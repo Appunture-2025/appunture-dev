@@ -134,7 +134,7 @@ Dado que selecionei o ponto LU-7 na lista de resultados
 
 Quando a tela de detalhes é carregada
 
-Então o sistema exibe: código (LU-7), nome em português (Lieque), nome em pinyin (Lièquē), meridiano (Pulmão)
+Então o sistema exibe: código (LU-7), nome em português (Lieque), nome em pinyin (Liéque), meridiano (Pulmão)
 
 \textbf{2. Deve exibir localização anatômica detalhada}
 
@@ -439,7 +439,7 @@ Então o sistema gera arquivo JSON com todas as coordenadas
 E salva no formato compatível com o seed do sistema
 
 % APÊNDICE C - DIAGRAMA DE CLASSES DE ANÁLISE
-\chapter{DIAGRAMA DE CLASSES DE ANÁLISE} \label{ap:classes}
+\chapter{DIAGRAMA DE CLASSES} \label{ap:classes}
 
 % \figura{DIAGRAMA DE CLASSES DE ANÁLISE}{0.9}{fig/diagrama-classes.png}{Os autores (2025)}{diagrama-classes}{}{}
 
@@ -462,7 +462,7 @@ E salva no formato compatível com o seed do sistema
 \end{itemize}
 
 % APÊNDICE D - DIAGRAMAS DE SEQUÊNCIA DE ANÁLISE
-\chapter{DIAGRAMAS DE SEQUÊNCIA DE ANÁLISE} \label{ap:sequencia}
+\chapter{DIAGRAMAS DE SEQUÊNCIA} \label{ap:sequencia}
 
 % \figura{DIAGRAMA DE SEQUÊNCIA - BUSCA POR SINTOMA}{0.9}{fig/seq-busca.png}{Os autores (2025)}{seq-busca}{}{}
 
@@ -472,36 +472,6 @@ E salva no formato compatível com o seed do sistema
 
 % \figura{DIAGRAMA DE SEQUÊNCIA - MAPEAMENTO DE PONTO}{0.9}{fig/seq-mapper.png}{Os autores (2025)}{seq-mapper}{}{}
 
-\section*{FLUXO DE BUSCA POR SINTOMA (COM INTERNET)}
-
-\begin{enumerate}
-    \item Usuário digita sintoma no campo de busca
-    \item Aplicativo envia consulta ao \textit{backend}
-    \item \textit{Backend} processa com Spring AI + Google Gemini (RAG)
-    \item IA retorna pontos relevantes com contexto
-    \item Aplicativo ordena e exibe resultados ao usuário
-\end{enumerate}
-
-\section*{FLUXO DE SINCRONIZAÇÃO}
-
-\begin{enumerate}
-    \item Aplicativo detecta conexão com internet
-    \item Aplicativo envia dados locais com \textit{flag} ``não sincronizado''
-    \item \textit{Backend} processa e resolve conflitos por \textit{timestamp}
-    \item \textit{Backend} retorna dados consolidados
-    \item Aplicativo atualiza banco local e marca como sincronizado
-\end{enumerate}
-
-\section*{FLUXO DE CONSULTA AO ASSISTENTE IA}
-
-\begin{enumerate}
-    \item Usuário envia pergunta em linguagem natural
-    \item \textit{Backend} busca pontos relevantes no banco (contexto)
-    \item \textit{Backend} monta \textit{prompt} enriquecido com contexto (RAG)
-    \item \textit{Backend} envia para Google Gemini via Spring AI
-    \item Modelo retorna resposta contextualizada
-    \item \textit{Backend} adiciona \textit{disclaimer} e envia ao aplicativo
-\end{enumerate}
 
 % APÊNDICE E - MODELO LÓGICO DE DADOS
 \chapter{MODELO LÓGICO DE DADOS} \label{ap:modelo-dados}

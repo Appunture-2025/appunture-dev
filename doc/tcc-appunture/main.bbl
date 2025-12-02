@@ -1,0 +1,197 @@
+\providecommand{\abntreprintinfo}[1]{%
+ \citeonline{#1}}
+\setlength{\labelsep}{0pt}\begin{thebibliography}{}
+\providecommand{\abntrefinfo}[3]{}
+\providecommand{\abntbstabout}[1]{}
+\abntbstabout{v-1.9.7 }
+
+\bibitem[Beck 2001]{beck2001}
+\abntrefinfo{Beck}{BECK}{2001}
+{BECK, K. \emph{Extreme Programming Explained: Embrace Change}. Boston:
+  Addison-Wesley, 2001.}
+
+\bibitem[Bernardo 2014]{bernardo2014}
+\abntrefinfo{Bernardo}{BERNARDO}{2014}
+{BERNARDO, K. \emph{Histórias de Usuário: A Arte de Escrever Requisitos para
+  Software}. São Paulo: Novatec, 2014.}
+
+\bibitem[Booch, Rumbaugh e Jacobson 2005]{booch2005}
+\abntrefinfo{Booch, Rumbaugh e Jacobson}{BOOCH; RUMBAUGH; JACOBSON}{2005}
+{BOOCH, G.; RUMBAUGH, J.; JACOBSON, I. \emph{UML: Guia do Usuário}. 2. ed. Rio
+  de Janeiro: Elsevier, 2005.}
+
+\bibitem[Booth et al. 2021]{booth2021}
+\abntrefinfo{Booth et al.}{BOOTH et al.}{2021}
+{BOOTH, R.~G. et al. How the nursing profession should adapt for a digital
+  future.
+\emph{BMJ}, v.~373, p. n1190, 2021.}
+
+\bibitem[Cohn 2004]{cohn2004}
+\abntrefinfo{Cohn}{COHN}{2004}
+{COHN, M. \emph{User Stories Applied: For Agile Software Development}. Boston:
+  Addison-Wesley, 2004.}
+
+\bibitem[{Comitê Gestor da Internet no Brasil} 2023]{ticsaude2023}
+\abntrefinfo{{Comitê Gestor da Internet no Brasil}}{{Comitê Gestor da
+  Internet no Brasil}}{2023}
+{{Comitê Gestor da Internet no Brasil}. \emph{TIC Saúde 2023: Pesquisa sobre
+  o uso das tecnologias de informação e comunicação nos estabelecimentos de
+  saúde brasileiros}.
+São Paulo, 2023.}
+
+\bibitem[Deitel e Deitel 2017]{deitel2017}
+\abntrefinfo{Deitel e Deitel}{DEITEL; DEITEL}{2017}
+{DEITEL, P.; DEITEL, H. \emph{Java: Como Programar}. 10. ed. São Paulo:
+  Pearson, 2017.}
+
+\bibitem[{Expo} 2023]{expo2023}
+\abntrefinfo{{Expo}}{{Expo}}{2023}
+{{Expo}. \emph{Expo Documentation}.
+[S.l.], 2023. Dispon{\'\i}vel em: \url{https://docs.expo.dev/}. Acesso em: 15
+  nov. 2025.}
+
+\bibitem[Ferreira, Costa e Almeida 2021]{ferreira2021}
+\abntrefinfo{Ferreira, Costa e Almeida}{FERREIRA; COSTA; ALMEIDA}{2021}
+{FERREIRA, L.~P.; COSTA, M.~B.; ALMEIDA, J.~P. Usabilidade em aplicativos de
+  saúde: diretrizes para desenvolvimento.
+\emph{Revista de Informática Aplicada}, v.~17, n.~2, p. 112--125, 2021.}
+
+\bibitem[Freire 1996]{freire1996}
+\abntrefinfo{Freire}{FREIRE}{1996}
+{FREIRE, P. \emph{Pedagogia da autonomia: saberes necessários à prática
+  educativa}. São Paulo: Paz e Terra, 1996.}
+
+\bibitem[Garcia-Molina, Ullman e Widom 2009]{molina2009}
+\abntrefinfo{Garcia-Molina, Ullman e Widom}{GARCIA-MOLINA; ULLMAN; WIDOM}{2009}
+{GARCIA-MOLINA, H.; ULLMAN, J.~D.; WIDOM, J. \emph{Database Systems: The
+  Complete Book}. 2. ed. [S.l.]: Pearson, 2009.}
+
+\bibitem[{Google} 2023]{google2023}
+\abntrefinfo{{Google}}{{Google}}{2023}
+{{Google}. \emph{Cloud Firestore Documentation}.
+[S.l.], 2023. Dispon{\'\i}vel em:
+  \url{https://firebase.google.com/docs/firestore}. Acesso em: 15 nov. 2025.}
+
+\bibitem[{Google} 2024]{firebase2024}
+\abntrefinfo{{Google}}{{Google}}{2024a}
+{{Google}. \emph{Firebase Authentication Documentation}.
+[S.l.], 2024. Dispon{\'\i}vel em: \url{https://firebase.google.com/docs/auth}.
+  Acesso em: 15 nov. 2025.}
+
+\bibitem[{Google} 2024]{gemini2024}
+\abntrefinfo{{Google}}{{Google}}{2024b}
+{{Google}. \emph{Gemini API Documentation}.
+[S.l.], 2024. Dispon{\'\i}vel em: \url{https://ai.google.dev/gemini-api/docs}.
+  Acesso em: 15 nov. 2025.}
+
+\bibitem[{International Organization for Standardization} 2011]{iso25010}
+\abntrefinfo{{International Organization for Standardization}}{{International
+  Organization for Standardization}}{2011}
+{{International Organization for Standardization}. \emph{ISO/IEC 25010:2011 -
+  Systems and software engineering - Systems and software Quality Requirements
+  and Evaluation (SQuaRE) - System and software quality models}. 2011.}
+
+\bibitem[{International Organization for Standardization} 2019]{iso9241}
+\abntrefinfo{{International Organization for Standardization}}{{International
+  Organization for Standardization}}{2019}
+{{International Organization for Standardization}. \emph{ISO 9241-210:2019 -
+  Ergonomics of human-system interaction - Part 210: Human-centred design for
+  interactive systems}. 2019.}
+
+\bibitem[Kreibich 2010]{kreibich2010}
+\abntrefinfo{Kreibich}{KREIBICH}{2010}
+{KREIBICH, J.~A. \emph{Using SQLite}. Sebastopol: O'Reilly Media, 2010.}
+
+\bibitem[Lewis et al. 2020]{lewis2020}
+\abntrefinfo{Lewis et al.}{LEWIS et al.}{2020}
+{LEWIS, P. et al. Retrieval-augmented generation for knowledge-intensive nlp
+  tasks.
+\emph{Advances in Neural Information Processing Systems}, v.~33, p. 9459--9474,
+  2020.}
+
+\bibitem[{Meta Platforms} 2023]{reactnative2023}
+\abntrefinfo{{Meta Platforms}}{{Meta Platforms}}{2023}
+{{Meta Platforms}. \emph{React Native Documentation}.
+[S.l.], 2023. Dispon{\'\i}vel em:
+  \url{https://reactnative.dev/docs/getting-started}. Acesso em: 15 nov. 2025.}
+
+\bibitem[Moraes e Cabral 2020]{moraes2020}
+\abntrefinfo{Moraes e Cabral}{MORAES; CABRAL}{2020}
+{MORAES, E.~H.; CABRAL, A. C.~F. Tecnologias digitais na educação em saúde:
+  uma revisão sistemática.
+\emph{Revista Brasileira de Educação Médica}, v.~44, n.~2, 2020.}
+
+\bibitem[Nielsen 1994]{nielsen1994}
+\abntrefinfo{Nielsen}{NIELSEN}{1994}
+{NIELSEN, J. \emph{Usability Engineering}. San Francisco: Morgan Kaufmann,
+  1994.}
+
+\bibitem[Norman 2013]{norman2013}
+\abntrefinfo{Norman}{NORMAN}{2013}
+{NORMAN, D.~A. \emph{The Design of Everyday Things: Revised and Expanded
+  Edition}. New York: Basic Books, 2013.}
+
+\bibitem[Oliveira, Santos e Lima 2022]{oliveira2022}
+\abntrefinfo{Oliveira, Santos e Lima}{OLIVEIRA; SANTOS; LIMA}{2022}
+{OLIVEIRA, A.~S.; SANTOS, R. C.~d.; LIMA, F.~R. Aplicativos educativos para
+  acupuntura: análise de usabilidade e eficácia.
+\emph{Revista Brasileira de Práticas Integrativas e Complementares em Saúde},
+  v.~12, n.~1, p. 45--58, 2022.}
+
+\bibitem[{Organização Mundial da Saúde} 1999]{oms1999}
+\abntrefinfo{{Organização Mundial da Saúde}}{{Organização Mundial da
+  Saúde}}{1999}
+{{Organização Mundial da Saúde}. \emph{Guidelines on basic training and
+  safety in acupuncture}.
+Geneva, 1999.}
+
+\bibitem[{Organização Mundial da Saúde} 2020]{oms2020}
+\abntrefinfo{{Organização Mundial da Saúde}}{{Organização Mundial da
+  Saúde}}{2020}
+{{Organização Mundial da Saúde}. \emph{WHO guideline: recommendations on
+  digital interventions for health system strengthening}.
+Geneva, 2020.}
+
+\bibitem[Pressman 2011]{pressman2011}
+\abntrefinfo{Pressman}{PRESSMAN}{2011}
+{PRESSMAN, R.~S. \emph{Engenharia de Software: Uma Abordagem Profissional}. 7.
+  ed. Porto Alegre: McGraw-Hill, 2011.}
+
+\bibitem[Pressman e Maxim 2016]{pressman2016}
+\abntrefinfo{Pressman e Maxim}{PRESSMAN; MAXIM}{2016}
+{PRESSMAN, R.~S.; MAXIM, B.~R. \emph{Engenharia de Software: Uma Abordagem
+  Profissional}. 8. ed. Porto Alegre: McGraw-Hill Education, 2016.}
+
+\bibitem[Schwaber e Sutherland 2020]{schwaber2020}
+\abntrefinfo{Schwaber e Sutherland}{SCHWABER; SUTHERLAND}{2020}
+{SCHWABER, K.; SUTHERLAND, J. \emph{The Scrum Guide}. [S.l.]: Scrum.org, 2020.}
+
+\bibitem[Siqueira, Barbosa e Furtado 2021]{siqueira2021}
+\abntrefinfo{Siqueira, Barbosa e Furtado}{SIQUEIRA; BARBOSA; FURTADO}{2021}
+{SIQUEIRA, L.~A.; BARBOSA, S. D.~J.; FURTADO, E. Design centrado no usuário em
+  aplicações móveis de saúde.
+\emph{Revista de Design, Tecnologia e Sociedade}, v.~8, n.~1, p. 78--95, 2021.}
+
+\bibitem[Souza, Silva e Carvalho 2020]{souza2020}
+\abntrefinfo{Souza, Silva e Carvalho}{SOUZA; SILVA; CARVALHO}{2020}
+{SOUZA, M. T.~d.; SILVA, M. D.~d.; CARVALHO, R.~d. Aplicativos móveis para
+  profissionais de saúde: uma revisão integrativa.
+\emph{Revista Brasileira de Enfermagem}, v.~73, n.~5, 2020.}
+
+\bibitem[{Spring} 2024]{springai2024}
+\abntrefinfo{{Spring}}{{Spring}}{2024}
+{{Spring}. \emph{Spring AI Documentation}.
+[S.l.], 2024. Dispon{\'\i}vel em:
+  \url{https://docs.spring.io/spring-ai/reference/}. Acesso em: 15 nov. 2025.}
+
+\bibitem[Sutherland 2014]{sutherland2014}
+\abntrefinfo{Sutherland}{SUTHERLAND}{2014}
+{SUTHERLAND, J. \emph{Scrum: A arte de fazer o dobro do trabalho na metade do
+  tempo}. São Paulo: LeYa, 2014.}
+
+\bibitem[Walls 2016]{walls2016}
+\abntrefinfo{Walls}{WALLS}{2016}
+{WALLS, C. \emph{Spring Boot in Action}. Shelter Island: Manning Publications,
+  2016.}
+
+\end{thebibliography}
