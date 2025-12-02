@@ -443,22 +443,100 @@ E salva no formato compatível com o seed do sistema
 
 % \figura{DIAGRAMA DE CLASSES DE ANÁLISE}{0.9}{fig/diagrama-classes.png}{Os autores (2025)}{diagrama-classes}{}{}
 
-\section*{CLASSES PRINCIPAIS}
+O sistema utiliza uma arquitetura baseada em Firestore (NoSQL) no \textit{backend} e SQLite no aplicativo móvel para armazenamento local. As principais entidades são descritas a seguir.
+
+\section*{CLASSES DO BACKEND (FIRESTORE)}
 
 \begin{itemize}
-    \item \textbf{User}: Representa os usuários do sistema, com atributos como id, nome, email, senha (hash), tipo de perfil (estudante, profissional, administrador) e data de cadastro.
+    \item \textbf{FirestoreUser}: Representa os usuários do sistema.
+    \begin{itemize}
+        \item \texttt{id}: String (Document ID do Firestore)
+        \item \texttt{firebaseUid}: String (UID do Firebase Authentication)
+        \item \texttt{email}: String
+        \item \texttt{name}: String
+        \item \texttt{role}: String (USER, ADMIN)
+        \item \texttt{enabled}: Boolean
+        \item \texttt{profileImageUrl}: String (URL da foto de perfil)
+        \item \texttt{favoritePointIds}: List<String> (IDs dos pontos favoritados)
+        \item \texttt{createdAt}, \texttt{updatedAt}: LocalDateTime
+    \end{itemize}
     
-    \item \textbf{AcupuncturePoint}: Representa um ponto de acupuntura, contendo código (ex: LU-7), nome em português, nome em pinyin, localização anatômica, profundidade de punção, indicações, contraindicações, funções energéticas e coordenadas no atlas.
+    \item \textbf{FirestorePoint}: Representa um ponto de acupuntura.
+    \begin{itemize}
+        \item \texttt{id}: String (Document ID)
+        \item \texttt{code}: String (ex: VG20, E36)
+        \item \texttt{name}: String (nome do ponto)
+        \item \texttt{description}: String (descrição detalhada)
+        \item \texttt{meridian}: String (meridiano associado)
+        \item \texttt{location}: String (localização anatômica)
+        \item \texttt{indication}: String (indicações terapêuticas)
+        \item \texttt{coordinates}: Map<String, Double> (coordenadas x, y no mapa)
+        \item \texttt{imageUrls}: List<String> (URLs das imagens no Firebase Storage)
+        \item \texttt{imageThumbnailMap}: Map<String, String> (mapeamento original → thumbnail)
+        \item \texttt{symptomIds}: List<String> (IDs dos sintomas relacionados)
+        \item \texttt{tags}: List<String> (tags para busca)
+        \item \texttt{category}: String (categoria do ponto)
+        \item \texttt{favoriteCount}, \texttt{viewCount}: Integer (estatísticas de uso)
+        \item \texttt{createdAt}, \texttt{updatedAt}: LocalDateTime
+        \item \texttt{createdBy}: String (UID do criador)
+    \end{itemize}
     
-    \item \textbf{Meridian}: Representa os meridianos da MTC, com código, nome em português, nome em chinês, elemento associado e característica yin/yang.
+    \item \textbf{FirestoreSymptom}: Representa sintomas que podem ser associados aos pontos.
+    \begin{itemize}
+        \item \texttt{id}: String (Document ID)
+        \item \texttt{name}: String (nome do sintoma)
+        \item \texttt{description}: String (descrição detalhada)
+        \item \texttt{category}: String (ex: Dor, Digestivo, Emocional)
+        \item \texttt{tags}: List<String> (tags para classificação)
+        \item \texttt{pointIds}: List<String> (IDs dos pontos relacionados)
+        \item \texttt{severity}: Integer (1-10, gravidade)
+        \item \texttt{useCount}: Integer (estatística de uso em buscas)
+        \item \texttt{createdAt}, \texttt{updatedAt}: LocalDateTime
+    \end{itemize}
+\end{itemize}
+
+\section*{CLASSES DO MOBILE (SQLITE LOCAL)}
+
+\begin{itemize}
+    \item \textbf{LocalPoint}: Cache local dos pontos de acupuntura.
+    \begin{itemize}
+        \item \texttt{id}: String
+        \item \texttt{name}, \texttt{chinese\_name}, \texttt{meridian}, \texttt{location}: String
+        \item \texttt{functions}, \texttt{indications}, \texttt{contraindications}: String
+        \item \texttt{code}: String
+        \item \texttt{favorite\_count}: Integer
+        \item \texttt{synced}: Boolean (status de sincronização)
+        \item \texttt{last\_sync}: String (timestamp da última sincronização)
+    \end{itemize}
     
-    \item \textbf{Symptom}: Representa sintomas clínicos que podem ser associados aos pontos de acupuntura, com nome, categoria e sinônimos.
+    \item \textbf{Favorite}: Relação entre usuário e pontos favoritados.
+    \begin{itemize}
+        \item \texttt{id}: Integer (autoincrement)
+        \item \texttt{point\_id}, \texttt{user\_id}: String
+        \item \texttt{synced}: Boolean
+        \item \texttt{operation}: String (UPSERT, DELETE)
+        \item \texttt{created\_at}, \texttt{updated\_at}: String
+    \end{itemize}
     
-    \item \textbf{Favorite}: Representa a relação entre usuário e pontos favoritados, com id do usuário, id do ponto, data de criação e status de sincronização.
+    \item \textbf{Note}: Anotações pessoais do usuário sobre pontos.
+    \begin{itemize}
+        \item \texttt{id}: Integer (autoincrement)
+        \item \texttt{point\_id}, \texttt{user\_id}: String
+        \item \texttt{content}: String (texto da anotação)
+        \item \texttt{synced}: Boolean
+        \item \texttt{created\_at}, \texttt{updated\_at}: String
+    \end{itemize}
     
-    \item \textbf{Note}: Representa as anotações pessoais do usuário sobre pontos específicos, com conteúdo em texto, data de criação, data de modificação e status de sincronização.
-    
-    \item \textbf{BodyMapCoords}: Representa as coordenadas de um ponto em uma vista específica do atlas, com referência à vista, coordenada X e coordenada Y em percentual.
+    \item \textbf{SyncOperation}: Fila de operações pendentes de sincronização.
+    \begin{itemize}
+        \item \texttt{id}: String (identificador único da operação)
+        \item \texttt{entity\_type}: String (favorite, note, point, symptom, image)
+        \item \texttt{operation}: String (UPSERT, DELETE)
+        \item \texttt{data}: String (JSON com os dados)
+        \item \texttt{status}: String (pending, in\_progress, retry, completed, failed)
+        \item \texttt{retry\_count}: Integer
+        \item \texttt{created\_at}: String
+    \end{itemize}
 \end{itemize}
 
 % APÊNDICE D - DIAGRAMAS DE SEQUÊNCIA DE ANÁLISE
@@ -480,97 +558,95 @@ E salva no formato compatível com o seed do sistema
 
 \section*{ESTRUTURA DO BANCO DE DADOS LOCAL (SQLITE)}
 
+O aplicativo móvel utiliza SQLite para armazenamento local dos dados, permitindo funcionamento \textit{offline}. A estrutura foi projetada para sincronização bidirecional com o Firestore do \textit{backend}.
+
 \begin{lstlisting}[language=SQL, caption={Estrutura do banco SQLite local}]
-CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email TEXT UNIQUE NOT NULL,
+-- Pontos de acupuntura (cache local)
+CREATE TABLE points (
+    id TEXT PRIMARY KEY,
+    code TEXT,
     name TEXT NOT NULL,
-    profile_type TEXT NOT NULL CHECK(
-        profile_type IN ('student', 'professional', 'admin')),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    synced_at DATETIME
-);
-
-CREATE TABLE meridians (
-    id INTEGER PRIMARY KEY,
-    code TEXT UNIQUE NOT NULL,
-    name_pt TEXT NOT NULL,
-    name_cn TEXT,
-    element TEXT,
-    yin_yang TEXT CHECK(yin_yang IN ('yin', 'yang'))
-);
-
-CREATE TABLE acupuncture_points (
-    id INTEGER PRIMARY KEY,
-    code TEXT UNIQUE NOT NULL,
-    name_pt TEXT NOT NULL,
-    name_pinyin TEXT,
-    meridian_id INTEGER NOT NULL,
-    location TEXT,
-    depth TEXT,
+    chinese_name TEXT,
+    meridian TEXT NOT NULL,
+    location TEXT NOT NULL,
+    functions TEXT,
     indications TEXT,
     contraindications TEXT,
-    functions TEXT,
-    special_characteristics TEXT,
-    content_status TEXT DEFAULT 'draft',
-    FOREIGN KEY (meridian_id) REFERENCES meridians(id)
+    image_path TEXT,
+    coordinates TEXT,
+    favorite_count INTEGER,
+    synced INTEGER DEFAULT 1,
+    last_sync DATETIME
 );
 
-CREATE TABLE body_map_coords (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    point_id INTEGER NOT NULL,
-    view TEXT NOT NULL,
-    x REAL NOT NULL,
-    y REAL NOT NULL,
-    mapped_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (point_id) REFERENCES acupuncture_points(id)
-);
-
+-- Sintomas relacionados aos pontos
 CREATE TABLE symptoms (
-    id INTEGER PRIMARY KEY,
+    id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
+    synonyms TEXT,
     category TEXT,
-    synonyms TEXT
+    use_count INTEGER,
+    synced INTEGER DEFAULT 1,
+    last_sync DATETIME
 );
 
-CREATE TABLE point_symptoms (
-    point_id INTEGER NOT NULL,
-    symptom_id INTEGER NOT NULL,
-    relevance_score REAL DEFAULT 1.0,
-    PRIMARY KEY (point_id, symptom_id),
-    FOREIGN KEY (point_id) REFERENCES acupuncture_points(id),
-    FOREIGN KEY (symptom_id) REFERENCES symptoms(id)
+-- Relacao N:N entre sintomas e pontos
+CREATE TABLE symptom_points (
+    symptom_id TEXT NOT NULL,
+    point_id TEXT NOT NULL,
+    efficacy_score REAL DEFAULT 1.0,
+    PRIMARY KEY(symptom_id, point_id)
 );
 
+-- Favoritos do usuario
 CREATE TABLE favorites (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    point_id INTEGER NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    point_id TEXT NOT NULL,
+    user_id TEXT NOT NULL,
     synced INTEGER DEFAULT 0,
-    UNIQUE(user_id, point_id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (point_id) REFERENCES acupuncture_points(id)
+    operation TEXT NOT NULL DEFAULT 'UPSERT',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(point_id, user_id)
 );
 
+-- Anotacoes pessoais do usuario
 CREATE TABLE notes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    point_id INTEGER NOT NULL,
+    point_id TEXT NOT NULL,
+    user_id TEXT NOT NULL,
     content TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME,
     synced INTEGER DEFAULT 0,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (point_id) REFERENCES acupuncture_points(id)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indices para otimizacao de buscas
-CREATE INDEX idx_points_meridian ON acupuncture_points(meridian_id);
-CREATE INDEX idx_points_code ON acupuncture_points(code);
-CREATE INDEX idx_coords_point ON body_map_coords(point_id);
-CREATE INDEX idx_favorites_user ON favorites(user_id);
-CREATE INDEX idx_notes_user ON notes(user_id);
+-- Historico de buscas
+CREATE TABLE search_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    query TEXT NOT NULL,
+    type TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Status de sincronizacao por tabela
+CREATE TABLE sync_status (
+    table_name TEXT PRIMARY KEY,
+    last_sync DATETIME NOT NULL,
+    status TEXT NOT NULL DEFAULT 'success'
+);
+
+-- Fila de sincronizacao de imagens
+CREATE TABLE image_sync_queue (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    point_id TEXT NOT NULL,
+    image_uri TEXT NOT NULL,
+    payload TEXT,
+    status TEXT NOT NULL DEFAULT 'pending',
+    retry_count INTEGER NOT NULL DEFAULT 0,
+    last_attempt DATETIME,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 \end{lstlisting}
 
 % APÊNDICE F - ESPECIFICAÇÃO DE APIs
