@@ -43,6 +43,10 @@ public class FileUploadService {
 
         // Gera um nome único para o arquivo
         String originalFilename = file.getOriginalFilename();
+        // Validate filename for path traversal attempts
+        if (originalFilename != null && (originalFilename.contains("..") || originalFilename.contains("/") || originalFilename.contains("\\"))) {
+            throw new IllegalArgumentException("Invalid file extension");
+        }
         String extension = getFileExtension(originalFilename).toLowerCase();
         // Sanitize and validate extension
         if (!isValidExtension(extension)) {

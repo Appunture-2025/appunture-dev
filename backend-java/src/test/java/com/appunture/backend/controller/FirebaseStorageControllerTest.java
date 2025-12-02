@@ -134,7 +134,7 @@ class FirebaseStorageControllerTest {
         mockMvc.perform(multipart("/storage/upload")
                         .file(file)
                         .with(csrf()))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isForbidden());
     }
 
     // =====================

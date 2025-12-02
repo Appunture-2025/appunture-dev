@@ -134,6 +134,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/api/health/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
+                        .requestMatchers("/storage/status").permitAll()
                         // Endpoints de leitura públicos (modo visitante)
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/points/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/symptoms/**").permitAll()

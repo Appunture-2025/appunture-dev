@@ -58,14 +58,17 @@ public class FirebaseStorageController {
         }
     }
 
-    @GetMapping("/signed-url/{fileName:.+}")
+    @GetMapping("/signed-url/**")
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Gerar URL assinada", description = "Gera URL assinada para acesso temporário ao arquivo")
     public ResponseEntity<Map<String, Object>> generateSignedUrl(
-            @PathVariable String fileName,
+            jakarta.servlet.http.HttpServletRequest request,
             @RequestParam(defaultValue = "60") int durationMinutes) {
         
         try {
+            // Extract fileName from the path after /signed-url/
+            String fileName = request.getRequestURI().substring(request.getRequestURI().indexOf("/signed-url/") + 12);
+            
             if (!firebaseStorageService.isAvailable()) {
                 return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                     .body(Map.of("error", "Firebase Storage não está disponível"));
