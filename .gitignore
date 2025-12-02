@@ -2,6 +2,14 @@
 .expo/
 frontend-mobile/appunture/.expo/
 
+# Sensitive files - NEVER commit these!
+arquivos-deploy/
+*-firebase-adminsdk-*.json
+*.json.bak
+
+# Zip files
+*.zip
+
 # Python
 __pycache__/
 *.py[cod]
@@ -14,3 +22,4 @@ dist/
 build/
 eggs/
 .eggs/
+

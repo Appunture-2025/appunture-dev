@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.2)  2 DEC 2025 16:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.2)  2 DEC 2025 16:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1522,11 +1522,25 @@ AP\^ENDICE B.
 
 ] [52] [53] [54] [55] [56] [57] [58] [59]
 AP\^ENDICE C.
+LaTeX Info: Symbol \textrightarrow not provided by
+            font family phv in TS1 encoding.
+            Default family used instead on input line 475.
+LaTeX Font Info:    Trying to load font information for T1+cmss on input line 4
+75.
+(C:\Users\Usuario\AppData\Local\Programs\MiKTeX\tex/latex/base\t1cmss.fd
+File: t1cmss.fd 2023/04/13 v2.5m Standard LaTeX font definitions
+)
+LaTeX Font Info:    Trying to load font information for TS1+cmss on input line 
+475.
+
+(C:\Users\Usuario\AppData\Local\Programs\MiKTeX\tex/latex/base\ts1cmss.fd
+File: ts1cmss.fd 2023/04/13 v2.5m Standard LaTeX font definitions
+)
 [60
 
-]
+] [61] [62]
 AP\^ENDICE D.
-[61
+[63
 
 ]
 AP\^ENDICE E.
@@ -1535,23 +1549,23 @@ AP\^ENDICE E.
 File: lstlang1.sty 2023/02/27 1.9 listings language file
 )
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
-nput line 483.
- [62
+nput line 563.
+ [64
 
-] [63] [64]
+] [65] [66]
 AP\^ENDICE F.
-[65
+[67
 
-] [66] [67] [68]
+] [68] [69] [70]
 AP\^ENDICE G.
 
 (C:\Users\Usuario\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2023/02/27 1.9 listings language file
-) [69
+) [71
 
 ]) 
 AED: lastpage setting LastPage
-[70]
+[72]
 \tf@lof=\write6
 \openout6 = `main.lof'.
 
@@ -1578,24 +1592,25 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 36057 strings out of 474485
- 688504 string characters out of 5742790
- 2187542 words of memory out of 5000000
- 57255 multiletter control sequences out of 15000+600000
- 583972 words of font info for 69 fonts, out of 8000000 for 9000
+ 36095 strings out of 474485
+ 689786 string characters out of 5742790
+ 2172542 words of memory out of 5000000
+ 57287 multiletter control sequences out of 15000+600000
+ 585085 words of font info for 71 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 117i,13n,121p,999b,2456s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\Usuario\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ec
-tt1200.pk> <C:\Users\Usuario\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/d
-pi600\ecrm1200.pk> <C:\Users\Usuario\AppData\Local\MiKTeX\fonts/pk/ljfour/jknap
-pen/ec/dpi600\ectt1000.pk><C:/Users/Usuario/AppData/Local/Programs/MiKTeX/fonts
-/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Usuario/AppData/Local/Programs/M
-iKTeX/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Users/Usuario/AppData/Local/Progr
-ams/MiKTeX/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Users/Usuario/AppData/Local/
-Programs/MiKTeX/fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on main.pdf (71 pages, 672901 bytes).
+ 117i,13n,121p,999b,2458s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\Usuario\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tc
+ss1200.pk> <C:\Users\Usuario\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/d
+pi600\ectt1200.pk> <C:\Users\Usuario\AppData\Local\MiKTeX\fonts/pk/ljfour/jknap
+pen/ec/dpi600\ecrm1200.pk> <C:\Users\Usuario\AppData\Local\MiKTeX\fonts/pk/ljfo
+ur/jknappen/ec/dpi600\ectt1000.pk><C:/Users/Usuario/AppData/Local/Programs/MiKT
+eX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Usuario/AppData/Local/Pr
+ograms/MiKTeX/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Users/Usuario/AppData/Loc
+al/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Users/Usuario/AppDat
+a/Local/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvro8a.pfb>
+Output written on main.pdf (73 pages, 678277 bytes).
 PDF statistics:
- 1494 PDF objects out of 1728 (max. 8388607)
- 530 named destinations out of 1000 (max. 500000)
+ 1511 PDF objects out of 1728 (max. 8388607)
+ 528 named destinations out of 1000 (max. 500000)
  730 words of extra memory for PDF output out of 10000 (max. 10000000)
 
