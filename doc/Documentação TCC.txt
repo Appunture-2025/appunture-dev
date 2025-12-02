@@ -1,0 +1,1046 @@
+﻿UNIVERSIDADE FEDERAL DO PARANÁ
+
+
+
+
+BRUNO BRUGNEROTTO DE LARA
+GABRIEL FRANCELINO VOIDALESKI
+PEDRO HENRIQUE LOPES
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+APPUNTURE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CURITIBA
+    2025
+AUTORES 
+BRUNO BRUGNEROTTO DE LARA
+GABRIEL FRANCELINO VOIDALESKI
+PEDRO HENRIQUE LOPES
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ESPECIFICAÇÃO TÉCNICA DO SISTEMA 
+ 
+ 
+O Appunture é um sistema multiplataforma de suporte à acupuntura composto por um aplicativo móvel offline-first, desenvolvido em React Native com Expo, um backend robusto em Java 17 com Spring Boot 3.2 e um painel administrativo web em React. A arquitetura utiliza Google Firestore como banco de dados principal e SQLite para persistência local no mobile, integrando autenticação via Firebase e um modo de desenvolvimento flexível que permite a execução e testes do sistema sem dependência direta de credenciais de nuvem. 
+ 
+Orientador(a): Prof(a). Dr(a). Paulo Sobreira Moraes
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+CURITIBA 
+2025
+RESUMO
+ 
+O aplicativo _Appunture_ tem como objetivo oferecer suporte técnico, educativo e visual para profissionais e estudantes da área de acupuntura, promovendo uma prática mais segura, padronizada e alinhada às exigências legais e sanitárias brasileiras. Em um cenário marcado pela ausência de regulamentação federal clara, disputas entre conselhos profissionais e formação heterogênea, o _Appunture_ surge como uma solução inovadora que facilita o acesso a informações de qualidade sobre os pontos de acupuntura corporal.
+A plataforma foi desenvolvida para Android, iOS e Web, apresentando um modelo anatômico interativo com funcionalidades de busca por critérios como nome do ponto, localização, benefícios terapêuticos, contraindicações e meridianos. O sistema considera os diferentes perfis de usuários — médicos, fisioterapeutas, terapeutas e demais profissionais da saúde — e adapta os conteúdos conforme o nível de formação, promovendo segurança no uso e evitando a disseminação inadequada de informações técnicas.
+A prática da acupuntura envolve desafios complexos, como a subjetividade diagnóstica da Medicina Tradicional Chinesa (MTC), a necessidade de protocolos rigorosos de biossegurança e a fiscalização insuficiente por parte dos órgãos reguladores. O _Appunture_ contribui diretamente nesses pontos ao fornecer informações padronizadas, baseadas em evidências científicas, diretrizes da Organização Mundial da Saúde (OMS) e boas práticas clínicas.
+Além de apoiar o aprendizado e a atualização profissional, o aplicativo contribui para a consolidação da acupuntura como prática multiprofissional e estimula o uso responsável de tecnologias no contexto das Práticas Integrativas e Complementares em Saúde (PICS). Seu desenvolvimento seguiu uma arquitetura híbrida com banco de dados local e sincronização com um backend remoto, garantindo desempenho, usabilidade e escalabilidade.
+Com um mercado em expansão — estimado em mais de 370 mil acupunturistas no Brasil — e diante do Projeto de Lei 5983/2019, que propõe a regulamentação da profissão, o _Appunture_ representa um importante aliado no fortalecimento da acupuntura como prática acessível, segura e tecnicamente embasada.
+Palavras-chave: Acupuntura, Appunture, MTC, Práticas Integrativas, Saúde, Biossegurança, Diagnóstico Energético
+ABSTRACT
+The _Appunture_ application aims to provide technical, educational, and visual support for professionals and students in the field of acupuncture, promoting a safer, more standardized practice aligned with Brazilian legal and sanitary requirements. In a context marked by the absence of clear federal regulation, professional council disputes, and heterogeneous training, _Appunture_ emerges as an innovative solution that facilitates access to high-quality information about acupuncture points.
+The platform was developed for Android, iOS, and Web, featuring an interactive anatomical model and search functionalities based on criteria such as point name, location, therapeutic benefits, contraindications, and meridians. The system considers the diverse profiles of users — including physicians, physiotherapists, therapists, and other healthcare professionals — and adapts content according to their educational background, ensuring safe usage and preventing the spread of inappropriate technical information.
+Acupuncture practice presents complex challenges, such as the subjective nature of Traditional Chinese Medicine (TCM) diagnostics, strict biosafety requirements, and insufficient regulatory oversight. _Appunture_ directly addresses these issues by providing standardized, evidence-based information aligned with World Health Organization (WHO) guidelines and best clinical practices.
+In addition to supporting professional learning and continuous education, the app contributes to the recognition of acupuncture as a multidisciplinary practice and promotes the responsible use of technology in the context of Integrative and Complementary Health Practices (PICS). Its development followed a hybrid architecture with local database access and remote synchronization, ensuring performance, usability, and scalability.
+With a growing market — estimated at over 370,000 acupuncture practitioners in Brazil — and in light of the proposed Bill 5983/2019 to regulate the profession, _Appunture_ represents a valuable tool for strengthening acupuncture as a safe, accessible, and evidence-based practice.
+Keywords: Acupuncture, Appunture, TCM, Integrative Health, Biosafety, Diagnosis, Health Technology
+SUMÁRIO
+
+
+AUTORES 
+BRUNO BRUGNEROTTO DE LARA
+GABRIEL FRANCELINO VOIDALESKI
+PEDRO HENRIQUE LOPES        2
+ESPECIFICAÇÃO TÉCNICA DO SISTEMA        2
+O Appunture é um sistema multiplataforma de suporte à acupuntura composto por um aplicativo móvel offline-first, desenvolvido em React Native com Expo, um backend robusto em Java 17 com Spring Boot 3.2 e um painel administrativo web em React. A arquitetura utiliza Google Firestore como banco de dados principal e SQLite para persistência local no mobile, integrando autenticação via Firebase e um modo de desenvolvimento flexível que permite a execução e testes do sistema sem dependência direta de credenciais de nuvem.        2
+Orientador(a): Prof(a). Dr(a). Paulo Sobreira Moraes        2
+CURITIBA        3
+2025        3
+RESUMO        3
+ABSTRACT        4
+SUMÁRIO        7
+1 INTRODUÇÃO        10
+1.1 OBJETIVOS        11
+2 FUNDAMENTAÇÃO TEÓRICA        13
+2.1 Acessibilidade como Direito e Ferramenta de Igualdade na Saúde        13
+2.2 Tecnologias Digitais como Apoio à Formação e Prática Segura        14
+2.3 Aplicativos de Acupuntura: Experiências e Recursos Tecnológicos        15
+2.4 Comparativo com Aplicativos Existentes        16
+2.5 Usabilidade e Design Centrado no Usuário        17
+2.6 Normas, Diretrizes e Evidências Científicas        18
+3 MOTIVAÇÕES        19
+3.1 Regulamentação e disputa de categorias profissionais        19
+3.2 Formação e fiscalização insuficientes        19
+3.3 Segurança do paciente e biossegurança        20
+3.4 Diagnóstico energético: complexidade e subjetividade        20
+4 TECNOLOGIAS E ARQUITETURA DO SISTEMA        22
+4.1 Visão Geral da Arquitetura        22
+4.1.1 Diagrama de Arquitetura        22
+4.3.3 Banco de Dados        24
+4.3.4 Interface Web Administrativa (React)        24
+4.4 Processamento de Linguagem Natural (NLP) Local        25
+4.4.1 Motor de Busca Inteligente        25
+4.4.2 Base de Conhecimento        25
+4.5 Tecnologias de Suporte e Desenvolvimento        25
+4.5.1 Gerenciamento de Estado        25
+5 METODOLOGIA        26
+5.1 METODOLOGIA DE DESENVOLVIMENTO        26
+5.1.1 Scrum        27
+5.2 MODELAGEM DO PROJETO        28
+5.2.3 Diagrama físico do banco de dados        33
+5.3 Product Backlog        33
+5.4 Planejamento de Sprints        36
+5.4.1 Estimativa Geral por Pontos de Função (PF)        36
+4        36
+5.4.2 Cálculo de Esforço        37
+6 APRESENTAÇÃO DO SISTEMA        40
+6.1 Arquitetura do Sistema        40
+6.2 AUTENTICAÇÃO E SEGURANÇA        41
+6.3.1 Tela Inicial e Onboarding        42
+6.3.2 Cadastro e Perfis de Usuário        42
+6.3.3 Tela Principal e Navegação        42
+6.3.4 Mapa Anatômico Interativo        43
+6.3.5 Detalhes dos Pontos de Acupuntura        43
+6.3.6 Sistema de Busca Inteligente        44
+6.3.7 Chatbot com Processamento de Linguagem Natural        44
+6.3.8 Sistema de Favoritos e Anotações Pessoais        45
+6.3.9 Modo Auricular (Auriculoterapia)        45
+6.4 PAINEL ADMINISTRATIVO WEB        45
+6.4.1 Gerenciamento de Conteúdo        45
+6.4.2 Controle de Usuários e Analytics        46
+6.5 EXPERIÊNCIA DO USUÁRIO E USABILIDADE        46
+6.6 PROTÓTIPO DE TELAS INICIAL        46
+7 CONSIDERAÇÕES FINAIS        51
+8 CONTEXTUALIZAÇÃO        52
+Tabela de Bugs:        52
+9 REFERÊNCIAS        54
+APÊNDICE B - DIAGRAMA DE CLASSES        58
+APÊNDICE C - HISTÓRIAS DE USUÁRIO, PROTÓTIPOS DE TELA E DIAGRAMAS DE SEQUÊNCIA        58
+HISTÓRIA DE USUÁRIO 1: BUSCA POR SINTOMAS        58
+Diagrama de Sequência        59
+HISTÓRIA DE USUÁRIO 2: SINCRONIZAÇÃO DE DADOS        59
+Diagrama de Sequência        59
+APÊNDICE D - MODELO FÍSICO DO BANCO DE DADOS        60
+APÊNDICE E - ESPECIFICAÇÃO DE APPLICATION PROGRAMMING INTERFACES (APIS)        60
+Autenticação        60
+`POST /api/auth/login`        60
+`POST /api/auth/register`        61
+Pontos de Acupuntura        61
+`GET /api/points`        61
+`GET /api/points/{id}`        61
+Sincronização        61
+`POST /api/sync`        61
+APÊNDICE F - MODELOS DE INTELIGÊNCIA ARTIFICIAL        61
+Motor de Busca e NLP (Fuse.js)        62
+Pipeline de Processamento:        62
+Exemplo de Funcionamento:        62
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+________________
+1 INTRODUÇÃO
+A prática da acupuntura no Brasil, embora cada vez mais difundida e procurada tanto no sistema público quanto no privado de saúde, ainda enfrenta desafios significativos no que diz respeito à regulamentação profissional, padronização de condutas, segurança técnica e formação dos praticantes. Trata-se de uma técnica milenar baseada na Medicina Tradicional Chinesa (MTC), que se expandiu no país por meio de cursos livres, técnicos e pós-graduações voltadas a diferentes profissionais da área da saúde. No entanto, a ausência de regulamentação federal clara e a disputa entre conselhos profissionais sobre quem pode exercer legalmente a acupuntura têm gerado um ambiente de insegurança jurídica, afetando não apenas os acupunturistas, mas também o acesso qualificado da população à prática.
+Além das disputas institucionais, o cenário atual é marcado pela fiscalização fragmentada, formação heterogênea e riscos crescentes à biossegurança e à saúde do paciente, especialmente em ambientes informais. Segundo diretrizes da Organização Mundial da Saúde (OMS), o uso inadequado de agulhas, a falta de higienização correta ou a aplicação indevida de técnicas podem resultar em infecções, lesões internas e outros agravos que comprometem gravemente a integridade dos usuários da acupuntura.
+Outro desafio relevante é o caráter subjetivo e complexo do diagnóstico energético, próprio da MTC. O raciocínio clínico baseado em padrões de desarmonia (como deficiência de Qi, estagnação de sangue, entre outros) exige extenso treinamento e sensibilidade clínica. A falta de padronização e apoio didático dificulta a atuação de profissionais iniciantes ou com formação limitada, podendo comprometer a eficácia terapêutica.
+Diante desse contexto, o uso de Tecnologias Digitais de Informação e Comunicação (TDIC) apresenta-se como uma ferramenta estratégica para apoiar a qualificação da prática da acupuntura. Soluções como aplicativos educativos e interativos podem auxiliar na visualização de pontos, organização de informações terapêuticas, revisão diagnóstica e adequação de conteúdos conforme o nível de formação do usuário, promovendo maior segurança, padronização e confiabilidade.
+Neste cenário, propõe-se o desenvolvimento do Appunture , um aplicativo multiplataforma (Android, iOS e Web) que funciona como um atlas digital de acupuntura interativo , voltado tanto para estudantes quanto para profissionais da área da saúde. A ferramenta oferece acesso offline a um banco de dados completo contendo os 361 pontos dos meridianos principais, pontos extras, imagens anatômicas, indicações clínicas, profundidade da punção, e características terapêuticas. O app também permite a consulta por sintomas com auxílio de um chatbot local com processamento de linguagem natural (NLP) , que interpreta o relato do usuário e sugere os pontos mais indicados.
+Com interface moderna e uso de tecnologias híbridas, o Appunture ainda possibilita sincronização com um backend remoto, permitindo o uso offline em campo e atualização automática de dados sempre que o dispositivo estiver conectado à internet. Complementarmente, um painel administrativo web permite que gestores e especialistas atualizem os conteúdos do sistema com segurança, mantendo a base sempre atualizada.
+Essa solução busca não apenas facilitar o acesso à informação qualificada, mas também contribuir para a padronização e segurança no uso da acupuntura no Brasil.
+1.1 OBJETIVOS
+O principal objetivo deste projeto é desenvolver e implementar o aplicativo Appunture , uma ferramenta digital educativa e interativa voltada à prática da acupuntura. O app tem como foco principal promover a padronização de condutas, aumentar a segurança técnica e oferecer suporte ao raciocínio clínico dos profissionais da área, por meio de recursos acessíveis, visuais e inteligentes. A iniciativa também busca contribuir para a formação contínua e o fortalecimento da prática multiprofissional, especialmente em um contexto de regulamentação incerta e formação heterogênea.
+Entre os objetivos específicos, destacam-se:
+● Visualização Didática e Interativa dos Pontos: Oferecer modelos anatômicos
+corporais e auriculares com mapas interativos em SVG, permitindo ao usuário clicar diretamente nos pontos e acessar informações técnicas detalhadas e confiáveis.
+● Busca Inteligente por Sintomas: Implementar um sistema de busca assistida por um chatbot local com NLP (Processamento de Linguagem Natural) , capaz de interpretar sintomas descritos em linguagem comum, mesmo com erros de digitação, e sugerir os pontos de acupuntura mais indicados.
+● Apoio à Formação Multiprofissional: Disponibilizar conteúdos adaptados aos diferentes níveis de formação e áreas de atuação dos profissionais (como médicos, terapeutas, fisioterapeutas, enfermeiros, etc.), respeitando limites éticos e legais.
+● Organização Estruturada de Informações Terapêuticas: Agrupar dados técnicos sobre indicações, funções energéticas, profundidade de punção, riscos e evidências científicas em uma base acessível, promovendo a prática baseada em evidências.
+● Facilidade de Navegação e Usabilidade: Oferecer uma experiência fluida e
+intuitiva, com sistema de busca por nome, meridiano, localização ou sintomas, filtros e funcionalidades como favoritos e anotações.
+● Sincronização de Dados e Suporte Offline: Permitir que o aplicativo funcione mesmo sem acesso à internet, armazenando os dados localmente e sincronizando automaticamente com o backend remoto sempre que uma conexão for detectada.
+● Gestão e Atualização de Conteúdo via Painel Administrativo Web: Criar uma interface administrativa segura e exclusiva para gestores e especialistas, permitindo o cadastro e atualização de pontos, sintomas, imagens e relações clínicas.
+● Respeito à Diversidade Profissional: Incorporar um sistema de perfis de usuários, com controle de acesso a conteúdos específicos conforme a formação declarada, evitando a exposição indevida de conteúdos técnicos a públicos leigos.
+● Padronização e Qualidade da Prática Clínica: Estimular a uniformização de
+nomenclaturas, descrições e abordagens terapêuticas, promovendo coesão entre
+profissionais e qualidade no atendimento ao paciente.
+
+Dessa forma, o Appunture propõe-se não apenas como um recurso digital de apoio ao estudo da acupuntura, mas como um instrumento estratégico de educação, padronização e valorização profissional , alinhado às diretrizes das Práticas Integrativas e Complementares (PICS) e às demandas contemporâneas da saúde pública e privada.
+
+2 FUNDAMENTAÇÃO TEÓRICA
+A construção de uma solução digital eficaz voltada ao ensino e à prática da acupuntura exige respaldo teórico multidisciplinar, abrangendo desde os fundamentos da acessibilidade na saúde até os princípios de usabilidade e desenvolvimento de tecnologias educativas. Este capítulo busca contextualizar e embasar as escolhas metodológicas e funcionais do aplicativo Appunture, discutindo as bases conceituais que orientam sua proposta. Para isso, são explorados os aspectos relacionados à democratização do acesso à informação técnica em saúde, o papel das Tecnologias Digitais de Informação e Comunicação (TDICs) no apoio à formação e à prática clínica, além da comparação com outras ferramentas disponíveis no mercado. A fundamentação aqui apresentada justifica a necessidade de um aplicativo como o Appunture e oferece suporte acadêmico às decisões adotadas no desenvolvimento do projeto.
+2.1 Acessibilidade como Direito e Ferramenta de Igualdade na Saúde
+A acessibilidade ao conhecimento e à prática segura em saúde deve ser compreendida como um direito fundamental, especialmente em contextos nos quais o acesso à formação e à informação de qualidade é desigual. No caso da acupuntura, esse desafio se intensifica pela diversidade de formações entre os praticantes — que podem ser médicos, fisioterapeutas, terapeutas integrativos ou técnicos em estética — e pela ausência de uma regulamentação federal unificada que determine diretrizes claras sobre a prática no Brasil. Essa lacuna acarreta diferentes formas de aprendizado, muitas vezes empíricas ou informalizadas, o que torna ainda mais necessária a disponibilização de conteúdos confiáveis e acessíveis.
+Freire (1996), em sua abordagem pedagógica libertadora, enfatiza que o conhecimento só adquire sentido real quando é compartilhado, situado e contextualizado. Nesse sentido, a disseminação de informações em saúde — sobretudo em áreas complexas como a acupuntura — deve ir além do conteúdo técnico e considerar o contexto cultural, social e educacional de quem aprende. O acesso à informação, portanto, não pode depender apenas de condições econômicas, infraestrutura local ou formação prévia, pois isso aprofundaria as desigualdades já existentes entre os profissionais de saúde nas diversas regiões do país.
+A inclusão digital torna-se uma aliada crucial nesse processo. Segundo Booth et al. (2021), tecnologias bem projetadas são capazes de reduzir barreiras estruturais no acesso à formação em saúde, desde que respeitem os diferentes níveis de letramento digital, necessidades pedagógicas e realidades locais dos usuários. Isso significa que o design de soluções digitais deve ser centrado no usuário e incluir funcionalidades como interfaces intuitivas, conteúdos multimodais (texto, áudio, imagem, vídeo), acessibilidade para pessoas com deficiência e responsividade para dispositivos móveis.
+Dados do _TIC Saúde 2023_ revelam que mais de 65% dos profissionais de saúde no Brasil usam smartphones como ferramenta principal de acesso a informações clínicas. Isso reforça a urgência de produzir plataformas móveis eficazes, que funcionem bem mesmo em
+condições técnicas limitadas, como conexões lentas ou dispositivos com pouca capacidade de processamento.
+Além disso, conforme apontam Souza et al. (2020), aplicativos de apoio à prática clínica devem não apenas apresentar informações confiáveis, mas também oferecer recursos de interação e personalização, que favoreçam o aprendizado ativo e a construção de confiança do profissional em sua atuação.
+Dessa forma, um aplicativo como o proposto neste trabalho, que visa tornar o conhecimento da acupuntura mais acessível, confiável e intuitivo, cumpre um papel social importante: reduzir desigualdades, promover a formação segura de profissionais, e, consequentemente, aumentar a qualidade do atendimento prestado à população.
+2.2 Tecnologias Digitais como Apoio à Formação e Prática Segura
+A utilização de tecnologias digitais aplicadas à saúde vem transformando não apenas os meios de acesso à informação, mas também a forma como os profissionais aplicam seu conhecimento na prática clínica. No campo da acupuntura, que exige domínio anatômico preciso e entendimento das interações energéticas do corpo humano, o uso de recursos visuais e interativos pode potencializar o aprendizado e a execução segura das técnicas.
+Segundo Moraes e Cabral (2020), o uso de aplicativos, plataformas interativas e realidade aumentada na educação em saúde estimula a aprendizagem significativa, reduz o tempo de assimilação de conteúdos complexos e melhora a retenção do conhecimento. No caso da acupuntura, isso se torna ainda mais relevante ao considerar que muitos dos pontos utilizados não são visíveis a olho nu, exigindo visualização em profundidade, correlação com estruturas internas e treino constante.
+Além disso, estudos como o de Oliveira et al. (2022) destacam que alunos e profissionais da área de terapias integrativas relataram maior segurança em suas práticas após utilizar aplicativos educativos que oferecem representações tridimensionais e localização anatômica de pontos de acupuntura.
+Portanto, investir no desenvolvimento de soluções digitais adaptadas à acupuntura não apenas moderniza o ensino, mas também amplia a segurança da prática clínica. Tais recursos são especialmente relevantes para estudantes em formação e profissionais em início de carreira, que frequentemente enfrentam dificuldades em aplicar corretamente os pontos e técnicas aprendidos de forma teórica.
+2.3 Aplicativos de Acupuntura: Experiências e Recursos Tecnológicos
+O desenvolvimento de tecnologias na área da saúde deve considerar mais do que apenas conteúdo técnico. A forma como o usuário interage com a interface, compreende as informações e se orienta dentro do aplicativo é determinante para a sua eficácia. No contexto da acupuntura — que envolve a localização precisa de pontos no corpo, o entendimento de trajetos de meridianos e a aplicação de protocolos — a usabilidade se torna um pilar essencial.
+De acordo com Norman (2013), um bom design deve “tornar possível o uso intuitivo”, ou seja, permitir que o usuário compreenda e utilize o sistema sem esforço cognitivo excessivo. Em aplicativos de saúde, isso significa que menus confusos, excesso de informações, termos técnicos não explicados ou falta de feedback visual comprometem a experiência do usuário e até mesmo colocam a segurança da prática em risco.
+A Organização Mundial da Saúde (OMS, 2020) recomenda que soluções tecnológicas em saúde digital adotem princípios de design centrado no usuário (DCU), considerando desde o início do desenvolvimento as reais necessidades, limitações e habilidades dos usuários. Isso é especialmente importante no caso de profissionais que atuam em contextos com restrições de tempo, estrutura ou formação técnica, como muitos terapeutas integrativos ou estudantes de cursos livres.
+Além disso, Ferreira et al. (2021) ressaltam que aplicativos com interfaces acessíveis e organizadas promovem maior retenção do conhecimento e reduzem erros clínicos, especialmente em áreas que exigem visualização corporal anatômica como a fisioterapia e a acupuntura.
+Por isso, o aplicativo proposto neste TCC prioriza:
+● Interfaces limpas e intuitivas;
+● Navegação fluida e segmentada por áreas do corpo;
+● Feedback visual ao selecionar pontos de acupuntura;
+● Compatibilidade com dispositivos móveis de diferentes capacidades;
+● Inclusão de recursos de busca inteligente, filtros por sintomas e suporte ao idioma
+técnico com explicações simplificadas.
+Esses elementos reforçam o compromisso com a acessibilidade e a segurança, pilares fundamentais quando se pensa em soluções tecnológicas que impactam diretamente a formação e atuação clínica dos profissionais da saúde.
+2.4 Comparativo com Aplicativos Existentes
+Atualmente, existem diversos aplicativos disponíveis na Play Store que buscam auxiliar estudantes e profissionais da área da acupuntura por meio de recursos visuais e informativos. No entanto, ao analisar criticamente essas soluções, é possível perceber limitações significativas que comprometem sua eficácia como ferramentas de apoio à prática clínica e ao aprendizado, especialmente no contexto brasileiro.
+O _Anatomy Learning_ , por exemplo, é um aplicativo renomado para o estudo da anatomia em 3D. Sua qualidade gráfica e riqueza de detalhes são inegáveis, porém o app não possui foco específico em acupuntura, o que o torna pouco funcional para quem busca compreender os pontos e os meridianos energéticos. Além disso, seu conteúdo é voltado a usuários com formação técnica mais avançada, o que pode representar uma barreira para estudantes de cursos livres ou profissionais de áreas menos técnicas. Outro ponto problemático é seu desempenho em dispositivos de menor capacidade, com relatos de travamentos e lentidão.
+Já o _Visual Acupuncture 3D_ apresenta um escopo mais próximo ao esperado, oferecendo visualização de pontos e meridianos. No entanto, peca em aspectos de usabilidade. A interface é considerada pouco intuitiva por muitos usuários, com menus confusos, poluição visual e falta de clareza nos textos. Esses fatores dificultam seu uso durante a prática clínica, especialmente em momentos em que o profissional precisa localizar rapidamente um ponto ou revisar um protocolo. Além disso, a ausência de suporte ao idioma português reduz sua acessibilidade para profissionais brasileiros.
+Outro aplicativo conhecido é o _Acupuncture 3D_ , que também disponibiliza visualizações anatômicas tridimensionais focadas em acupuntura. Entretanto, o aplicativo carece de atualizações e apresenta conteúdos desatualizados em relação às nomenclaturas e práticas adotadas no Brasil. Sua interface é rígida e limitada, com dificuldade de navegação e ausência de funcionalidades complementares como busca por sintomas, indicação de protocolos ou explicações detalhadas para aplicação dos pontos.
+Em contraste com essas soluções, o aplicativo proposto neste TCC se destaca por adotar uma abordagem centrada no usuário, com interface limpa, navegação fluida e foco na aplicação prática da acupuntura em contexto clínico. Ele foi pensado para funcionar bem mesmo em dispositivos mais simples, garantindo acessibilidade digital a um público mais amplo. Além disso, traz conteúdo em português, explicações didáticas e filtros de busca por sintomas, aproximando-se mais das reais necessidades dos profissionais e estudantes brasileiros da área.
+Essa comparação evidencia que, embora os aplicativos analisados ofereçam contribuições pontuais, nenhum deles contempla simultaneamente os pilares de acessibilidade, usabilidade, confiabilidade e contexto nacional. O desenvolvimento do aplicativo proposto surge, assim, como uma resposta direta às lacunas existentes no mercado digital de apoio à acupuntura, promovendo inclusão, segurança e aprimoramento profissional.
+2.5 Usabilidade e Design Centrado no Usuário
+Para que a tecnologia seja de fato acessível e eficaz, é essencial que siga princípios de usabilidade e design centrado no usuário. Nielsen (1994) define usabilidade como a capacidade de um sistema ser usado por seus usuários com eficiência, efetividade e satisfação. Esse conceito é especialmente importante em contextos de formação em saúde, onde a curva de aprendizado precisa ser suavizada.
+Segundo Siqueira et al. (2021), aplicações móveis voltadas para profissionais da saúde que incorporam princípios de design centrado no usuário têm maiores taxas de adesão e melhor impacto educacional. A adaptação do conteúdo conforme o perfil do usuário, como proposto no Appunture, está em consonância com o modelo de usabilidade responsiva, recomendado por padrões como a norma ISO/IEC 25010.
+2.6 Normas, Diretrizes e Evidências Científicas
+O desenvolvimento de soluções tecnológicas voltadas à saúde deve considerar diretrizes oficiais e evidências científicas. A OMS (1999) publicou um guia para treinamento e segurança em acupuntura, enfatizando a necessidade de padronização de pontos, técnicas de punção e biossegurança.
+Na área de software, normas como a ISO 9241-210 e a ISO/IEC 25010 orientam o desenvolvimento de interfaces acessíveis, seguras e eficientes, especialmente em sistemas críticos como os de saúde. A adoção dessas diretrizes no Appunture garante não apenas a funcionalidade, mas também a segurança e a confiabilidade da ferramenta.
+________________
+3 MOTIVAÇÕES
+O desenvolvimento do aplicativo _Appunture_ surge a partir de uma série de desafios estruturais enfrentados pela prática da acupuntura no Brasil. Estes desafios envolvem a regulamentação da profissão, a formação heterogênea dos profissionais, a fragilidade nos processos de fiscalização, os riscos à biossegurança e a complexidade diagnóstica da Medicina Tradicional Chinesa (MTC). A seguir, são apresentados os principais fatores motivadores que embasam a proposta deste projeto.
+3.1 Regulamentação e disputa de categorias profissionais
+A regulamentação da acupuntura no Brasil é um dos maiores entraves para sua prática estruturada e segura. Apesar de sua origem milenar na MTC e da crescente popularização a partir das décadas finais do século XX, ainda não há consenso nacional sobre quais categorias profissionais estão habilitadas a aplicar acupuntura. Isso tem gerado disputas entre conselhos de diferentes áreas, como medicina, fisioterapia, enfermagem, psicologia, odontologia e farmácia.
+Enquanto o Conselho Federal de Medicina (CFM) defende a acupuntura como especialidade médica, conselhos de outras áreas reconhecem a prática multiprofissional e regulamentam internamente sua atuação. Essa disputa tem gerado insegurança jurídica e limitações à atuação de profissionais devidamente capacitados, ao mesmo tempo em que abre espaço para práticas irregulares.
+A proposta do Projeto de Lei 5983/2019, atualmente em tramitação no Senado Federal, busca criar critérios nacionais para o exercício da acupuntura, independentemente da formação de base, desde que haja capacitação específica. Enquanto isso, soluções tecnológicas devem ser sensíveis a esse cenário, respeitando os limites legais e adaptando os conteúdos conforme o perfil profissional do usuário.
+3.2 Formação e fiscalização insuficientes
+A ausência de um conselho exclusivo e de uma legislação unificada gera uma lacuna na fiscalização da prática da acupuntura no Brasil. Muitos profissionais atuam com formações diversas, que vão desde cursos livres até especializações, sem uma padronização mínima nacional. Além disso, terapeutas que não estão vinculados a conselhos de classe podem atuar sem supervisão ou responsabilização adequada.
+Nesse contexto, um aplicativo como o _Appunture_ pode oferecer suporte educativo e técnico, contribuindo para o aperfeiçoamento de profissionais com diferentes formações. Por meio da diferenciação de perfis de usuários e de um sistema de conteúdos escalonados conforme a formação declarada, o aplicativo propõe uma experiência segura, ética e ajustada à realidade do usuário.
+3.3 Segurança do paciente e biossegurança
+A acupuntura, por envolver a inserção de agulhas no corpo humano, é considerada uma prática invasiva e requer protocolos rigorosos de biossegurança. A utilização inadequada de instrumentos ou a realização do procedimento por pessoas sem conhecimento técnico podem gerar complicações sérias, como infecções, lesões internas, hematomas e até pneumotórax.
+Casos documentados, como o de uma paciente hospitalizada após perfuração pulmonar em São Paulo, demonstram os riscos reais da má prática. Muitos desses casos ocorrem em ambientes informais ou com baixa qualificação técnica.
+A tecnologia pode ser uma aliada na disseminação de boas práticas. O aplicativo _Appunture_ fornece informações claras e baseadas em diretrizes de segurança da OMS, orientando sobre profundidade de pontuação, indicações, contra indicações e características especiais dos pontos, contribuindo para uma atuação mais segura e responsável.
+3.4 Diagnóstico energético: complexidade e subjetividade
+O raciocínio clínico na acupuntura, segundo os princípios da MTC, exige uma abordagem subjetiva e holística, muitas vezes desafiadora para iniciantes. Diagnósticos são baseados em padrões energéticos, observações da língua e do pulso, e uma análise minuciosa do estado geral do paciente.
+Diferentemente da medicina ocidental, não se trata apenas de associar um sintoma a uma causa direta, mas de identificar síndromes energéticas como estagnação de Qi, excesso de calor, umidade interna, entre outras. O mesmo sintoma, como dor abdominal, pode ter interpretações energéticas distintas, dependendo do conjunto de sinais apresentados.
+Nesse sentido, o aplicativo _Appunture_ atua como um apoio ao raciocínio clínico, fornecendo descrições de padrões, relações entre sintomas e síndromes e, inclusive, oferecendo um sistema de busca inteligente por sintomas com suporte de NLP (Processamento de Linguagem Natural) , que interpreta a linguagem do usuário e sugere os pontos mais indicados para o caso apresentado.
+Diante dos desafios regulatórios, formativos e clínicos que permeiam a prática da acupuntura no Brasil, torna-se essencial o desenvolvimento de ferramentas tecnológicas que aliem conhecimento técnico, segurança e acessibilidade. O _Appunture_ surge como resposta a essas motivações, buscando oferecer um recurso digital estratégico para fortalecer a prática da acupuntura com ética, qualidade e base científica.
+
+________________
+4 TECNOLOGIAS E ARQUITETURA DO SISTEMA
+Este capítulo apresenta o stack tecnológico utilizado no desenvolvimento do Appunture , detalhando a arquitetura do sistema , as tecnologias empregadas e as decisões técnicas que fundamentam a implementação da solução.
+4.1 Visão Geral da Arquitetura
+O Appunture foi desenvolvido seguindo uma arquitetura híbrida distribuída, composta por três camadas principais:
+* Aplicativo Móvel (React Native + Expo): Interface principal do usuário com
+capacidade offline completa
+* API Backend (Java + Spring Boot): Servidor de aplicação responsável pela
+lógica de negócio e sincronização
+* Interface Web Administrativa (React): Painel de administração para gestão de
+conteúdo
+Esta arquitetura garante alta disponibilidade, performance otimizada e experiência consistente mesmo em ambientes com conectividade limitada.
+4.1.1 Diagrama de Arquitetura
+A figura a seguir ilustra a arquitetura distribuída do sistema:
+(anexar)
+O Appunture foi desenvolvido seguindo uma arquitetura híbrida e modular, que integra funcionalidades offline e online para garantir alta disponibilidade, desempenho e usabilidade mesmo em ambientes com conexão limitada ou instável.
+4.2 Arquitetura Híbrida (Offline + Online)
+4.2.1 Funcionamento Offline Completo
+O aplicativo móvel foi projetado com estratégia offline-first , garantindo que todas as funcionalidades principais funcionem independentemente da conectividade:
+Banco de Dados Local (SQLite):
+* Armazena todos os 361 pontos de acupuntura dos meridianos principais
+* Contém pontos extras, sintomas e suas relações terapêuticas
+* Mantém favoritos e anotações do usuário
+* Estrutura otimizada para consultas rápidas
+Sistema de Cache Inteligente (MMKV):
+* Armazena configurações de usuário e estados da aplicação
+* Cache de imagens SVG e recursos visuais
+* Dados de sessão e preferências de interface
+* Performance até 30x superior ao AsyncStorage tradicional
+4.2.2 Sincronização Inteligente
+Quando conectado à internet, o sistema implementa sincronização bidirecional :
+Sincronização Descendente (Backend → Mobile):
+* Atualização automática de dados clínicos atualizados
+* Download incremental baseado em versionamento
+* Compressão de dados para otimizar transferência
+* Validação de integridade dos dados recebidos
+Sincronização Ascendente (Mobile → Backend):
+* Upload de favoritos e anotações do usuário
+* Backup automático de preferências
+* Logs de uso para análise de performance
+* Controle de conflitos com timestamp
+4.3 Stack Tecnológico Detalhado
+4.3.1 Frontend Mobile (React Native + Expo)
+React Native 0.72+:
+* Framework multiplataforma para desenvolvimento nativo
+* Arquitetura New Architecture (Fabric + TurboModules)
+* Performance otimizada com compilação ahead-of-time
+* Compatibilidade total com Android 8+ e iOS 12+
+Expo SDK 49+:
+* Plataforma de desenvolvimento que acelera o ciclo de build
+* Facilita deployment e distribuição nas lojas
+* Suporte nativo para câmera, armazenamento e notificações
+* Over-the-air updates para atualizações sem app store
+Expo Router (File-based Routing):
+* Sistema de navegação automático baseado na estrutura de pastas
+* Suporte nativo para deep linking
+* Navegação por stack, tabs e modal
+* TypeScript support completo
+4.3.2 Backend API (Java + Spring Boot)
+Java 17 LTS:
+* Linguagem robusta, fortemente tipada e de alta performance
+* Amplamente utilizada em sistemas corporativos e de saúde
+* Ecossistema maduro com bibliotecas para segurança e integração
+* Suporte a multithreading e processamento concorrente eficiente
+Spring Boot 3.2+:
+* Framework que simplifica o desenvolvimento de aplicações Java
+* Arquitetura baseada em injeção de dependência e inversão de controle
+* Integração nativa com Spring Security e serviços Google Cloud
+* Actuator para monitoramento e métricas de produção
+Autenticação Firebase + Spring Security:
+* Integração com Firebase Authentication para gestão de identidades
+* Validação de tokens JWT no backend via Spring Security
+* Controle de acesso baseado em roles (RBAC)
+* Segurança robusta e escalável gerenciada pelo Google
+4.3.3 Banco de Dados
+SQLite (Mobile - Local):
+* Banco relacional embarcado de alta performance
+* Zero configuração e manutenção
+* ACID compliance para integridade dos dados
+* Suporte completo para consultas SQL complexas
+* Tamanho reduzido (< 1MB) ideal para mobile
+Google Cloud Firestore (Backend - Remoto):
+* Banco de dados NoSQL flexível, escalável e de alta performance
+* Sincronização em tempo real e suporte offline nativo
+* Modelo de dados baseado em documentos e coleções
+* Integração perfeita com o ecossistema Firebase e Google Cloud
+* Consultas expressivas e indexação automática
+4.3.4 Interface Web Administrativa (React)
+React 18+ com TypeScript:
+* Biblioteca para interfaces reativas e componentizadas
+* Hooks para gerenciamento de estado eficiente
+* Server-side rendering com Next.js
+* Component library customizada baseada em Material-UI
+Funcionalidades Administrativas:
+* CRUD completo de pontos de acupuntura
+* Upload e mapeamento de coordenadas SVG
+* Gestão de sintomas e relações terapêuticas
+* Dashboard com métricas de uso
+* Sistema de permissões granular
+4.4 Processamento de Linguagem Natural (NLP) Local
+4.4.1 Motor de Busca Inteligente
+Fuse.js (Fuzzy Search):
+* Algoritmo de busca tolerante a erros de digitação
+* Score de similaridade configurável
+* Suporte para múltiplos campos de busca simultânea
+* Performance otimizada para datasets de tamanho médio
+Pipeline de Processamento:
+O sistema implementa um pipeline de processamento de linguagem natural que inclui:
+(complementar)
+4.4.2 Base de Conhecimento
+Mapeamento Sintoma-Ponto:
+* Base com mais de 500 sintomas comuns mapeados
+* Sinônimos e variações linguísticas incluídas
+* Peso terapêutico baseado em evidências clínicas
+* Suporte para combinações de sintomas
+4.5 Tecnologias de Suporte e Desenvolvimento
+4.5.1 Gerenciamento de Estado
+Zustand (Estado Global):
+* Biblioteca de estado minimalista e performática
+* TypeScript-first com inferência automática
+* Persist middleware para sincronização com storage local
+* DevTools integration para debug
+React Query (Gerenciamento de Dados):
+* Cache inteligente de requisições HTTP
+* Invalidação automática e refetch estratégico
+* Estados de loading, error e success padronizados
+* Offline support com background sync
+
+
+5 METODOLOGIA
+Este capítulo apresenta as metodologias e ferramentas utilizadas para o desenvolvimento do aplicativo Appunture, abrangendo desde as práticas de gerenciamento de projeto até as técnicas de modelagem e as tecnologias empregadas na implementação da solução.
+5.1 METODOLOGIA DE DESENVOLVIMENTO
+“A engenharia de software é uma disciplina tecnológica que se preocupa com todos os aspectos da produção de software.” (PRESSMAN, 2016, p. 31)
+Seguindo os princípios da engenharia de software moderna, buscou-se conciliar qualidade técnica e valor prático, conforme destaca Pressman (2016), ao afirmar que o software deve ser desenvolvido de forma disciplinada, mas adaptável às necessidades do projeto. A metodologia permitiu ajustes rápidos com base em testes reais, além de facilitar a manutenção e escalabilidade da aplicação.
+5.1.1 Scrum
+Para a gestão do desenvolvimento do aplicativo _Appunture_ , optou-se pela utilização do Scrum , um framework ágil amplamente adotado em projetos de software devido à sua flexibilidade e capacidade de adaptação a contextos complexos.
+Conforme Schwaber e Sutherland (2020, p. 4), o Scrum é "um framework leve que ajuda pessoas, times e organizações a gerar valor por meio de soluções adaptativas para problemas complexos". Ele permite organizar o trabalho de maneira iterativa e incremental, promovendo entregas frequentes e contínua melhoria do produto.
+Durante a construção do _Appunture_ , adotaram-se ciclos de desenvolvimento quinzenais (Sprints), nos quais o time planejava, desenvolvia e entregava partes funcionais da aplicação. Essa prática segue o conceito apresentado por Sutherland (2014, p. 15), segundo o qual “a definição de objetivos sequenciais que devem ser concluídos em um período definido” favorece foco, previsibilidade e evolução do produto.
+Cada ciclo se iniciava com uma Sprint Planning , onde era definido o backlog da sprint — uma lista priorizada de funcionalidades e correções a serem entregues. O time se organizava de forma autogerenciada, decidindo coletivamente “quem faria o quê, como e quando”, respeitando a autonomia e a responsabilidade individual de cada membro da equipe (SCHWABER; SUTHERLAND, 2020).
+No contexto deste projeto foram definidos os seguintes papéis:
+   * Cliente e Orientador: Prof. Dr. Paulo Eduardo Sobreira Moraes
+   * Product Owner : Bruno Brugnerotto de Lara - Scrum Master: Gabriel
+Francelino Voidaleski
+- Desenvolvedor: Pedro Henrique Lopes
+
+Os eventos de Daily Scrum foram adaptados para ocorrer semanalmente,
+considerando a disponibilidade da equipe envolvida no projeto. Já o evento de Sprint Retrospective foi mantido ao final de cada sprint, promovendo momentos de reflexão e melhoria contínua do processo de desenvolvimento. O planejamento das sprints é apresentado no Quadro 1, que descreve a organização do cronograma ao longo das 16 semanas previstas para a execução do projeto, divididas em ciclos quinzenais. As histórias de usuário foram distribuídas de acordo com a relevância funcional, o grau de complexidade e o tempo estimado para sua implementação.
+A maioria das sprints ocorreu conforme o cronograma, e todas as funcionalidades inicialmente planejadas foram entregues. O caráter iterativo e adaptativo do Scrum permitiu ajustes pontuais, garantindo flexibilidade diante de imprevistos ou mudanças de prioridade. Ao final de cada ciclo, realizava-se uma apresentação das funcionalidades concluídas e alinhava-se o escopo da sprint seguinte. 
+        Essa dinâmica favoreceu a organização das tarefas, aumentou a produtividade da equipe e assegura maior controle sobre o progresso do projeto. Com a conclusão do desenvolvimento e a entrega de todas as funcionalidades propostas, é possível afirmar que o uso do Scrum contribuiu significativamente para a eficiência do projeto. O framework auxiliou na definição clara dos objetivos e prazos, promovendo um desenvolvimento mais ágil, estruturado e colaborativo.
+
+QUADRO 1 - SPRINTS DE DESENVOLVIMENTO
+Sprint Semana PF Entregas Planejadas
+Sprint 1 0–1 4 Setup do projeto, autenticação, rotas iniciais
+Sprint 2 2–3 8 Login/registro, persistência de token, navegação protegida
+Sprint 3 4–5 10 Busca por sintomas com NLP, exibição de resultados
+Sprint 4 6–7 10 Tela de resultados com imagens + início da tela de detalhes
+Sprint 5 8–9 10 Tela de corpo humano com SVG interativo
+Sprint 6 10–11 10 Favoritos, anotações, sincronização offline e online
+Sprint 7 12–13 12 Backend completo + painel administrativo com upload de SVG
+Sprint 8 14–15 0 Testes finais, deploy mobile/web
+
+5.2 MODELAGEM DO PROJETO
+A modelagem é uma etapa fundamental no desenvolvimento de sistemas, pois proporciona uma representação visual da estrutura e do comportamento da aplicação. Segundo Booch, Rumbaugh e Jacobson (2005), empresas que entregam sistemas de qualidade e atendem às necessidades dos usuários são aquelas que compreendem a importância da modelagem desde os estágios iniciais do projeto.
+No desenvolvimento do aplicativo Appunture, a modelagem permitiu visualizar de forma macro os elementos do sistema, facilitando a compreensão das funcionalidades e dos fluxos de dados. Como destacam os autores Booch, Rumbaugh e Jacobson (2005), a construção de diagramas é essencial em sistemas orientados a objetos, pois oferece clareza sobre a estrutura e o funcionamento do software. Para isso, foi utilizada a UML (Unified Modeling Language) como linguagem padrão, uma vez que, de acordo com os mesmos autores, trata-se de uma abordagem consolidada e amplamente adotada para representar graficamente os componentes e relações de um sistema. A UML foi essencial para descrever os casos de uso, classes, atividades e interações do aplicativo, garantindo maior controle e alinhamento durante todas as etapas do desenvolvimento.
+
+5.2.1 Diagrama de casos de uso
+Enquanto o diagrama de classes oferece uma perspectiva estrutural do sistema, representando seus componentes de forma estática, ele não contempla a dinâmica das interações entre os elementos. Segundo Pressman (2011), é por meio dos diagramas de casos de uso que se visualiza como os usuários interagem com as funcionalidades do sistema, sendo uma ferramenta fundamental na modelagem orientada a objetos.
+No projeto Appunture, o diagrama de casos de uso foi elaborado com o objetivo de representar os diferentes perfis de usuários — como profissionais da saúde, administradores e desenvolvedores — e suas respectivas interações com o aplicativo. Esse diagrama fornece uma visão geral das funcionalidades previstas, sendo essencial para validar requisitos e auxiliar no planejamento das sprints de desenvolvimento.
+O Diagrama de Casos de Uso do sistema Appunture apresenta os seguintes casos principais:
+
+   * UC01 - Realizar Login: O usuário pode se autenticar no sistema 
+   * UC02 - Realizar Cadastro: Novos usuários podem criar conta
+   * UC03 - Buscar Pontos: Busca por pontos usando critérios diversos
+   * UC04 - Visualizar Mapa Corporal: Interação com modelo anatômico SVG
+   * UC05 - Consultar Detalhes do Ponto: Visualizar informações completas
+   * UC06 - Gerenciar Favoritos: Adicionar/remover pontos favoritos
+   * UC07 - Fazer Anotações: Criar notas personalizadas
+   * UC08 - Busca por Sintomas: Utilizar chatbot com NLP
+   * UC09 - Sincronizar Dados: Upload/download de dados do servidor
+   * UC10 - Administrar Sistema: Gestão de conteúdo (apenas admin)
+   * UC11 - Controlar Usuários: Gerenciar contas de usuários e verificar perfis (apenas admin)
+   * UC12 - Visualizar Analytics: Analisar métricas de uso e relatórios (apenas admin)
+   * UC13 - Upload Imagens SVG: Fazer upload e mapear coordenadas dos pontos em SVGs (apenas admin)
+
+5.2.2 Histórias de usuário
+A prática de expressar requisitos por meio de histórias surgiu no contexto do desenvolvimento ágil, mais especificamente no processo Extreme Programming, conforme introduzido por Beck (2001). As histórias de usuário consistem em descrições concisas de funcionalidades escritas sob a ótica do próprio usuário, facilitando a comunicação entre a equipe de desenvolvimento e os stakeholders.
+Segundo Bernardo (2014), a principal característica dessas histórias está na simplicidade e objetividade, permitindo que necessidades do cliente sejam descritas de forma clara e centrada em valor. No desenvolvimento do aplicativo Appunture, as funcionalidades foram documentadas com base nessa abordagem, sendo cada história composta por:
+      * Um título identificador da necessidade;
+      * Uma descrição no formato: SENDO (perfil), QUERO (função) PARA (objetivo);
+E seus respectivos critérios de aceitação, que, conforme Cohn (2004), "definem os limites de uma história de usuário, sendo usados para confirmar quando uma história está concluída e funcionando como esperado".
+As histórias estão organizadas por perfis de uso — usuários, administradores e desenvolvedores — e orientaram o planejamento das funcionalidades nas sprints do projeto. Abaixo, são descritas as principais:
+
+      1. Como usuário, desejo consultar pontos de acupuntura interativamente em um
+corpo humano, para localizar facilmente a região desejada.
+● Critérios de aceitação:
+○Deve ser possível tocar/clicar no ponto anatômico e acessar seus detalhes.
+○ Deve haver destaque visual nos pontos ativos do corpo.
+      2. Como usuário, desejo buscar pontos por nome, localização, meridiano ou função
+terapêutica, para encontrar informações de forma rápida.
+● Critérios:
+○ Deve aceitar buscas por texto.
+○ A pesquisa deve filtrar e exibir resultados dinâmicos.
+      3. Como usuário, desejo filtrar pontos com base em sintomas que estou tratando
+(ex: “ansiedade” + “insônia”), para encontrar sugestões apropriadas.
+● Critérios:
+○ Deve aceitar múltiplos sintomas.
+○ Deve retornar pontos relacionados por frequência de uso clínico.
+      4. Como usuário, desejo visualizar informações detalhadas sobre cada ponto,
+incluindo profundidade, punção, características especiais e funções.
+● Critérios:
+○ Todas as informações devem estar organizadas em seções.
+○ Imagens e descrições devem estar disponíveis offline.
+      5. Como usuário, desejo usar o app sem internet, para ter acesso ao conteúdo mesmo em locais sem sinal.
+● Critérios:
+○ O app deve funcionar com banco local.
+○ Ao conectar-se, os dados são sincronizados com o backend.
+      6. Como usuário, desejo registrar uma conta e fazer login, para salvar minhas
+preferências e histórico.
+● Critérios:
+○ Deve permitir login com email/senha.
+○ O app deve diferenciar usuários por tipo (ex: estudante, profissional etc.).
+      7. Como usuário, desejo usar um chatbot para descrever meus sintomas com
+linguagem natural, para receber recomendações automáticas.
+● Critérios:
+○ Deve funcionar offline com NLP básico.
+○ Quando online, pode usar IA remota para sugestões mais inteligentes.
+      8. Como administrador, desejo acessar o painel web, para visualizar e gerenciar os dados do aplicativo.
+● Critérios:
+○ Login restrito ao perfil administrador.
+○ Interface adaptada para desktop.
+      9. Como administrador, desejo cadastrar e editar pontos de acupuntura, para manter o banco de dados atualizado.
+● Critérios:
+○ Deve permitir adicionar nome, descrição, localização, meridiano, imagem etc.
+○ Interface amigável com validação dos campos.
+      10. Como administrador, desejo consultar relatórios de uso, para entender como os usuários estão utilizando a plataforma.
+● Critérios:
+○ Relatórios por data, localização, pontos mais acessados.
+○ Visualização em gráfico ou tabela.
+      11. Como administrador, desejo importar/exportar dados dos pontos via CSV ou JSON, para facilitar atualizações em lote.
+● Critérios:
+○ Deve permitir upload e download estruturado.
+○ Deve validar dados antes de aplicar mudanças.
+      12. Como desenvolvedor, desejo que o banco local sincronize com o banco remoto ao detectar conexão, para garantir que os dados estejam sempre atualizados.
+      13. Como desenvolvedor, desejo que o sistema de busca aceite variações e erros de digitação, para melhorar a experiência de uso.
+● Critérios:
+○ Suporte a fuzzy search ou NLP simples local.
+○ Sugestões automáticas de correção.
+      14. Como desenvolvedor, desejo garantir que cada tipo de usuário tenha permissões específicas, para proteger dados sensíveis.
+● Critérios:
+○ Sistema de autenticação com diferenciação de papéis.
+○ Restrições de acesso por tipo de conta.
+
+5.2.3 Diagrama físico do banco de dados
+O diagrama físico de banco de dados é uma representação detalhada das tabelas que compõem o sistema, incluindo seus atributos, tipos de dados, chaves primárias e estrangeiras. Conforme observado por Molina et al. (2009), esse tipo de modelagem visa representar a estrutura real de armazenamento da informação, sendo vital para a implementação correta de um banco de dados relacional.
+Para o Appunture, o diagrama físico foi desenvolvido com base no diagrama de classes UML, refletindo tanto o banco de dados local (SQLite), utilizado para acesso offline no dispositivo móvel, quanto o banco remoto (Firestore), hospedado no backend acessado via API. Essa abordagem híbrida permite sincronização de dados e garante a continuidade do uso mesmo em ambientes sem conexão com a internet.
+Segundo Lobo (2009), os diagramas físicos ajudam a simplificar a visualização das operações do sistema ao descreverem claramente os relacionamentos entre tabelas, bem como os dados que cada uma armazena. Essa clareza foi essencial para garantir a integridade dos dados e o correto funcionamento das funcionalidades do aplicativo, como buscas, filtros por sintomas e sincronização de informações.
+5.3 Product Backlog
+ID Item do Backlog Plataforma PF Prioridade Descrição resumida
+1 Setup do projeto e bibliotecas iniciais
+Todas 3 Alta Configuração de
+ambiente, ESLint,
+Expo, libs principais
+2 Sistema de navegação (tabs, stack, rotas protegidas)
+Mobile/Web 5 Alta Estrutura de
+navegação entre telas
+e rotas protegidas
+3 Tela de login e registro com autenticação JWT
+Todas 5 Alta Fluxo completo de
+autenticação com
+backend
+4 Tela de busca com filtro por sintomas ou nome de ponto
+Mobile/Web 8 Alta Campo de busca com
+autocomplete, fuzzy
+matching
+5 Chatbot local com NLP + fuzzy search (Fuse.js)
+Mobile
+(offline)
+6 Alta Interpreta sintomas
+digitados e sugere
+pontos
+6 Tela de resultados com lista de pontos filtrados
+Mobile/Web 8 Alta Exibe pontos com
+imagens resumidas e
+opções
+7 Tela do corpo humano com hotspots interativos (SVG)
+Mobile 14 Alta Imagem interativa
+com clique nos pontos
+mapeados
+8 Tela de detalhes de um ponto
+Mobile/Web 6 Média Mostra nome,
+funções, indicações,
+punção,
+contraindicações
+9 Funcionalidade de favoritar pontos
+Mobile
+(sync)
+3 Média Salvar/remover ponto
+como favorito
+localmente
+10 Anotações personalizadas por ponto
+Mobile
+(sync)
+3 Média Campo de texto salvo
+localmente com
+opção de edição
+11 Banco de dados local (SQLite/MMKV) + mecanismo de versionamento de dados
+Mobile 4 Alta Armazena pontos e
+sintomas localmente,
+com controle de
+versão
+12 Sistema de sincronização (favoritos, anotações)
+Mobile →
+Backend
+6 Alta Envia dados locais
+não sincronizados
+quando online
+13 Backend RESTful (Java Firestore + JWT)
+Backend 5 Alta CRUD de usuários,
+pontos, sintomas e
+sincronização
+14 CRUD completo de pontos e sintomas (admin)
+Web +
+Backend
+6 Alta Interface de gestão
+dos dados clínicos do
+app
+15 Upload de imagens SVG e definição de coordenadas
+Web Admin 3 Média Ferramenta para
+mapeamento visual
+dos pontos no SVG
+16 Controle de acesso por perfil (user/admin)
+Todas 3 Alta Restringe conteúdo
+sensível por tipo de
+usuário
+17 Deploy e testes finais (Web Mobile)
+Todas 5 Média Testes, gravação de
+vídeo demo, entrega
+em loja/testflight
+
+5.4 Planejamento de Sprints
+O desenvolvimento do Appunture foi estruturado com base na metodologia SCRUM , dividindo o projeto em 8 sprints quinzenais , ao longo de aproximadamente 15 semanas de trabalho efetivo. Cada sprint contempla entregas incrementais de funcionalidades, priorizando valor de uso e estrutura progressiva do sistema.
+A equipe de desenvolvimento é composta por três integrantes , com disponibilidade média de 4,5 horas semanais por pessoa, totalizando 13,5 horas por semana , ou 27 horas por sprint. Dessa forma, o tempo estimado total do projeto é de aproximadamente 202,5 horas.
+5.4.1 Estimativa Geral por Pontos de Função (PF)
+Abaixo está a distribuição das estimativas por funcionalidade:
+Funcionalidade Estimativa (PF)
+Tela de busca com filtro por sintomas/finalidade 8
+Tela de resultados com imagens 8
+Tela do corpo humano com hotspots interativos (SVG) 14
+Tela de detalhes de um ponto 6
+Funcionalidade de favoritos e anotações 6
+Backend com autenticação e CRUD de pontos/sintomas 8
+Painel administrativo para cadastro e upload de imagens
+SVG
+4
+Sistema de sincronização (SQLite ↔ Backend) 6
+Sistema de navegação e layout geral 5
+Deploy, testes finais e refinos 5
+Integração do Chatbot local com NLP offline 6
+Total Estimado 72 PF
+5.4.2 Cálculo de Esforço
+● Tempo disponível por sprint :
+3 pessoas × 4,5 h/semana × 2 semanas = 27 horas/sprint
+● Tempo total estimado :
+15 semanas × 13,5 h/semana = 202,5 horas
+● Total de Pontos de Função estimado :
+72 PF , distribuídos ao longo de 7 sprints + 1 sprint de buffer
+Essa estimativa garante que as entregas sejam compatíveis com a capacidade da equipe, permitindo uma margem de segurança adequada para ajustes, testes finais e documentação durante o Sprint 8 (Buffer).
+
+5.3 FERRAMENTAS DE DESENVOLVIMENTO
+Nesta seção estão descritas as diferentes ferramentas que, juntas, viabilizaram a construção e o desenvolvimento do aplicativo Appunture.
+5.3.1 React Native
+React Native é um framework de desenvolvimento móvel criado pelo Facebook em 2015, que permite criar aplicações nativas para iOS e Android usando JavaScript e React. Segundo a documentação oficial (REACT NATIVE, 2023), "React Native combina as melhores partes do desenvolvimento nativo com React, uma biblioteca JavaScript de ponta para construção de interfaces de usuário".
+O framework foi escolhido para este projeto por permitir desenvolvimento multiplataforma com alta performance, reduzindo significativamente o tempo de desenvolvimento e manutenção. A arquitetura bridge do React Native permite que o código JavaScript se comunique diretamente com componentes nativos das plataformas.
+5.3.2 Expo
+Expo é uma plataforma de código aberto para criar aplicações React Native universais. Segundo a documentação (EXPO, 2023), "Expo é um conjunto de ferramentas e serviços construídos em torno do React Native que ajuda você a desenvolver, construir, implementar e iterar rapidamente em aplicações iOS, Android e web".
+A escolha do Expo se deu pela facilidade de configuração do ambiente de desenvolvimento, capacidade de testar aplicações em dispositivos reais através do Expo Go, e pelos serviços integrados como EAS Build para compilação na nuvem.
+5.3.3 Java
+Java é uma linguagem de programação orientada a objetos, robusta e segura, amplamente utilizada no desenvolvimento de sistemas corporativos. Segundo Deitel e Deitel (2017), "Java é a linguagem de programação mais popular do mundo, permitindo o desenvolvimento de aplicações seguras, portáveis e de alto desempenho".
+Para o backend do Appunture, Java foi escolhido por sua tipagem estática, que previne erros em tempo de compilação, e por sua robustez no tratamento de regras de negócio complexas e integrações com serviços em nuvem.
+5.3.4 Spring Boot
+Spring Boot é um framework que facilita a criação de aplicações baseadas em Spring autônomas e de nível de produção. Segundo Walls (2016), "Spring Boot muda a forma como desenvolvemos aplicações Spring, oferecendo configuração automática e eliminando a necessidade de configurações XML complexas".
+O Spring Boot foi adotado no projeto por sua capacidade de acelerar o desenvolvimento, integração nativa com serviços do Google Cloud (como Firestore e Firebase), e por fornecer recursos prontos para segurança (Spring Security) e monitoramento.
+5.3.5 Google Cloud Firestore
+O Firestore é um banco de dados NoSQL flexível e escalável para desenvolvimento móvel, web e de servidor, oferecido pelo Google Cloud Platform. Segundo a documentação oficial (GOOGLE, 2023), "o Firestore mantém seus dados em sincronia entre aplicativos clientes através de ouvintes em tempo real e oferece suporte offline para dispositivos móveis e web".
+Para o Appunture, o Firestore foi escolhido por sua estrutura de documentos flexível, ideal para armazenar dados hierárquicos de pontos de acupuntura, e por sua integração nativa com o ecossistema Firebase, simplificando a autenticação e o armazenamento de arquivos.
+5.3.6 SQLite
+SQLite é um mecanismo de banco de dados SQL embutido, que não requer servidor separado ou configuração. Segundo Kreibich (2010), "SQLite é uma biblioteca de software que implementa um mecanismo de banco de dados SQL transacional, autônomo, sem servidor e de configuração zero".
+No aplicativo móvel Appunture, SQLite foi implementado para garantir funcionamento offline completo, armazenando localmente todos os pontos de acupuntura, sintomas e dados do usuário, permitindo consultas rápidas mesmo sem conexão com a internet.
+________________
+
+
+6 APRESENTAÇÃO DO SISTEMA
+Neste capítulo o Appunture é apresentado, pontuando os aspectos técnicos e as funcionalidades que constituem a aplicação.
+6.1 Arquitetura do Sistema
+O Appunture foi desenvolvido seguindo uma arquitetura híbrida e modular que integra funcionalidades offline e online para garantir alta disponibilidade, desempenho e usabilidade mesmo em ambientes com conexão limitada ou instável. A arquitetura se divide em três módulos principais: aplicativo móvel (React Native/Expo), backend (Java + Spring Boot) e painel administrativo web (React).
+6.1.1 Arquitetura Híbrida (Offline + Online)
+No núcleo do aplicativo móvel, o Appunture utiliza um banco de dados local SQLite para armazenar informações clínicas essenciais, incluindo os 361 pontos dos meridianos principais, pontos extras, sintomas, relações terapêuticas, favoritos e anotações do usuário. Esta abordagem garante que o aplicativo funcione integralmente em modo offline, permitindo consultas rápidas e uso em campo, sem depender da conexão com a internet.
+Quando a conexão estiver disponível, o sistema realiza sincronizações automáticas e seguras com um backend remoto, desenvolvido em Java com Spring Boot, que hospeda o banco de dados Firestore centralizado. Esta sincronização atualiza dados clínicos, envia registros do usuário e mantém o histórico sempre preservado e atualizado.
+6.1.2 Comunicação e Sincronização
+A comunicação entre o app e o backend é realizada via API RESTful, utilizando autenticação Firebase/JWT para controle seguro de acesso. O backend disponibiliza endpoints públicos para consulta de dados clínicos e endpoints privados para operações que envolvem dados do usuário, como sincronização e autenticação.
+A sincronização implementa um mecanismo de controle de versões dos dados clínicos para evitar downloads desnecessários e garantir que o aplicativo trabalhe sempre com as informações mais recentes. O processo ocorre automaticamente em background sempre que uma conexão de internet é detectada
+6.1.3 Processamento Local de Linguagem Natural (NLP)
+Para viabilizar a busca inteligente por sintomas mesmo offline, o aplicativo incorpora um módulo local de processamento de linguagem natural (NLP), que utiliza técnicas de normalização textual, remoção de stopwords e busca difusa (fuzzy search) com a biblioteca Fuse.js. Este sistema permite interpretar entradas do usuário em linguagem natural, incluindo correções automáticas de erros de digitação, e mapear sintomas a pontos de acupuntura clinicamente indicados.
+6.1.4 Interface Interativa e Navegação
+A interface do app é construída para promover uma experiência intuitiva e visualmente rica, com mapas anatômicos interativos baseados em SVG, que possibilitam a interação direta com os pontos de acupuntura. A navegação é estruturada para facilitar o acesso rápido às principais funcionalidades, como busca, visualização detalhada, favoritos e anotações, promovendo fluidez e usabilidade.
+6.1.5 Backend e Web Admin
+O backend centraliza a gestão dos dados oficiais, incluindo o cadastro e atualização dos pontos, sintomas e suas relações. Uma interface administrativa web, desenvolvida em React, permite que gestores e especialistas mantenham o conteúdo sempre atualizado, garantindo a qualidade e a segurança das informações disponíveis no app.
+6.2 AUTENTICAÇÃO E SEGURANÇA
+Para garantir a segurança dos usuários e a integridade dos dados, o sistema implementa um robusto mecanismo de autenticação. As senhas informadas durante o cadastro passam pelo algoritmo bcrypt, um método de criptografia unidirecional que transforma a senha em hash antes do armazenamento no banco de dados, evitando que informações sensíveis sejam salvas como texto puro.
+Durante o processo de login, a senha enviada pelo usuário passa pelo mesmo algoritmo, e o hash resultante é comparado ao hash armazenado, definindo o sucesso ou falha da autenticação. A resposta de sucesso gera um token JWT assinado com o algoritmo HMAC SHA-256, que é utilizado para manter a sessão do usuário.
+A sessão é gerenciada pelo aplicativo móvel, que armazena o token no storage local do dispositivo. Desta forma, o usuário permanece logado mesmo após fechar e reabrir o aplicativo. A cada interação que requer comunicação com o backend, o token é enviado via cabeçalho HTTP para validação e controle de acesso.
+
+6.3 FUNCIONALIDADES DO SISTEMA
+6.3.1 Tela Inicial e Onboarding
+Quando o usuário inicia a utilização do aplicativo pela primeira vez, é apresentada uma sequência de telas de apresentação (onboarding) que explicam as principais funcionalidades e benefícios do Appunture. Esta experiência introdutória inclui informações sobre o uso offline, a busca inteligente, os mapas anatômicos interativos e os diferentes perfis de usuário disponíveis.
+Na tela inicial, o usuário pode escolher entre realizar o processo de cadastro ou direcionar-se diretamente para a tela de login. O design foi pensado para transmitir profissionalismo e confiança, utilizando a identidade visual do projeto com cores que remetem à medicina tradicional chinesa e à modernidade tecnológica.
+6.3.2 Cadastro e Perfis de Usuário
+A tela de cadastro permite que diferentes tipos de profissionais da saúde se registrem no sistema, incluindo médicos, fisioterapeutas, terapeutas, enfermeiros, estudantes e outros profissionais relacionados. É fundamental destacar que durante o cadastro, o usuário deve informar seu perfil profissional, pois esta informação é utilizada para adaptar o conteúdo apresentado conforme o nível de formação e os limites éticos e legais de cada profissão.
+O sistema implementa diferentes níveis de acesso baseados no perfil declarado:
+      * Profissionais médicos: acesso completo a todas as informações clínicas
+      * Fisioterapeutas e terapeutas: acesso a conteúdos específicos de sua área
+      * Estudantes: acesso a conteúdos educativos com enfoque didático
+      * Outros profissionais: acesso personalizado conforme a regulamentação da
+categoria
+6.3.3 Tela Principal e Navegação
+Após a autenticação, a tela principal do aplicativo apresenta uma interface limpa e intuitiva, com acesso direto às principais funcionalidades: visualização do corpo humano interativo, busca por pontos, busca por sintomas via chatbot, favoritos e configurações pessoais.
+A navegação é estruturada através de uma barra inferior com ícones que facilitam o acesso às diferentes seções:
+      * Ícone de corpo humano: acesso ao mapa anatômico interativo
+      * Ícone de busca: tela de busca avançada por critérios múltiplos
+      * Ícone de chatbot: assistente inteligente para busca por sintomas
+      * Ícone de coração: lista de pontos favoritos salvos pelo usuário
+      * Ícone de usuário: perfil, configurações e sincronização
+6.3.4 Mapa Anatômico Interativo
+A funcionalidade principal do Appunture é a visualização interativa do corpo humano através de mapas anatômicos em SVG de alta qualidade. O usuário pode navegar por diferentes vistas (anterior, posterior, lateral) e interagir diretamente com os pontos de acupuntura marcados na interface.
+Cada ponto é representado por um marcador visual clicável que, quando acionado, exibe informações básicas em um tooltip e permite acesso aos detalhes completos. A
+interface utiliza diferentes cores e tamanhos para destacar pontos de acordo com sua importância clínica e frequência de uso.
+O sistema também permite a visualização de meridianos completos, onde o usuário pode selecionar um meridiano específico e ver todos os seus pontos destacados no corpo, facilitando o aprendizado das relações energéticas entre os pontos.
+6.3.5 Detalhes dos Pontos de Acupuntura
+Ao clicar em um ponto específico, seja no mapa anatômico ou nos resultados de busca, o usuário é direcionado para a tela de detalhes completos do ponto. Esta tela apresenta informações organizadas em seções claras:
+      * Identificação: nome em português, chinês (pinyin), código e meridiano
+      * Localização anatômica: descrição precisa da localização no corpo
+      * Funções energéticas: ações segundo a Medicina Tradicional Chinesa
+      * Indicações clínicas: sintomas e condições tratáveis
+      * Técnica de punção: profundidade, direção e cuidados especiais
+      * Contraindicações: situações em que o ponto não deve ser utilizado
+      * Evidências científicas: estudos e referências quando disponíveis
+As informações são adaptadas conforme o perfil do usuário, garantindo que conteúdos técnicos específicos sejam apresentados apenas para profissionais qualificados.
+6.3.6 Sistema de Busca Inteligente
+O Appunture oferece múltiplas formas de busca para facilitar o acesso às informações:
+Busca Textual Tradicional: Campo de busca que aceita nomes de pontos, meridianos, sintomas ou palavras-chave. O sistema utiliza fuzzy search para corrigir erros de digitação e encontrar resultados mesmo com grafia incorreta.
+Busca por Filtros: Interface avançada que permite combinar múltiplos critérios:
+      * Meridiano específico
+      * Região corporal
+      * Tipo de indicação (dor, distúrbios emocionais, problemas digestivos, etc.)
+      * Técnica de punção
+      * Contraindicações específicas
+Os resultados são apresentados em lista organizada por relevância, com opções de ordenação por nome, localização ou frequência de uso clínico.
+6.3.7 Chatbot com Processamento de Linguagem Natural
+Uma das funcionalidades do Appunture é o chatbot inteligente que permite ao usuário descrever sintomas em linguagem natural e receber sugestões de pontos de acupuntura apropriados. O sistema funciona offline utilizando processamento local de linguagem natural.
+O usuário pode descrever sintomas como "dor de cabeça do lado direito com náusea" ou "ansiedade e insônia há várias semanas", e o sistema interpreta a entrada, identifica os sintomas-chave e sugere os pontos mais indicados baseado em evidências clínicas e práticas tradicionais.
+O chatbot também oferece perguntas de esclarecimento para refinar as sugestões: "A dor de cabeça é pulsátil ou constante?", "A ansiedade está relacionada a algum período específico do dia?". Estas interações melhoram a precisão das recomendações.
+6.3.8 Sistema de Favoritos e Anotações Pessoais
+Os usuários podem marcar pontos como favoritos para acesso rápido posterior, criando listas personalizadas de pontos frequentemente utilizados em sua prática clínica. O
+sistema também permite adicionar anotações pessoais a cada ponto, possibilitando que o profissional registre observações sobre eficácia, combinações utilizadas ou particularidades de seus pacientes.
+Estas informações pessoais são sincronizadas com o servidor quando há conexão disponível, garantindo que estejam sempre disponíveis mesmo em diferentes dispositivos.
+6.3.9 Modo Auricular (Auriculoterapia)
+Além do mapa corporal completo, o Appunture inclui um módulo específico para auriculoterapia, apresentando um mapeamento detalhado da orelha com todos os pontos auriculares catalogados. Esta funcionalidade segue a mesma estrutura interativa do mapa corporal, permitindo clique direto nos pontos e acesso a informações específicas sobre sistemas e órgãos relacionados.
+O módulo auricular inclui diferentes protocolos e escolas de auriculoterapia, permitindo que o usuário escolha entre as abordagens francesa, chinesa ou outras tradições, adaptando-se às diferentes formações profissionais.
+6.4 PAINEL ADMINISTRATIVO WEB
+Para garantir a qualidade e atualização constante das informações, o Appunture inclui um painel administrativo web desenvolvido em React, acessível apenas para gestores e especialistas autorizados.
+6.4.1 Gerenciamento de Conteúdo
+O painel permite o cadastro e edição completa de pontos de acupuntura, incluindo upload de imagens, descrições técnicas, relações entre pontos e evidências científicas. A interface é otimizada para facilitar a entrada de dados e inclui validações para garantir a consistência das informações.
+Administradores podem também gerenciar a base de sintomas e suas relações com os pontos, ajustando pesos terapêuticos e adicionando novos sintomas conforme necessário.
+6.4.2 Controle de Usuários e Analytics
+O sistema administrativo oferece relatórios detalhados sobre uso da aplicação, incluindo pontos mais consultados, funcionalidades mais utilizadas, distribuição geográfica dos usuários e feedback coletado. Estas informações são fundamentais para melhorias contínuas do sistema.
+O painel também permite o gerenciamento de usuários, incluindo verificação de perfis profissionais quando necessário e suporte técnico direto.
+6.5 EXPERIÊNCIA DO USUÁRIO E USABILIDADE
+O desenvolvimento do Appunture priorizou uma experiência de usuário fluida e intuitiva, considerando que os usuários podem estar em diferentes contextos de uso - desde estudantes em casa até profissionais em consulta com pacientes.
+A interface utiliza princípios de design centrado no usuário, com navegação clara, feedback visual imediato para todas as ações, e tempos de resposta otimizados. O aplicativo funciona igualmente bem em smartphones e tablets, adaptando-se automaticamente ao tamanho da tela.
+Recursos de acessibilidade foram implementados para garantir usabilidade por pessoas com diferentes necessidades, incluindo suporte a leitores de tela, contraste adequado e navegação por teclado.
+Este capítulo apresentou de forma detalhada o sistema Appunture, desde sua arquitetura técnica até suas funcionalidades principais. A solução desenvolvida representa uma ferramenta moderna e abrangente para apoio à prática da acupuntura, combinando tradição milenar com tecnologia contemporânea para promover segurança, padronização e qualidade no exercício profissional.
+
+
+6.6 PROTÓTIPO DE TELAS INICIAL
+A seguir, apresentamos as telas iniciais do aplicativo Appunture , desenvolvidas com foco em usabilidade, clareza visual e acessibilidade. O design adota uma paleta suave e tipografia moderna. O objetivo é permitir que o usuário encontre pontos de acupuntura com rapidez, explore o corpo humano interativamente e receba recomendações personalizadas com o auxílio de um assistente inteligente.
+Tela inicial A tela inicial apresenta uma visão geral do aplicativo com informações estatísticas, como número total de pontos e meridianos cadastrados. Também disponibiliza atalhos para acessar rapidamente o mapa corporal e a pesquisa por pontos, promovendo uma navegação fluida desde o primeiro contato.
+  
+
+Mapa Corporal Interativo
+A interface mostra um modelo esquemático do corpo humano com hotspots clicáveis representando os pontos de acupuntura. Ao interagir com os pontos, o usuário visualiza o nome correspondente. Esta tela oferece uma forma visual e intuitiva de explorar os pontos no corpo humano, facilitando o aprendizado anatômico e prático.
+
+
+  
+
+
+
+
+
+Tela de Busca e Listagem de Pontos Esta tela permite que o usuário pesquise pontos de acupuntura por nome ou código, além de filtrar os resultados por meridiano. Abaixo dos filtros, são exibidas as informações dos pontos encontrados, incluindo nome, meridiano e localização anatômica. Cada item apresenta um botão de acesso aos detalhes completos do ponto.
+
+
+  
+
+
+
+
+
+
+
+Assistente de Acupuntura (Chatbot) Nesta tela, o usuário interage com um assistente inteligente que utiliza NLP para entender sintomas descritos em linguagem natural e sugerir pontos de acupuntura adequados. O assistente também exibe sugestões rápidas e respostas contextuais, oferecendo uma experiência personalizada e eficiente.
+
+
+  
+
+
+
+7 CONSIDERAÇÕES FINAIS
+Este trabalho teve como objetivo o desenvolvimento do aplicativo Appunture, uma ferramenta digital inovadora para consulta e estudo de pontos de acupuntura, que integra conhecimentos da Medicina Tradicional Chinesa com tecnologia moderna para oferecer suporte a profissionais e estudantes da área.
+A aplicação foi desenvolvida com foco na usabilidade, acessibilidade e segurança, seguindo rigorosos padrões técnicos e éticos. Através de uma arquitetura híbrida e modular, o Appunture garante funcionamento pleno offline, com acesso a um extenso banco de dados de pontos de acupuntura, sintomas e relações terapêuticas, além de funcionalidades avançadas de busca e consulta.
+O sistema foi projetado para ser uma solução completa e confiável, que contribui para a formação e atualização profissional, promovendo a acupuntura como uma prática segura, eficaz e embasada em evidências científicas. Além disso, o Appunture estimula o uso responsável de tecnologias no contexto das Práticas Integrativas e Complementares em Saúde.
+Os resultados obtidos ao longo do desenvolvimento e os testes realizados indicam que o Appunture atende às necessidades propostas, apresentando-se como uma ferramenta valiosa para a comunidade de acupunturistas e demais profissionais da saúde.
+Para trabalhos futuros, sugere-se a continuidade do aprimoramento e atualização do aplicativo, bem como a realização de novos estudos que avaliem o impacto da ferramenta na prática clínica e na formação dos profissionais de saúde.
+
+
+
+
+________________
+8 CONTEXTUALIZAÇÃO
+Este capítulo apresenta a documentação técnica detalhada do sistema Appunture, incluindo diagramas UML, modelos de dados e especificações de interface. A modelagem visual facilita a compreensão da arquitetura do sistema e serve como guia para o desenvolvimento e manutenção futura.
+Os diagramas apresentados nos apêndices a seguir ilustram diferentes visões do sistema:
+      * Apêndice A (Casos de Uso): Descreve as interações funcionais entre os usuários (Usuário Comum e Administrador) e o sistema.
+      * Apêndice B (Classes): Detalha a estrutura estática do sistema, incluindo
+atributos e métodos das principais entidades.
+      * Apêndice C (Sequência e Histórias): Demonstra o fluxo de mensagens entre os objetos para realizar funcionalidades específicas, como busca por sintomas e sincronização.
+      * Apêndice D (Modelo Físico): Apresenta o esquema do banco de dados,
+incluindo tabelas, chaves primárias e relacionamentos.
+      * Apêndice E (APIs): Documenta os endpoints da API RESTful utilizada para
+comunicação entre o frontend e o backend.
+      * Apêndice F (Modelos de IA): Explica o funcionamento do motor de NLP local para sugestão de pontos.
+      * Apêndice G (Fluxo de Telas): Apresenta a navegação entre as interfaces do aplicativo.
+
+
+Além disso, a Tabela de Bugs lista os bugs conhecidos e o plano de mitigação para cada um.
+Tabela de Bugs:
+
+
+ID
+	Componente / Tela
+	Bug Potencial / Risco
+	Causa Provável
+	Impacto
+	Probabilidade
+	Plano de Mitigação
+	B01
+	Chat Bot
+	Chatbot não entende variações de linguagem
+	NLP local não treinado com sinônimos
+	Alto
+	Alta
+	Ampliar base de dados de sintomas e frases
+	B02
+	Mapa do Corpo
+	SVG do corpo não renderiza em dispositivos móveis
+	Incompatibilidade com browsers
+	Médio
+	Média
+	Testar em diferentes navegadores
+	B03
+	Pesquisa/Busca
+	Busca falha com acentos ou termos incompletos
+	Falta de normalização na busca
+	Médio
+	Alta
+	Implementar função de limpeza de texto
+	B04
+	Detalhes do Ponto
+	Imagem do ponto não carrega offline
+	Falta de cache local
+	Baixo
+	Média
+	Usar cacheStorage ou fallback padrão
+	B05
+	Login do Usuário
+	Validação fraca de e-mail/senha
+	Regex insuficiente
+	Alto
+	Alta
+	Testes com entradas inválidas
+	B06
+	Pontos Favoritados
+	Pontos favoritos se perdem ao reiniciar app
+	Armazenamento local mal implementado
+	Alto
+	Média
+	Testes com localStorage e persistência
+	
+
+ 
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+9 REFERÊNCIAS
+BOOTH, Wayne C.; COLOMB, Gregory G.; WILLIAMS, Joseph M. O ofício de pesquisar: como planejar, fazer e apresentar uma pesquisa. 3. ed. São Paulo: Martins Fontes, 2021.
+BERNARDO, Lucas R. Desenvolvimento de um aplicativo para dispositivos móveis voltado ao aprendizado de anatomia humana por meio de realidade aumentada. Monografia (Bacharelado em Ciência da Computação) – Universidade Federal de Uberlândia, 2014.
+BOOCH, Grady; RUMBAUGH, James; JACOBSON, Ivar. UML: guia do usuário. 2. ed. Rio de Janeiro: Elsevier, 2005.
+COHN, Mike. User Stories Applied: For Agile Software Development. Boston: Addison-Wesley, 2004.
+FREIRE, Paulo. Pedagogia da autonomia: saberes necessários à prática educativa. 23. ed. São Paulo: Paz e Terra, 1996.
+GRAHAM, Ian. Requirements engineering and rapid development: an agile perspective. West Sussex: John Wiley & Sons, 2013.
+HAHN, Robert. Acupuncture: A Comprehensive Text. Shanghai: Shanghai College of Traditional Medicine, 2012.
+KREIBICH, Jens. Mobile Applications: Architecture, Design, and Development. O'Reilly Media, 2010.
+LOBO, Camila. Interfaces acessíveis para aplicativos móveis: diretrizes e recomendações. Monografia (Design Gráfico) – Universidade Federal do Rio de Janeiro, 2009.
+MOLINA, Ana C. G. et al. Inclusão digital e acessibilidade na web: uma perspectiva para portadores de necessidades especiais. Revista Novas Tecnologias na Educação, v. 7, n. 2, p. 1–9, 2009.
+NIELSEN, Jakob. Usability Engineering. San Diego: Academic Press, 1994.
+NORMAN, Donald A. O design do dia a dia. Rio de Janeiro: Rocco, 2013.
+ORGANIZAÇÃO MUNDIAL DA SAÚDE (OMS). Guidelines on Basic Training and Safety in Acupuncture. Geneva: World Health Organization, 1999.
+ORGANIZAÇÃO MUNDIAL DA SAÚDE (OMS). WHO Global Report on Traditional and Complementary Medicine 2019. Geneva: World Health Organization, 2020.
+PRESSMAN, Roger S. Engenharia de Software: uma abordagem profissional. 7. ed. São Paulo: McGraw-Hill, 2016.
+REACT NATIVE. Documentação oficial. Disponível em: https://reactnative.dev. Acesso em: 10 jul. 2025.
+EXPO. Expo Documentation. Disponível em: https://docs.expo.dev. Acesso em: 10 jul. 2025.
+GOOGLE. Firestore Documentation. Disponível em: https://firebase.google.com/docs/firestore. Acesso em: 10 jul. 2025.
+SCHWABER, Ken; SUTHERLAND, Jeff. The Scrum Guide: The Definitive Guide to Scrum.
+      1. Disponível em: https://scrumguides.org. Acesso em: 10 jul. 2025.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+APÊNDICE A - DIAGRAMA DE CASOS DE USO
+  
+
+APÊNDICE B - DIAGRAMA DE CLASSES
+  
+
+APÊNDICE C - HISTÓRIAS DE USUÁRIO, PROTÓTIPOS DE TELA E DIAGRAMAS DE SEQUÊNCIA
+HISTÓRIA DE USUÁRIO 1: BUSCA POR SINTOMAS
+Como usuário, desejo buscar pontos por sintomas que estou sentindo, para encontrar sugestões de tratamento.
+Diagrama de Sequência
+  
+
+HISTÓRIA DE USUÁRIO 2: SINCRONIZAÇÃO DE DADOS
+Como usuário, desejo que meus dados sejam salvos na nuvem, para não perder minhas anotações e favoritos.
+Diagrama de Sequência
+  
+
+APÊNDICE D - MODELO FÍSICO DO BANCO DE DADOS
+  
+
+APÊNDICE E - ESPECIFICAÇÃO DE APPLICATION PROGRAMMING INTERFACES (APIS)
+A seguir estão descritos os principais endpoints da API RESTful do Appunture, desenvolvida em Java com Spring Boot.
+Autenticação
+`POST /api/auth/login`
+Autentica um usuário e retorna um token JWT.
+         * Body: `{ "email": "user@example.com", "password": "password" }`
+         * Response:
+`{ "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", "user": { ... } }`
+`POST /api/auth/register`
+Registra um novo usuário no sistema.
+         * Body:
+`{ "name": "Nome", "email": "email@example.com", "password": "pass", "profileType": "STUDENT" }`
+Pontos de Acupuntura
+`GET /api/points`
+Retorna a lista de todos os pontos de acupuntura (suporta paginação e filtros).
+         * Query Params: `page`, `limit`, `meridian`, `search`
+`GET /api/points/{id}`
+Retorna os detalhes completos de um ponto específico.
+Sincronização
+`POST /api/sync`
+Endpoint bidirecional para sincronização de dados. Recebe dados locais (favoritos, notas) e retorna atualizações do servidor (novos pontos, correções).
+         * Header: `Authorization: Bearer <token>`
+         * Body:
+`{ "lastSyncTimestamp": 1700000000, "favorites": [...], "notes": [...] }`
+         * Response:
+`{ "pointsToUpdate": [...], "symptomsToUpdate": [...], "serverTimestamp": 1700000500 }`
+APÊNDICE F - MODELOS DE INTELIGÊNCIA ARTIFICIAL
+O Appunture utiliza um modelo de Processamento de Linguagem Natural (NLP) local para interpretar sintomas descritos pelos usuários e sugerir pontos de acupuntura.
+Motor de Busca e NLP (Fuse.js)
+O sistema não utiliza redes neurais profundas (Deep Learning) no dispositivo móvel para garantir funcionamento offline e baixa latência. Em vez disso, utiliza um algoritmo de busca difusa (Fuzzy Search) otimizado com pré-processamento de texto.
+Pipeline de Processamento:
+         1. Normalização de Texto:
+         * Conversão para minúsculas.
+         * Remoção de acentos e caracteres especiais.
+         * Remoção de _stopwords_ (palavras comuns sem valor semântico, como "de",
+"com", "e").
+         2. Tokenização e Pesquisa:
+         * O texto de entrada é quebrado em tokens.
+         * Cada token é comparado com a base de dados de sintomas e descrições de
+pontos.
+         * O algoritmo calcula um _score_ de similaridade (distância de Levenshtein)
+para tolerar erros de digitação.
+         3. Ranking de Relevância:
+         * Os pontos são ordenados com base na pontuação de match dos sintomas.
+         * Pesos maiores são atribuídos a correspondências exatas e sintomas
+principais.
+Exemplo de Funcionamento:
+         * Entrada do Usuário: "dor de cabeca forte"
+         * Processamento: "dor", "cabeca", "forte"
+         * Matches Encontrados:
+         * "Cefaleia" (Sinônimo de dor de cabeça) -> Ponto IG4 (Hegu)
+         * "Enxaqueca" -> Ponto VB20 (Fengchi)
+         * Resultado: Lista de pontos sugeridos (IG4, VB20) com explicação da relação terapêutica.
+
+
+
+
+
+APÊNDICE G - FLUXO DE TELAS
+
+O fluxo de telas apresenta a navegação entre as interfaces do aplicativo móvel, mostrando como o usuário transita entre login, cadastro, tela inicial, busca, detalhes dos pontos, favoritos e anotações. Dessa forma, permite visualizar a organização geral da experiência de uso e a estrutura de navegação do Appunture.
