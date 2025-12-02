@@ -21,15 +21,15 @@ A comunicação entre o app e o \textit{backend} é realizada via API RESTful, u
 
 A sincronização implementa um mecanismo de controle de versões dos dados clínicos para evitar \textit{downloads} desnecessários e garantir que o aplicativo trabalhe sempre com as informações mais recentes. O processo ocorre automaticamente em \textit{background} sempre que uma conexão de internet é detectada.
 
-\subsection{Processamento de Linguagem Natural e Assistente IA}
+\subsection{Assistente de IA para Busca Inteligente}
 
-Para viabilizar a busca inteligente por sintomas, o aplicativo implementa dois níveis de processamento:
+Para viabilizar a busca inteligente por sintomas, o aplicativo utiliza um assistente de inteligência artificial integrado ao \textit{backend}. Esta funcionalidade requer conexão com a internet para processamento.
 
-\textbf{Busca Local (Offline):}
-O módulo local utiliza técnicas de normalização textual, remoção de \textit{stopwords} e busca difusa (\textit{fuzzy search}) com a biblioteca Fuse.js. Este sistema permite interpretar entradas do usuário em linguagem natural, incluindo correções automáticas de erros de digitação, e mapear sintomas a pontos de acupuntura clinicamente indicados.
+\textbf{Arquitetura RAG (Retrieval-Augmented Generation):}
+O sistema utiliza a arquitetura RAG integrada ao \textit{backend} Java. O assistente inteligente, alimentado pelo Google Gemini 1.5 Flash via Spring AI, interpreta perguntas do usuário sobre sintomas e tratamentos, fornecendo respostas contextualizadas com a base de dados técnica do sistema. Esta abordagem reduz alucinações do modelo e aumenta a confiabilidade das sugestões clínicas.
 
-\textbf{Assistente IA com RAG (Online):}
-Quando conectado à internet, o sistema utiliza a arquitetura RAG (\textit{Retrieval-Augmented Generation}) integrada ao \textit{backend}. O assistente inteligente, alimentado pelo Google Gemini 1.5 Flash via Spring AI, interpreta perguntas complexas sobre sintomas e tratamentos, fornecendo respostas contextualizadas com a base de dados técnica do sistema. Esta abordagem reduz alucinações do modelo e aumenta a confiabilidade das sugestões clínicas.
+\textbf{Navegação Offline:}
+Quando sem conexão, o usuário pode navegar manualmente pelo atlas anatômico e acessar as informações dos pontos já sincronizados no banco de dados local. A busca inteligente por sintomas fica indisponível até que uma conexão seja restabelecida.
 
 \subsection{Interface Interativa e Navegação}
 
@@ -119,7 +119,7 @@ A tela de detalhes apresenta informações completas sobre cada ponto de acupunt
 
 \subsection{Sistema de Busca Inteligente}
 
-O sistema de busca do \textit{Appunture} utiliza técnicas de processamento de linguagem natural para oferecer resultados relevantes mesmo quando o usuário não conhece o nome exato do ponto que procura. A busca pode ser realizada por:
+O sistema de busca do \textit{Appunture} utiliza inteligência artificial para oferecer resultados relevantes mesmo quando o usuário não conhece o nome exato do ponto que procura. A busca pode ser realizada por:
 
 \begin{itemize}
     \item Nome do ponto (em português ou pinyin);
@@ -129,7 +129,7 @@ O sistema de busca do \textit{Appunture} utiliza técnicas de processamento de l
     \item Funções terapêuticas.
 \end{itemize}
 
-O algoritmo de busca difusa (\textit{fuzzy search}) implementado com Fuse.js permite encontrar resultados mesmo com erros de digitação ou variações na escrita.
+O assistente de IA interpreta a intenção do usuário e retorna os pontos mais relevantes, mesmo com erros de digitação ou variações na escrita. Esta funcionalidade requer conexão com a internet.
 
 \subsection{Assistente Inteligente com IA Generativa}
 

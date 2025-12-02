@@ -2,88 +2,523 @@
 % APÊNDICES
 % ----------------------------------------------------------
 
-\chapter{DIAGRAMA DE CLASSES} \label{ap:classes}
+% APÊNDICE A - DIAGRAMA DE CASOS DE USO
+\chapter{DIAGRAMA DE CASOS DE USO} \label{ap:casos-uso}
 
-O diagrama de classes apresenta a estrutura das principais entidades do sistema \textit{Appunture} e seus relacionamentos.
+% \figura{DIAGRAMA DE CASOS DE USO}{0.9}{fig/diagrama-casos-uso.png}{Os autores (2025)}{diagrama-casos-uso}{}{}
 
-% Inserir figura do diagrama de classes
-% \figura{DIAGRAMA DE CLASSES DO SISTEMA}{0.9}{fig/diagrama-classes.png}{Os autores (2025)}{diagrama-classes}{}{}
+% APÊNDICE B - HISTÓRIAS DE USUÁRIO
+\chapter{HISTÓRIAS DE USUÁRIO} \label{ap:historias}
 
-\section{CLASSES PRINCIPAIS}
+HU01 -- Buscar pontos por sintoma
+
+HU02 -- Visualizar detalhes do ponto
+
+HU03 -- Navegar pelo atlas anatômico
+
+HU04 -- Favoritar ponto de acupuntura
+
+HU05 -- Adicionar anotação pessoal
+
+HU06 -- Sincronizar dados entre dispositivos
+
+HU07 -- Consultar assistente de IA
+
+HU08 -- Mapear ponto no atlas (administrador)
+
+\section*{HU01 -- Buscar pontos por sintoma}
+
+\textbf{SENDO} um estudante ou profissional de acupuntura
+
+\textbf{QUERO} buscar pontos de acupuntura por sintomas
+
+\textbf{PARA} encontrar rapidamente os pontos indicados para tratamento
+
+\textbf{DESENHO DA(S) TELA(S):}
+
+% \figura{PROTÓTIPO DE BUSCA POR SINTOMA}{0.8}{fig/proto-busca-sintoma.png}{Os autores (2025)}{proto-busca}{}{}
+
+\textbf{CRITÉRIOS DE ACEITAÇÃO}
+
+\begin{enumerate}
+    \item Deve aceitar entrada de texto livre descrevendo sintomas
+    \item Deve utilizar IA para interpretar a intenção do usuário
+    \item Deve ordenar resultados por relevância
+    \item Deve requerer conexão com a internet
+    \item Deve exibir indicações de cada ponto nos resultados
+\end{enumerate}
+
+\textbf{CRITÉRIOS DE ACEITAÇÃO -- DETALHAMENTO}
+
+\textbf{Critério de contexto} (Válido como premissa para todos os critérios):
+
+Dado que desejo buscar pontos de acupuntura
+
+E acessei a tela de busca do aplicativo
+
+\textbf{1. Deve aceitar entrada de texto livre descrevendo sintomas}
+
+Dado que desejo buscar por um sintoma
+
+Quando digito ``dor de cabeça'' no campo de busca
+
+Então o sistema realiza a busca e exibe os pontos relacionados
+
+\textbf{2. Deve utilizar IA para interpretar a intenção}
+
+Dado que digitei ``dor de cabesa'' com erro ortográfico
+
+Quando seleciono buscar
+
+Então o assistente de IA identifica a intenção
+
+E retorna resultados relevantes baseados no contexto
+
+\textbf{3. Deve ordenar resultados por relevância}
+
+Dado que a busca retornou múltiplos pontos
+
+Quando visualizo os resultados
+
+Então os pontos mais relevantes aparecem primeiro
+
+E cada resultado exibe um \textit{score} de relevância
+
+\textbf{4. Deve requerer conexão com a internet}
+
+Dado que o dispositivo está sem conexão com a internet
+
+Quando tento realizar uma busca inteligente
+
+Então o sistema informa que é necessária conexão
+
+E sugere navegação manual pelo atlas
+
+\textbf{5. Deve exibir indicações de cada ponto nos resultados}
+
+Dado que a busca retornou resultados
+
+Quando visualizo a lista de pontos
+
+Então cada ponto exibe seu código, nome e principais indicações
+
+\section*{HU02 -- Visualizar detalhes do ponto}
+
+\textbf{SENDO} um usuário do aplicativo
+
+\textbf{QUERO} visualizar os detalhes completos de um ponto de acupuntura
+
+\textbf{PARA} conhecer sua localização, indicações e técnicas de punção
+
+\textbf{DESENHO DA(S) TELA(S):}
+
+% \figura{PROTÓTIPO DE DETALHES DO PONTO}{0.8}{fig/proto-detalhes-ponto.png}{Os autores (2025)}{proto-detalhes}{}{}
+
+\textbf{CRITÉRIOS DE ACEITAÇÃO}
+
+\begin{enumerate}
+    \item Deve exibir todas as informações do ponto (código, nomes, meridiano)
+    \item Deve exibir localização anatômica detalhada
+    \item Deve exibir indicações clínicas baseadas no padrão WHO
+    \item Deve exibir funções energéticas segundo a MTC
+    \item Deve mostrar a posição do ponto no atlas SVG
+    \item Deve permitir favoritar o ponto
+    \item Deve permitir adicionar anotações pessoais
+\end{enumerate}
+
+\textbf{CRITÉRIOS DE ACEITAÇÃO -- DETALHAMENTO}
+
+\textbf{1. Deve exibir todas as informações do ponto}
+
+Dado que selecionei o ponto LU-7 na lista de resultados
+
+Quando a tela de detalhes é carregada
+
+Então o sistema exibe: código (LU-7), nome em português (Lieque), nome em pinyin (Lièquē), meridiano (Pulmão)
+
+\textbf{2. Deve exibir localização anatômica detalhada}
+
+Dado que estou visualizando os detalhes do ponto
+
+Quando verifico a seção de localização
+
+Então o sistema exibe a descrição anatômica conforme padrão WHO
+
+E indica a profundidade de punção recomendada
+
+\textbf{3. Deve mostrar a posição do ponto no atlas SVG}
+
+Dado que estou visualizando os detalhes do ponto
+
+Quando verifico a seção do atlas
+
+Então o sistema exibe a vista anatômica correspondente
+
+E destaca a posição exata do ponto no corpo
+
+\section*{HU03 -- Navegar pelo atlas anatômico}
+
+\textbf{SENDO} um usuário do aplicativo
+
+\textbf{QUERO} navegar pelas diferentes vistas do atlas anatômico interativo
+
+\textbf{PARA} localizar visualmente os pontos de acupuntura no corpo humano
+
+\textbf{DESENHO DA(S) TELA(S):}
+
+% \figura{PROTÓTIPO DO ATLAS ANATÔMICO}{0.8}{fig/proto-atlas.png}{Os autores (2025)}{proto-atlas}{}{}
+
+\textbf{CRITÉRIOS DE ACEITAÇÃO}
+
+\begin{enumerate}
+    \item Deve permitir selecionar entre as 15 vistas disponíveis
+    \item Deve exibir os pontos mapeados como marcadores clicáveis
+    \item Deve permitir aplicar \textit{zoom} e arrastar a imagem
+    \item Deve exibir detalhes ao tocar em um marcador
+    \item Deve funcionar em modo \textit{offline} (navegação manual)
+\end{enumerate}
+
+\textbf{CRITÉRIOS DE ACEITAÇÃO -- DETALHAMENTO}
+
+\textbf{1. Deve permitir selecionar entre as 15 vistas disponíveis}
+
+Dado que acessei a tela do atlas anatômico
+
+Quando visualizo as opções de vistas
+
+Então o sistema exibe: corpo anterior, corpo posterior, cabeça frontal, cabeça lateral, mão dorsal, mão palmar, pé dorsal, pé plantar, entre outras
+
+\textbf{2. Deve exibir os pontos mapeados como marcadores clicáveis}
+
+Dado que selecionei a vista ``corpo anterior''
+
+Quando a imagem SVG é carregada
+
+Então o sistema exibe marcadores nos pontos que possuem coordenadas mapeadas
+
+E cada marcador é interativo
+
+\textbf{3. Deve exibir detalhes ao tocar em um marcador}
+
+Dado que visualizo os marcadores no atlas
+
+Quando toco em um marcador de ponto
+
+Então o sistema exibe um \textit{tooltip} com código e nome do ponto
+
+E permite navegar para a tela de detalhes
+
+\section*{HU04 -- Favoritar ponto de acupuntura}
+
+\textbf{SENDO} um usuário autenticado
+
+\textbf{QUERO} marcar pontos de acupuntura como favoritos
+
+\textbf{PARA} acessá-los rapidamente em consultas futuras
+
+\textbf{CRITÉRIOS DE ACEITAÇÃO}
+
+\begin{enumerate}
+    \item Deve permitir favoritar/desfavoritar com um toque
+    \item Deve salvar favoritos no banco local imediatamente
+    \item Deve sincronizar favoritos quando houver conexão
+    \item Deve listar todos os favoritos em tela dedicada
+\end{enumerate}
+
+\textbf{CRITÉRIOS DE ACEITAÇÃO -- DETALHAMENTO}
+
+\textbf{1. Deve permitir favoritar/desfavoritar com um toque}
+
+Dado que estou visualizando os detalhes de um ponto
+
+Quando toco no ícone de coração/estrela
+
+Então o sistema alterna o estado de favorito do ponto
+
+E atualiza o ícone visualmente
+
+\textbf{2. Deve salvar favoritos no banco local imediatamente}
+
+Dado que favoritei um ponto
+
+Quando fecho e reabro o aplicativo
+
+Então o ponto permanece marcado como favorito
+
+\textbf{3. Deve sincronizar favoritos quando houver conexão}
+
+Dado que o dispositivo está conectado à internet
+
+Quando adiciono ou removo um favorito
+
+Então o sistema sincroniza a alteração com o \textit{backend}
+
+E mantém consistência entre dispositivos
+
+\section*{HU05 -- Adicionar anotação pessoal}
+
+\textbf{SENDO} um usuário autenticado
+
+\textbf{QUERO} adicionar anotações pessoais aos pontos de acupuntura
+
+\textbf{PARA} registrar observações de estudo e experiências clínicas
+
+\textbf{CRITÉRIOS DE ACEITAÇÃO}
+
+\begin{enumerate}
+    \item Deve permitir criar anotação em texto livre
+    \item Deve associar anotação ao ponto específico
+    \item Deve permitir editar e excluir anotações
+    \item Deve exibir data de criação/modificação
+    \item Deve sincronizar anotações entre dispositivos
+\end{enumerate}
+
+\textbf{CRITÉRIOS DE ACEITAÇÃO -- DETALHAMENTO}
+
+\textbf{1. Deve permitir criar anotação em texto livre}
+
+Dado que estou na tela de detalhes do ponto LU-5
+
+Quando seleciono ``adicionar anotação''
+
+Então o sistema exibe campo de texto para digitação
+
+E permite salvar a anotação
+
+\textbf{2. Deve permitir editar e excluir anotações}
+
+Dado que já tenho uma anotação salva no ponto
+
+Quando toco na anotação existente
+
+Então o sistema exibe opções de editar ou excluir
+
+\section*{HU06 -- Sincronizar dados entre dispositivos}
+
+\textbf{SENDO} um usuário autenticado
+
+\textbf{QUERO} que meus dados sejam sincronizados automaticamente
+
+\textbf{PARA} não perder anotações e favoritos ao trocar de dispositivo
+
+\textbf{CRITÉRIOS DE ACEITAÇÃO}
+
+\begin{enumerate}
+    \item Deve sincronizar automaticamente quando houver conexão
+    \item Deve salvar dados localmente quando \textit{offline}
+    \item Deve resolver conflitos mantendo versão mais recente
+    \item Deve notificar status da sincronização
+    \item Não deve impactar performance do aplicativo
+\end{enumerate}
+
+\textbf{CRITÉRIOS DE ACEITAÇÃO -- DETALHAMENTO}
+
+\textbf{1. Deve sincronizar automaticamente quando houver conexão}
+
+Dado que o dispositivo está conectado à internet
+
+Quando abro o aplicativo
+
+Então o sistema verifica e sincroniza dados automaticamente
+
+\textbf{2. Deve salvar dados localmente quando offline}
+
+Dado que o dispositivo está sem conexão
+
+Quando adiciono um favorito ou anotação
+
+Então o sistema salva no banco SQLite local
+
+E marca para sincronização posterior
+
+\textbf{3. Deve resolver conflitos mantendo versão mais recente}
+
+Dado que editei a mesma anotação em dois dispositivos
+
+Quando ocorre a sincronização
+
+Então o sistema mantém a versão com \textit{timestamp} mais recente
+
+\section*{HU07 -- Consultar assistente de IA}
+
+\textbf{SENDO} um usuário do aplicativo
+
+\textbf{QUERO} consultar um assistente de IA sobre acupuntura
+
+\textbf{PARA} obter orientações educacionais sobre pontos e tratamentos
+
+\textbf{CRITÉRIOS DE ACEITAÇÃO}
+
+\begin{enumerate}
+    \item Deve aceitar perguntas em linguagem natural
+    \item Deve fornecer respostas baseadas na base de dados do sistema (RAG)
+    \item Deve incluir \textit{disclaimer} sobre uso educacional
+    \item Deve estar disponível apenas com conexão à internet
+    \item Deve referenciar os pontos mencionados nas respostas
+\end{enumerate}
+
+\textbf{CRITÉRIOS DE ACEITAÇÃO -- DETALHAMENTO}
+
+\textbf{1. Deve aceitar perguntas em linguagem natural}
+
+Dado que acessei a tela do assistente de IA
+
+Quando digito ``quais pontos são indicados para ansiedade?''
+
+Então o sistema processa a pergunta e gera uma resposta
+
+\textbf{2. Deve fornecer respostas baseadas na base de dados do sistema}
+
+Dado que fiz uma pergunta ao assistente
+
+Quando a resposta é gerada
+
+Então o sistema utiliza dados dos pontos cadastrados no sistema
+
+E menciona pontos específicos com seus códigos
+
+\textbf{3. Deve incluir disclaimer sobre uso educacional}
+
+Dado que recebi uma resposta do assistente
+
+Quando visualizo o conteúdo
+
+Então a resposta inclui aviso de que é apenas para fins educacionais
+
+E não substitui orientação profissional
+
+\section*{HU08 -- Mapear ponto no atlas (administrador)}
+
+\textbf{SENDO} um administrador do sistema
+
+\textbf{QUERO} mapear as coordenadas de um ponto no atlas SVG
+
+\textbf{PARA} permitir a visualização correta do ponto pelos usuários
+
+\textbf{DESENHO DA(S) TELA(S):}
+
+% \figura{PROTÓTIPO DO POINT MAPPER}{0.8}{fig/proto-point-mapper.png}{Os autores (2025)}{proto-mapper}{}{}
+
+\textbf{CRITÉRIOS DE ACEITAÇÃO}
+
+\begin{enumerate}
+    \item Deve permitir selecionar um ponto da lista
+    \item Deve permitir selecionar a vista do atlas
+    \item Deve permitir clicar na imagem para definir coordenadas
+    \item Deve exibir prévia do marcador na posição selecionada
+    \item Deve salvar coordenadas no formato percentual
+    \item Deve exportar mapeamentos em formato JSON
+\end{enumerate}
+
+\textbf{CRITÉRIOS DE ACEITAÇÃO -- DETALHAMENTO}
+
+\textbf{1. Deve permitir selecionar um ponto da lista}
+
+Dado que acessei a ferramenta Point Mapper
+
+Quando seleciono o meridiano ``LU'' e o ponto ``LU-1''
+
+Então o sistema carrega as informações do ponto
+
+\textbf{2. Deve permitir clicar na imagem para definir coordenadas}
+
+Dado que selecionei um ponto e uma vista do atlas
+
+Quando clico na posição anatômica correta na imagem
+
+Então o sistema registra as coordenadas X e Y em percentual
+
+\textbf{3. Deve exportar mapeamentos em formato JSON}
+
+Dado que mapeei múltiplos pontos
+
+Quando seleciono ``exportar''
+
+Então o sistema gera arquivo JSON com todas as coordenadas
+
+E salva no formato compatível com o seed do sistema
+
+% APÊNDICE C - DIAGRAMA DE CLASSES DE ANÁLISE
+\chapter{DIAGRAMA DE CLASSES DE ANÁLISE} \label{ap:classes}
+
+% \figura{DIAGRAMA DE CLASSES DE ANÁLISE}{0.9}{fig/diagrama-classes.png}{Os autores (2025)}{diagrama-classes}{}{}
+
+\section*{CLASSES PRINCIPAIS}
 
 \begin{itemize}
-    \item \textbf{User}: Representa os usuários do sistema, com atributos como nome, email, senha (hash), tipo de perfil e data de cadastro.
+    \item \textbf{User}: Representa os usuários do sistema, com atributos como id, nome, email, senha (hash), tipo de perfil (estudante, profissional, administrador) e data de cadastro.
     
-    \item \textbf{AcupuncturePoint}: Representa um ponto de acupuntura, contendo informações como código, nome em português, nome em pinyin, localização anatômica, profundidade de punção, indicações, contraindicações e funções energéticas.
+    \item \textbf{AcupuncturePoint}: Representa um ponto de acupuntura, contendo código (ex: LU-7), nome em português, nome em pinyin, localização anatômica, profundidade de punção, indicações, contraindicações, funções energéticas e coordenadas no atlas.
     
-    \item \textbf{Meridian}: Representa os meridianos da MTC, com nome, código e lista de pontos associados.
+    \item \textbf{Meridian}: Representa os meridianos da MTC, com código, nome em português, nome em chinês, elemento associado e característica yin/yang.
     
-    \item \textbf{Symptom}: Representa sintomas clínicos que podem ser associados aos pontos de acupuntura.
+    \item \textbf{Symptom}: Representa sintomas clínicos que podem ser associados aos pontos de acupuntura, com nome, categoria e sinônimos.
     
-    \item \textbf{Favorite}: Representa a relação entre usuário e pontos favoritados.
+    \item \textbf{Favorite}: Representa a relação entre usuário e pontos favoritados, com id do usuário, id do ponto, data de criação e status de sincronização.
     
-    \item \textbf{Note}: Representa as anotações pessoais do usuário sobre pontos específicos.
+    \item \textbf{Note}: Representa as anotações pessoais do usuário sobre pontos específicos, com conteúdo em texto, data de criação, data de modificação e status de sincronização.
+    
+    \item \textbf{BodyMapCoords}: Representa as coordenadas de um ponto em uma vista específica do atlas, com referência à vista, coordenada X e coordenada Y em percentual.
 \end{itemize}
 
-\chapter{HISTÓRIAS DE USUÁRIO DETALHADAS} \label{ap:historias}
+% APÊNDICE D - DIAGRAMAS DE SEQUÊNCIA DE ANÁLISE
+\chapter{DIAGRAMAS DE SEQUÊNCIA DE ANÁLISE} \label{ap:sequencia}
 
-\section{HISTÓRIA DE USUÁRIO 1: BUSCA POR SINTOMAS}
+% \figura{DIAGRAMA DE SEQUÊNCIA - BUSCA POR SINTOMA}{0.9}{fig/seq-busca.png}{Os autores (2025)}{seq-busca}{}{}
 
-\textbf{Como} usuário do aplicativo, \textbf{quero} buscar pontos de acupuntura por sintomas, \textbf{para} encontrar rapidamente os pontos indicados para tratamento.
+% \figura{DIAGRAMA DE SEQUÊNCIA - SINCRONIZAÇÃO DE DADOS}{0.9}{fig/seq-sync.png}{Os autores (2025)}{seq-sync}{}{}
 
-\textbf{Critérios de Aceitação:}
+% \figura{DIAGRAMA DE SEQUÊNCIA - CONSULTA ASSISTENTE IA}{0.9}{fig/seq-ia.png}{Os autores (2025)}{seq-ia}{}{}
+
+% \figura{DIAGRAMA DE SEQUÊNCIA - MAPEAMENTO DE PONTO}{0.9}{fig/seq-mapper.png}{Os autores (2025)}{seq-mapper}{}{}
+
+\section*{FLUXO DE BUSCA POR SINTOMA (COM INTERNET)}
+
 \begin{enumerate}
-    \item O sistema deve aceitar entrada de texto livre descrevendo sintomas;
-    \item A busca deve funcionar mesmo com erros de digitação;
-    \item Os resultados devem ser ordenados por relevância;
-    \item Deve ser possível filtrar por múltiplos sintomas simultaneamente;
-    \item A busca deve funcionar em modo \textit{offline}.
+    \item Usuário digita sintoma no campo de busca
+    \item Aplicativo envia consulta ao \textit{backend}
+    \item \textit{Backend} processa com Spring AI + Google Gemini (RAG)
+    \item IA retorna pontos relevantes com contexto
+    \item Aplicativo ordena e exibe resultados ao usuário
 \end{enumerate}
 
-% Inserir diagrama de sequência se disponível
+\section*{FLUXO DE SINCRONIZAÇÃO}
 
-\section{HISTÓRIA DE USUÁRIO 2: SINCRONIZAÇÃO DE DADOS}
-
-\textbf{Como} usuário do aplicativo, \textbf{quero} que meus dados sejam sincronizados automaticamente, \textbf{para} não perder minhas anotações e favoritos ao trocar de dispositivo.
-
-\textbf{Critérios de Aceitação:}
 \begin{enumerate}
-    \item A sincronização deve ocorrer automaticamente quando houver conexão;
-    \item Dados salvos \textit{offline} devem ser enviados ao \textit{backend} quando conectar;
-    \item Conflitos de dados devem ser resolvidos mantendo a versão mais recente;
-    \item O usuário deve ser notificado sobre o status da sincronização;
-    \item A sincronização não deve impactar a performance do aplicativo.
+    \item Aplicativo detecta conexão com internet
+    \item Aplicativo envia dados locais com \textit{flag} ``não sincronizado''
+    \item \textit{Backend} processa e resolve conflitos por \textit{timestamp}
+    \item \textit{Backend} retorna dados consolidados
+    \item Aplicativo atualiza banco local e marca como sincronizado
 \end{enumerate}
 
-\chapter{MODELO FÍSICO DO BANCO DE DADOS} \label{ap:banco}
+\section*{FLUXO DE CONSULTA AO ASSISTENTE IA}
 
-\section{ESTRUTURA DO BANCO DE DADOS LOCAL (SQLITE)}
+\begin{enumerate}
+    \item Usuário envia pergunta em linguagem natural
+    \item \textit{Backend} busca pontos relevantes no banco (contexto)
+    \item \textit{Backend} monta \textit{prompt} enriquecido com contexto (RAG)
+    \item \textit{Backend} envia para Google Gemini via Spring AI
+    \item Modelo retorna resposta contextualizada
+    \item \textit{Backend} adiciona \textit{disclaimer} e envia ao aplicativo
+\end{enumerate}
+
+% APÊNDICE E - MODELO LÓGICO DE DADOS
+\chapter{MODELO LÓGICO DE DADOS} \label{ap:modelo-dados}
+
+% \figura{MODELO LÓGICO DE DADOS}{0.9}{fig/modelo-logico.png}{Os autores (2025)}{modelo-logico}{}{}
+
+\section*{ESTRUTURA DO BANCO DE DADOS LOCAL (SQLITE)}
 
 \begin{lstlisting}[language=SQL, caption={Estrutura do banco SQLite local}]
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT UNIQUE NOT NULL,
     name TEXT NOT NULL,
-    profile_type TEXT NOT NULL,
+    profile_type TEXT NOT NULL CHECK(
+        profile_type IN ('student', 'professional', 'admin')),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     synced_at DATETIME
-);
-
-CREATE TABLE acupuncture_points (
-    id INTEGER PRIMARY KEY,
-    code TEXT UNIQUE NOT NULL,
-    name_pt TEXT NOT NULL,
-    name_pinyin TEXT,
-    meridian_id INTEGER,
-    location TEXT,
-    depth TEXT,
-    indications TEXT,
-    contraindications TEXT,
-    functions TEXT,
-    special_characteristics TEXT,
-    svg_x REAL,
-    svg_y REAL,
-    FOREIGN KEY (meridian_id) REFERENCES meridians(id)
 );
 
 CREATE TABLE meridians (
@@ -92,7 +527,33 @@ CREATE TABLE meridians (
     name_pt TEXT NOT NULL,
     name_cn TEXT,
     element TEXT,
-    yin_yang TEXT
+    yin_yang TEXT CHECK(yin_yang IN ('yin', 'yang'))
+);
+
+CREATE TABLE acupuncture_points (
+    id INTEGER PRIMARY KEY,
+    code TEXT UNIQUE NOT NULL,
+    name_pt TEXT NOT NULL,
+    name_pinyin TEXT,
+    meridian_id INTEGER NOT NULL,
+    location TEXT,
+    depth TEXT,
+    indications TEXT,
+    contraindications TEXT,
+    functions TEXT,
+    special_characteristics TEXT,
+    content_status TEXT DEFAULT 'draft',
+    FOREIGN KEY (meridian_id) REFERENCES meridians(id)
+);
+
+CREATE TABLE body_map_coords (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    point_id INTEGER NOT NULL,
+    view TEXT NOT NULL,
+    x REAL NOT NULL,
+    y REAL NOT NULL,
+    mapped_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (point_id) REFERENCES acupuncture_points(id)
 );
 
 CREATE TABLE symptoms (
@@ -103,9 +564,9 @@ CREATE TABLE symptoms (
 );
 
 CREATE TABLE point_symptoms (
-    point_id INTEGER,
-    symptom_id INTEGER,
-    relevance_score REAL,
+    point_id INTEGER NOT NULL,
+    symptom_id INTEGER NOT NULL,
+    relevance_score REAL DEFAULT 1.0,
     PRIMARY KEY (point_id, symptom_id),
     FOREIGN KEY (point_id) REFERENCES acupuncture_points(id),
     FOREIGN KEY (symptom_id) REFERENCES symptoms(id)
@@ -113,32 +574,41 @@ CREATE TABLE point_symptoms (
 
 CREATE TABLE favorites (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER,
-    point_id INTEGER,
+    user_id INTEGER NOT NULL,
+    point_id INTEGER NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     synced INTEGER DEFAULT 0,
+    UNIQUE(user_id, point_id),
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (point_id) REFERENCES acupuncture_points(id)
 );
 
 CREATE TABLE notes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER,
-    point_id INTEGER,
-    content TEXT,
+    user_id INTEGER NOT NULL,
+    point_id INTEGER NOT NULL,
+    content TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME,
     synced INTEGER DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (point_id) REFERENCES acupuncture_points(id)
 );
+
+-- Indices para otimizacao de buscas
+CREATE INDEX idx_points_meridian ON acupuncture_points(meridian_id);
+CREATE INDEX idx_points_code ON acupuncture_points(code);
+CREATE INDEX idx_coords_point ON body_map_coords(point_id);
+CREATE INDEX idx_favorites_user ON favorites(user_id);
+CREATE INDEX idx_notes_user ON notes(user_id);
 \end{lstlisting}
 
+% APÊNDICE F - ESPECIFICAÇÃO DE APIs
 \chapter{ESPECIFICAÇÃO DE APIs} \label{ap:apis}
 
 \section{AUTENTICAÇÃO}
 
-\subsection{POST /api/auth/login}
+\subsection*{POST /api/auth/login}
 
 \textbf{Descrição:} Autentica um usuário no sistema.
 
@@ -163,7 +633,7 @@ CREATE TABLE notes (
 }
 \end{lstlisting}
 
-\subsection{POST /api/auth/register}
+\subsection*{POST /api/auth/register}
 
 \textbf{Descrição:} Registra um novo usuário no sistema.
 
@@ -179,24 +649,76 @@ CREATE TABLE notes (
 
 \section{PONTOS DE ACUPUNTURA}
 
-\subsection{GET /api/points}
+\subsection*{GET /api/points}
 
 \textbf{Descrição:} Retorna lista de pontos de acupuntura.
 
 \textbf{Query Parameters:}
 \begin{itemize}
-    \item \texttt{meridian}: Filtrar por meridiano
-    \item \texttt{search}: Termo de busca
+    \item \texttt{meridian}: Filtrar por código do meridiano (ex: LU, LI, ST)
+    \item \texttt{search}: Termo de busca em nome ou indicações
     \item \texttt{symptoms}: Lista de sintomas separados por vírgula
+    \item \texttt{page}: Número da página (paginação)
+    \item \texttt{limit}: Quantidade por página (padrão: 20)
 \end{itemize}
 
-\subsection{GET /api/points/\{id\}}
+\textbf{Response (200 OK):}
+\begin{lstlisting}[language=json]
+{
+    "data": [
+        {
+            "id": 1,
+            "code": "LU-1",
+            "namePt": "Zhongfu",
+            "namePinyin": "Zhongfu",
+            "meridian": "LU",
+            "location": "Na regiao anterolateral...",
+            "indications": ["tosse", "asma", "dor toracica"]
+        }
+    ],
+    "pagination": {
+        "page": 1,
+        "limit": 20,
+        "total": 362
+    }
+}
+\end{lstlisting}
 
-\textbf{Descrição:} Retorna detalhes de um ponto específico.
+\subsection*{GET /api/points/\{code\}}
+
+\textbf{Descrição:} Retorna detalhes completos de um ponto específico.
+
+\textbf{Response (200 OK):}
+\begin{lstlisting}[language=json]
+{
+    "id": 7,
+    "code": "LU-7",
+    "namePt": "Lieque",
+    "namePinyin": "Lieque",
+    "meridian": {
+        "code": "LU",
+        "namePt": "Pulmao",
+        "element": "Metal"
+    },
+    "location": "Na face anterolateral do antebraco...",
+    "depth": "0,3-0,5 cun obliquamente",
+    "indications": ["cefaleia", "rigidez cervical", "tosse"],
+    "contraindications": [],
+    "functions": "Dispersa Vento, libera o Exterior...",
+    "specialCharacteristics": "Ponto Luo, Ponto de Abertura...",
+    "coordinates": {
+        "x": 48.28,
+        "y": 25.97
+    },
+    "bodyMapCoords": [
+        {"view": "arm-anterior", "x": 48.28, "y": 25.97}
+    ]
+}
+\end{lstlisting}
 
 \section{SINCRONIZAÇÃO}
 
-\subsection{POST /api/sync}
+\subsection*{POST /api/sync}
 
 \textbf{Descrição:} Sincroniza dados do dispositivo com o servidor.
 
@@ -204,102 +726,112 @@ CREATE TABLE notes (
 \begin{lstlisting}[language=json]
 {
     "lastSyncTimestamp": "2025-11-15T10:30:00Z",
-    "favorites": [...],
-    "notes": [...]
-}
-\end{lstlisting}
-
-\chapter{MODELOS DE INTELIGÊNCIA ARTIFICIAL} \label{ap:ia}
-
-\section{MOTOR DE BUSCA LOCAL (FUSE.JS)}
-
-O sistema de busca inteligente local do \textit{Appunture} utiliza a biblioteca Fuse.js para implementar busca difusa (\textit{fuzzy search}) com as seguintes configurações:
-
-\begin{lstlisting}[language=JavaScript, caption={Configuração do Fuse.js}]
-const fuseOptions = {
-    keys: [
-        { name: 'name_pt', weight: 0.4 },
-        { name: 'name_pinyin', weight: 0.2 },
-        { name: 'indications', weight: 0.3 },
-        { name: 'location', weight: 0.1 }
+    "favorites": [
+        {"pointId": 7, "action": "add", "timestamp": "..."},
+        {"pointId": 12, "action": "remove", "timestamp": "..."}
     ],
-    threshold: 0.4,
-    includeScore: true,
-    minMatchCharLength: 2,
-    ignoreLocation: true
-};
+    "notes": [
+        {
+            "pointId": 7,
+            "content": "Observacao clinica...",
+            "action": "add",
+            "timestamp": "..."
+        }
+    ]
+}
 \end{lstlisting}
 
-\section{ASSISTENTE IA COM RAG (SPRING AI + GOOGLE GEMINI)}
+\textbf{Response (200 OK):}
+\begin{lstlisting}[language=json]
+{
+    "syncTimestamp": "2025-11-15T10:35:00Z",
+    "favorites": [...],
+    "notes": [...],
+    "conflicts": []
+}
+\end{lstlisting}
 
-Quando conectado à internet, o sistema utiliza a arquitetura RAG (\textit{Retrieval-Augmented Generation}) para fornecer respostas mais precisas e contextualizadas.
+\section{ASSISTENTE DE IA}
 
-\begin{lstlisting}[language=Java, caption={Integração Spring AI com RAG}]
-@Service
-public class AcupunctureAssistantService {
+\subsection*{POST /api/assistant/query}
+
+\textbf{Descrição:} Envia pergunta ao assistente de IA com RAG.
+
+\textbf{Request Body:}
+\begin{lstlisting}[language=json]
+{
+    "question": "Quais pontos sao indicados para ansiedade?"
+}
+\end{lstlisting}
+
+\textbf{Response (200 OK):}
+\begin{lstlisting}[language=json]
+{
+    "answer": "Para auxiliar no tratamento da ansiedade...",
+    "referencedPoints": ["HT-7", "PC-6", "SP-6", "GV-20"],
+    "disclaimer": "Esta informacao e apenas para fins educacionais..."
+}
+\end{lstlisting}
+
+% APÊNDICE G - ARQUITETURA RAG DO ASSISTENTE DE IA
+\chapter{ARQUITETURA RAG DO ASSISTENTE DE IA} \label{ap:rag}
+
+\section*{CONFIGURAÇÃO DO SPRING AI COM GOOGLE GEMINI}
+
+\begin{lstlisting}[language=Java, caption={Configuração do Spring AI}]
+@Configuration
+public class AIConfig {
     
-    private final ChatClient chatClient;
-    private final PointRepository pointRepository;
-    private final SymptomRepository symptomRepository;
+    @Value("${spring.ai.vertex.ai.gemini.project-id}")
+    private String projectId;
     
-    public String getClinicAssistance(String userQuestion) {
-        // 1. Busca contexto relevante na base de dados
-        List<Point> relevantPoints = 
-            pointRepository.findBySymptoms(userQuestion);
-        List<Symptom> relevantSymptoms = 
-            symptomRepository.findByKeywords(userQuestion);
-        
-        // 2. Monta prompt enriquecido com contexto
-        String enrichedPrompt = buildPromptWithContext(
-            userQuestion, relevantPoints, relevantSymptoms);
-        
-        // 3. Chama o modelo de IA via Spring AI
-        return chatClient.prompt()
-            .system(ACUPUNCTURE_SYSTEM_PROMPT)
-            .user(enrichedPrompt)
-            .call()
-            .content();
-    }
+    @Value("${spring.ai.vertex.ai.gemini.location}")
+    private String location;
     
-    private String buildPromptWithContext(
-            String question, 
-            List<Point> points,
-            List<Symptom> symptoms) {
-        StringBuilder context = new StringBuilder();
-        context.append("Contexto dos pontos relevantes:\n");
-        for (Point p : points) {
-            context.append(String.format(
-                "- %s (%s): %s. Indicacoes: %s\n",
-                p.getNamePt(), p.getCode(),
-                p.getLocation(), p.getIndications()));
-        }
-        return context + "\n\nPergunta: " + question;
+    @Bean
+    public ChatClient chatClient(VertexAiGeminiChatModel model) {
+        return ChatClient.builder(model)
+            .defaultSystem(ACUPUNCTURE_SYSTEM_PROMPT)
+            .build();
     }
 }
-\end{lstlisting>
+\end{lstlisting}
 
-\section{PIPELINE DE PROCESSAMENTO LOCAL}
-
-O processamento de linguagem natural local segue o seguinte \textit{pipeline}:
+\section*{PIPELINE RAG (RETRIEVAL-AUGMENTED GENERATION)}
 
 \begin{enumerate}
-    \item \textbf{Normalização}: Conversão para minúsculas, remoção de acentos;
-    \item \textbf{Tokenização}: Separação do texto em palavras;
-    \item \textbf{Remoção de stopwords}: Eliminação de palavras comuns (de, para, o, a, etc.);
-    \item \textbf{Stemização}: Redução das palavras à sua raiz;
-    \item \textbf{Busca difusa}: Aplicação do algoritmo Fuse.js;
-    \item \textbf{Ranking}: Ordenação dos resultados por relevância.
+    \item \textbf{Recepção}: Usuário envia pergunta em linguagem natural
+    \item \textbf{Retrieval}: \textit{Backend} busca pontos relevantes no banco de dados
+    \item \textbf{Augmentation}: Monta \textit{prompt} enriquecido com contexto dos pontos
+    \item \textbf{Generation}: Google Gemini 1.5 Flash gera resposta contextualizada
+    \item \textbf{Pós-processamento}: Adiciona \textit{disclaimer} educacional e referências
 \end{enumerate}
 
-\section{EXEMPLO DE FUNCIONAMENTO}
+\section*{EXEMPLO DE FUNCIONAMENTO}
 
 \textbf{Entrada do usuário:} ``dor de cabeça forte na testa''
 
-\textbf{Processamento:}
+\textbf{Processamento RAG:}
 \begin{enumerate}
-    \item Normalização: ``dor de cabeca forte na testa''
-    \item Tokenização: [``dor'', ``de'', ``cabeca'', ``forte'', ``na'', ``testa'']
-    \item Remoção de stopwords: [``dor'', ``cabeca'', ``forte'', ``testa'']
-    \item Busca: Procura por sintomas e indicações relacionados
-    \item Resultado: Pontos como VG20 (Baihui), VB14 (Yangbai), E8 (Touwei)
+    \item Recepção: Pergunta enviada ao \textit{backend} via API REST
+    \item Retrieval: Busca pontos com indicações relacionadas a cefaleia
+    \item Augmentation: Contexto montado com GV-20, GB-14, ST-8, EX-HN3
+    \item Generation: Gemini gera explicação sobre os pontos e suas indicações
+    \item Resposta: ``Para dor de cabeça frontal, os pontos mais indicados são...''
 \end{enumerate}
+
+\section*{SYSTEM PROMPT DO ASSISTENTE}
+
+\begin{lstlisting}[language=Java, caption={System prompt para contexto de acupuntura}]
+private static final String ACUPUNCTURE_SYSTEM_PROMPT = """
+    Voce e um assistente educacional especializado em acupuntura.
+    Seu objetivo e auxiliar estudantes e profissionais a compreender
+    os pontos de acupuntura e suas aplicacoes clinicas.
+    
+    IMPORTANTE: Suas respostas sao apenas para fins educacionais
+    e NAO substituem a formacao profissional ou consulta medica.
+    
+    Sempre mencione os codigos dos pontos (ex: LU-7, ST-36)
+    e suas principais indicacoes quando relevante.
+    """;
+\end{lstlisting}

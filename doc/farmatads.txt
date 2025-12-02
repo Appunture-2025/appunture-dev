@@ -1,0 +1,2321 @@
+UNIVERSIDADE FEDERAL DO PARANÁ
+MARINA N. BEPPLER
+PIETRA P. MINATTI
+FARMATADS: APP DE CONTROLE DE MEDICAMENTOS
+CURITIBA
+2024
+MARINA N. BEPPLER
+PIETRA P. MINATTI
+FARMATADS: APP DE CONTROLE DE MEDICAMENTOS
+Trabalho apresentado como requisito à obtenção
+do grau de Tecnólogo em Análise e
+Desenvolvimento de Sistemas no curso de
+Tecnologia em Análise e Desenvolvimento de
+Sistemas, Setor de Educação Profissional e
+Tecnológica da Universidade Federal do Paraná.
+Prof. Orientador: Dieval Guizelini
+CURITIBA
+2024
+UNIVERSIDADE FEDERAL DO PARANÁ
+SETOR DE EDUCAÇÃO PROFISSIONAL E TECNOLÓGICA
+Rua Alcides Vieira Arcoverde 1225, - - Bairro Jardim das Américas, Curitiba/PR,
+CEP 81520-260
+Telefone: 3360-5000 - http://www.ufpr.br/
+ATA DE REUNIÃO
+TERMO DE APROVAÇÃO
+MARINA NEVES BEPPLER
+PIETRA PIZZATTO MINATTI
+FARMATADS: APP DE CONTROLE DE MEDICAMENTOS
+Monografia aprovada como requisito parcial à obtenção do título de Tecnólogo em Análise e
+Desenvolvimento de Sistemas,
+do Setor de Educação Profissional e Tecnológica da Universidade Federal do Paraná.
+Curitiba, 16 de dezembro de 2024.
+Prof. Dr. Dieval Guizelini
+Orientadora – SEPT/UFPR
+Prof. Dr. Paulo Eduardo Sobreira Moraes
+SEPT/UFPR
+Prof. Dr. Roberto Tadeu Raittz
+SEPT/UFPR
+Documento assinado eletronicamente por DIEVAL GUIZELINI, DIRETOR(A) DO SETOR DE
+EDUCACAO PROFISSIONAL E TECNOLOGICA - SEPT, em 20/12/2024, às 14:56,
+conforme art. 1º, III, "b", da Lei 11.419/2006.
+Documento assinado eletronicamente por PAULO EDUARDO SOBREIRA MORAES,
+PROFESSOR DO MAGISTERIO SUPERIOR, em 20/12/2024, às 14:59, conforme art. 1º, III,
+"b", da Lei 11.419/2006.
+Documento assinado eletronicamente por ROBERTO TADEU RAITTZ, PROFESSOR ENS
+BASICO TECN TECNOLOGICO, em 20/12/2024, às 18:33, conforme art. 1º, III, "b", da Lei
+11.419/2006.
+A autenticidade do documento pode ser conferida aqui informando o código verificador
+7388045 e o código CRC 07694CC2.
+Referência: Processo nº 23075.074499/2024-07 SEI nº 7388045
+AGRADECIMENTOS
+Aos professores do curso de Tecnologia em Análise e Desenvolvimento de
+Sistemas, que ao longo desses anos nos proveram o conhecimento necessário para
+a idealização e execução desse trabalho.
+Aos amigos queridos com os quais temos o prazer de conviver, coautores das
+pausas necessárias e dos momentos de descontração que nos mantiveram sãs
+durante este percurso: Beu, Chico, Dhavi, Gab, Gabi, Giovana, Helena, Ingrid,
+Isadora, Klug, Levi, Lucas e Luiz; Bia, Gabi P., Luana e Milena; Aleida, Emilly, Lorenzo
+e Marina.
+Aos meus pais, Marcio e Simone, por sempre acreditarem em mim e nunca
+medirem esforços para proporcionar um ensino de qualidade, permitindo que eu
+chegasse até aqui.
+Ao meu pai, Carlos, pela paciência, ideias e colaboração quando surgiam
+problemas de desenvolvimento que pareciam impossíveis.
+RESUMO
+A população nacional encontra-se em envelhecimento constante. O aumento
+da expectativa de vida da população e queda da taxa de fecundidade causaram um
+aumento significativo da porcentagem de idosos na população. Isso, juntamente da
+transição epidemiológica — teoria que afirma que padrões demográficos, econômicos
+e sociológicos podem mudar o perfil de uma população inteira quanto se trata de
+doenças, geralmente resultando na concentração de agravos não transmissíveis entre
+a população idosa — faz com que a preocupação com a saúde de pessoas idosas se
+torne muito mais urgente.
+Um dos principais desafios enfrentados pela parcela idosa da população,
+notoriamente dependente de medicamentos diversos para manter a sua qualidade de
+vida, é manter o controle dos fármacos que deve tomar. A falha ao consumir esses
+remédios prescritos pode ser bastante prejudicial ao idoso e causada pelos mais
+diversos motivos: problemas cognitivos ou de memória, falta de acessibilidade aos
+medicamentos — seja por indisponibilidade ou valor dos mesmos — pela
+subprescrição e até mesmo polimedicação.
+Nesse contexto, o presente trabalho propõe o desenvolvimento de um
+aplicativo mobile, o Farmatads. Sua principal funcionalidade é realizar o controle de
+medicamentos por meio de alertas sonoros e notificações, auxiliando que ocorra o
+consumo correto de fármacos. O app permite também a consulta de bulas dos
+medicamentos consumidos, além de ser simples e facilmente customizável, visando
+a utilização do mesmo pelo público idoso.
+O projeto para seu desenvolvimento foi dividido em duas etapas: a primeira,
+de organização do plano de desenvolvimento, modelagem e documentação do
+projeto, além da sua Prova de Conceito. A segunda etapa, por sua vez, foi elaborada
+durante o primeiro semestre de 2024 e envolveu o desenvolvimento do aplicativo em
+si.
+Palavras-chave: Medicamentos. Adesão Medicamentosa. Transição
+Epidemiológica. Controle de medicamentos. Aplicativo mobile.
+ABSTRACT
+The national population is constantly aging. The increase in life expectancy and
+a decline in fertility rates have led to a significant rise in the percentage of elderly
+individuals in the population. This, coupled with epidemiological transition — a theory
+that asserts that demographic, economic, and sociological patterns can change the
+profile of an entire population concerning diseases, often resulting in the concentration
+of non-communicable diseases among the elderly — makes the concern for the health
+of elderly individuals much more urgent.
+One of the main challenges faced by the elderly population, notably dependent
+on various medications to maintain their quality of life, is keeping track of the medicine
+they should take. Failure to consume these prescribed medications can be quite
+detrimental to the elderly and can be caused by various reasons: cognitive or memory
+problems, lack of accessibility to medications — either due to unavailability or cost —
+underprescription, and even polypharmacy.
+In this context, this work proposes the development of a mobile application,
+Farmatads. Its main functionality is to control medication intake through sound alerts
+and notifications, assisting in the correct consumption of medicine. The app also allows
+the consultation of medication leaflets, in addition to being simple and easily
+customizable, aiming for use by the elderly population.
+The project for its development has been divided into two stages: the first,
+organizing the development plan, project modeling, and documentation, as well as its
+Proof of Concept. The second stage, in turn, was carried out during the first semester
+of 2024 and involved the development of the application itself.
+Key-words: Medication. Medication Adherence. Epidemiologic Transition.
+Medication control. Mobile App.
+LISTA DE FIGURAS
+FIGURA 1 - POPULAÇÃO BRASILEIRA POR GRUPOS DE IDADE .......................20
+FIGURA 2 - TELA INICIAL DO APLICATIVO MEDISAFE.........................................28
+FIGURA 3 - TELA DE MEDICAMENTOS DO APLICATIVO MEDISAFE..................29
+FIGURA 4 - TELA INICIAL DO APLICATIVO PILL REMINDER ...............................31
+FIGURA 5 - TELA DE MEDICAMENTOS DO APLICATIVO PILL REMINDER.........32
+FIGURA 6 - TELA INICIAL DO APLICATIVO UFPR/HC LEMBRE-ME.....................34
+FIGURA 7 - TELA DE MEDICAMENTOS DOS APLICATIVO UFPR/HC ..................34
+FIGURA 8 - FLUXO DE PROCESSO DO SCRUM ...................................................40
+FIGURA 9 – QUADRO KANBAN DO DESENVOLVIMENTO DO PROJETO ...........43
+FIGURA 10 - VISÃO GERAL DO NOTION ...............................................................47
+FIGURA 11 - VISÃO GERAL DO FIGMA..................................................................48
+FIGURA 12 - VISÃO GERAL DO DIAGRAMS.NET VERSÃO WEB .........................50
+FIGURA 13 - VISÃO GERAL DO VS CODE .............................................................50
+FIGURA 14 - EXEMPLO DE USO DA API BULÁRIO ...............................................55
+FIGURA 15 - ARQUITETURA DO SISTEMA............................................................56
+FIGURA 16 - TELA INICIAL ......................................................................................58
+FIGURA 17 - TELA DE LOGIN DA APLICAÇÃO ......................................................59
+FIGURA 18 - TELA DE RECUPERAÇÃO DE SENHA..............................................60
+FIGURA 19 - TELA DE REDEFINIÇÃO DE SENHA SEM INPUTS ..........................61
+FIGURA 20 - TELA DE REDEFINIÇÃO DE SENHA COM INPUTS..........................61
+FIGURA 21 - TELA DE CADASTRO.........................................................................62
+FIGURA 22 - TELA DE TUTORIAL/MENU PRINCIPAL............................................63
+FIGURA 23 - TELA DE MEDICAMENTOS................................................................64
+FIGURA 24 - ADICIONAR NOVO MEDICAMENTO .................................................64
+FIGURA 25 - TELA DE SELEÇÃO DE TIPO.............................................................65
+FIGURA 26 - TELA INSERÇÃO CÁPSULA ..............................................................66
+FIGURA 27 - TELA INSERÇÃO CAPSULA 2 ...........................................................66
+FIGURA 28 - TELA INSERÇÃO COMPRIMIDO 1 ....................................................66
+FIGURA 29 - TELA INSERÇÃO COMPRIMIDO 2 ....................................................66
+FIGURA 30 - TELA INSERÇÃO XAROPE 1 .............................................................67
+FIGURA 31 - TELA INSERÇÃO XAROPE 2 .............................................................67
+FIGURA 32 - TELA EDIÇÃO XAROPE .....................................................................68
+FIGURA 33 - TELA EDIÇÃO XAROPE P2................................................................68
+FIGURA 34 - TELA EDIÇÃO CÁPSULA ...................................................................68
+FIGURA 35 - TELA EDIÇÃO CÁPSULA P2 ..............................................................68
+FIGURA 36 - TELA EDIÇÃO COMPRIMIDO ............................................................69
+FIGURA 37 - TELA EDIÇÃO COMPRIMIDO ............................................................69
+FIGURA 38 - NOTIFICAÇÃO DE MEDICAMENTO ..................................................69
+FIGURA 39 - TELA DE INGESTÃO DE REMÉDIOS ................................................70
+FIGURA 40 - TELA DE PESQUISA DE BULA ..........................................................71
+FIGURA 41 - TELA DE PESQUISA APÓS ATIVAÇÃO DO CARD DE RESULTADO
+71
+FIGURA 42 - ANTIGA TELA DE PESQUISA DE BULA............................................72
+FIGURA 43 - DIAGRAMA DE CASOS DE USO .......................................................81
+FIGURA 44 - PROTÓTIPO DE CRIAÇÃO DE CONTA.............................................83
+FIGURA 45 - PROTÓTIPO DE LOGIN......................................................................86
+FIGURA 46 - PROTÓTIPO RECUPERAÇÃO DE SENHA 1.....................................88
+FIGURA 47 - PROTÓTIPO DE RECUPERAÇÃO DE SENHA 2...............................89
+FIGURA 48 - PROTÓTIPO DA VISUALIZAÇÃO DO MENU.....................................92
+FIGURA 49 - PROTÓTIPO DE ADIÇÃO DE MEDICAMENTOS...............................94
+FIGURA 50 - PROTÓTIPO SELEÇÃO DE TIPO ......................................................95
+FIGURA 51 - PROTÓTIPO INFORMAÇÕES BÁSICAS DO MEDICAMENTO .........96
+FIGURA 52 - PROTÓTIPO CUSTOMIZAÇÃO DP MEDICAMENTO ........................97
+FIGURA 53 - PROTÓTIPO ACESSO A CARTELAS DIGITAIS ..............................100
+FIGURA 54 - PROTÓTIPO REGISTRAR INGESTÃO MEDICAMENTO.................101
+FIGURA 55 - PROTÓTIPO MEDICAMENTOS TOMADOS ....................................102
+FIGURA 56 - PROTÓTIPO DE PESQUISA DE BULA ............................................104
+FIGURA 57 - PROTÓTIPO VISUALIZAÇÃO DE BULA ..........................................105
+FIGURA 58 - PROTÓTIPO DE NOTIFICAÇÃO ......................................................107
+FIGURA 59 - PROTÓTIPO DE EDIÇÃO DO MEDICAMENTO...............................108
+FIGURA 60 - PROTÓTIPO EDIÇÃO BÁSICA.........................................................109
+FIGURA 61 - PROTÓTIPO EDIÇÃO DE CUSTOMIZÁVEIS...................................109
+FIGURA 62 - PROTÓTIPO EXCLUSÃO DE MEDICAMENTO ...............................110
+FIGURA 63 - DIAGRAMA DE CLASSES DE ANÁLISE ..........................................113
+FIGURA 64 - DIAGRAMA DE SEQUÊNCIA DE CADASTRO DO USUÁRIO .........113
+FIGURA 65 - DIAGRAMA DE SEQUÊNCIA DE LOGIN..........................................114
+FIGURA 66 - DIAGRAMA DE SEQUÊNCIA DE ACESSO AO MENU PRINCIPAL 115
+FIGURA 67 - DIAGRAMA DE SEQUÊNCIA DE NOVO MEDICAMENTO ..............115
+FIGURA 68 - DIAGRAMA DE SEQUÊNCIA DE CADASTRO DE MEDICAMENTO
+116
+FIGURA 69 - DIAGRAMA DE SEQUÊNCIA DE TOMADA DE MEDICAMENTO....116
+FIGURA 70 - DIAGRAMA DE SEQUÊNCIA DE PESQUISA DE BULA ..................117
+FIGURA 71 - MODELO LÓGICO DE DADOS.........................................................118
+LISTA DE TABELAS
+TABELA 1 - MEDISAFE: PONTOS POSITIVOS E NEGATIVOS..............................29
+TABELA 2 - PILL REMINDER: PONTOS POSITIVOS E NEGATIVOS ....................32
+TABELA 3 - HC/UFPR LEMBRE-ME: PONTOS POSITIVOS E NEGATIVOS..........35
+TABELA 4 - CRONOGRAMA DE TRABALHO DA EQUIPE NA PRIMEIRA ETAPA 42
+TABELA 5 - CRONOGRAMA DE TRABALHO DA EQUIPE NA SEGUNDA ETAPA 44
+LISTA DE ABREVIATURAS E SIGLAS
+DANT - Doenças e Agravos Não Transmissíveis
+DCNT - Doenças Crônicas Não Transmissiveis
+P.O - Product Owner
+UML - Unified Modeling Language
+VS Code - Visual Studio Code, um editor de código-fonte
+API - Application Programming Interface
+JWT - Jason Web Token
+SUMÁRIO
+1 INTRODUÇÃO.......................................................................................................15
+1.1 PROBLEMA ........................................................................................................16
+1.2 OBJETIVO GERAL..............................................................................................16
+1.3 OBJETIVOS ESPECÍFICOS ...............................................................................17
+1.4 JUSTIFICATIVA ..................................................................................................17
+2 FUNDAMENTAÇÃO TEÓRICA .............................................................................18
+2.1 ENVELHECIMENTO POPULACIONAL ..............................................................18
+2.2 TRANSIÇÃO EPIDEMIOLÓGICA........................................................................20
+2.3 SUBADESÃO MEDICAMENTOSA......................................................................23
+2.3.1 ACESSO A MEDICAMENTOS.........................................................................25
+2.3.2 POLIMEDICAÇÃO............................................................................................25
+2.3.3 SUBPRESCRIÇÃO ..........................................................................................25
+2.3.4 MONITORAMENTO INADEQUADO ................................................................26
+2.3.5 COMPROMETIMENTO COGNITIVO...............................................................26
+2.4 SOFTWARES SEMELHANTES ..........................................................................27
+2.4.1 MEDISAFE.......................................................................................................28
+2.4.2 PILL REMINDER..............................................................................................30
+2.4.3 UFPR/HC LEMBRE-ME ...................................................................................33
+3 MATERIAIS E MÉTODOS .....................................................................................35
+3.1 METODOLOGIA DE DESENVOLVIMENTO .......................................................35
+3.1.1 SCRUM ............................................................................................................35
+3.1.1.1 Eventos.........................................................................................................36
+3.1.1.2 Artefatos .......................................................................................................37
+3.1.1.3 Papéis e responsabilidades..........................................................................38
+3.1.1.3.1 Developers...........................................................................................39
+3.1.1.3.2 Product Owner.....................................................................................39
+3.1.1.3.3 Scrum Master.......................................................................................39
+3.1.1.4 Fluxo de processo ........................................................................................40
+3.1.2 Kanban.............................................................................................................40
+3.2 CRONOGRAMA DE TRABALHO........................................................................42
+3.3 MODELAGEM DO SISTEMA..............................................................................44
+3.3.1 Diagrama de Caso de Uso ...............................................................................45
+3.3.2 Histórias de usuário..........................................................................................45
+3.3.3 Diagrama de Classes .......................................................................................45
+3.3.4 Diagrama de sequência....................................................................................46
+3.3.5 Modelo lógico de dados....................................................................................46
+3.4 FERRAMENTAS DE DESENVOLVIMENTO.......................................................47
+3.4.1 Notion...............................................................................................................47
+3.4.2 Figma ...............................................................................................................48
+3.4.3 Diagrams.net ....................................................................................................49
+3.4.4 Visual Studio Code...........................................................................................50
+3.4.5 Autenticação JWT ............................................................................................51
+3.4.6 Vue.js ...............................................................................................................51
+3.4.7 Ionic..................................................................................................................52
+3.4.7.1 Capacitor ......................................................................................................52
+3.4.8 PostgreSQL......................................................................................................52
+3.4.9 Node.js .............................................................................................................53
+3.4.10 Express ..........................................................................................................53
+3.4.11 Axios...............................................................................................................54
+3.4.12 Bulário API .....................................................................................................54
+3.4.13 FDA Drug API.................................................................................................55
+4 APRESENTAÇÃO DOS RESULTADOS...............................................................56
+4.1 ARQUITETURA DO SISTEMA............................................................................56
+4.2 APRESENTAÇÃO DO SISTEMA........................................................................57
+5 CONSIDERAÇÕES FINAIS...................................................................................73
+6 REFERÊNCIAS......................................................................................................76
+7 APÊNDICES ..........................................................................................................81
+15
+1 INTRODUÇÃO
+Cada vez mais, a população nacional vem envelhecendo. O aumento da
+expectativa de vida da população e queda da taxa de fecundidade causaram um
+aumento significativo da porcentagem de idosos na população. Segundo dados do
+IBGE — Instituto Brasileiro de Geografia e Estatística — dentre a população estimada
+em 212,7 milhões em 2021, a porcentagem de pessoas abaixo de 30 anos de idade
+no país caiu 5,4% em relação a mesma medição feita em 2012. Enquanto isso, a
+parcela de pessoas com 60 anos ou mais aumentou de 11,3% para 14,7% da
+população durante o mesmo período.
+De acordo com dados do Fundo de População das Nações Unidas Brasil
+(UNFPA/BR) fatores como o aumento da expectativa de vida da população — tanto
+em escala nacional como mundial — e a diminuição das taxas de fecundidade e
+mortalidade são de grande influência para esse aumento drástico da população de
+terceira idade ao longo dos anos. A crescente expectativa de vida depende de
+diversos outros elementos primordiais, dentre eles o desenvolvimento da saúde e da
+medicina, a melhoria das condições de saneamento básico e coleta de lixo (UMANN,
+2019). É claro que todos esses aspectos têm sua própria importância e influência,
+porém, dentre eles, se destacam os avanços tecnológicos nas áreas da medicina e
+da farmácia, os quais permitiram a criação de remédios, vacinas, tratamentos e
+métodos de prevenção mais eficazes.
+É indiscutível que a progressiva evolução nesse aspecto beneficia tanto
+profissionais da área de saúde quanto seus pacientes. Com diagnósticos mais claros
+e ágeis, bem como tratamentos mais variados e efetivos, é possível salvar mais vidas
+e proporcionar maior qualidade de vida às pessoas. Porém, como toda inovação, os
+avanços medicinais têm seus aspectos positivos e negativos. Assim como pode prover
+maior possibilidade de prevenção de doenças, diminuição de erros médicos,
+diagnósticos mais precisos e ampliação do atendimento, a infusão de novas
+tecnologias e tratamentos nesse meio pode diminuir drasticamente a acessibilidade
+de certos aspectos da medicina para alguns grupos. Esse é o caso de grande parte
+da parcela da população com 60 anos ou mais, que nem sempre consegue se manter
+a par de todas as facetas que envolvem cuidar de sua própria saúde, independente
+da complexidade.
+16
+1.1 PROBLEMA
+A prevalência do uso de medicamentos receitados aumenta substancialmente
+com a idade. Segundo estudo conduzido em um grupo de 97 idosos brasileiros, com
+média de idade de 71,6 anos, 44,3% dos avaliados tomam entre 1 e 2 medicamentos
+prescritos diariamente (FREIRE, 2009). Enquanto fica claro que muitos dentre o
+público da terceira idade necessitam fazer o uso de medicamentos diários para manter
+a qualidade de vida, porém nem sempre fazem o uso efetivo de tais. Problemas com
+fármacos incluem ineficácia, efeitos adversos, superdosagem, subdosagem e
+interações medicamentosas dos fármacos. Sua ineficácia pode ser causada por dois
+fatores principais: a subprescrição médica e a baixa adesão.
+Nesse trabalho, focaremos no segundo desses fatores. A adesão depende de
+mais elementos fora a idade do paciente por si só. Segundo dados do Manual MSD,
+mais da metade dos idosos não usa os fármacos indicados ou os toma em doses
+menores do que o prescrito. As causas são parecidas com as que causam a
+subadesão em pacientes mais jovens, porém também incluem limitações físicas e
+financeiras que podem prejudicar na aquisição de medicamentos, problemas
+cognitivos e de memória, uso de múltiplos fármacos e até mesmo a não compreensão
+dos benefícios que o consumo correto da prescrição pode trazer.
+Assim, torna-se necessária uma ferramenta que permita o controle do uso de
+medicamentos, para que sejam consumidos com a regularidade necessária para que
+se tornem efetivos. Além de se mostrar indispensável para a população idosa, tal
+ferramenta também poderia ser facilmente utilizada pelo público em geral, por se tratar
+de uma forma fácil e eficiente de lidar com questões essenciais para saúde e bemestar da população.
+1.2 OBJETIVO GERAL
+O presente Trabalho de Conclusão de Curso propõe o desenvolvimento de
+um aplicativo para dispositivos móveis de simples utilização, que permita que até o
+mais leigo dos usuários possa usá-lo de forma a aproveitar todas suas
+funcionalidades. Dito aplicativo irá visar a aproximação entre o público de terceira
+idade e a tecnologia, buscando simplificar e melhorar suas interações. Além disso,
+também servirá como apoio para usuários de todas as idades, que poderão fazer uso
+de suas funcionalidades para melhorar sua qualidade de vida com o controle preciso
+de seus medicamentos.
+17
+1.3 OBJETIVOS ESPECÍFICOS
+Dentre os objetivos específicos do aplicativo detalhado no presente trabalho,
+podemos citar:
+• Realizar pesquisa de mercado com pessoas que fazem uso de grande
+variedade de medicamentos com o objetivo de entender as
+necessidades e preferências em relação ao aplicativo.
+• Realizar testes de usabilidade com pessoas da terceira idade visando o
+aprimoramento da interface do aplicativo, tornando-a mais amigável
+para o público.
+• Implementar as funções de cadastro e login do usuário, possibilitando o
+acesso ao aplicativo em outros dispositivos sem perda de dados.
+• Implementar a função de registro dos medicamentos pelo usuário,
+trazendo informações sobre os fármacos por meio de APIs e permitindo
+ao usuário incluir cartelas adicionais conforme necessário.
+• Implementar a função de notificação, que alertará o usuário no horário
+exato da ingestão do medicamento.
+• Desenvolver uma interface que apresente representações digitais de
+cartelas para cada medicamento registrado, permitindo ao usuário
+personalizar as cores e formatos dos fármacos.
+• Implementar a função de exclusão de medicamentos, para que o usuário
+possa remover os fármacos não mais utilizados.
+• Implementar a função de edição, para que o usuário possa modificar os
+horários de ingestão dos medicamentos.
+1.4 JUSTIFICATIVA
+Atualmente, o Brasil encontra-se na quinta posição do ranking dos países com
+maior número de smartphones. Cerca de 55,4% da população brasileira tem acesso
+a um telefone celular próprio (EXAME, 2023). Ainda, de acordo com dados levantados
+Tecnologia da Informação e Comunicação com base em informações da Pesquisa
+Nacional por Amostra de Domicílios Contínua (PnadTIC), houve um aumento no
+percentual de pessoas acima de 60 anos com acesso à internet e seu próprio telefone
+móvel — de 66,6% em 2019 para 71,2% em 2021. Pela primeira vez, mais da metade
+18
+da população idosa do país tem acesso a essas tecnologias de forma praticamente
+irrestrita.
+Sendo assim, é possível dar início a um processo de aproximação ainda mais
+efetivo entre a população da terceira idade e tecnologias móveis, utilizando-as para
+aumentar a qualidade de vida desses idosos. Buscando melhorar e simplificar essas
+interações, empregando de um tema de interesse aos idosos, é possível efetivamente
+fazer a integração entre a saúde, a tecnologia e seu usuário mais prioritário: o idoso.
+Já existem em circulação alguns aplicativos de função principal parecida com o
+aplicativo proposto. Entretanto, nenhum deles é projetado com o público com mais de
+60 anos em mente, de forma que podem se apresentar mais difíceis de compreender
+para essa parcela da população.
+Nesse âmbito, a proposta de desenvolvimento aplicada nesse Trabalho de
+Conclusão de Curso se trata de um aplicativo mobile que facilite o controle do
+consumo de fármacos, diminuindo a subadesão aos mesmos. Nesse aplicativo, os
+usuários terão a capacidade de cadastrar seus medicamentos em forma de cartelas
+digitais, organizando seus horários com a ajuda de notificações. O aplicativo também
+permitirá o acesso às informações dos fármacos por meio de APIs, além de oferecer
+a distinção entre as cartelas através do uso de cores e formatos específicos para cada
+remédio listado. A flexibilidade do aplicativo permitirá aos usuários a edição dessas
+informações, inclusive o design das cartelas, de acordo com suas preferências.
+As funções do aplicativo serão apresentadas de forma simplificada, assim
+como seu design, visando tornar mais fácil o uso do software pelo público da terceira
+idade.
+2 FUNDAMENTAÇÃO TEÓRICA
+Nesse capítulo, definem-se os estudos e conceitos que fundamentam o
+software proposto, buscando expor conceitos como o envelhecimento populacional, a
+transição epidemiológica e a subadesão medicamentosa. Além disso, são
+apresentados e analisados softwares com propósitos relacionados ao proposto nesse
+Trabalho de Conclusão de Curso.
+2.1 ENVELHECIMENTO POPULACIONAL
+O envelhecimento é um processo natural e inevitável na vida de todo ser
+humano. Diversas organizações definem um indivíduo como idoso quando o mesmo
+19
+tem 60 anos de idade ou mais completos — mundialmente, a Organização Mundial
+de Saúde (OMS), que já define assim essa faixa-etária desde 2002, no mínimo1
+. No
+Brasil, a lei 14.423, de 22 de julho de 2022 define como idosos pessoas com idade
+igual ou superior a 60 (sessenta) anos (BRASIL, 2022).
+Esse processo demonstra um triunfo no desenvolvimento mundial, refletindo
+as melhoras na nutrição, na qualidade de vida, na saúde e medicina, nas condições
+sanitárias, no ensino e muitas outras (UNFPA, 2018). Há diversos fatores
+socioeconômicos e políticos como os previamente citados que contribuem para o
+envelhecimento populacional, sendo que ele varia de acordo com a nação. Porém, já
+é possível considerar que ele é uma realidade mundial.
+O envelhecimento populacional pode ser definido, em termos simples, como
+o crescimento elevado da taxa da população considerada idosa em relação a outros
+grupos etários (CAMARANO, 2002). Tal processo foi primeiramente registrado na
+Europa, com o declínio acentuado da fecundidade e diminuição dos índices de
+mortalidade em consequência da Segunda Revolução Industrial, no século XIX
+(RAMOS, 2002). A transição demográfica — fator essencial para definirmos o
+envelhecimento populacional — é definida por Paschoal et al. (2005) como:
+[...] o termo transição demográfica refere-se ao processo gradual pelo
+qual uma sociedade passa de uma situação de altas taxas de fecundidade e
+mortalidade a uma situação de baixas taxas de tais indicadores. Quando há
+queda na taxa de mortalidade, com aumento da expectativa de vida e
+diminuição da taxa de fecundidade, a população começa a envelhecer.
+(PASCHOAL et al, 2005, p.20).
+Embora seja uma marca da evolução da sociedade, esse fato se torna uma
+espécie de faca de dois gumes: revoluções indispensáveis na sociedade permitiram
+que a porcentagem pessoas idosas na população brasileira subissem para 15,1%, em
+2022 (IBGE, 2022), porém vieram a troco da redução de parcelas mais jovens da
+população. Atualmente, a população de idosos na população supera em muito a de
+crianças jovens (de 0 a 4 anos de idade), que representa apenas 6,8% da população.
+A figura 1 abaixo demonstra essa grande disparidade populacional, apresentando
+dados nacionais e divididos por regiões.
+_______________
+1 Organização Mundial de Saúde. Active Ageing - A Policy Framework. Arquivado em 19 de março de
+2015, no Wayback Machine. A contribution of the World Health Organization to the Second United
+Nations World Assembly on Ageing. Madri, abril de 2002, p. 4.
+20
+FIGURA 1 - POPULAÇÃO BRASILEIRA POR GRUPOS DE IDADE
+FONTE: G1 (2022)
+Similarmente, dados da World Population Prospects (WPP), o conjunto de
+estimativas e projeções oficiais da população das Nações Unidas indica o ano de 2018
+como a primeira vez em que a população mundial de idosos superou a de crianças
+com menos de cinco anos completos (DESA, 2022). Ainda segundo estimativas da
+WPP, essa porcentagem deve duplicar até 2050 e quintuplicar até 2100.
+Mesmo com essa discrepância de idades preocupante existente, deve existir
+espaço para que essa crescente parcela da população nacional e mundial tenha
+acesso a ferramentas que possam melhorar ainda mais o seu estilo de vida e
+aumentar sua longevidade. Desde políticas públicas até iniciativa privada, é
+fundamental dar extrema atenção a saúde das pessoas idosas.
+2.2 TRANSIÇÃO EPIDEMIOLÓGICA
+A Epidemiologia, do grego epi (sobre), demos (povo) e logos (estudo), indica
+o estudo de algo que “vem sobre o povo”, acomete ou afeta uma população.
+Especificamente, esse estudo leva em conta a distribuição de doenças e mortalidade,
+além de seus determinantes e consequências sobre certos grupos populacionais
+(OMRAM, 1996).
+Por sua vez, a Teoria da Transição Epidemiológica surge como maneira de
+refinar as teorias de transição demográfica de autores como Van Nort & Karon
+(1955) e Micklin (1968), buscando melhor descrever como padrões de saúde e
+doença são componentes integrais da mudança e envelhecimento populacional.
+Nela, Omran (1996) enfoca na mudança complexa nos padrões de saúde e doença
+e nas interações entre esses padrões, seus determinantes e suas consequências
+21
+demográficas, econômicas e sociológicas. Nesse estudo, existem diversas
+evidências de que sustentam essa transição, reforçando o fato de que as pandemias
+de doenças infecciosas mais comuns em certos períodos da história vêm cada vez
+mais sendo substituídas por doenças degenerativas e provocadas pelo homem
+como principais causas de mortalidade na população, em geral de pessoas idosas e
+mais suscetíveis a agravos crônicos.
+Segundo Chaimowicz2
+(1997 apud SCHRAMM et al., 2004), há uma
+correlação direta entre os processos de transição epidemiológica e demográfica,
+sendo que tudo indica que à medida que cresce o número de pessoas idosas na
+população, mais frequentes se tornam as doenças não transmissíveis e crônicodegenerativas. Ao mesmo tempo, o declínio da taxa de mortalidade acaba por
+beneficiar as faixas mais jovens da população, justamente pelo declínio das doenças
+infecciosas. Essa fase da transição populacional é descrita em estudos sobre
+padrões de mortalidade e doenças, como o supracitado estudo de Omran (1996),
+que propõe que:
+Durante a transição, ocorre uma mudança a longo prazo nos padrões de
+mortalidade e de doença, em que as pandemias de infecção são
+gradualmente substituídas por doenças degenerativas e provocadas pelo
+homem como principal forma de morbilidade e principal causa de morte
+(OMRAM, 1996, p.6, tradução nossa3
+).
+São por ele descritas três grandes fases sucessivas da Transição
+Epidemiológica:
+1. A Era da Pestilência e fome, na qual a mortalidade é elevada e
+flutuante, tornando impossível o crescimento populacional de maneira
+equilibrada. A expectativa de vida é baixa e varia entre os 20 e 40 anos
+de idade. As doenças infecciosas são grande agravante nessa fase;
+2. A Era do Retrocesso de Pandemias, na qual a mortalidade
+gradualmente começa a diminuir, com menor número de picos
+_______________
+2 Chaimowicz F 1997. A saúde dos idosos brasileiros às vésperas do século 21: problemas, projeções
+e alternativas. Revista de Saúde Pública 31(2):184-200.
+3
+“During the transition, a long-term shift occurs in mortality and disease patterns whereby pandemics
+of infection are gradually displaced by degenerative and man-made diseases as the chief form of
+morbidity and primary cause of death” (OMRAM, 1996, p.6)
+22
+epidêmicos. Nela, a expectativa começa a aumentar gradativamente,
+aumentando de cerca de 30 até 50 anos de idade;
+3. A Era das Doenças Degenerativas e Provocadas pelo Homem, por fim,
+ocorre com a estabilização da taxa de mortalidade e aumento da
+expectativa de vida para mais de 50 anos de idade. É nesse ponto que
+doenças infecciosas deixam de ser a maior ameaça a saúde da
+população e as doenças degenerativas passam a ser de grande
+ameaça para a população mais velha — que agora existe graças a
+diversos fatores socioeconômicos.
+Grande dos países ocidentais e europeus se encontra na terceira fase da
+Transição Epidemiológica, enquanto em países em desenvolvimento ela é mais
+recente, com efeito de fatores médicos mais direto e mais saliente — contando com
+massivo impacto da importação de fatores médicos ampliado por programas de saúde
+pública. Essa ideia é reforçada por Preston4
+(1975 apud PRATA, 1992), que afirma
+que, no mundo em desenvolvimento, as medidas efetivas de proteção de saúde têm
+mais impacto que o determinismo econômico. O Brasil é um dos países que se
+encaixa nessa definição, embora tenha suas próprias peculiaridades.
+Por muitos anos, divergindo do modelo experimentado por países
+industrializados e mesmo de países latinos na vizinhança, o Brasil apresentou uma
+certa superposição entre as fases de Transição Epidemiológica. Dependendo da
+região do país, era possível observar a predominância de ora uma ou outra fase,
+algumas porções do território sendo mais acometidas por doenças infecciosas
+enquanto outras já estabilizavam nas doenças degenerativas causadas pelo homem.
+Alguns autores, como Possas (1989) e Laurenti (1990), concluíram então que o país
+se encontra em meio a fase intermediária de Transição Epidemiológica, a “Era de
+“Retrocesso de Pandemias”. Laurenti ainda afirma que a transição não é uniforme,
+pontuando que “em alguns estados, ou regiões destes, esta se encontra em fase
+inicial; em outros, na fase intermediária, e em alguns a transição está quase se
+completando.”
+_______________
+4 PRESTON, S., 1975. The changing relation between mortality and level of economic development.
+Population Studies, 29: 231-247.
+23
+Por outro lado, em 1930 as mortes por doenças infecciosas eram
+correspondentes a cerca de 46% das mortes nas capitais brasileiras, enquanto em
+2003, elas correspondiam a apenas 5% dessas mortes (SILVA JUNIOR et al.5
+, 2003
+apud FREIRE, 2009). Também é pertinente notar que as Doenças e Agravos Não
+Transmissíveis (DANT) são responsáveis por mais da metade do total de mortes no
+Brasil, sendo que em 2019, 54,7% dos óbitos registrados no Brasil foram causados
+por doenças crônicas não transmissíveis (DCNT) — definidas como:
+“Doenças que apresentam uma ou mais das seguintes características: são
+permanentes, deixam incapacidade residual, são causadas por alteração
+patológica irreversível, exigem treinamento especial do paciente para
+reabilitação, ou podem exigir um longo período de supervisão, observação ou
+cuidado” (OMS, 2003, p.4, tradução nossa6
+).
+Dentre os falecimentos causados por DCNTs, menos da metade ocorreram
+prematuramente, reforçando novamente a predominância da população idosa em
+contraste com a mais jovem quando se trata desse tipo de doença, (BRASIL, 2021).
+A mudança no perfil epidemiológico da população brasileira se tornou mais
+drasticamente perceptível em anos recentes em comparação ao observado no início
+do século. O perfil de morbi-mortalidade atual requer a revisão de conceitos antigos
+existentes com relação a saúde da população, reforçando a necessidade de refinar
+conhecimentos quanto a realidade do contexto de saúde para se adaptar a parcela
+crescente de pessoas idosas — segundo Veras (2007), mais de 650 mil novos
+integrantes são adicionados a esse grupo populacional anualmente — que
+necessitarão de atenção redobrado no contexto da saúde.
+2.3 SUBADESÃO MEDICAMENTOSA
+O conceito de adesão é definido, pelo dicionário Michaelis de língua
+Portuguesa, como a “manifestação de apoio a uma iniciativa ou causa”, ou em termos
+_______________
+5 SILVA JUNIOR, J. B.; GOMES, F. B. C.; CEZÁRIO, A.C; MOURA, L. Doenças e agravos não
+transmissíveis: bases epidemiológicas. In: ROUQUAYROL, M. Z. Epidemiologia & Saúde. 6. Ed.
+Rio de Janeiro: Medsi, 2003. P. 289-311.
+6
+“Diseases which have one or more of the following characteristics: they are permanent, leave residual
+disability, are caused by nonreversible pathological alteration, require special training of the patient
+for rehabilitation, or may be expected to require a long period of supervision, observation or care”
+(OMS, 2003, p.4).
+24
+jurídicos, como o “ato pelo qual um indivíduo, uma instituição ou uma nação passa a
+participar de um negócio ou processo por iniciativa própria”.
+Em contexto relacionado a saúde, a adesão é definida pela OMS (2003, p.3,
+tradução nossa7
+) como “o ponto até em que o comportamento de uma pessoa – tomar
+medicamentos, seguir uma dieta, e/ou executar mudanças no estilo de vida,
+corresponde às recomendações acordadas de um prestador de cuidados de saúde”.
+A subadesão, por sua vez, implica uma adesão baixa ou inexistente a
+determinado negócio ou processo, indicado pelo uso do prefixo “sub”, de origem
+etimológica no latim e significando “por baixo” — ou seja, designativo de inferioridade,
+substituição, aproximação.
+O crescimento vertiginoso da incidência das DCNTs, como já observado, é
+resultado direto da transição epidemiológica do Brasil. Levando em consideração o
+padrão estabelecido por essa gradual mudança de paradigma, é lógico o aumento na
+taxa de adesão de medicamentos para o tratamento de doenças crônicas e
+degenerativas — porém isso também implica na total falta e/ou subadesão aos
+mesmos. Existem diversos fatores influenciadores para esses incidentes, dentre eles
+fatores intrínsecos ao próprio paciente, referentes à doença e/ou características da
+terapêutica e relacionados à interação entre o paciente e os profissionais de saúde
+(OMS, 20038 apud TAVARES et al., 2013).
+Um estudo conduzido por Tavares (2013), em conjunto com alunos de
+faculdades de Medicina e Enfermagem de diversas universidades brasileiras foi
+responsável por investigar esses fatores agravantes, além de determinar as
+estatísticas relacionadas a subadesão medicamentosa em uma amostra de cerca de
+1.242 indivíduos idosos residentes no sul do país. Esse estudo concluiu que na
+amostra analisada, havia alta prevalência do uso de medicamentos, sendo que cerca
+de 1/3 dos indivíduos analisados apresentavam baixa adesão ao tratamento —
+consistente com as estimativas encontradas em outros estudos, que indicam que
+cerca de 20,0% a 50,0% dos pacientes em geral não aderem ao tratamento.
+_______________
+7
+“The extent to which a person’s behaviour – taking medication, following a diet, and/or executing
+lifestyle changes, corresponds with agreed recommendations from a health care provider.” (OMS,
+2003, p.3)
+8 World Health Organization: Adherence to long-term therapies: evidence for action. Geneva: WHO;
+2003.
+25
+Ainda referente ao estudo de Tavares et al. (2013), juntamente com
+informações do Manual MSD (versão para o profissional de saúde) podemos fazer
+uso das informações colhidas para estabelecer algumas razões agravantes da
+subadesão medicamentosa por parte da população idosa:
+2.3.1 ACESSO A MEDICAMENTOS
+Especialmente quando se trata do sistema público de saúde, um grande
+agravante a habilidade das pessoas idosas de manter-se em dia com suas prescrições
+medicamentosas é o acesso a tais fármacos, seja por preço ou disponibilidade. A
+obtenção gratuita é, frequentemente, a única alternativa de acesso ao medicamento
+e idosos que necessitaram fazer pagamento parcial ou total dos medicamentos do
+qual fazem uso tem uma taxa de adesão menor ainda do que aqueles que o obtém
+gratuitamente. O custo do tratamento, portanto, mostra-se fator importante na adesão
+ao tratamento medicamentoso nessa faixa da população (TAVARES et al., 2013).
+Os achados de uma pesquisa de base ambulatorial realizada em Campinas,
+SP (CINTRA; GUARIENTO; MIYAZAKI, 2010) também indicam a falta de
+medicamentos nas unidades básicas de saúde e os gastos com medicamentos como
+um dos maiores agravantes da subadesão. Esses resultados enfatizam a importância
+da assistência farmacêutica adequada nos cuidados básicos de saúde como
+facilitador do acesso aos medicamentos nesse nível de cuidado, fator que pode
+impactar na adesão ao tratamento.
+2.3.2 POLIMEDICAÇÃO
+A polimedicação é definida como o uso paralelo de múltiplos fármacos, sendo
+que alguns autores impõe o número mínimo de cinco medicamentos para que a
+definição seja válida. Essa situação se apresenta como um grande desafio para o
+atendimento e cuidado ao idoso, visto que pode causar diversos efeitos adversos,
+desde interações medicamentosas perigosas até hospitalizações e mesmo óbitos
+(PAULINO et al., 2021).
+2.3.3 SUBPRESCRIÇÃO
+Fármacos são com frequência subprescritos — ou seja, é receitada uma dose
+menor de um medicamento necessário, o que acarreta com a diminuição da sua
+eficiência nos tratamentos — graças a relutância de certos profissionais de saúde. Há
+26
+receios por parte desses profissionais ao realizar a prescrição de medicamentos
+relacionados ao tratamento de depressão, doença de Alzheimer, dores diversas,
+insuficiência cardíaca, pós-infarto do miocárdio, hipertensão, dentre outros. O
+tratamento dessas condições pode envolver a prescrição de opioides,
+betabloqueadores, anticoagulantes e uma variedade de outros fármacos
+considerados mais “agressivos” ou mais perigosos para os idosos9
+.
+Isso se dá por diversos motivos relacionados aos profissionais de saúde.
+Alguns relutam em prescrever a dose correta de certos medicamentos por estarem
+preocupados com o aumento do risco de efeitos adversos do medicamento em si e/ou
+sua interação com outros fármacos já prescritos anteriormente, com o tempo
+necessário para haver benefício com o tratamento ou por acreditar que o tratamento
+do problema primário é o único objetivo de todos os pacientes (MANUAL MSD, 2023).
+2.3.4 MONITORAMENTO INADEQUADO
+Especialmente importante no caso de pacientes idosos, o monitoramento do
+consumo de fármacos deve ser observado com atenção para garantir a eficácia do
+tratamento. Critérios de monitoramento adequado baseados no estudo de dosagem
+ou duração inadequada da terapia, duplicação de terapia e possível interação
+medicamentosa vem sendo estabelecidos pela entidade estadunidense Health Care
+Financing Administration (HCFA) buscando padronizar e melhorar esse processo.
+O monitoramento adequado do uso de um fármaco inclui a documentação da
+prescrição, observação de resultados e respostas ao uso correto e/ou prolongado,
+solicitação de exames laboratoriais por parte do profissional de saúde, observação de
+possíveis efeitos adversos e a revisão periódica de fármacos para necessidade de
+uso contínuo (MANUAL MSD, 2023). A falha ao acatar um ou mais desses pontos já
+indica o monitoramento inadequado.
+2.3.5 COMPROMETIMENTO COGNITIVO
+Um dos, se não o maior problema que afeta a adesão medicamentosa das
+pessoas idosas, é o comprometimento cognitivo que surge em consequência da idade
+avançada. Fatores como a inabilidade de definir prioridades, dificuldade para
+_______________
+9 PORTO ALEGRE, Prefeitura Municipal de. Remume de Porto Alegre. Medicamentos
+potencialmente perigosos para idosos. Porto Alegre, 2017.
+27
+planejamento e organização e principalmente a incapacidade de relembrar certas
+informações torna o uso contínuo de fármacos muito mais desafiador para essa
+parcela da população (MORROW et al.10, 2006 apud TAVARES et al, 2013)
+Fatores cognitivos funcionais também tem seu peso sobre a adesão, sendo
+necessário avaliar as habilidades dos pacientes em questão — incluindo destreza,
+força da mão, visão, orientação espacial, dentre outros — para definir um regime
+adequado de fármacos (MANUAL MSD, 2023). Profissionais de saúde podem facilitar
+esse regime por fazer adaptações, providenciando ou recomendando recipientes de
+fácil acesso, rótulos de fármacos e instruções em letras grandes, ou preenchidos com
+base nas necessidades diárias dos fármacos, ou mesmo chamadas telefônicas de
+lembrete ou assistência à medicação, mas é mais comum que não ocorram
+personalizações grandes no tratamento indicado.
+2.4 SOFTWARES SEMELHANTES
+Os dados a seguir se referem a uma análise de aplicativos com funções
+parecidas com a do Farmatads. Os três objetos escolhidos para realizar essa
+comparação foram os aplicativos UFPR/HC Lembre-me, o Pill Reminder e o Medisafe.
+Todos esses sistemas têm como principal objetivo auxiliar na adesão do tratamento
+pelo paciente para que não se esqueça de tomar os medicamentos no horário certo,
+porém todos eles possuem seus diferenciais.
+Para a análise, foi feita uma avaliação de aplicações concorrentes, de
+funcionalidade principal parecida com o sistema solicitado. Isso foi feito pelo uso
+prolongado das mesmas, um período de teste pré-determinado do uso de todos os
+objetos de estudo para avaliar sua verdadeira eficácia. Além disso, foram
+consideradas as avaliações públicas do aplicativo postadas em suas respectivas lojas
+de aplicativos.
+Foram testadas tanto versões para Android quanto para IOS, fazendo-se uma média
+das avaliações de usuários que utilizam ambos esses sistemas operacionais. Dentre
+essas avaliações, foram consideradas tanto a média da nota de um a cinco dos
+usuários que já fizeram uso do mesmo quanto os comentários deixados com eles.
+_______________
+10 Insel K, Morrow D, Brewer B, Figueredo A. Executive function, working memory, and medication
+adherence among older adults. J Gerontol B Psychol Sci Soc Sci. 2006
+28
+2.4.1 MEDISAFE
+O Medisafe auxilia no gerenciamento da quantidade de medicamentos para
+evitar o esquecimento e não se esquecer de comprar mais deles quando estiverem
+prestes a acabar. Além disso, permite criar lembretes de para enxaqueca, alergia,
+controle da pressão arterial e nível de glicose no sangue — não exatamente
+medicamentos, mas outras questões médicas de grande importância.
+Esse software tem como público-alvo qualquer usuário de prescrições
+regulares de medicamentos, assim como aqueles que querem manter uma forma de
+controle sobre outras condições de saúde como alergias, diabetes, condições
+cardíacas, dentre outras. Seu principal diferencial é a possibilidade de criar lembretes
+personalizados para coisas que não são fármacos. Também, a capacidade de
+customização da imagem dos medicamentos — tornando-o mais acessível para que
+não seja necessário a leitura completa do aviso sonoro/notificação para identificar o
+medicamento que deve ser consumido.
+FIGURA 2 - TELA INICIAL DO APLICATIVO MEDISAFE
+FONTE: AS AUTORAS (2023)
+29
+FIGURA 3 - TELA DE MEDICAMENTOS DO APLICATIVO MEDISAFE
+FONTE: AS AUTORAS (2023)
+Fazendo a sua análise, foi possível perceber alguns pontos positivos e
+negativos, registrados na tabela a seguir:
+TABELA 1 - MEDISAFE: PONTOS POSITIVOS E NEGATIVOS
+Pontos positivos Pontos negativos
+Função principal: criar lembretes de
+medicamentos com notificações
+sonoras e visuais
+Fontes e botões são pequenos e não
+existem opções de acessibilidade como
+alto contraste, customização de
+tamanho de ícones e fontes
+Possibilidade de criar lembretes
+personalizados para coisas
+que não são fármacos
+Não permite a consulta de bulas de
+medicamento no app
+Capacidade de customização da
+imagem dos medicamentos, tornando-o
+mais acessível
+Funcionamento é um pouco
+complicado, podendo ser confuso para
+o público idoso
+Não é necessário a leitura Não existem tutoriais explicando as
+funções do aplicativo, nem nenhum tipo
+de manual
+30
+completa do aviso sonoro/notificação
+para identificar o medicamento que
+deve ser consumido
+Design limpo e minimalista
+FONTE: As Autoras (2023)
+Após a análise, foi concluído que enquanto sua principal função — de manter
+o controle do consumo de fármacos — é bem-sucedida, o Medisafe ainda é
+insuficiente em questões de acessibilidade e simplicidade de funcionamento. Por outro
+lado, traz a função de controle de condições médicas, algo interessante e inovador
+em um app dessa categoria.
+2.4.2 PILL REMINDER
+O Pill Reminder é um aplicativo de administração e lembretes de
+medicamentos. Ele tem como objetivo principal alertar os horários corretos da
+ingestão dos fármacos por meio de notificações e alarmes. O aplicativo também
+possui a opção de salvar um medicamento como crítico, permitindo que o alarme,
+junto com a notificação pop-up, seja apresentado ao usuário mesmo com o dispositivo
+em modo silencioso.
+A ferramenta tem como público-alvo qualquer usuário que faça uso de
+medicamentos e queira manter controle de seu consumo de acordo com os horários
+corretos. O software permite a personalização de cor do medicamento adicionado,
+assim como a adição de foto, além do som do alarme, que também pode ser alterado
+para facilitar sua identificação.
+31
+FIGURA 4 - TELA INICIAL DO APLICATIVO PILL REMINDER
+FONTE: AS AUTORAS (2023)
+32
+FIGURA 5 - TELA DE MEDICAMENTOS DO APLICATIVO PILL REMINDER
+FONTE: AS AUTORAS (2023)
+Fazendo a sua análise, foi possível perceber alguns pontos positivos e
+negativos, registrados na tabela a seguir:
+TABELA 2 - PILL REMINDER: PONTOS POSITIVOS E NEGATIVOS
+Pontos positivos Pontos negativos
+Função principal: criar lembretes de
+medicamentos com notificações
+sonoras e visuais
+Não possui instruções claras de
+visualização e edição dos
+medicamentos
+Permite notificações e alarmes no
+modo silencioso
+Não permite a consulta de bulas de
+medicamento no app
+33
+Possibilidade de personalizar os sons e
+as cores das notificações sonoras e
+visuais
+Possibilidade de selecionar um
+medicamento como crítico, dando-o
+mais destaque
+Não existem tutoriais explicando as
+funções do aplicativo, nem nenhum tipo
+de manual
+Possibilidade de adicionar medicamento
+de dose única
+Interface simples
+FONTE: As Autoras (2023)
+2.4.3 UFPR/HC LEMBRE-ME
+O UFPR/HC Lembre-me é um app ainda em desenvolvimento. Como
+principal objetivo, ele também orienta, fazendo o uso de sinais sonoros e visuais, a
+dosagem de medicamentos prescritos por médicos responsáveis. Ele tem como foco
+os pacientes do Ambulatório anticoagulante do Hospital de Clínicas da UFPR, de
+forma que tem opções disponíveis para lidar com eventos adversos relacionados ao
+uso de coagulantes — como a ocorrência de sangramentos excessivos. Ele permite,
+além de salvar medicamentos, seus horários de dosagem e alarmes, definir uma
+dosagem exata a ser tomada — o que também é mostrado no alerta, inclusive
+definindo quantos comprimidos devem ser tomados para atingir a dose correta, por
+exemplo.
+Seu público-alvo são os pacientes que usam medicamentos anticoagulantes e
+são pacientes do Hospital de Clínicas, independentemente se sua idade. Ele dá sinais
+sonoros e notificações ao chegar o horário de consumo de medicamentos, mas ele
+não funciona corretamente caso o dispositivo móvel esteja silenciado. O sistema tem
+interface simples e requer login para o acesso, — o que tanto traz mais segurança
+para aqueles que o utilizam como o tornam mais inacessível para pacientes menos
+experientes com tecnologias do gênero.
+34
+FIGURA 6 - TELA INICIAL DO APLICATIVO UFPR/HC LEMBRE-ME
+FONTE: AS AUTORAS (2023)
+FIGURA 7 - TELA DE MEDICAMENTOS DOS APLICATIVO UFPR/HC
+FONTE: AS AUTORAS (2023)
+35
+Fazendo a sua análise, foi possível perceber alguns pontos positivos e
+negativos, registrados na tabela a seguir:
+TABELA 3 - HC/UFPR LEMBRE-ME: PONTOS POSITIVOS E NEGATIVOS
+Pontos positivos Pontos negativos
+Função principal: criar lembretes de
+medicamentos com notificações
+sonoras e visuais
+Funcionamento é um pouco
+complicado, podendo ser confuso para
+o público idoso
+Controle de incidentes
+relacionados especificamente ao uso de
+coagulantes
+Não permite a consulta de bulas de
+medicamento no app
+Permite definir uma dosagem exata a
+ser tomada
+Requer login para acesso, o que pode
+ser confuso para o público idoso
+O alerta/notificação define quantos
+comprimidos devem ser tomados para
+atingir a dose correta
+Interface simples
+FONTE: As Autoras (2023)
+3 MATERIAIS E MÉTODOS
+Nesse capítulo, são apresentados dois grandes tópicos: o método de
+desenvolvimento de software e as tecnologias aplicadas para o fazer.
+3.1 METODOLOGIA DE DESENVOLVIMENTO
+Para o desenvolvimento do trabalho foi usado o framework SCRUM, em
+conjunto com o método Kanban, ambos detalhados a seguir.
+3.1.1 SCRUM
+O SCRUM inicialmente apareceu como um termo associado ao
+desenvolvimento no livro “The New Product Development Game”, de autoria de
+Hirotaka Takeuchi e Ikujiro Nonaka (MACHADO e MEDINA, 2009). Mais tarde, em
+1995, foi formalizado pelo autor Ken Schwaber como uma metodologia para projetos
+de desenvolvimento de software baseado no sistema lean da Toyota. O SCRUM
+finalmente ganhou uma definição formal em 2013, sendo descrito como um framework
+36
+que pode ser utilizado para resolver diversos tipos de problemas, sempre entregando
+produtos com o maior valor possível (SCHWABER e SUTHERLAND, 2013).
+O SCRUM é o um framework objetivo, possuindo metas claras, equipe bem
+definida e acima de tudo flexibilidade e adaptabilidade. Ele possui como fundamento
+a divisão do projeto em etapas incrementais e iterativas, permitindo que participantes
+se adaptem a mudanças frequentes e possam atender a demandas. Esses
+participantes têm seus relacionamentos e interações orientados sem o auxílio de
+instruções detalhadas, mas sim se utilizando da inteligência coletiva dos envolvidos
+(SCHWABER e SUTHERLAND, 2020).
+Esse framework combina quatro eventos de inspeção e adaptação dentro de
+uma sprint — um evento maior que engloba todos os outros — e garante sua
+funcionalidade por meio de seus quatro pilares empíricos:
+• Transparência: definido pelos autores Schwaber e Sutherland como a
+visibilidade do processo emergente e do trabalho para quem executa e
+recebe esse trabalho. Baixa transparência pode levar a decisões que
+diminuem o valor e aumentam riscos desnecessários;
+• Inspeção: A detecção de variações ou problemas potencialmente
+indesejáveis deve ser feita por meio de inspeções frequentes dos
+artefatos e progresso em direção as metas;
+• Adaptação: Ajustes de algum aspecto do processo que se desvia dos
+limites ou de produtos que se mostrem inaceitáveis devem ser feitos o
+mais rápido o possível para minimizar novos desvios.
+3.1.1.1 Eventos
+Os eventos existentes no SCRUM servem para criar regularidade e minimizar
+a necessidade de reuniões não planejadas, sendo preferencialmente realizados no
+mesmo horário e local para reduzir a complexidade. São eles:
+• Sprint: Esse evento tem duração fixa, geralmente de um mês ou menos. Ela
+começa diretamente após o término da última e é nela em que acontece todo
+o trabalho para atingir a meta do Produto. Elas permitem previsibilidade e
+garantindo que aconteça a adaptação e inspeção do progresso em direção a
+uma meta do Produto pelo menos uma vez por mês. Na definição do Guia do
+Scrum, por Schwaber e Sutherland (2020), cada Sprint é considerado como um
+37
+projeto curto. Durante o período definido para uma Sprint, ocorrem algumas
+ações:
+• Nenhuma mudança que afete a meta da Sprint;
+• A qualidade não diminui;
+• O Product Backlog é refinado conforme a necessidade apresentada;
+• O escopo pode ser esclarecido e renegociado com o Product Owner
+conforme ocorre mais aprendizado.
+• Sprint Planning: É o que inicia a Sprint ao definir o trabalho que deve ser
+realizado durante o seu período. Ele é criado por meio do trabalho colaborativo
+de todo o Scrum Team, abordando três tópicos principais: a razão pelo qual a
+Sprint em questão é valiosa ou acrescenta valor ao Produto, as coisas que
+podem ser feitas durante a Sprint e a maneira como o trabalho escolhido será
+realizado;
+• Daily Scrum: É uma reunião cujo propósito é inspecionar o progresso em
+direção a meta da Sprint e adaptar o Backlog conforme o necessário. Nele, os
+Developers falam sobre seu progresso, além de produzir um plano de ação
+para o próximo dia de trabalho;
+• Sprint Review: Tem como objetivo inspecionar o resultado da Sprint e
+determinar as adaptações futuras. O Scrum Team mostra os resultados de seu
+trabalho para os principais stakeholders e o progresso em direção a Meta do
+Produto é discutido. É o penúltimo evento da Sprint;
+• Sprint Retrospective: Esse evento busca planejar maneiras de aumentar a
+qualidade e a eficácia dos Sprints, inspecionando o desempenho da última a
+acontecer com relação a indivíduos, interações, processos, ferramentas e sua
+Definição de Pronto. Ela conclui a Sprint.
+3.1.1.2 Artefatos
+O SCRUM como metodologia possui artefatos, que representam trabalho ou
+valor. Projetados para maximizar a transparência das principais informações, eles
+garantem que todos os que os inspecionam tem a mesma base para adaptação
+(SCHWABER e SUTHERLAND, 2020).
+Existem três artefatos do SCRUM:
+1. Product Backlog: Isso se trata de uma lista ordenada do que é preciso para
+o aperfeiçoamento contínuo do produto e é a única fonte de trabalho
+38
+realizado pelo Scrum Team. Seu compromisso é a Meta do Produto, que
+descreve o estado futuro do produto que pode servir como base ou alvo
+para o Scrum Team planejar e define o seu objetivo a longo prazo. Um
+objetivo definido nesse artefato deve ser cumprido ou abandonado para que
+o Scrum Team possa assumir o próximo;
+2. Sprint Backlog: Esse artefato é composto pela Meta de Sprint (por que), os
+itens do Backlog selecionados para a Sprint (o que), além do plano para
+entregar o incremento (como). Ele é feito por e para os desenvolvedores e
+é um planejamento em tempo real do que devem fazer durante a Sprint para
+atingir a Meta da Sprint. Ele é atualizado ao longo da Sprint conforme mais
+é aprendido e deve ter detalhes o bastante para que o progresso possa ser
+inspecionado na Daily Scrum;
+• A meta da Sprint é criada durante a Sprint Planning e então adicionada
+ao Backlog. Ela é o objetivo único da Sprint, algo que os
+desenvolvedores mantêm em mente durante sua duração e que deve
+ser renegociada com o Product Owner no caso de o trabalho acabar
+sendo diferente do esperado.
+3. Incremento: Um incremento é o que é adicionado a todos os incrementos
+anteriores e verificado para garantir que todos funcionem em conjunto. Para
+fornecer valor, cada incremento deve ser utilizável. O trabalho realizado não
+pode ser considerado parte de um incremento ao menos que atenda a
+Definição de Pronto:
+• A Definição de pronto é uma descrição formal do estado do Incremento
+quando atende às medidas de qualidade exigidas para o produto. Se ele
+faz parte dos padrões da organização, todos os Scrum Teams devem
+segui-la como mínimo; caso contrário, o Scrum Team deve criar sua
+própria definição de acordo com o produto com o qual estão trabalhando.
+3.1.1.3 Papéis e responsabilidades
+A unidade fundamental desse framework é um pequeno time de pessoas
+chamado de Scrum Team, que consiste em um Scrum Master, um Product Owner e
+alguns Developers. Esse time é pequeno o bastante para permanecer ágil, mas
+grande o bastante para concluir trabalho significativo durante a duração de uma Sprint.
+39
+O Scrum Team é responsável por todo o trabalho desde atividades
+relacionadas ao produto — como a colaboração com o stakeholder, manutenção,
+verificação, operação, experimentação, pesquisa e desenvolvimento — até
+necessidades mais variadas, mas necessárias.
+3.1.1.3.1 Developers
+São os responsáveis pela criação dos incrementos utilizáveis a cada Sprint.
+As habilidades e responsabilidades desses membros são variadas, mas no geral
+incluem a criação do Sprint Backlog, introduzir qualidade ao aderir a uma Definição
+de Pronto e adaptar seu plano de trabalho diário para alcançar a meta da Sprint.
+3.1.1.3.2 Product Owner
+Ele é responsável por maximizar o valor do Produto resultante do trabalho do
+Scrum Team, além de gerenciar da forma mais eficaz o Product Backlog, o que inclui:
+desenvolver e comunicar explicitamente a meta do produto, criar e comunicar os itens
+nele definidos, ordenar os itens do Backlog, além de garantir que ele seja
+transparente, visível e compreensível.
+O P.O pode delegar o trabalho pelo qual é responsável, mas ele não deixa de
+ter responsabilidade sobre isso. As suas decisões devem ser respeitadas, pois são
+visíveis no conteúdo e na ordem do Backlog e por meio do incremento na revisão da
+Sprint.
+3.1.1.3.3 Scrum Master
+Esse participante é responsável por estabelecer o SCRUM de acordo com o
+que é estabelecido no Guia do Scrum. Ele deve ter entendimento e conhecimento da
+teoria e prática do método, tanto no time quanto na organização.
+Quando se trata de servir ao Scrum Team, o P.O tem algumas obrigações.
+Elas incluem o treinamento de membros do time em autogerenciamento e crossfuncionalidade, remover impedimentos ao progresso do Scrum Team, ajudar o time a
+se concentrar na criação de incrementos de alto valor que atendem a Definição de
+Pronto e por fim, garantir que todos os eventos Scrum aconteçam e sejam positivos e
+produtivos.
+O P.O também serve ao Scrum Master, por meio de ajuda para encontrar
+técnicas de definição eficaz de meta do Produto e gerenciamento do Backlog,
+estabelecer o planejamento empírico do produto para um ambiente complexo, definir
+40
+maneiras de convencer o Scrum Team a entender a necessidade de itens do Backlog
+claros e concisos e por fim facilitar a colaboração dos stakeholders.
+Por fim, ele serve a organização de diversas maneiras. Elas incluem a
+liderança, treinamento e orientação da organização na adoção do SCRUM; remoção
+de barreiras entre stakeholder e Scrum Teams; planejamento da implementação do
+Scrum dentro da organização e auxílio aos funcionários e stakeholders a compreender
+e aplicar uma abordagem empírica para trabalhos complexos.
+3.1.1.4 Fluxo de processo
+A seguir, é apresentado o fluxo padrão do processo do SCRUM.
+FIGURA 8 - FLUXO DE PROCESSO DO SCRUM
+FONTE: SCRUM.ORG (2020)
+3.1.2 Kanban
+Com origem enraizada no lean manufacturing, o Kanban se trata de uma
+estrutura de gestão de projetos que depende de tarefas visuais para gerenciar fluxos
+de trabalho (REHKOPF, [s.d]). Ele tem a intenção de a intenção de ajudar seus
+usuários a gerenciarem melhor o trabalho e melhorar a prestação de serviços ao ponto
+de atender consistentemente as expectativas dos clientes.
+Idealizado entre as décadas de 40 e 50 por Taiichi Ōno — inicialmente
+utilizando o modelo tradicional de cartões de papel para sinalizar e rastrear a demanda
+em fábricas — e mais tarde sendo adaptado para o desenvolvimento de software foi
+popularizado por autores como Mary e Tom Poppendieck (2003) e David J. Anderson
+(2007). Anderson (2010) o descreve, em seu livro “Kanban: Mudança Evolucionária
+41
+de Sucesso para o seu Negócio de Tecnologia” não como um framework ou
+metodologia, mas sim como um método que deve ser adicionado a uma metodologia,
+framework ou maneira de trabalhar já existente.
+Em material disponibilizado pela Kanban University (2022) — O Guia Oficial
+do Método Kanban V.2 — são definidas algumas diretrizes essenciais para se
+trabalhar com esse método. Seus princípios são divididos em gestão de mudanças e
+entrega de serviços e suas práticas gerais incluem:
+• Visualizar: A chave para colaboração efetiva e essencial para identificar
+oportunidades de melhoria no projeto;
+• Limitar WIP (Work In Progress): WIP índica o número de tarefas em progresso
+durante um determinado período de tempo. No Kanban, o WIP é limitado para
+equilibrar a utilização e garantir o fluxo de trabalho;
+• Gerir o fluxo: Tem como objetivo concluir o trabalho da forma mais contínua e
+previsível o possível, ainda assim mantendo um ritmo sustentável. A limitação
+do WIP mencionada anteriormente é uma das melhores formas de garantir um
+fluxo de trabalho contínuo e previsível;
+• Explicitar políticas: Todas as políticas devem ser acordadas entre clientes,
+partes interessadas e colaboradores responsáveis pelo trabalho e ser expostas
+a todos, preferencialmente junto ao quadro Kanban. É necessário inspecionar
+e adaptar as políticas regularmente e essas devem ser escassas, simples, bem
+definidas, aplicáveis e facilmente modificáveis;
+• Implementar ciclos de feedback: Necessários para entregas coordenadas e
+para a melhora da entrega do serviço. Alguns meios usados para os ciclos de
+feedback são o quadro Kanban, as métricas e reuniões regulares;
+• Melhorar colaborativamente: O método envolve mudanças contínuas, sendo
+que essas mudanças são realizadas colaborativamente usando experimentos
+baseados em modelos e no método científico. O feedback e métricas são
+importantes para criar um caminho evolutivo.
+O Kanban vem sendo utilizado em diversos setores, incluindo aeronáutica,
+saúde, varejo de vestuário, recursos humanos e, principalmente, no desenvolvimento
+de software (AHMAD et al., 2017). Entre as vantagens do seu uso para
+desenvolvimento de software, é possível mencionar (PRICKLADNICKI; WILLI;
+MILANI, 2014):
+42
+• Identificação de gargalos e/ou impedimentos;
+• Visualização do processo como um todo;
+• Otimização de tempo;
+• Distribuição mais eficiente do trabalho;
+• Dinamismo entre as pessoas;
+• Identificação de medições fora da faixa de previsibilidade.
+Tradicionalmente, são utilizados “Quadros Kanban”, no qual existem cartões
+ou post-its detalhando as tarefas existentes e as separando em um fluxo de trabalho
+delimitado por tarefas “A fazer”, “Em andamento” e “Concluídas”, embora seja possível
+adaptar listas adicionais de acordo com as demandas e complexidade do projeto.
+Adaptações podem até mesmo trazer o quadro para meios digitais, como no caso
+desse projeto, que fez uso da ferramenta Notion para criar e controlar o quadro
+Kanban utilizado pela equipe.
+3.2 CRONOGRAMA DE TRABALHO
+O processo de elaboração desse trabalho se deu ao longo de semestres,
+sendo que a primeira etapa, da definição e elaboração da documentação do projeto,
+ocorreu entre os meses de julho e novembro do ano de 2023.
+Para tal, foi utilizada a metodologia SCRUM, de maneira adaptada para as
+necessidades do grupo. A duração de cada Sprint foi variada, sendo que se
+estenderam entre uma semana e um mês. A Daily Scrum se tornou semanal, graças
+as necessidades e disponibilidade da equipe — devido aos cronogramas conflitantes,
+as reuniões eram realizadas as quintas-feiras após o período de aulas vespertino.
+Cada uma delas tinha a duração de aproximadamente uma hora. As Sprint Reviews,
+por sua vez, ocorreram todas na última quinta-feira do mês na qual cada Sprint era
+realizada.
+A seguir é apresentado um cronograma das atividades desempenhadas ao
+longo do período designado para a elaboração da primeira parte do trabalho.
+TABELA 4 - CRONOGRAMA DE TRABALHO DA EQUIPE NA PRIMEIRA ETAPA
+ATIVIDADES PERÍODO DA SPRINT
+Escrita da proposta do TCC 01/08/23 - 01/09/23
+Organização da metodologia e
+documentos
+01/08/23 - 01/09/23
+43
+Introdução 01/08/23 - 01/09/23
+Fundamentação Teórica 01/09/23 - 01/10/23
+Desenvolvimento de telas do sistema 01/09/23 - 01/10/23
+Escrita das histórias de usuário 01/09/23 - 01/10/23
+Projeto da arquitetura do sistema 01/09/23 - 01/10/23
+Materiais e métodos 01/10/23 - 01/11/23
+Elaboração de diagramas 01/11/23 - 08/11/23
+Considerações parciais 08/11/23 - 15/11/23
+Ajuste das referências 08/11/23 - 15/11/23
+Edições finais do documento 08/11/23 - 15/11/23
+FONTE: AS AUTORAS (2023)
+O método Kanban foi utilizado em conjunto com a metodologia adaptada,
+sendo que a equipe manteve um quadro Kanban atualizado com as tarefas
+necessárias conforme a figura abaixo:
+FIGURA 9 – QUADRO KANBAN DO DESENVOLVIMENTO DO PROJETO
+FONTE: AS AUTORAS (2023)
+A segunda etapa, de desenvolvimento do projeto, foi elaborada durante o
+primeiro semestre de 2024. Foi mantido o modelo de SCRUM modificado para
+gerenciar o desenvolvimento do aplicativo mobile a ser desenvolvido pela equipe. O
+cronograma de trabalho foi dividido em duas partes significativas, de produção do
+front-end e então do backend do aplicativo.
+44
+Na primeira etapa de desenvolvimento, o foco foi direcionado ao front-end da
+aplicação, em vue.js em conjunto com a framework Ionic. O desenvolvimento das telas
+demorou cerca de três meses, entre março e junho de 2024 — sem contar o período
+de greve dos técnicos, docentes e estudantil ocorrida entre abril e junho do presente
+ano.
+O desenvolvimento do backend da aplicação ocorreu durante o período de
+cerca de dois meses, iniciando pouco antes do retorno da greve e terminando na
+primeira semana de agosto de 2024.
+A seguir é apresentado um cronograma das atividades desempenhadas ao
+longo do período designado para a elaboração da segunda parte do trabalho.
+TABELA 5 - CRONOGRAMA DE TRABALHO DA EQUIPE NA SEGUNDA ETAPA
+ATIVIDADES PERÍODO DA SPRINT
+Criação do projeto 03/03/24 - 09/03/24
+Primeiros commits e configuração do
+repositório Git
+10/03/24 - 16/03/24
+HU01, HU02 17/03/24 - 23/03/24
+HU03 24/03/24 - 30/03/24
+HU05, HU06, HU07 31/03/24 - 14/03/24
+Período da greve 15/04/24 - 24/06/24
+HU09 25/06/24 - 06/07/24
+Lógica de Login e Cadastro 07/07/24 - 13/07/24
+Implementação do Backend 14/07/24 - 20/07/24
+HU04 21/07/24 – 27/07/24
+HU08, HU11 28/07/24 – 29/07/24
+HU10, integração mobile 30/07/24 – 06/08/24
+FONTE: As Autoras (2024)
+3.3 MODELAGEM DO SISTEMA
+Para a modelagem do projeto foi feito o uso da UML (Unified Modeling
+Language) para a elaboração dos diagramas referentes ao sistema. Os resultados
+são apresentados nos itens a seguir:
+45
+3.3.1 Diagrama de Caso de Uso
+Um Diagrama de Caso de Uso é uma representação gráfica de todas as
+interações possíveis de um usuário com um sistema. Nele, são descritas metas dos
+usuários, suas interações com o sistema e o comportamento que o sistema deve exibir
+para satisfazer as metas do usuário final (FOWLER, 2014).
+Segundo McLaughlin et al. (2006), esse diagrama é como uma “planta” para
+os sistemas. Seu método simplista, cujo formato busca imitar o mundo real, permite
+que seja a ferramenta perfeita para a comunicação com os possíveis stakeholders —
+que tendem a preferir informações simplificadas e mais facilmente digeríveis.
+O Diagrama de Caso de Uso referente ao sistema Farmatads é apresentado
+no Apêndice A do presente documento.
+3.3.2 Histórias de usuário
+A User Story, ou História de Usuário se trata de uma especificação de uma ou
+mais sentenças, normalmente na linguagem de negócios ou cotidiana do usuário final,
+que busca descrever o que um usuário faz ou necessita fazer como parte de sua
+função de trabalho. Elas são usadas com metodologias ágeis para definir o escopo do
+projeto de software (VAZQUEZ e SIMÕES, 2016).
+Podendo ser criadas tanto pelos usuários em si como desenvolvedores,
+captura o "quem", "o quê" e "por quê" de um requisito específico por meio de uma
+descrição curta que normalmente segue a ordem de “sendo - quero – para". Essa
+estrutura também inclui um protótipo da tela buscando atender ao requisito descrito e
+seus critérios de aceitação.
+As Histórias de Usuário elaboradas para o aplicativo Farmatads podem ser
+encontradas no Apêndice B do presente documento.
+3.3.3 Diagrama de Classes
+Esse se trata de um diagrama de estrutura estática que descreve a
+modelagem de um sistema, mostrando suas classes, atributos, métodos e
+relacionamentos entre objetos. Ele é o principal alicerce da modelagem orientada a
+objetos e pode ser usado para modelagem de dados (SPARKS, 2011).
+As classes são representadas por caixas com três compartimentos: o
+superior, que contém o nome da classe; o do meio, que contém os atributos e por fim
+o inferior que contém os métodos da classe. São especificados dois tipos de escopo
+46
+— instância e classe, a segunda representada por nomes sublinhados — além de
+alguns tipos de relacionamento: dependência, herança, associação, agregação,
+composição e dependência.
+O Diagrama de Classes elaborado para o Farmatads se encontra no Apêndice
+C desse documento.
+3.3.4 Diagrama de sequência
+Esse diagrama mostra interações de processos organizados em uma
+sequência de tempo. O diagrama descreve todos os objetos e processos envolvidos,
+além das mensagens trocadas conforme o necessário para a execução de certa
+funcionalidade. Quando se trata de um cenário específico de casos de uso, os
+diagramas mostram os eventos que os atores externos geram, sua ordem e possíveis
+eventos entre sistemas.
+A representação do diagrama depende de setas horizontais com o nome da
+mensagem escrita acima delas, exibindo interação. Setas solidas são síncronas, setas
+abertas representas mensagens assíncronas e linhas tracejadas representam
+mensagens de resposta (AMBLER, 2008). Se um caller enviar uma mensagem
+síncrona, ele deverá esperar até que a mensagem seja concluída para invocar uma
+sub-rotina. Se for assíncrona, ele poderá continuar o processamento e não precisará
+esperar por uma resposta.
+No Apêndice D, é apresentado o Diagrama de Sequência referente ao
+Farmatads.
+3.3.5 Modelo lógico de dados
+O Modelo Lógico estabelece a estrutura de elementos de dados e os
+relacionamentos entre eles. Ele se trata de uma descrição do banco de dados no nível
+de abstração do usuário do SGBD, definindo quais tabelas o banco contém
+juntamente com o nome de cada uma das colunas que elas contêm (SOARES, [s.d.]).
+Nesta notação, dados são representados em tabelas, sendo que as relações
+são o retângulo que as forma e as colunas existentes são listadas dentro do retângulo
+que representa a relação. Nelas, devem ser representadas as chaves primária e
+estrangeira, que também tem seus visuais específicos.
+O Modelo Lógico de dados se encontra no Apêndice E do presente
+documento.
+47
+3.4 FERRAMENTAS DE DESENVOLVIMENTO
+A seguir são apresentadas todas as ferramentas, softwares e bibliotecas que
+serão utilizadas para o desenvolvimento do aplicativo mobile a ser produzido pela
+equipe.
+3.4.1 Notion
+O Notion é uma plataforma de colaboração que teve release inicial em 2016,
+se popularizando com sua versão 2.0, lançada em 2018 e nomeada como produto do
+mês pela Product Hunt. Esse software de produtividade possui suporte a um sistema
+de Markdown modificado que integra quadros Kanban, tarefas, wikis e bases de dados
+em uma ferramenta de gerenciamento de arquivos.
+A principal vantagem do Notion é o fato de que essa ferramenta oferece uma
+área de trabalho unificada, especialmente útil para times de desenvolvimento por
+permitir que usuários cometem em projetos em desenvolvimento, participem em
+discussões e recebam/forneçam feedback uns aos outros (PROBST, 2022).
+Outro ponto positivo da plataforma é seu suporte a blocos de código,
+permitindo a escolha entre 60 linguagens de programação para a coloração/destaque
+de sintaxes específicas. Tal função é um grande diferencial para a organização de
+projetos de software tal como o sendo desenvolvido no presente trabalho.
+FIGURA 10 - VISÃO GERAL DO NOTION
+48
+FONTE: AS AUTORAS (2023)
+3.4.2 Figma
+O Figma é uma plataforma colaborativa lançada em 2016 por Dylan Field e
+Evan Wallace, que tem como objetivo a construção de interfaces, protótipos e
+wireframes por meio de recursos gráficos.
+Um dos principais benefícios do software é a colaboratividade, uma vez que
+permite o acesso a vários usuários em tempo real, oferecendo as opções de edição,
+feedback, marcação e navegação pelos protótipos. Dessa forma, o programa é ideal
+para grandes times que trabalham com metodologias ágeis em UI (User Interface
+Design) e UX (User Experience Design), uma vez que viabiliza a construção de
+aplicações com maior flexibilidade, agilidade e capacidade de resposta dos membros
+da equipe.
+A principal função do Figma voltada para desenvolvedores é o “Modo dev”,
+que permite localizar de forma rápida e simples as informações necessárias para a
+construção da aplicação. Com o uso dessa função é possível inspecionar os
+elementos utilizados na construção do projeto, permitindo a visualização de medidas,
+espaçamentos, especificações e estilos, além de uma pré-visualização do código
+gerado em CSS, Android e IOS.
+FIGURA 11 - VISÃO GERAL DO FIGMA
+49
+FONTE: AS AUTORAS (2023)
+3.4.3 Diagrams.net
+O diagrams.net (anteriormente draw.io) é um software de desenho gráfico
+multiplataforma desenvolvido em JavaScript e HTML5, que possui os recursos para a
+criação de diagramas diversos: fluxogramas, wireframes, diagramas UML,
+organogramas e diagramas de rede (BATTERSBY, 2020). Ele está disponível
+gratuitamente, tanto como site como aplicativo off-line para desktop.
+Entre as principais funcionalidades das aplicações fornecidas pelo
+diagrams.net estão a segurança dos dados dos diagrama, a portabilidade e
+adaptabilidade da ferramenta — que permite o uso de plataformas de armazenamento
+em nuvem da preferência do usuário para armazenar os diagramas elaborados — a
+possibilidade de colaboração simultânea em diagramas, a facilidade do uso do seu
+editor e a integração com outros aplicativos como Jira, Notion, Microsoft Office
+365/Teams e até mesmo o Google Workplace.
+50
+FIGURA 12 - VISÃO GERAL DO DIAGRAMS.NET VERSÃO WEB
+FONTE: AS AUTORAS (2023)
+3.4.4 Visual Studio Code
+O VS Code é um editor de código-fonte produzido pela Microsoft para
+Windows, Linux e macOS. Os seus recursos incluem suporte para depuração,
+highlighting de sintaxe, snippets, refatoração de código, extensões que adicionam
+funcionalidades e integração com o Git (VS Code, 2023). Os usuários podem também
+alterar o tema exibido, os atalhos de teclado e as preferências em geral.
+Ele inclui suporte básico para as linguagens de programação mais comuns,
+oferecendo, além do destaque de sintaxe, funções como a correspondência de
+colchetes, dobramento de código e trechos configuráveis. Ao contrário da maioria dos
+editores de código, que oferecem um sistema de projetos, o VS Code permite aos
+usuários abrir alguns diretórios que podem ser salvos como workspaces (áreas de
+trabalho) que podem ser reutilizados futuramente. Isso permite que ele opere como
+um editor de código independente de linguagem, que pode ser usado para uma ampla
+quantidade de projetos. Para permitir essa forma de uso, o VS Code faz uso de
+extensões disponíveis através de um repositório central — incluindo desde adições
+ao editor até mesmo suporte a diferentes idiomas.
+FIGURA 13 - VISÃO GERAL DO VS CODE
+51
+FONTE: AS AUTORAS (2023)
+3.4.5 Autenticação JWT
+Um token é como uma assinatura digital, uma chave única que identifica e
+confirma uma identidade (ALURA, 2022). Um código numérico instantâneo, ele
+protege contra fraudes e aumenta a segurança, sendo que armazena esse código em
+formato JSON. Um token JWT especificamente se trata de uma forma de autenticação
+que permite que um servidor verifique a identidade de um usuário sem precisar
+armazenar informações sobre ele. Ele transmite e armazena de forma segura os
+objetos JSON entre diferentes aplicações (TOTVS, 2023)
+3.4.6 Vue.js
+Vue (pronunciado /vju;/, ou view) é um framework JavaScript open-source
+utilizado para a construção de interfaces de usuários e single-page applications (VUE,
+2023). Ele apresenta uma arquitetura incrementalmente adaptável e concentrada na
+renderização declarativa e na composição de componentes de forma similar a
+linguagens como Angular e React, porém voltada totalmente ao desenvolvimento
+front-end.
+Os dois principais recursos do Vue são a Renderização Declarativa — seu
+núcleo contém um sistema que permite declarativamente renderizar dados no DOM
+(Document Object Model) usando uma sintaxe mais simples e reativa. Isso é feito por
+52
+meio de diretivas exclusivas ao Vue — e a Reatividade. A reatividade é o que permite
+que o Vue rastreie automaticamente as mudanças de estado do JavaScript e atualize
+o DOM com eficiência quando qualquer mudança ocorre.
+A maioria dos projetos Vue faz uso de componentes com um formato de
+arquivo chamado de SFC (Single-File Component). Semelhante ao HTML, fazendo
+até mesmo uso de tags, ele encapsula a lógica do componente em JavaScript, os
+estilos em CSS e o modelo em HTML.
+3.4.7 Ionic
+Esse se trata de um SDK (Software Development Kit) para construir
+aplicativos mobile híbridos usando tecnologias Web como HTML, CSS e JavaScript.
+Suas funcionalidades incluem a integração com frameworks populares como Angular,
+React e Vue (IONIC, 2023).
+O Ionic é otimizado para a Web e Native, emulando diretrizes de UI de
+aplicativos nativos. Ele usa Capacitor (ou Cordova) para implantação nativa ou roda
+no navegador como um Progressive Web App. Para o desenvolvimento do aplicativo
+projetado para esse trabalho, será utilizada o suporte oficial do Ionic para a biblioteca
+Vue 3 — isso porque por si só, o Vue não tem suporte nativo para produção de
+aplicativos mobile.
+3.4.7.1 Capacitor
+O Capacitor é um runtime nativo open source para desenvolvimento de
+aplicativos Web Native para iOS, Android e Progressive com JavaScript, HTML e CSS
+(CAPACITOR, [s.d.]).
+3.4.8 PostgreSQL
+O PostgreSQL é um SGBD open-source que usa o modelo relacional para o
+armazenamento de dados. Esse SGBD conquistou uma boa reputação graças a sua
+"arquitetura robusta, confiabilidade, integridade de dados, conjunto robusto de
+recursos extensibilidade e dedicação da comunidade de código aberto por trás do
+software para fornecer soluções inovadoras e de desempenho consistente"
+(POSTGRESQL, 2019).
+O PostgreSQL pode ser executado em todos os sistemas operacionais
+modernos, sendo compatível com ACID (Atomicity, Consistency, Isolation, and
+Durability) desde 2001. Seus recursos extras são destinados a auxiliar
+53
+desenvolvedores a criar aplicativos e administradores a proteger a integridade dos
+dados e a construir ambientes tolerantes a falhas, além de ajudá-lo a gerenciar seus
+dados independentemente do tamanho do conjunto de dados.
+Uma outra característica notável do PostgreSQL é a sua extensibilidade,
+característica que permite que novas funções sejam criadas, tipos de dados próprios
+sejam definidos e até mesmo que código de diferentes linguagens de programação
+sejam escritos sem que seja necessário recompilar o banco de dados
+(POSTGRESQL, 2019).
+3.4.9 Node.js
+Para a estruturação do backend do Farmatads, o node.js foi o runtime
+selecionado. Definido como um runtime JavaScript assíncrono orientado a eventos
+(NODE.JS, [s.d.]), o Node.js tem como objetivo permitir a construção de aplicativos de
+rede escalonáveis. Com design voltado a baixa latência e streaming, o Node.js tem
+alta compatibilidade com HTTP — tornando-o adequado para a base de uma
+biblioteca ou estrutura web.
+Um aplicativo que utiliza Node.js é executado em um único processo, sem
+criar novas threads para cada requisição. Isso permite que esse runtime lide com
+milhares de conexões simultâneas em um único servidor sem que sua execução seja
+prejudicada pelo gerenciamento concorrente de threads.
+Uma vantagem única do Node.js — e especialmente interessante para o
+presente projeto — é que seu uso possibilita que JavaScript pode ser usado para
+escrever o código server-side, de maneira que não é necessário o aprendizado de
+uma linguagem completamente diferente da usada no front-end.
+3.4.10 Express
+O Express é uma web application framework Node.js mínima e flexível que
+fornece um conjunto robusto de recursos para aplicativos web e móveis, capaz de
+facilmente criar APIs robustas (OPENJS FOUNDATION, 2017). Ele pode ser utilizado
+para a criação de rotas, tratamentos de erros e com os verbos HTTP (GET, PUT,
+UPDATE E DELETE) entre outras facilidades.
+54
+3.4.11 Axios
+O Axios é um cliente HTML baseado em promessas para o node.js e para o
+navegador. Ele pode rodar no navegador e em node.js com a mesma base de código,
+ou seja, é isomórfico (AXIOS, [s.d]). Ao lado do servidor, utiliza o código nativo do
+node.js — o módulo HTTP — enquanto o XMLHttpRequests é usado no lado do
+cliente, no navegador.
+Entre suas features, podem ser citadas a habilidade de fazer
+XMLHttpRequests ao navegador, fazer requisições HTTP ao node.js, interceptar e
+transformar dados de requisições e respostas além de cancelar requisições. O Axios
+automaticamente transforma os dados de requisições para JSON e também suporta
+proteções contra XSRF (Cross Site Request Forgery, uma falsificação de solicitação
+entre sites, também conhecido como ataque de um clique) no lado do cliente.
+3.4.12 Bulário API
+A API em questão realiza uma pesquisa de bulas de medicamentos fazendo
+uso de uma biblioteca que realiza pesquisa de medicamentos por nome e categoria,
+permitindo obter informações gerais do fármaco, além de disponibilizar o PDF da bula
+desejada (LANDIN, 2021). Esse bulário digital se utiliza do portal da ANVISA para a
+busca completa, adicionando funcionalidades que o portal por si só não permite
+implementar em aplicativos. Além disso, a API faz uso de técnicas de WebCrawler
+para conseguir certos dados não disponibilizados para pesquisadores e
+desenvolvedores pela ANVISA e pelo Governo Brasileiro.
+A API é simples e se utiliza do padrão REST, além das tecnologias Node.js
+como a linguagem de programação principal juntamente com o Vercel — uma
+plataforma voltada para a hospedagem de aplicações — com Serverless functions.
+Abaixo, segue um exemplo do uso da API em questão:
+55
+FIGURA 14 - EXEMPLO DE USO DA API BULÁRIO
+FONTE: AS AUTORAS (2023)
+3.4.13 FDA Drug API
+A open FDA é uma API baseada em Elasticsearch que fornece dados públicos
+da Food and Drug Administration (FDA) sobre substâncias como medicamentos,
+dispositivos e alimentos (OpenFDA, [s.d.]). Especificamente relacionada a partição de
+medicamentos (Drug API), ela permite consultar informações sobre medicamentos
+aprovados pela FDA, incluindo seus ingredientes ativos, rótulos, indicações
+terapêuticas e outras características importantes. Com isso, oferece uma maneira
+eficiente de integrar dados atualizados sobre produtos farmacêuticos em sistemas e
+aplicativos, sendo uma ferramenta valiosa para profissionais da saúde, pesquisadores
+e desenvolvedores da área farmacêutica.
+Apesar de trazer informações sobre esse medicamentos diversos, a API
+fornece um aviso quanto a sua utilização. Nem todos os dados na openFDA foram
+validados para uso clínico ou de produção. E como a openFDA só fornece dados
+publicamente disponíveis, ela não contém informações com Identificação Pessoal de
+Pacientes ou outros dados sensíveis.
+56
+4 APRESENTAÇÃO DOS RESULTADOS
+O presente tópico tem como objetivo demonstrar os resultados conseguidos no
+desenvolvimento do software Farmatads, descrevendo sua arquitetura e as
+funcionalidades de suas telas/interfaces.
+4.1 ARQUITETURA DO SISTEMA
+Para o desenvolvimento do Farmatads, a arquitetura é estruturada da
+seguinte forma: O usuário acessa o aplicativo por meio de seu dispositivo móvel, tendo
+que realizar o login para acessar as telas seguintes. Após o aplicativo realizar todas
+as validações necessárias e o usuário fizer o acesso, é carregada a tela principal do
+aplicativo. Dela, o usuário pode consultar bulas de remédios — que podem ser
+pesquisadas por meio de consultas à API Bulário realizadas pelo aplicativo por meio
+da biblioteca Vue — ou adicionar medicamentos a sua lista para que seja notificado
+pelo aplicativo. Os medicamentos e suas informações são armazenados no banco de
+dados PostgreSQL.
+O front-end foi codificado usando a biblioteca Vue 3 — para desenvolvimento
+dinâmico e reativo do aplicativo, fazendo bom proveito do fato do Vue ser específico
+para desenvolvimento front-end — em conjunto com o SDK Ionic para a
+compatibilização do sistema com dispositivos móveis. Para o backend do aplicativo,
+foi optado pelo uso do banco de dados relacional PostgreSQL, fazendo uso do Node.js
+para a criação do servidor web e ferramentas de rede usando JavaScript e uma
+coleção de "módulos" que lidam com as funcionalidades principais (COOK, 2015). Por
+fim, haverá integração com a API Bulário para que o usuário possa fazer a consulta
+de medicamentos.
+FIGURA 15 - ARQUITETURA DO SISTEMA
+57
+FONTE: AS AUTORAS (2023)
+4.2 APRESENTAÇÃO DO SISTEMA
+Ao iniciar o sistema, o usuário se depara com uma tela que o dá a opção de
+realizar seu login, caso já o tenha, ou cadastro, caso não. Clicar em qualquer uma
+dessas opções irá redirecionar o usuário para a respectiva tela, a depender do que foi
+selecionado. Essa tela principal pode ser vista abaixo, na figura 16.
+58
+FIGURA 16 - TELA INICIAL
+FONTE: APLICATIVO FARMATADS (2024)
+Na tela de login, representada pela figura 17, o usuário deve informar seu email
+e senha para comparação com as informações correspondentes armazenadas no
+Banco de Dados. A senha será criptografada utilizando JWT e se estiver correta, irá
+devolver um token com expiração de um mês. Caso esse token não esteja
+armazenado durante todas as requisições subsequentes ao login, a API irá recusar
+todas as solicitações e o aplicativo irá forçar que o usuário seja redirecionado de volta
+a tela de login, de onde só poderá passar quando inserir um email e senha que sejam
+válidos. Nessa tela, também existe a opção de recuperação de senha do usuário, caso
+necessário.
+59
+FIGURA 17 - TELA DE LOGIN DA APLICAÇÃO
+FONTE: APLICATIVO FARMATADS (2024)
+Ao clicar no botão "Esqueci minha senha", o usuário será redirecionado para
+uma tela de recuperação de senha. Nela, existe um campo para inserção de email,
+para que seja enviado um código de recuperação para o endereço de email informado.
+Caso o texto inserido não seja um email, não é possível prosseguir. Caso, contrário,
+o usuário será redirecionado para uma tela onde poderá inserir o código recebido e
+redefinir sua senha. Isso está representado na figura abaixo:
+60
+FIGURA 18 - TELA DE RECUPERAÇÃO DE SENHA
+FONTE: APLICATIVO FARMATADS (2024)
+Na tela final de redefinição de senha, o usuário deve informar o código numérico
+de seis dígitos para que possa ter acesso aos inputs para a mudança de senha, que
+devem coincidir para que a senha possa ser realmente alterada. O código gerado é
+aleatoriamente gerado, e enviado para o email informado pelo usuário. Seguem
+abaixo as representações das telas, com e sem o input de mudança de senha visíveis.
+61
+FIGURA 19 - TELA DE REDEFINIÇÃO DE SENHA SEM INPUTS
+FONTE: APLICATIVO FARMATADS (2024)
+FIGURA 20 - TELA DE REDEFINIÇÃO DE SENHA COM INPUTS
+FONTE: APLICATIVO FARMATADS (2024)
+62
+Caso o usuário nunca tenha acessado o sistema e deva fazer um novo
+cadastro, depois de clicar na opção pertinente na tela inicial, ele será redirecionado a
+tela de cadastro. Nela, deve ser informado o nome, email e senha (além da
+confirmação da senha) do novo usuário, que será registrada no banco de dados da
+aplicação. A senha será criptografada por meio de um segredo JWT, além de serem
+tomadas as medidas necessárias para evitar sql injection na inserção desses dados.
+A tela de cadastro está representada na figura a seguir:
+FIGURA 21 - TELA DE CADASTRO
+FONTE: APLICATIVO FARMATADS (2024)
+Ao acessar o aplicativo, o usuário já se encontra no menu principal/tutorial do
+mesmo, no qual ele tem acesso a navegação com acesso ao registro de novos
+medicamentos, a busca de bulas e de novamente exibir essa tela principal de tutorial,
+63
+clicando no “?” no canto superior direito. Nessa tela, também é possível realizar o
+logout da aplicação, que apaga o token de login que permite o acesso a maior parte
+das rotas da aplicação e redireciona o usuário de volta a tela de login.
+Figura 22 - TELA DE TUTORIAL/MENU PRINCIPAL
+FONTE: APLICATIVO FARMATADS (2024)
+Ao clicar na aba “Remédios” da navegação, o usuário é redirecionado para a
+tela de medicamentos do aplicativo. Nela, são apresentados os medicamentos já
+registrados localmente pelo usuário, além do botão para adicionar novos
+medicamentos conforme o necessário. Cada medicamento apresentado tem um botão
+próprio para edição e deleção, que recupera as informações do medicamento
+registrado no banco de dados por meio do seu id e permite que essas operações
+sejam realizadas.
+64
+FIGURA 23 - TELA DE MEDICAMENTOS
+FONTE: APLICATIVO FARMATADS (2024)
+FIGURA 24 - ADICIONAR NOVO MEDICAMENTO
+FONTE: APLICATIVO FARMATADS (2024)
+65
+Caso o usuário deseje registrar um novo medicamento, ele deve clicar no
+botão para adicionar ele. Isso fará com que seja redirecionado para uma tela que o
+deixa escolher que tipo de remédio ele deseja adicionar, onde pode escolher entre
+cápsula, comprimido e xarope. O tipo escolhido é passado para a próxima tela como
+seu respectivo código, como um integer ao invés de uma string com o nome completo.
+Isso porque no banco de dados no PostgreSQL, existe uma tabela tipo que guarda
+essas informações.
+Figura 25 - TELA DE SELEÇÃO DE TIPO
+FONTE: APLICATIVO FARMATADS (2024)
+Cada opção redireciona para as telas que permitem que os dados referentes
+a cada tipo sejam salvos no banco de dados da aplicação. Todas elas têm
+características base similares, contendo nome da medicação, a hora inicial de
+ingestão, intervalo de tempo entre doses, e a cor desejada para a visualização. No
+caso de cápsula e comprimido, existe um atributo quantidade que representa o
+número de cápsulas ou comprimidos que devem ser ingeridos, enquanto em xarope
+66
+existem dois atributos: a dosagem do xarope em questão e a quantidade de doses.
+Informações definidas aqui serão o que será utilizado para salvar o medicamento no
+banco de dados e depois calcular os horários corretos para enviar notificações para o
+usuário. A seguir, as diferentes telas para adição de novo medicamento:
+FIGURA 28 - TELA INSERÇÃO
+COMPRIMIDO 1
+FONTE: APLICATIVO FARMATADS (2024)
+FIGURA 29 - TELA INSERÇÃO
+COMPRIMIDO 2
+FONTE: APLICATIVO FARMATADS (2024)
+FIGURA 26 - TELA INSERÇÃO CÁPSULA
+FONTE: APLICATIVO FARMATADS (2024)
+Figura 27 - TELA INSERÇÃO CAPSULA 2
+FONTE: APLICATIVO FARMATADS (2024)
+67
+FIGURA 30 - TELA INSERÇÃO XAROPE 1
+FONTE: APLICATIVO FARMATADS (2024)
+FIGURA 31 - TELA INSERÇÃO XAROPE 2
+FONTE: APLICATIVO FARMATADS (2024)
+Assim como a inserção possui telas diferentes para cada tipo de
+medicamento, também ocorre com a edição de medicamentos já existente. Seu menu
+de edição é acessível a partir da tela “Remédios”, estando debaixo de cada registro
+de medicamento, juntamente com um botão para deletar cada medicamento.
+68
+FIGURA 32 - TELA EDIÇÃO XAROPE
+FONTE: APLICATIVO FARMATADS (2024)
+FIGURA 33 - TELA EDIÇÃO XAROPE P2
+FONTE: APLICATIVO FARMATADS (2024)
+Figura 34 - TELA EDIÇÃO CÁPSULA
+FONTE: APLICATIVO FARMATADS (2024)
+FIGURA 35 - TELA EDIÇÃO CÁPSULA P2
+FONTE: APLICATIVO FARMATADS (2024)
+69
+FIGURA 36 - TELA EDIÇÃO COMPRIMIDO
+FONTE: APLICATIVO FARMATADS (2024)
+FIGURA 37 - TELA EDIÇÃO COMPRIMIDO
+FONTE: APLICATIVO FARMATADS (2024)
+Baseado na hora inicial em que o medicamento foi tomado, é feito o cálculo
+da próxima dose com base no intervalo também registrado pelo usuário. Esses valores
+são utilizados para mandar notificações para o usuário quando chega o horário
+apropriado.
+FIGURA 38 - NOTIFICAÇÃO DE MEDICAMENTO
+FONTE: APLICATIVO FARMATADS (2024)
+Para registrar um medicamento como tomado, o usuário deve, na tela de
+remédios, clicar no remédio que recebeu a notificação para a ingestão. Ao clicar em
+qualquer parte que não os botões de edição, o usuário é redirecionado para a tela de
+70
+remédios que já foram ingeridas, inserindo o horário em que o medicamento é
+consumido para que possa ser feito o registro das doses tomadas, assim como fazer
+o cálculo do horário de ingestão para a próxima dose (que não deve mudar do que já
+estava registrado, se o medicamento foi ingerido no horário certo).
+FIGURA 39 - TELA DE INGESTÃO DE REMÉDIOS
+FONTE: APLICATIVO FARMATADS (2024)
+Por fim, ao acessar a aba “Bulas” na navegação, é mostrado um input para
+buscar o medicamento desejado. Ao clicar na lupa, é feita uma consulta a API
+OpenFDA, que irá retornar uma série de informações sobre o medicamento
+pesquisado. Essas informações são apresentadas em um card abaixo dos resultados
+disponíveis, sendo que a informação em si está em inglês, por se tratar de uma API
+desenvolvida nos Estados Unidos.
+71
+FIGURA 40 - TELA DE PESQUISA DE BULA
+FONTE: APLICATIVO FARMATADS (2024)
+FIGURA 41 - TELA DE PESQUISA APÓS ATIVAÇÃO DO CARD DE RESULTADO
+FONTE: APLICATIVO FARMATADS (2024)
+72
+Inicialmente, essa consulta era feita por meio da API Bulário, que retornava o
+PDF da bula do medicamento pesquisado. A bula era baixada automaticamente pelo
+sistema. Infelizmente, a API foi desativada por meados de outubro de 2024 por
+motivos de estar sendo utilizada inapropriadamente para datamining, de forma que foi
+necessário achar uma alternativa. Não existe atualmente outra API em português.
+FIGURA 42 - ANTIGA TELA DE PESQUISA DE BULA
+FONTE: APLICATIVO FARMATADS (2024)
+As telas apresentadas nesse capítulo representam toda a arquitetura do
+sistema Farmatads e as funcionalidades do aplicativo desenvolvido. Além disso,
+consta uma breve explicação sobre seus funcionamentos e particularidade
+acompanhando cada figura. No próximo capítulo, será apresentada a conclusão e as
+considerações finais ligadas ao trabalho desenvolvido.
+73
+5 CONSIDERAÇÕES FINAIS
+Durante a primeira etapa do desenvolvimento do presente projeto, foi
+concebida, principalmente, a arquitetura do sistema a ser desenvolvido — o
+Farmatads, um app de controle de medicamentos. Além disso, foi elaborada a
+documentação do sistema, visando o estabelecimento de uma base sólida para o seu
+eventual desenvolvimento na segunda parte do projeto.
+O foco principal foi primeiramente na organização do projeto, ou seja,
+definição de metodologias, ferramentas de trabalho em equipe, definição de
+cronogramas e outros detalhes minuciosos de como o trabalho no projeto ocorreria.
+Em seguida, a maior prioridade se tornou a fundamentação teórica do projeto.
+Para que as dores do usuário se tornassem claras e um público-alvo pudesse ser
+definido desde o início, foi dada especial atenção a essa etapa do projeto. Percebendo
+a clara oportunidade para o desenvolvimento de um app para o público mais velho, se
+tornou mais fácil a definição inicial dos requisitos e características necessárias para
+trabalhar com idosos.
+Com a fundamentação teórica bem definida e o objetivo do app claro, foi
+iniciada a elaboração dos protótipos de tela e Histórias de Usuário aos quais essas
+supririam aos requisitos. Elaboradas na plataforma Figma, essas telas foram os
+primeiros artefatos a serem desenvolvidos no projeto e serviram de guia para tudo o
+que foi desenvolvido na sequência. Também foram elaborados os casos de uso do
+sistema. Finalizada essa etapa, foi decidida a arquitetura do Farmatads, buscando
+utilizar ferramentas que pudessem aproveitar os conhecimentos que as autoras já
+tinham, não tendo que aprender novas linguagens completamente diferentes para
+desenvolver o projeto na segunda etapa.
+Após a definição da arquitetura, foi desenvolvida a seção de Materiais e
+Métodos do documento do projeto, detalhando as tecnologias e metodologias
+definidas pelas autoras ao longo do projeto. Por fim, foram concebidos os diagramas
+faltantes do sistema, como os diagramas de classe, sequência e a modelagem lógica
+do banco de dados. As semanas finais foram dedicadas a revisão e formatação final
+do documento para entrega.
+Os maiores desafios encontrados para a concepção do Farmatads foram a
+decisão das tecnologias a serem utilizadas no desenvolvimento — que, como já
+mencionado, preferencialmente se encaixariam dentro do escopo de conhecimento
+das autoras — e a organização da arquitetura dentro dessa primeira definição. A
+74
+decisão exigiu bastante pesquisa e até mesmo consulta de profissionais experientes
+na área, mas bons resultados foram obtidos no final.
+Quanto ao desenvolvimento, a equipe teve de aperfeiçoar suas habilidades e
+seus conhecimentos em ferramentas conhecidas tanto como com novas tecnologias,
+como foi o caso do frontend em Vue. Após aprendidas, essas novas tecnologias
+facilitaram enormemente o desenvolvimento do aplicativo em questão.
+De forma geral, o sistema resultante é um aplicativo simples e de fácil
+utilização, como imaginado desde o começo para que pudesse servir a porção da
+população idosa. O frontend em Vue foi crucial para o desenvolvimento de telas limpas
+e simplificadas, com sua lógica incluída em um único arquivo de forma a permitir
+menos confusão entre arquivos. Já para o desenvolvimento do backend, foi utilizada
+a linguagem Javascript, especificamente o Node.js, utilizando axios para fazer as
+requisições ao banco de dados PostgreSQL. Toda a informação do banco de dados é
+populada pelo próprio usuário ao fazer seu cadastro, login e inserir medicamentos. A
+integração mobile foi realizada por meio do framework Ionic, que foi utilizado em
+conjunto com a linguagem Vue.
+Referente as limitações da solução atual, encontram-se o fato de que a base
+de dados é local — o que representa dificuldade grande para o acesso e manipulação
+dos dados do backend em plataformas móveis, mesmo em emuladores. Também
+existe o fato de que a consulta de bulas foi limitada para medicamentos que em sua
+maioria, não são vendidos localmente no Brasil, mas sim nos Estados Unidos.
+Para trabalhos futuros, seria interessante refinar a forma como o backend é
+configurado, permitindo melhor acesso mobile. Também poderia ser ajustada como
+os dados são passados entre páginas, que atualmente é realizado por meio da
+LocalStorage — que não é de tão fácil acesso quando se trata de dispositivos móveis
+quanto é em web, mas ainda poderia representar uma grande falha de segurança.
+Mais uma modificação seria a implementação de alarmes nos horários corretos para
+ingestão de medicação juntamente com notificações. No registro de novos
+medicamentos, poderiam ser inseridas instruções mais detalhadas sobre esse
+processo de inserção, além de ser implementada uma forma de adicionar doses
+fracionadas. Algumas simplificações da interface poderiam ocorrer, além de ser
+considerada a limitação de sistemas operacionais dos dispositivos utilizados pelo
+público-alvo. Por fim, seria interessante implementar uma forma de fazer pesquisa de
+75
+bulas de medicamentos em português sem depender da API que foi desativada —
+talvez desenvolvendo uma biblioteca ou API própria por meio de data scraping.
+76
+6 REFERÊNCIAS
+AHMAD, M. O. et al. Kanban in software engineering: A systematic mapping study.
+The Journal of systems and software, v. 137, p. 96–113, 2018.
+ALURA. Figma: o que é a ferramenta, Design e uso. Alura. Disponível em:
+<https://www.alura.com.br/artigos/figma#:~:text=O%20Figma%20%C3%A9%20uma
+%20plataforma,Dylan%20Field%20e%20Evan%20Wallace.>. Acesso em: 31 out.
+2023.
+ALURA. O que é JSON Web Tokens? Disponível em:
+<https://www.alura.com.br/artigos/o-que-e-json-webtokens?srsltid=AfmBOooS1ysP4JtuimWup0-
+YjyZwpB4xd_F3iJvWFIUT327fpnzjv0iS>. Acesso em: 11 abril. 2024.
+ALVAREZ, P. Charted: The World’s Aging Population from 1950 to 2100.
+Disponível em: <https://www.visualcapitalist.com/cp/charted-the-worlds-agingpopulation-1950-to-2100/#:~:text=In%202022%2C%20there%20were%20771>.
+Acesso em 15 set. 2023.
+AMBLER, S. W. The object primer: agile model-driven development with UML 2.0.
+Cambridge: Cambridge Univ. Press, 2008.
+ANDERSON, David J. Kanban: successful evolutionary change for your
+technology business. Seattle: Blue Hole, 2010.
+BATTERSBY, J. How to download Draw.Io diagrams. Disponível em:
+<https://www.tomsguide.com/how-to/how-to-download-drawio-diagrams>. Acesso
+em: 1 nov. 2023.
+CABRAL, Umberlândia. População cresce, mas número de pessoas com menos de
+30 anos cai 5,4% de 2012 a 2021. Agência IBGE Notícias, 2022. Disponível em:
+<https://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-denoticias/noticias/34438-populacao-cresce-mas-numero-de-pessoas-com-menos-de30-anos-cai-5-4-de-2012-a2021#:~:text=A%20popula%C3%A7%C3%A3o%20total%20do%20pa%C3%ADs,39
+%2C8%25%20no%20per%C3%ADodo.>. Acesso em: 01 de set. de 2023.
+Capacitor: Cross-platform native runtime for web apps. Disponível em:
+<https://capacitorjs.com/>. Acesso em 11. abril 2024.
+CAMARANO, A. TEXTO PARA DISCUSSÃO No 858 ENVELHECIMENTO DA
+POPULAÇÃO BRASILEIRA: UMA CONTRIBUIÇÃO DEMOGRÁFICA*. [s.l: s.n.].
+Disponível em:
+77
+<https://portalantigo.ipea.gov.br/agencia/images/stories/PDFs/TDs/td_0858.pdf>.
+Acesso em 15 set. 2023.
+CINTRA, Fernanda A; GUARIENTO, Maria E; MIYASAKI, Lilian A. Adesão
+medicamentosa em idosos em seguimento ambulatorial. Cienc. Saude Coletiva.
+2010; Disponível em: < https://doi.org/10.1590/S1413-81232010000900025.> Acesso
+em: 05 de out. de 2023.
+Cook, F. Node.js Essentials. Packt Publishing, 2015.
+DIAGRAMS.NET. Features of draw.io. Disponível em:
+<https://www.drawio.com/features>. Acesso em: 1 nov. 2023.
+EM. Problemas relacionados a fármacos em idosos. Disponível em:
+<https://www.msdmanuals.com/pt-br/profissional/geriatria/terapia-medicamentosaem-idosos/problemas-relacionados-a-f%C3%A1rmacos-em-idosos>. Acesso em: 22
+set. 2023.
+ENVELHECIMENTO populacional. Disponível em: <https://brazil.unfpa.org/ptbr/topics/envelhecimentopopulacional#:~:text=O%20aumento%20da%20expectativa%20de>. Acesso em: 1
+set. 2023.
+EQUIPE TOTVS. JWT token: o que é, estrutura e as vantagens de usar. Disponível
+em: <https://www.totvs.com/blog/gestao-para-assinatura-de-documentos/jwt-token/>.
+Acesso em: 11 abril. 2024.
+DATABASE modeling in UML (Unified Modeling Language). Disponível em:
+<https://www.methodsandtools.com/archive/archive.php?id=9>. Acesso em: 1 nov.
+2023.
+FOOD AND DRUG ADMINISTRATION (FDA). FDA Drug API. Disponível em:
+https://open.fda.gov/apis/drug/. Acesso em: 27 out. 2024.
+FIGMA: o que é e como usar na criação de interfaces | Blog da Tera. Somostera.com.
+Disponível em: <https://blog.somostera.com/ux-design/figma>. Acesso em: 31 out.
+2023.
+FOWLER, M. UML Essencial: um breve guia para linguagem padrão. Porto Alegre:
+Bookman, 2014.
+FREIRE, C.C. Adesão e condições de uso de medicamentos por idosos.
+Orientador: Profa. Dra. Sueli Marques. 2009. 130 p. Dissertação (Mestrado em
+Enfermagem) - Escola de Enfermagem de Ribeirão Preto, Universidade de São Paulo,
+Ribeirão Preto, 2009. Disponível em:
+78
+<https://www.teses.usp.br/teses/disponiveis/22/22132/tde-09032010-
+162351/publico/ClaudiaCamaraFreire.pdf.> Acesso em: 01 de set. de 2023.
+INTRODUÇÃO | Axios Docs. ([s.d.]). Disponível em: <https://axioshttp.com/ptbr/docs/intro>. Acesso em 20 jul. 2024.
+INTRODUCTION to ionic. ([s.d.]). Ionic Framework Docs. Recuperado 9 de novembro
+de 2023, de https://ionicframework.com/docs.
+LANDIN, I. bulario-api: API para a pesquisa de bulas de medicamentos. [s.l: s.n.].
+LOPES, A. Brasil é um dos cinco países com maior número de smartphones,
+mostra ranking. Exame, 2023. Disponível em: <https://exame.com/tecnologia/brasile-um-dos-cinco-paises-com-maior-numero-de-smartphone-mostra-ranking/>. Acesso
+em: 1 set. 2023.
+LOURENÇO, A. Saiba porque a expectativa de vida do brasileiro vem crescendo.
+Disponível em: <https://www.em.com.br/app/noticia/bemviver/2019/11/30/interna_bem_viver,1104760/saiba-porque-a-expectativa-de-vidado-brasileiro-vem-crescendo.shtml>. Acesso em: 8 set. 2023.
+MACHADO, M. SCRUM -Método Ágil: uma mudança cultural na Gestão de
+Projetos de Desenvolvimento de Software. Disponível em:
+<https://uniesp.edu.br/sites/_biblioteca/revistas/20170531154126.pdf>. Acesso em:
+27 out. 2023.
+MCLAUGHLIN, B., POLLICE, G., WEST, D. Head First Object Oriented Analysis
+and Design. O'Reilly Media, Inc, 2006.
+OMRAN, A. R. The Epidemiologic Transition: A Theory of the Epidemiology of
+Population Change. Milbank Quarterly, v. 83, n. 4, p. 731–757, 9 nov. 2005.
+OPENJS FOUNDATION. Express - Node.js web application framework. Disponível
+em: <https://expressjs.com/>. Acesso em: 11. abril. 2024.
+PASCHOAL, S. M. P.; SALLES, R. F. N.; FRANCO, R. P. Epidemiologia do
+Envelhecimento. In: CARVALHO FILHO, E. T.; PAPALÉO NETTO, M. Geriatria:
+fundamentos, clínica e terapêutica. 2. ed. São Paulo: Atheneu, 2005. cap. 2, p. 19-
+34.
+PAULINO, R. D. A. et al. Fatores Relacionados à Polimedicação e o Impacto na
+Qualidade de Vida dos Idosos: Uma Revisão Integrativa da Literatura / Factors
+Related to Polymedication and the Impact on the Quality of Life of the Elderly: An
+Integrative Literature Review. ID on line REVISTA DE PSICOLOGIA, v. 15, n. 54, p.
+183–196, 2021.
+79
+POSTGRESQL. PostgreSQL: About. Disponível em:
+<https://www.postgresql.org/about/>. Acesso em: 1 nov. 2023.
+PRATA, P. R. A transição epidemiológica no Brasil. Cadernos de Saúde Pública, v.
+8, n. 2, p. 168–175, jun. 1992.
+PRIKLADNICKI, Rafael; WILLI, Renato; MILANI, Fabiano. Métodos ágeis para
+desenvolvimento de software. Porto Alegre: Bookman, 2014.
+PROBST, C. 5 things you need to know about Notion. Disponível em:
+<https://www.techradar.com/features/5-things-you-need-to-know-about-notion>.
+Acesso em: 27 out. 2023.
+RIBAS, R. Pela primeira vez mais da metade dos idosos tem acesso à Internet
+no Brasil. O Globo, 2022. Disponível em:
+<https://oglobo.globo.com/economia/noticia/2022/09/pela-primeira-vez-mais-dametade-dos-idosos-tem-acesso-a-internet-no-brasil.ghtml>. Acesso em: 1 set. 2023.
+REHKOPF, P. M. Kanban vs. Scrum. Disponível em:
+<https://www.atlassian.com/br/agile/kanban/kanban-vs-scrum>. Acesso em: 27 out.
+2023.
+SOARES, E. PROGRAMAÇÃO COM ACESSO A BANCO DE DADOS. [s.l., s.n.].
+Disponível em: <https://docente.ifrn.edu.br/elieziosoares/disciplinas/programacaocom-acesso-a-banco-de-dados/10-modelo-logico>. Acesso em: 1 nov. 2023.
+SCHWABER, K.; SUTHERLAND, J. O Guia do Scrum. [s.l], novembro de 2020.
+Disponível em: <https://scrumguides.org/docs/scrumguide/v2020/2020-Scrum-GuidePortugueseBR-3.0.pdf>. Acesso em: 1 nov. 2023.
+SELLGREN, A. The official guide to the Kanban method. Disponível em:
+<https://kanban.university/kanban-guide/>. Acesso em: 20 out. 2023.
+TAVARES, N. U. L. et al. Fatores associados a baixa adesão ao tratamento
+medicamentoso em idosos. Revista de saúde pública, v. 47, n. 6, p. 1092–1101,
+2013.
+UML 2 class diagrams: An agile introduction. Disponível em:
+<https://agilemodeling.com/artifacts/classDiagram.htm>. Acesso em: 1 nov. 2023.
+VAZQUEZ, C. E.; SIMÕES, G. S. Engenharia de Requisitos: software orientado
+ao negócio. [s.l.] Brasport, 2016.
+VUE. Introduction | Vue.js. Disponível em:
+<https://vuejs.org/guide/introduction.html>. Acesso em: 1 nov. 2023.
+80
+WORLD HEALTH ORGANIZATION. Adherence to Long-Term Therapies.
+Disponível em: <https://iris.who.int/bitstream/handle/10665/42682/9241545992.pdf>.
+Acesso em: 29 set. 2023.
+81
+7 APÊNDICES
+APÊNDICE A – DIAGRAMA DE CASOS DE USO
+FIGURA 43 - DIAGRAMA DE CASOS DE USO
+FONTE: AS AUTORAS (2023)
+82
+APÊNDICE B - HISTÓRIAS DE USUÁRIO
+HU01 – Criar conta
+HU02 – Realizar login
+HU03 – Recuperar senha
+HU04 – Visualizar menu
+HU05 – Adicionar novo medicamento
+HU06 – Registrar informações do novo medicamento
+HU07 – Acessar as cartelas digitais
+HU08 – Registrar ingestão do medicamento
+HU09 – Visualizar as bulas dos medicamentos
+HU10 – Receber a notificação no horário de ingestão do medicamento
+HU11 – Editar informações do medicamento
+HU01 – Cadastrar usuário
+ SENDO um usuário não cadastrado
+ QUERO criar minha conta no aplicativo
+ PARA registrar e controlar minha ingestão de medicamentos
+DESENHO DA(S) TELA(S):
+83
+FIGURA 44 - PROTÓTIPO DE CRIAÇÃO DE CONTA
+FONTE: AS AUTORAS (2023)
+CRITÉRIOS DE ACEITAÇÃO
+1. Não deve permitir campos vazios
+2. Não deve permitir e-mail inválido
+3. Não deve permitir email que já existe no banco de dados
+4. Não deve permitir senha com menos de 6 caracteres
+5. Não deve permitir a criação de conta se a senha e a confirmação de
+ senha forem diferentes
+6. Deve retornar à tela anterior
+7. Deve realizar cadastro de usuário
+CRITÉRIOS DE ACEITAÇÃO - DETALHAMENTO
+Critério de contexto (Válido como premissa para todos os critérios):
+84
+Dado que desejo criar uma conta no aplicativo
+E acessei a página de cadastro
+1. Não deve permitir campos vazios
+Dado que algum dos campos está vazio
+Quando seleciono “Criar conta”
+Então o sistema apresenta a mensagem “Preencha todos os campos
+para criar a conta”
+2. Não deve permitir e-mail inválido
+Dado que o campo “Email” foi preenchido com algo que não constitui um
+ email válido
+Quando seleciono “Criar conta”
+Então o sistema apresenta a mensagem “Digite um email válido”
+3. Não deve permitir email que já existe no banco de dados
+Dado que o campo “Email” foi preenchido com um email já cadastrado no
+banco de dados
+Quando seleciono “Criar conta”
+Então o sistema apresenta a mensagem “O email informado já está
+cadastrado no sistema”
+4. Não deve permitir senha com menos de 6 caracteres
+Dado que o campo “Senha” foi preenchido
+E possui menos de 6 caracteres
+Quando seleciono o campo “Confirmar senha”
+Então o sistema apresenta a mensagem “A senha precisa ter, no
+mínimo, 6 caracteres”
+85
+5. Não deve permitir a criação de conta se a senha e a confirmação de
+senha forem diferentes
+Dado que os campos “senha” e “confirmar senha” foram preenchidos
+E as senhas não são iguais
+Quando seleciono “criar conta”
+Então o sistema apresenta a mensagem “senhas não conferem”
+6. Deve retornar à tela anterior
+Dado que não desejo mais criar a conta
+Quando pressiono o botão de seta para voltar
+Então o sistema retorna à tela anterior ao de criação de conta
+7. Deve realizar cadastro de usuário
+Dado que todos os campos foram preenchidos
+E todos os campos são válidos
+Quando seleciono “criar conta”
+Então o sistema cria a conta do usuário
+HU02 - Realizar Login
+SENDO um usuário cadastrado
+QUERO realizar o login no aplicativo
+PARA registrar os medicamentos e receber as notificações
+86
+DESENHO DA(S) TELAS
+FIGURA 45 - PROTÓTIPO DE LOGIN
+FONTE: AS AUTORAS (2023)
+CRITÉRIOS DE ACEITAÇÃO
+1. Não deve permitir campos vazios
+2. Deve verificar se o email está cadastrado
+3. Deve verificar se a senha corresponde com o email
+CRITÉRIOS DE ACEITAÇÃO - DETALHAMENTO
+Dado que desejo acessar o aplicativo
+E acessei a página inicial
+ 1. Não deve permitir campos vazios
+ Dado que algum campo está vazio
+87
+ Quando seleciono “entrar”
+ Então o sistema apresenta a mensagem “preencha todos os
+campos para continuar”
+ 2. Deve verificar se o email está cadastrado
+ Dado que os campos “email” e “senha” foram preenchidos
+ Quando seleciono “entrar”
+ E o sistema verifica que o email não está cadastrado no
+banco de dados
+ Então o sistema apresenta a mensagem “Email não cadastrado,
+volte para criar sua conta”
+ 3. Deve verificar se a senha corresponde com o email
+ Dado que os campos “email” e “senha” foram preenchidos
+ Quando seleciono “entrar”
+ E o sistema verifica que a senha inserida não corresponde
+com o email do usuário
+ Então o sistema apresenta a mensagem “Senha incorreta”
+HU03 – Recuperar senha
+SENDO um usuário do aplicativo
+QUERO alterar minha senha de login
+PARA recuperar meu acesso ao aplicativo
+88
+DESENHO DA(S) TELAS
+FIGURA 46 - PROTÓTIPO RECUPERAÇÃO DE SENHA 1
+FONTE: AS AUTORAS (2023)
+89
+FIGURA 47 - PROTÓTIPO DE RECUPERAÇÃO DE SENHA 2
+FONTE: AS AUTORAS (2023)
+CRITÉRIOS DE ACEITAÇÃO
+1. Deve verificar se o email já está cadastrado
+2. Deve enviar um email ao usuário com o código de recuperação de senha
+3. Não deve permitir campos vazios
+ 4. Não deve permitir senha com menos de 6 caracteres
+ 5. Não deve permitir a criação de conta se a nova senha e a confirmação da
+ nova senha forem diferentes
+6. Deve salvar a nova senha no sistema
+
+CRITÉRIOS DE ACEITAÇÃO - DETALHAMENTO
+ Dado que desejo mudar minha senha
+ E acessei a página “esqueci a senha”
+1. Deve verificar se o email já está cadastrado
+90
+
+
+ Dado que o campo “email” foi preenchido
+ Quando seleciono “receber código”
+ E o sistema verifica que o email não está cadastrado no
+banco de dados
+ Então o sistema apresenta a mensagem “Email não cadastrado”
+ 2. Deve enviar um email ao usuário com o código de recuperação de
+senha
+Dado que o campo “email” foi preenchido
+Quando seleciono “receber código”
+Então o sistema envia um email ao usuário com o código de
+recuperação de senha
+ 3. Não deve permitir campos vazios
+Dado que algum dos campos está vazio
+Quando seleciono “salvar”
+Então o sistema apresenta a mensagem “preencha todos os campos
+para continuar”
+4. Não deve permitir senha com menos de 6 caracteres
+Dado que o campo “nova senha” foi preenchido
+ E possui menos de 6 caracteres
+ Quando seleciono o campo “Confirmar nova senha”
+Então o sistema apresenta a mensagem “a nova senha precisa ter, no
+mínimo, 6 caracteres”
+5. Não deve permitir a criação de conta se a nova senha e a confirmação da
+ nova senha forem diferentes
+Dado que os campos “nova senha” e “confirmar nova senha” foram
+preenchidos
+91
+E as senhas não são iguais
+Quando seleciono “salvar”
+Então o sistema apresenta a mensagem “senhas não conferem”
+6. Deve salvar a nova senha no sistema
+Dado que todos os campos foram preenchidos
+E a nova senha é válida
+Quando seleciono “salvar”
+Então o sistema atualiza a senha do usuário no banco de dados
+HU04 – Visualizar menu
+ SENDO um usuário cadastrado
+ QUERO acessar o menu de opções
+ PARA acessar as opções disponíveis
+DESENHO DA(S) TELA(S):
+92
+FIGURA 48 - PROTÓTIPO DA VISUALIZAÇÃO DO MENU
+FONTE: AS AUTORAS (2023)
+CRITÉRIOS DE ACEITAÇÃO
+ 1. Deve redirecionar para a tela de medicamentos
+ 2. Deve redirecionar para a tela de bulas
+ 3. Deve redirecionar para a tela de configurações de alarme
+ 4. Deve permitir o encerramento da sessão atual no aplicativo
+CRITÉRIOS DE ACEITAÇÃO - DETALHAMENTO
+Dado que acessei minha conta no aplicativo
+E acessei a página “menu”
+ 1. Deve redirecionar para a tela de medicamentos
+ Dado que desejo acessar meus medicamentos
+93
+ Quando seleciono “remédios”
+ Então o sistema redireciona para a página de medicamentos do
+usuário
+
+ 2. Deve redirecionar para a tela de bulas
+
+ Dado que desejo acessar as bulas dos medicamentos
+ Quando seleciono “bulas”
+ Então o sistema redireciona para a página de bulas dos medicamentos
+do usuário
+ 3. Deve redirecionar para a tela de configurações de alarme
+ Dado que desejo acessar as configurações de alarme
+ Quando seleciono o ícone do alarme
+ Então o sistema redireciona para a página de configurações de alarme
+do usuário
+ 4. Deve permitir o encerramento da sessão atual no aplicativo
+ Dado que desejo encerrar minha sessão no aplicativo
+ Quando seleciono “sair do aplicativo”
+ Então o sistema encerra a sessão atual
+ E o sistema redireciona para a tela de login
+HU05 – Adicionar novo medicamento
+ SENDO um usuário autenticado no sistema
+ QUERO adicionar um novo medicamento
+ PARA controlar minha ingestão do medicamento
+DESENHO DA(S) TELA(S):
+94
+FIGURA 49 - PROTÓTIPO DE ADIÇÃO DE MEDICAMENTOS
+FONTE: AS AUTORAS (2023)
+95
+FIGURA 50 - PROTÓTIPO SELEÇÃO DE TIPO
+FONTE: AS AUTORAS (2023)
+CRITÉRIOS DE ACEITAÇÃO
+ 1. Deve permitir adicionar uma das opções de medicamentodisponíveis
+ (cápsula, comprimido ou xarope)
+CRITÉRIOS DE ACEITAÇÃO - DETALHAMENTO
+Dado que estou autenticado no sistema
+E acessei a tela “remédios”
+ 1. Deve permitir adicionar novo medicamento
+ Dado que desejo adicionar um novo medicamento
+ Quando seleciono o botão de adição no centro da tela
+96
+ E o sistema apresenta as opções disponíveis
+ Então seleciono uma das opções de medicamentos
+HU06 – Registrar informações do novo medicamento
+FIGURA 51 - PROTÓTIPO INFORMAÇÕES BÁSICAS DO MEDICAMENTO
+FONTE: AS AUTORAS (2023)
+97
+FIGURA 52 - PROTÓTIPO CUSTOMIZAÇÃO DP MEDICAMENTO
+FONTE: AS AUTORAS (2023)
+CRITÉRIOS DE ACEITAÇÃO
+1. Não deve permitir o campo “nome” vazio
+2. Deve permitir preencher os campos “quantidade” e “horário inicial”
+3. Deve permitir redirecionar para a segunda tela de registros de informações
+4. Deve permitir preencher o campo “intervalo de tempo”
+5. Deve permitir selecionar a cor da cartela digital
+6. Deve permitir salvar as informações da cartela digital
+CRITÉRIOS DE ACEITAÇÃO - DETALHAMENTO
+ Dado que selecionei a opção do medicamento disponível
+ E desejo registrar as informações do medicamento
+98
+1. Não deve permitir o campo “nome” vazio
+ Dado que o campo “nome” está vazio
+ Quando seleciono “avançar”
+ Então o sistema deve apresentar a mensagem “informe o nome
+para avançar”
+ 2. Deve permitir preencher os campos “quantidade” e “horário inicial”
+Dado que desejo registrar a quantidade de cápsulas e o horário inicial
+de ingestão
+Quando preencho os campos numéricos
+Então o sistema realiza o registro dos campos da primeira tela de
+cadastro de informações do medicamento
+3. Deve permitir redirecionar para a segunda tela de registros de
+ informações
+Dado que todos os dados foram preenchidos
+Quando seleciono “avançar”
+Então o sistema redireciona para a segunda tela de cadastro de
+informações do medicamento
+4. Deve permitir preencher o campo “intervalo de tempo”
+Dado que desejo registrar o intervalo de tempo entre a ingestão dos
+medicamentos
+Quando preencho o campo numérico
+Então o sistema realiza o registro do campo da segunda tela de
+cadastro de informações do medicamento
+5. Deve permitir selecionar a cor da cartela digital
+99
+Dado que desejo selecionar a cor da cartela digital
+Quando seleciono uma das cores do campo “cor”
+Então o sistema realiza o registro da cartela digital com a cor
+selecionada
+6. Deve permitir salvar as informações da cartela digital
+Dado que desejo salvar as informações registradas
+Quando seleciono “salvar”
+Então o sistema salva as informações no banco de dados
+HU07 – Acessar as cartelas digitais
+ SENDO um usuário com medicamentos cadastrados no sistema
+ QUERO acessar as cartelas digitais cadastradas
+ PARA visualizar meus medicamentos
+DESENHO DA(S) TELA(S):
+100
+FIGURA 53 - PROTÓTIPO ACESSO A CARTELAS DIGITAIS
+FONTE: AS AUTORAS (2023)
+CRITÉRIOS DE ACEITAÇÃO
+ 1. Deve apresentar todos os medicamentos registrados pelo usuário
+CRITÉRIOS DE ACEITAÇÃO - DETALHAMENTO
+Dado que estou autenticado no sistema
+E acessei a tela “remédios”
+ 1. Deve apresentar todos os medicamentos registrados pelo usuário
+ Dado que desejo acessar os medicamentos que registrei no sistema
+ Quando acesso a tela “remédios”
+101
+ Então o sistema apresenta todos os medicamentos registrados no
+sistema
+HU08 – Registrar ingestão do medicamento
+SENDO um usuário com medicamentos cadastrados no sistema
+QUERO registrar a ingestão de um medicamento no sistema
+PARA controlar a ingestão e visualização dos medicamentos nas
+cartelas digitais
+DESENHO DA(S) TELA(S):
+FIGURA 54 - PROTÓTIPO REGISTRAR INGESTÃO MEDICAMENTO
+FONTE: AS AUTORAS (2023)
+102
+FIGURA 55 - PROTÓTIPO MEDICAMENTOS TOMADOS
+FONTE: AS AUTORAS (2023)
+CRITÉRIOS DE ACEITAÇÃO
+1. Deve permitir que o usuário selecione uma cápsula preenchida na cartela
+ digital
+2. Deve permitir preencher os campos de data e hora da ingestão do
+ medicamento
+3. Deve permitir selecionar a opção de não ingestão do medicamento
+4. Deve permitir selecionar a opção “salvar”
+5. Deve permitir selecionar a opção “cancelar”
+6. Deve permitir a visualização da cápsula vazia na cartela
+CRITÉRIOS DE ACEITAÇÃO - DETALHAMENTO
+1. Deve permitir que o usuário selecione uma cápsula preenchida na
+ cartela digital
+Dado que desejo registrar uma cápsula como ingerida
+Quando seleciono a cápsula na cartela digital
+Então o sistema redireciona para a tela de registro dos campos
+relacionados a ingestão do medicamento
+103
+
+2. Deve permitir preencher os campos de data e hora da ingestão do
+ medicamento
+Dado que desejo registrar os campos data e hora da ingestão do
+medicamento
+Quando preencho os campos numéricos
+Então o sistema realiza o registro da data e hora da cápsula
+selecionada
+3. Deve permitir selecionar a opção de não ingestão do medicamento
+Dado que desejo registrar um medicamento como não ingerido
+Quando seleciono a opção “não tomei”
+Então o sistema mantém a cápsula preenchida na cartela
+4. Deve permitir selecionar a opção “salvar”
+Dado que desejo salvar a cápsula com os campos preenchidos
+Quando seleciono a opção “salvar”
+Então o sistema registra a cápsula como ingerida na data e horário
+especificados
+5. Deve permitir selecionar a opção “cancelar”
+Dado que desejo cancelar o preenchimento dos campos
+Quando seleciono a opção “cancelar”
+Então o sistema não realiza o registro e não altera a cápsula na
+cartela
+6. Deve permitir a visualização da cápsula vazia na cartela
+Dado que desejo visualizar a cápsula registrada como ingerida na
+cartela
+Quando seleciono a tela “remédios” no menu
+104
+Então o sistema redireciona para a tela “remédios”
+E o sistema exibe a cartela com a cápsula vazia
+HU09 – Visualizar as bulas dos medicamentos
+SENDO um usuário com medicamentos cadastrados no sistema
+QUERO acessar a tela “bulas” no menu
+PARA visualizar a bula do medicamento registrado
+DESENHO DA(S) TELA(S):
+FIGURA 56 - PROTÓTIPO DE PESQUISA DE BULA
+FONTE: AS AUTORAS (2023)
+105
+FIGURA 57 - PROTÓTIPO VISUALIZAÇÃO DE BULA
+FONTE: AS AUTORAS (2023)
+CRITÉRIOS DE ACEITAÇÃO
+1. Deve permitir a visualização das bulas de todos os medicamentos
+registrados
+2. Deve permitir selecionar a bula para expandir e visualizar
+3. Deve permitir selecionar a opção de pesquisar a bula dos medicamentos
+ registrados
+4. Deve permitir retrair a bula
+CRITÉRIOS DE ACEITAÇÃO - DETALHAMENTO
+1. Deve permitir a visualização das bulas de todos os medicamentos
+registrados
+Dado que desejo visualizar as bulas registradas no aplicativo
+Quando seleciono a opção “bulas” no menu
+Então o sistema redireciona para a tela de bulas
+106
+2. Deve permitir selecionar a bula para expandir e visualizar
+Dado que desejo expandir a bula de um medicamento para visualizar
+Quando seleciono o nome de um medicamento registrado
+Então o sistema expande a bula selecionada
+E permite a visualização
+3. Deve permitir selecionar a opção de pesquisar a bula dos
+ medicamentos registrados
+Dado que desejo pesquisar a bula de um medicamento registrado
+Quando seleciono a caixa de pesquisa
+Então o sistema permite o preenchimento da caixa de texto com o
+nome de um medicamento registrado
+E retorna a bula pesquisada
+4. Deve permitir retrair a bula
+Dado que desejo retrair a visualização da bula de um medicamento
+Quando seleciono o nome da bula com visualização expandida
+Então o sistema retrai a bula selecionada
+HU10 – Receber a notificação no horário de ingestão do medicamento
+SENDO um usuário com medicamentos cadastrados no sistema
+QUERO receber notificações no horário de ingestão dos
+medicamentos
+PARA controlar a ingestão e visualização dos medicamentos nas
+cartelas digitais
+107
+DESENHO DA(S) TELA(S):
+FIGURA 58 - PROTÓTIPO DE NOTIFICAÇÃO
+FONTE: AS AUTORAS
+CRITÉRIOS DE ACEITAÇÃO
+1. Deve permitir a visualização das notificações
+2. Deve permitir selecionar as notificações
+CRITÉRIOS DE ACEITAÇÃO - DETALHAMENTO
+1. Deve permitir a visualização das notificações
+Dado que desejo visualizar as notificações
+Quando recebo o alarme no horário da ingestão do medicamento
+Então o sistema gera uma notificação com alarme
+2. Deve permitir selecionar as notificações
+Dado que desejo selecionar a notificação
+Quando recebo a notificação com alarme no horário da ingestão do
+ medicamento
+Então o sistema redireciona para a tela “remédios”
+HU11 – Editar informações do medicamento
+SENDO um usuário com medicamentos cadastrados no sistema
+QUERO editar as informações do medicamento
+108
+PARA atualizar com novas informações
+DESENHO DA(S) TELA(S):
+FIGURA 59 - PROTÓTIPO DE EDIÇÃO DO MEDICAMENTO
+FONTE: AS AUTORAS (2023)
+109
+Figura 60 - PROTÓTIPO EDIÇÃO BÁSICA
+FONTE: AS AUTORAS (2023)
+Figura 61 - PROTÓTIPO EDIÇÃO DE CUSTOMIZÁVEIS
+FONTE: AS AUTORAS (2023)
+110
+FIGURA 62 - PROTÓTIPO EXCLUSÃO DE MEDICAMENTO
+FONTE: AS AUTORAS (2023)
+CRITÉRIOS DE ACEITAÇÃO
+1. Deve permitir selecionar a opção de edição
+2. Deve permitir alterar os campos “quantidade” e “horário inicial”
+3. Deve permitir redirecionar para a segunda tela de edição de informações
+4. Deve permitir alterar o campo “intervalo de tempo”
+5. Deve permitir editar a cor da cartela digital
+6. Deve permitir salvar as informações atualizadas da cartela digital
+7. Deve permitir excluir o medicamento
+CRITÉRIOS DE ACEITAÇÃO - DETALHAMENTO
+1. Deve permitir selecionar a opção de edição
+Dado que desejo selecionar a opção de edição do medicamento
+Quando seleciono a tela “remédios” no menu
+Então o sistema redireciona para a primeira tela de
+cadastro de informações do medicamento
+111
+2. Deve permitir alterar os campos “quantidade” e “horário inicial”
+Dado que desejo alterar a quantidade de cápsulas e o horário inicial
+de ingestão
+Quando altero o valor dos campos numéricos
+Então o sistema realiza o registro dos campos atualizados da primeira
+tela de cadastro de informações do medicamento
+3. Deve permitir redirecionar para a segunda tela de edição de
+informações
+Dado que todos os dados foram preenchidos
+Quando seleciono “avançar”
+Então o sistema redireciona para a segunda tela de cadastro de
+informações do medicamento
+4. Deve permitir alterar o campo “intervalo de tempo”
+Dado que desejo alterar o intervalo de tempo entre a ingestão
+dos medicamentos
+Quando altero o valor dos campos numéricos
+Então o sistema realiza o registro dos campos atualizados da segunda
+tela de cadastro de informações do medicamento
+5. Deve permitir editar a cor da cartela digital
+Dado que desejo alterar a cor da cartela digital
+Quando seleciono outra cor do campo “cor”
+Então o sistema realiza o registro atualizado da cartela digital com a
+cor selecionada
+112
+6. Deve permitir salvar as informações atualizadas da cartela digital
+Dado que desejo salvar as informações atualizadas
+Quando seleciono “salvar”
+Então o sistema salva as informações atualizadas no banco de dados
+7. Deve permitir excluir o medicamento
+Dado que desejo excluir o medicamento registrado
+Quando seleciono “excluir medicamento”
+Então o sistema pede a confirmação da exclusão
+8. Deve permitir confirmar a exclusão do medicamento
+Dado que desejo confirmar a exclusão do medicamento registrado
+Quando seleciono a opção “sim”
+Então o sistema exclui o cadastro do medicamento
+APÊNDICE C - DIAGRAMA DE CLASSES DE ANÁLISE
+113
+FIGURA 63 - DIAGRAMA DE CLASSES DE ANÁLISE
+FONTE: AS AUTORAS (2023)
+APÊNDICE D - DIAGRAMA DE SEQUÊNCIA DE ANÁLISE
+FIGURA 64 - DIAGRAMA DE SEQUÊNCIA DE CADASTRO DO USUÁRIO
+FONTE: AS AUTORAS (2023)
+1 N
+114
+FIGURA 65 - DIAGRAMA DE SEQUÊNCIA DE LOGIN
+FONTE: AS AUTORAS (2023)
+115
+FIGURA 66 - DIAGRAMA DE SEQUÊNCIA DE ACESSO AO MENU PRINCIPAL
+FONTE: AS AUTORAS (2023)
+FIGURA 67 - DIAGRAMA DE SEQUÊNCIA DE NOVO MEDICAMENTO
+FONTE: AS AUTORAS
+116
+FIGURA 68 - DIAGRAMA DE SEQUÊNCIA DE CADASTRO DE MEDICAMENTO
+FONTE: AS AUTORAS (2023)
+FIGURA 69 - DIAGRAMA DE SEQUÊNCIA DE TOMADA DE MEDICAMENTO
+FONTE: AS AUTORAS (2023)
+117
+FIGURA 70 - DIAGRAMA DE SEQUÊNCIA DE PESQUISA DE BULA
+FONTE: AS AUTORAS (2023)
+118
+APÊNDICE E - MODELO LÓGICO DE DADOS
+FIGURA 71 - MODELO LÓGICO DE DADOS
+FONTE: AS AUTORAS (2023)

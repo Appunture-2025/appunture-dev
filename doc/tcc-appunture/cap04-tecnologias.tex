@@ -27,9 +27,9 @@ O \textit{Appunture} foi desenvolvido seguindo uma arquitetura híbrida e modula
 
 \section{ARQUITETURA HÍBRIDA (OFFLINE + ONLINE)} \label{sec:arquitetura_hibrida}
 
-\subsection{Funcionamento Offline Completo}
+\subsection{Funcionamento Offline}
 
-O aplicativo móvel foi projetado com estratégia ``\textit{offline-first}'', garantindo que todas as funcionalidades principais funcionem independentemente da conectividade:
+O aplicativo móvel foi projetado com estratégia ``\textit{offline-first}'', garantindo que as funcionalidades de navegação e consulta de dados funcionem independentemente da conectividade:
 
 \textbf{Banco de Dados Local (SQLite):}
 \begin{itemize}
@@ -39,6 +39,8 @@ O aplicativo móvel foi projetado com estratégia ``\textit{offline-first}'', ga
     \item Estrutura otimizada para consultas rápidas;
     \item Garantia de performance instantânea e independência de rede.
 \end{itemize}
+
+\textbf{Nota:} A busca inteligente por sintomas utilizando o assistente de IA requer conexão com a internet. Quando \textit{offline}, o usuário pode navegar manualmente pelo atlas anatômico e acessar os detalhes dos pontos já sincronizados.
 
 \textbf{Sistema de Cache Inteligente (MMKV):}
 \begin{itemize}
