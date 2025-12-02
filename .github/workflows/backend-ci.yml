@@ -128,13 +128,17 @@ jobs:
         run: gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
 
       - name: Create Artifact Registry repository if not exists
-        continue-on-error: true
         run: |
-          gcloud artifacts repositories create ${{ env.REPOSITORY }} \
-            --repository-format=docker \
-            --location=us-central1 \
-            --description="Appunture Backend Docker images" \
-            --project=${{ secrets.GCP_PROJECT_ID }} || true
+          if ! gcloud artifacts repositories describe ${{ env.REPOSITORY }} --location=us-central1 --project=${{ secrets.GCP_PROJECT_ID }} > /dev/null 2>&1; then
+            echo "Creating Artifact Registry repository..."
+            gcloud artifacts repositories create ${{ env.REPOSITORY }} \
+              --repository-format=docker \
+              --location=us-central1 \
+              --description="Appunture Backend Docker images" \
+              --project=${{ secrets.GCP_PROJECT_ID }}
+          else
+            echo "Repository already exists"
+          fi
 
       - name: Build and push Docker image
         working-directory: backend-java
