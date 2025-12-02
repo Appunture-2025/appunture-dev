@@ -207,14 +207,6 @@ const firebaseConfig = {
   messagingSenderId: "123...", // FIREBASE_MESSAGING_SENDER_ID
   appId: "1:123...", // FIREBASE_APP_ID
 };
-const firebaseConfig = {
-  apiKey: "AIzaSyA37SzSYX-_JAJsN6mw2X8hWDcXEiCMHog",
-  authDomain: "appunture-tcc.firebaseapp.com",
-  projectId: "appunture-tcc",
-  storageBucket: "appunture-tcc.firebasestorage.app",
-  messagingSenderId: "756244484248",
-  appId: "1:756244484248:web:82482fed9b2b2f690d40ed"
-};
 ```
 
 ### 2.7 Criar Service Account
