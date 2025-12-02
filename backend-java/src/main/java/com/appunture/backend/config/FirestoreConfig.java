@@ -58,10 +58,17 @@ public class FirestoreConfig {
                     credentials = GoogleCredentials.getApplicationDefault();
                 }
 
+                // Remove 'gs://' prefix if present (Firebase SDK doesn't accept it)
+                String bucket = storageBucket;
+                if (bucket != null && bucket.startsWith("gs://")) {
+                    bucket = bucket.substring(5);
+                    log.info("Removido prefixo 'gs://' do storage bucket");
+                }
+
                 FirebaseOptions options = FirebaseOptions.builder()
                         .setCredentials(credentials)
                         .setProjectId(projectId)
-                        .setStorageBucket(storageBucket)
+                        .setStorageBucket(bucket)
                         .build();
 
                 FirebaseApp.initializeApp(options);
