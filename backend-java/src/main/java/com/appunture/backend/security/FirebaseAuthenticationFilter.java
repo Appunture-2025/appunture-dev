@@ -110,8 +110,12 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isPublicEndpoint(String uri) {
-    return uri.startsWith("/api/public") ||
+        return uri.startsWith("/api/public") ||
                uri.startsWith("/api/health") ||
+               uri.startsWith("/api/points") ||    // Modo visitante - leitura de pontos
+               uri.startsWith("/api/symptoms") ||  // Modo visitante - leitura de sintomas
+               uri.startsWith("/points") ||        // Modo visitante - leitura de pontos (sem /api)
+               uri.startsWith("/symptoms") ||      // Modo visitante - leitura de sintomas (sem /api)
                uri.startsWith("/swagger-ui") ||
                uri.startsWith("/v3/api-docs") ||
                uri.equals("/") ||
