@@ -25,6 +25,7 @@ import { SvgUri } from "react-native-svg";
 import type { GalleryImageSource } from "../types/media";
 import { getSvgAssetUriSync } from "../utils/bodyMap";
 import { useThemeColors } from "../stores/themeStore";
+import { COLORS } from "../utils/constants";
 
 export interface ImageGalleryProps {
   images: GalleryImageSource[];
