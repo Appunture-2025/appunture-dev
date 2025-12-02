@@ -18,21 +18,29 @@
     "contraindications": "Cuidado com pneumotórax; evitar punções profundas em pacientes muito emagrecidos.",
     "functions": "Regula e faz descer o Qi de Pulmão, transforma Fleuma-Calor, harmoniza Qi de Estômago, relaxa o tórax.",
     "coordinates": {
-      "x": null,
-      "y": null
+      "x": 47.35495091929558,
+      "y": 62.19188800770712
     },
-    "bodyMapCoords": [],
+    "bodyMapCoords": [
+      {
+        "view": "LU",
+        "x": 47.35495091929558,
+        "y": 62.19188800770712,
+        "mappedAt": "2025-12-01T23:35:48.136Z"
+      }
+    ],
     "imageUrls": [],
     "imageRefs": [],
     "imageThumbnailMap": {},
     "imageAudit": [],
     "symptomIds": [],
     "tags": [
-      "who-enriched"
+      "who-enriched",
+      "coords-mapped"
     ],
     "category": "General",
     "createdAt": "2025-01-01T00:00:00Z",
-    "updatedAt": "2025-12-01T18:36:37.749804Z",
+    "updatedAt": "2025-12-02T12:14:53.553235Z",
     "createdBy": "system",
     "favoriteCount": 0,
     "viewCount": 0,
@@ -69,21 +77,29 @@
     "contraindications": "Punção profunda com risco de pneumotórax; evitar em pele inflamada.",
     "functions": "Dispersa Calor do Pulmão, alivia plenitude torácica, promove a circulação de Qi nos ombros.",
     "coordinates": {
-      "x": null,
-      "y": null
+      "x": 46.318870912052304,
+      "y": 62.19188800770712
     },
-    "bodyMapCoords": [],
+    "bodyMapCoords": [
+      {
+        "view": "LU",
+        "x": 46.318870912052304,
+        "y": 62.19188800770712,
+        "mappedAt": "2025-12-01T23:35:58.432Z"
+      }
+    ],
     "imageUrls": [],
     "imageRefs": [],
     "imageThumbnailMap": {},
     "imageAudit": [],
     "symptomIds": [],
     "tags": [
-      "who-enriched"
+      "who-enriched",
+      "coords-mapped"
     ],
     "category": "General",
     "createdAt": "2025-01-01T00:00:00Z",
-    "updatedAt": "2025-12-01T18:36:37.753921Z",
+    "updatedAt": "2025-12-02T12:14:53.553235Z",
     "createdBy": "system",
     "favoriteCount": 0,
     "viewCount": 0,
@@ -120,21 +136,29 @@
     "contraindications": "Evitar em pacientes propensos a síncope; atenção a vasos superficiais.",
     "functions": "Resfria o Sangue, interrompe sangramentos, acalma o Po e regula o Qi ascendente do Pulmão.",
     "coordinates": {
-      "x": null,
-      "y": null
+      "x": 47.84251798152771,
+      "y": 49.84018899572347
     },
-    "bodyMapCoords": [],
+    "bodyMapCoords": [
+      {
+        "view": "LU",
+        "x": 47.84251798152771,
+        "y": 49.84018899572347,
+        "mappedAt": "2025-12-01T23:36:02.192Z"
+      }
+    ],
     "imageUrls": [],
     "imageRefs": [],
     "imageThumbnailMap": {},
     "imageAudit": [],
     "symptomIds": [],
     "tags": [
-      "who-enriched"
+      "who-enriched",
+      "coords-mapped"
     ],
     "category": "General",
     "createdAt": "2025-01-01T00:00:00Z",
-    "updatedAt": "2025-12-01T18:36:37.757852Z",
+    "updatedAt": "2025-12-02T12:14:53.553235Z",
     "createdBy": "system",
     "favoriteCount": 0,
     "viewCount": 0,
@@ -169,21 +193,29 @@
     "contraindications": "Evitar estimulação excessiva em pacientes debilitados.",
     "functions": "Move o Qi e o Sangue da região superior, alivia dor torácica e auxilia na respiração.",
     "coordinates": {
-      "x": null,
-      "y": null
+      "x": 47.964409747085746,
+      "y": 48.43166191540955
     },
-    "bodyMapCoords": [],
+    "bodyMapCoords": [
+      {
+        "view": "LU",
+        "x": 47.964409747085746,
+        "y": 48.43166191540955,
+        "mappedAt": "2025-12-01T23:36:05.808Z"
+      }
+    ],
     "imageUrls": [],
     "imageRefs": [],
     "imageThumbnailMap": {},
     "imageAudit": [],
     "symptomIds": [],
     "tags": [
-      "who-enriched"
+      "who-enriched",
+      "coords-mapped"
     ],
     "category": "General",
     "createdAt": "2025-01-01T00:00:00Z",
-    "updatedAt": "2025-12-01T18:36:37.759851Z",
+    "updatedAt": "2025-12-02T12:14:53.553235Z",
     "createdBy": "system",
     "favoriteCount": 0,
     "viewCount": 0,
@@ -216,21 +248,29 @@
     "contraindications": "Evitar punção medial profunda para proteger vasos.",
     "functions": "Elimina Calor do Pulmão, regula água, relaxa tendões do cotovelo e desce o Qi rebelde.",
     "coordinates": {
-      "x": null,
-      "y": null
+      "x": 48.81765210599197,
+      "y": 40.73893709215658
     },
-    "bodyMapCoords": [],
+    "bodyMapCoords": [
+      {
+        "view": "LU",
+        "x": 48.81765210599197,
+        "y": 40.73893709215658,
+        "mappedAt": "2025-12-01T23:36:09.196Z"
+      }
+    ],
     "imageUrls": [],
     "imageRefs": [],
     "imageThumbnailMap": {},
     "imageAudit": [],
     "symptomIds": [],
     "tags": [
-      "who-enriched"
+      "who-enriched",
+      "coords-mapped"
     ],
     "category": "General",
     "createdAt": "2025-01-01T00:00:00Z",
-    "updatedAt": "2025-12-01T18:36:37.763849Z",
+    "updatedAt": "2025-12-02T12:14:53.553235Z",
     "createdBy": "system",
     "favoriteCount": 0,
     "viewCount": 0,
@@ -266,21 +306,29 @@
     "contraindications": "Cuidado em crianças pequenas ou pacientes anticoagulados.",
     "functions": "Desobstrui o canal, interrompe sangramentos pulmonares, alivia dor aguda, desce o Qi.",
     "coordinates": {
-      "x": null,
-      "y": null
+      "x": 48.634814457654926,
+      "y": 32.287774610273026
     },
-    "bodyMapCoords": [],
+    "bodyMapCoords": [
+      {
+        "view": "LU",
+        "x": 48.634814457654926,
+        "y": 32.287774610273026,
+        "mappedAt": "2025-12-01T23:36:15.127Z"
+      }
+    ],
     "imageUrls": [],
     "imageRefs": [],
     "imageThumbnailMap": {},
     "imageAudit": [],
     "symptomIds": [],
     "tags": [
-      "who-enriched"
+      "who-enriched",
+      "coords-mapped"
     ],
     "category": "General",
     "createdAt": "2025-01-01T00:00:00Z",
-    "updatedAt": "2025-12-01T18:36:37.766866Z",
+    "updatedAt": "2025-12-02T12:14:53.553235Z",
     "createdBy": "system",
     "favoriteCount": 0,
     "viewCount": 0,
@@ -315,21 +363,29 @@
     "contraindications": "Evitar movimentos bruscos para não irritar nervos; cautela em gestantes ao abrir o Ren Mai.",
     "functions": "Libera o exterior, promove a descida do Qi do Pulmão, beneficia garganta e regula água corporal.",
     "coordinates": {
-      "x": null,
-      "y": null
+      "x": 48.2834766217648,
+      "y": 25.965335505069774
     },
-    "bodyMapCoords": [],
+    "bodyMapCoords": [
+      {
+        "view": "LU",
+        "x": 48.2834766217648,
+        "y": 25.965335505069774,
+        "mappedAt": "2025-12-01T23:36:31.519Z"
+      }
+    ],
     "imageUrls": [],
     "imageRefs": [],
     "imageThumbnailMap": {},
     "imageAudit": [],
     "symptomIds": [],
     "tags": [
-      "who-enriched"
+      "who-enriched",
+      "coords-mapped"
     ],
     "category": "General",
     "createdAt": "2025-01-01T00:00:00Z",
-    "updatedAt": "2025-12-01T18:36:37.768865Z",
+    "updatedAt": "2025-12-02T12:14:53.553235Z",
     "createdBy": "system",
     "favoriteCount": 0,
     "viewCount": 0,
@@ -363,21 +419,29 @@
     "contraindications": "Pressão digital firme antes de agulhar; cuidado com a artéria radial.",
     "functions": "Tonifica o Pulmão Metal, regula o Qi descendente e harmoniza garganta e punho.",
     "coordinates": {
-      "x": null,
-      "y": null
+      "x": 48.3838580700429,
+      "y": 24.983827977386724
     },
-    "bodyMapCoords": [],
+    "bodyMapCoords": [
+      {
+        "view": "LU",
+        "x": 48.3838580700429,
+        "y": 24.983827977386724,
+        "mappedAt": "2025-12-01T23:36:37.549Z"
+      }
+    ],
     "imageUrls": [],
     "imageRefs": [],
     "imageThumbnailMap": {},
     "imageAudit": [],
     "symptomIds": [],
     "tags": [
-      "who-enriched"
+      "who-enriched",
+      "coords-mapped"
     ],
     "category": "General",
     "createdAt": "2025-01-01T00:00:00Z",
-    "updatedAt": "2025-12-01T18:36:37.773863Z",
+    "updatedAt": "2025-12-02T12:14:53.553235Z",
     "createdBy": "system",
     "favoriteCount": 0,
     "viewCount": 0,
@@ -413,21 +477,29 @@
     "contraindications": "Compressão da artéria radial antes da punção; evitar em casos de endarterite ativa.",
     "functions": "Tonifica Pulmão, harmoniza circulação, transforma fleuma crônica e abre os Luo.",
     "coordinates": {
-      "x": null,
-      "y": null
+      "x": 48.082713725208606,
+      "y": 23.73463657851739
     },
-    "bodyMapCoords": [],
+    "bodyMapCoords": [
+      {
+        "view": "LU",
+        "x": 48.082713725208606,
+        "y": 23.73463657851739,
+        "mappedAt": "2025-12-01T23:36:40.875Z"
+      }
+    ],
     "imageUrls": [],
     "imageRefs": [],
     "imageThumbnailMap": {},
     "imageAudit": [],
     "symptomIds": [],
     "tags": [
-      "who-enriched"
+      "who-enriched",
+      "coords-mapped"
     ],
     "category": "General",
     "createdAt": "2025-01-01T00:00:00Z",
-    "updatedAt": "2025-12-01T18:36:37.777862Z",
+    "updatedAt": "2025-12-02T12:14:53.553235Z",
     "createdBy": "system",
     "favoriteCount": 0,
     "viewCount": 0,
@@ -463,21 +535,29 @@
     "contraindications": "Cautela no primeiro trimestre gestacional; atenção ao usar moxabustão.",
     "functions": "Clareia Calor do Pulmão, beneficia garganta, desce Qi rebelde e acalma o Shen.",
     "coordinates": {
-      "x": null,
-      "y": null
+      "x": 47.530615759679065,
+      "y": 22.039305394337575
     },
-    "bodyMapCoords": [],
+    "bodyMapCoords": [
+      {
+        "view": "LU",
+        "x": 47.530615759679065,
+        "y": 22.039305394337575,
+        "mappedAt": "2025-12-01T23:36:44.608Z"
+      }
+    ],
     "imageUrls": [],
     "imageRefs": [],
     "imageThumbnailMap": {},
     "imageAudit": [],
     "symptomIds": [],
     "tags": [
-      "who-enriched"
+      "who-enriched",
+      "coords-mapped"
     ],
     "category": "General",
     "createdAt": "2025-01-01T00:00:00Z",
-    "updatedAt": "2025-12-01T18:36:37.779972Z",
+    "updatedAt": "2025-12-02T12:14:53.553235Z",
     "createdBy": "system",
     "favoriteCount": 0,
     "viewCount": 0,
@@ -510,21 +590,29 @@
     "contraindications": "Evitar em distúrbios hemorrágicos; uso estéril ao fazer sangria.",
     "functions": "Dispersa Calor extremo, abre orifícios sensoriais, acalma o Shen e promove circulação no canal.",
     "coordinates": {
-      "x": null,
-      "y": null
+      "x": 45.22184244928283,
+      "y": 20.700886038406143
     },
-    "bodyMapCoords": [],
+    "bodyMapCoords": [
+      {
+        "view": "LU",
+        "x": 45.22184244928283,
+        "y": 20.700886038406143,
+        "mappedAt": "2025-12-01T23:37:00.087Z"
+      }
+    ],
     "imageUrls": [],
     "imageRefs": [],
     "imageThumbnailMap": {},
     "imageAudit": [],
     "symptomIds": [],
     "tags": [
-      "who-enriched"
+      "who-enriched",
+      "coords-mapped"
     ],
     "category": "General",
     "createdAt": "2025-01-01T00:00:00Z",
-    "updatedAt": "2025-12-01T18:36:37.781841Z",
+    "updatedAt": "2025-12-02T12:14:53.553235Z",
     "createdBy": "system",
     "favoriteCount": 0,
     "viewCount": 0,
