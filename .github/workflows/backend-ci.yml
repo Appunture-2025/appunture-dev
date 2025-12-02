@@ -30,8 +30,9 @@ permissions:
 
 env:
   JAVA_VERSION: "17"
-  REGISTRY: gcr.io
-  IMAGE_NAME: appunture-backend
+  REGISTRY: us-central1-docker.pkg.dev
+  REPOSITORY: appunture-backend
+  IMAGE_NAME: backend
 
 jobs:
   build-and-test:
@@ -123,20 +124,29 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Configure Docker
+      - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
+
+      - name: Create Artifact Registry repository if not exists
+        continue-on-error: true
+        run: |
+          gcloud artifacts repositories create ${{ env.REPOSITORY }} \
+            --repository-format=docker \
+            --location=us-central1 \
+            --description="Appunture Backend Docker images" \
+            --project=${{ secrets.GCP_PROJECT_ID }} || true
 
       - name: Build and push Docker image
         working-directory: backend-java
         run: |
-          docker build -t ${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
-          docker push ${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker build -t ${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
+          docker push ${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
       - name: Deploy to Cloud Run
         id: deploy
         run: |
-          gcloud run deploy ${{ env.IMAGE_NAME }} \
-            --image ${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+          gcloud run deploy ${{ env.REPOSITORY }} \
+            --image ${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
             --platform managed \
             --region us-central1 \
             --allow-unauthenticated \
