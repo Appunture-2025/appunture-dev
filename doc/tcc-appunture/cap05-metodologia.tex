@@ -1,0 +1,293 @@
+% ----------------------------------------------------------
+% Capítulo 5 - METODOLOGIA
+% ----------------------------------------------------------
+\chapter{METODOLOGIA} \label{cha:metodologia}
+
+Este capítulo apresenta as metodologias e ferramentas utilizadas para o desenvolvimento do aplicativo \textit{Appunture}, abrangendo desde as práticas de gerenciamento de projeto até as técnicas de modelagem e as tecnologias empregadas na implementação da solução.
+
+\section{METODOLOGIA DE DESENVOLVIMENTO} \label{sec:metodologia_dev}
+
+``A engenharia de software é uma disciplina tecnológica que se preocupa com todos os aspectos da produção de software'' \cite{pressman2016}.
+
+Seguindo os princípios da engenharia de software moderna, buscou-se conciliar qualidade técnica e valor prático, conforme destaca \citeonline{pressman2016}, ao afirmar que o software deve ser desenvolvido de forma disciplinada, mas adaptável às necessidades do projeto. A metodologia permitiu ajustes rápidos com base em testes reais, além de facilitar a manutenção e escalabilidade da aplicação.
+
+\subsection{Scrum}
+
+Para a gestão do desenvolvimento do aplicativo \textit{Appunture}, optou-se pela utilização do Scrum, um \textit{framework} ágil amplamente adotado em projetos de software devido à sua flexibilidade e capacidade de adaptação a contextos complexos.
+
+Conforme \citeonline{schwaber2020}, o Scrum é ``um \textit{framework} leve que ajuda pessoas, times e organizações a gerar valor por meio de soluções adaptativas para problemas complexos''. Ele permite organizar o trabalho de maneira iterativa e incremental, promovendo entregas frequentes e contínua melhoria do produto.
+
+Durante a construção do \textit{Appunture}, adotaram-se ciclos de desenvolvimento quinzenais (\textit{Sprints}), nos quais o time planejava, desenvolvia e entregava partes funcionais da aplicação. Essa prática segue o conceito apresentado por \citeonline{sutherland2014}, segundo o qual ``a definição de objetivos sequenciais que devem ser concluídos em um período definido'' favorece foco, previsibilidade e evolução do produto.
+
+Cada ciclo se iniciava com uma \textit{Sprint Planning}, onde era definido o \textit{backlog} da \textit{sprint} --- uma lista priorizada de funcionalidades e correções a serem entregues. O time se organizava de forma autogerenciada, decidindo coletivamente ``quem faria o quê, como e quando'', respeitando a autonomia e a responsabilidade individual de cada membro da equipe \cite{schwaber2020}.
+
+No contexto deste projeto foram definidos os seguintes papéis:
+
+\begin{itemize}
+    \item \textbf{Product Owner}: Bruno Brugnerotto de Lara
+    \item \textbf{Scrum Master}: Gabriel Francelino Voidaleski
+    \item \textbf{Desenvolvedor}: Pedro Henrique Lopes
+\end{itemize}
+
+Os eventos de \textit{Daily Scrum} foram adaptados para ocorrer semanalmente, considerando a disponibilidade da equipe envolvida no projeto. Já o evento de \textit{Sprint Retrospective} foi mantido ao final de cada \textit{sprint}, promovendo momentos de reflexão e melhoria contínua do processo de desenvolvimento.
+
+\section{MODELAGEM DO PROJETO} \label{sec:modelagem}
+
+A modelagem é uma etapa fundamental no desenvolvimento de sistemas, pois proporciona uma representação visual da estrutura e do comportamento da aplicação. Segundo \citeonline{booch2005}, empresas que entregam sistemas de qualidade e atendem às necessidades dos usuários são aquelas que compreendem a importância da modelagem desde os estágios iniciais do projeto.
+
+No desenvolvimento do aplicativo \textit{Appunture}, a modelagem permitiu visualizar de forma macro os elementos do sistema, facilitando a compreensão das funcionalidades e dos fluxos de dados. Como destacam os autores \citeonline{booch2005}, a construção de diagramas é essencial em sistemas orientados a objetos, pois oferece clareza sobre a estrutura e o funcionamento do software. Para isso, foi utilizada a UML (\textit{Unified Modeling Language}) como linguagem padrão, uma vez que, de acordo com os mesmos autores, trata-se de uma abordagem consolidada e amplamente adotada para representar graficamente os componentes e relações de um sistema.
+
+\subsection{Diagrama de Casos de Uso}
+
+Enquanto o diagrama de classes oferece uma perspectiva estrutural do sistema, representando seus componentes de forma estática, ele não contempla a dinâmica das interações entre os elementos. Segundo \citeonline{pressman2011}, é por meio dos diagramas de casos de uso que se visualiza como os usuários interagem com as funcionalidades do sistema, sendo uma ferramenta fundamental na modelagem orientada a objetos.
+
+No projeto \textit{Appunture}, o diagrama de casos de uso foi elaborado com o objetivo de representar os diferentes perfis de usuários --- como profissionais da saúde, administradores e desenvolvedores --- e suas respectivas interações com o aplicativo.
+
+\subsection{Histórias de Usuário}
+
+A prática de expressar requisitos por meio de histórias surgiu no contexto do desenvolvimento ágil, mais especificamente no processo \textit{Extreme Programming}, conforme introduzido por \citeonline{beck2001}. As histórias de usuário consistem em descrições concisas de funcionalidades escritas sob a ótica do próprio usuário, facilitando a comunicação entre a equipe de desenvolvimento e os \textit{stakeholders}.
+
+Segundo \citeonline{bernardo2014}, a principal característica dessas histórias está na simplicidade e objetividade, permitindo que necessidades do cliente sejam descritas de forma clara e centrada em valor. No desenvolvimento do aplicativo \textit{Appunture}, as funcionalidades foram documentadas com base nessa abordagem, sendo cada história composta por:
+
+\begin{itemize}
+    \item Uma descrição no formato: SENDO (perfil), QUERO (função) PARA (objetivo);
+    \item Seus respectivos critérios de aceitação.
+\end{itemize}
+
+Conforme \citeonline{cohn2004}, os critérios de aceitação ``definem os limites de uma história de usuário, sendo usados para confirmar quando uma história está concluída e funcionando como esperado''.
+
+\subsubsection{Histórias de Usuário do Projeto}
+
+\begin{enumerate}
+    \item Como usuário, desejo consultar pontos de acupuntura interativamente em um corpo humano, para localizar facilmente a região desejada.
+    \begin{itemize}
+        \item Critérios de aceitação: Deve ser possível tocar/clicar no ponto anatômico e acessar seus detalhes. Deve haver destaque visual nos pontos ativos do corpo.
+    \end{itemize}
+    
+    \item Como usuário, desejo buscar pontos por nome, localização, meridiano ou função terapêutica, para encontrar informações de forma rápida.
+    \begin{itemize}
+        \item Critérios de aceitação: Deve aceitar buscas por texto. A pesquisa deve filtrar e exibir resultados dinâmicos.
+    \end{itemize}
+    
+    \item Como usuário, desejo filtrar pontos com base em sintomas que estou tratando (ex: ``ansiedade'' + ``insônia''), para encontrar sugestões apropriadas.
+    \begin{itemize}
+        \item Critérios de aceitação: Deve aceitar múltiplos sintomas. Deve retornar pontos relacionados por frequência de uso clínico.
+    \end{itemize}
+    
+    \item Como usuário, desejo visualizar informações detalhadas sobre cada ponto, incluindo profundidade, punção, características especiais e funções.
+    \begin{itemize}
+        \item Critérios de aceitação: Todas as informações devem estar organizadas em seções. Imagens e descrições devem estar disponíveis \textit{offline}.
+    \end{itemize}
+    
+    \item Como usuário, desejo usar o app sem internet, para ter acesso ao conteúdo mesmo em locais sem sinal.
+    \begin{itemize}
+        \item Critérios de aceitação: O app deve funcionar com banco local. Ao conectar-se, os dados são sincronizados com o \textit{backend}.
+    \end{itemize}
+    
+    \item Como usuário, desejo registrar uma conta e fazer login, para salvar minhas preferências e histórico.
+    \begin{itemize}
+        \item Critérios de aceitação: Deve permitir login com email/senha. O app deve diferenciar usuários por tipo (ex: estudante, profissional etc.).
+    \end{itemize}
+    
+    \item Como usuário, desejo usar um assistente inteligente para descrever meus sintomas com linguagem natural, para receber recomendações automáticas baseadas em evidências.
+    \begin{itemize}
+        \item Critérios de aceitação: Quando \textit{online}, deve utilizar IA Generativa (Spring AI + Google Gemini) para sugestões contextualizadas. Respostas devem ser baseadas na base de dados técnica do sistema.
+    \end{itemize}
+    
+    \item Como administrador, desejo acessar o painel web, para visualizar e gerenciar os dados do aplicativo.
+    \begin{itemize}
+        \item Critérios de aceitação: Login restrito ao perfil administrador. Interface adaptada para \textit{desktop}.
+    \end{itemize}
+    
+    \item Como administrador, desejo cadastrar e editar pontos de acupuntura, para manter o banco de dados atualizado.
+    \begin{itemize}
+        \item Critérios de aceitação: Deve permitir adicionar nome, descrição, localização, meridiano, imagem etc. Interface amigável com validação dos campos.
+    \end{itemize}
+    
+    \item Como administrador, desejo consultar relatórios de uso, para entender como os usuários estão utilizando a plataforma.
+    \begin{itemize}
+        \item Critérios de aceitação: Relatórios por data, localização, pontos mais acessados. Visualização em gráfico ou tabela.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Diagrama Físico do Banco de Dados}
+
+O diagrama físico de banco de dados é uma representação detalhada das tabelas que compõem o sistema, incluindo seus atributos, tipos de dados, chaves primárias e estrangeiras. Conforme observado por \citeonline{molina2009}, esse tipo de modelagem visa representar a estrutura real de armazenamento da informação, sendo vital para a implementação correta de um banco de dados relacional.
+
+Para o \textit{Appunture}, o diagrama físico foi desenvolvido com base no diagrama de classes UML, refletindo tanto o banco de dados local (SQLite), utilizado para acesso \textit{offline} no dispositivo móvel, quanto o banco remoto (Firestore), hospedado no \textit{backend} acessado via API.
+
+\section{PRODUCT BACKLOG} \label{sec:backlog}
+
+O \autoref{qua:backlog} apresenta o \textit{Product Backlog} do projeto \textit{Appunture}, com os itens priorizados e suas respectivas estimativas em Pontos de Função (PF).
+
+\begin{quadro}[htb]
+\caption{Product Backlog do Appunture}
+\label{qua:backlog}
+\centering
+\footnotesize
+\begin{tabular}{|c|p{5cm}|c|c|c|}
+\hline
+\textbf{ID} & \textbf{Item do Backlog} & \textbf{Plataforma} & \textbf{PF} & \textbf{Prioridade} \\
+\hline
+1 & Setup do projeto e bibliotecas iniciais & Todas & 3 & Alta \\
+\hline
+2 & Sistema de navegação (tabs, stack, rotas protegidas) & Mobile/Web & 5 & Alta \\
+\hline
+3 & Tela de login e registro com autenticação JWT & Todas & 5 & Alta \\
+\hline
+4 & Tela de busca com filtro por sintomas ou nome de ponto & Mobile/Web & 8 & Alta \\
+\hline
+5 & Assistente IA com RAG (Spring AI + Gemini) & Mobile/Backend & 6 & Alta \\
+\hline
+6 & Tela de resultados com lista de pontos filtrados & Mobile/Web & 8 & Alta \\
+\hline
+7 & Tela do corpo humano com hotspots interativos (SVG) & Mobile & 14 & Alta \\
+\hline
+8 & Tela de detalhes de um ponto & Mobile/Web & 6 & Média \\
+\hline
+9 & Funcionalidade de favoritar pontos & Mobile & 3 & Média \\
+\hline
+10 & Anotações personalizadas por ponto & Mobile & 3 & Média \\
+\hline
+11 & Banco de dados local (SQLite/MMKV) + versionamento & Mobile & 4 & Alta \\
+\hline
+12 & Sistema de sincronização (favoritos, anotações) & Mobile/Backend & 6 & Alta \\
+\hline
+13 & Backend RESTful (Java Firestore + JWT) & Backend & 5 & Alta \\
+\hline
+14 & CRUD completo de pontos e sintomas (admin) & Web/Backend & 6 & Alta \\
+\hline
+15 & Upload de imagens SVG e definição de coordenadas & Web Admin & 3 & Média \\
+\hline
+16 & Controle de acesso por perfil (user/admin) & Todas & 3 & Alta \\
+\hline
+17 & Deploy e testes finais (Web Mobile) & Todas & 5 & Média \\
+\hline
+\end{tabular}
+\fonte{Os autores (2025)}
+\end{quadro}
+
+\section{PLANEJAMENTO DE SPRINTS} \label{sec:sprints}
+
+O desenvolvimento do \textit{Appunture} foi estruturado com base na metodologia SCRUM, dividindo o projeto em 8 \textit{sprints} quinzenais, ao longo de aproximadamente 15 semanas de trabalho efetivo. Cada \textit{sprint} contempla entregas incrementais de funcionalidades, priorizando valor de uso e estrutura progressiva do sistema.
+
+A equipe de desenvolvimento é composta por três integrantes, com disponibilidade média de 4,5 horas semanais por pessoa, totalizando 13,5 horas por semana, ou 27 horas por \textit{sprint}. Dessa forma, o tempo estimado total do projeto é de aproximadamente 202,5 horas.
+
+\subsection{Estimativa Geral por Pontos de Função (PF)}
+
+O \autoref{qua:estimativa} apresenta a distribuição das estimativas por funcionalidade:
+
+\begin{quadro}[htb]
+\caption{Estimativa por Pontos de Função}
+\label{qua:estimativa}
+\centering
+\begin{tabular}{|p{10cm}|c|}
+\hline
+\textbf{Funcionalidade} & \textbf{Estimativa (PF)} \\
+\hline
+Tela de busca com filtro por sintomas/finalidade & 8 \\
+\hline
+Tela de resultados com imagens & 8 \\
+\hline
+Tela do corpo humano com hotspots interativos (SVG) & 14 \\
+\hline
+Tela de detalhes de um ponto & 6 \\
+\hline
+Funcionalidade de favoritos e anotações & 6 \\
+\hline
+Backend com autenticação e CRUD de pontos/sintomas & 8 \\
+\hline
+Painel administrativo para cadastro e upload de imagens SVG & 4 \\
+\hline
+Sistema de sincronização (SQLite $\leftrightarrow$ Backend) & 6 \\
+\hline
+Sistema de navegação e layout geral & 5 \\
+\hline
+Deploy, testes finais e refinos & 5 \\
+\hline
+Integração do Assistente IA com RAG & 6 \\
+\hline
+\textbf{Total Estimado} & \textbf{72 PF} \\
+\hline
+\end{tabular}
+\fonte{Os autores (2025)}
+\end{quadro}
+
+\subsection{Cálculo de Esforço}
+
+\begin{itemize}
+    \item \textbf{Tempo disponível por sprint}: 3 pessoas $\times$ 4,5 h/semana $\times$ 2 semanas = 27 horas/sprint
+    \item \textbf{Tempo total estimado}: 15 semanas $\times$ 13,5 h/semana = 202,5 horas
+    \item \textbf{Total de Pontos de Função estimado}: 72 PF, distribuídos ao longo de 7 sprints + 1 sprint de buffer
+\end{itemize}
+
+O \autoref{qua:sprints} apresenta o cronograma de \textit{sprints}:
+
+\begin{quadro}[htb]
+\caption{Cronograma de Sprints}
+\label{qua:sprints}
+\centering
+\footnotesize
+\begin{tabular}{|c|c|c|p{7cm}|}
+\hline
+\textbf{Sprint} & \textbf{Semana} & \textbf{PF} & \textbf{Entregas Planejadas} \\
+\hline
+Sprint 1 & 0--1 & 4 & Setup do projeto, autenticação, rotas iniciais \\
+\hline
+Sprint 2 & 2--3 & 8 & Login/registro, persistência de token, navegação protegida \\
+\hline
+Sprint 3 & 4--5 & 10 & Busca avançada, integração IA, exibição de resultados \\
+\hline
+Sprint 4 & 6--7 & 10 & Tela de resultados com imagens + início da tela de detalhes \\
+\hline
+Sprint 5 & 8--9 & 10 & Tela de corpo humano com SVG interativo \\
+\hline
+Sprint 6 & 10--11 & 10 & Favoritos, anotações, sincronização offline e online \\
+\hline
+Sprint 7 & 12--13 & 12 & Backend completo + painel administrativo com upload de SVG \\
+\hline
+Sprint 8 & 14--15 & 0 & Testes finais, deploy mobile/web \\
+\hline
+\end{tabular}
+\fonte{Os autores (2025)}
+\end{quadro}
+
+\section{FERRAMENTAS DE DESENVOLVIMENTO} \label{sec:ferramentas}
+
+Nesta seção estão descritas as diferentes ferramentas que, juntas, viabilizaram a construção e o desenvolvimento do aplicativo \textit{Appunture}.
+
+\subsection{React Native}
+
+React Native é um \textit{framework} de desenvolvimento móvel criado pelo Facebook em 2015, que permite criar aplicações nativas para iOS e Android usando JavaScript e React. Segundo a documentação oficial \cite{reactnative2023}, ``React Native combina as melhores partes do desenvolvimento nativo com React, uma biblioteca JavaScript de ponta para construção de interfaces de usuário''.
+
+O \textit{framework} foi escolhido para este projeto por permitir desenvolvimento multiplataforma com alta performance, reduzindo significativamente o tempo de desenvolvimento e manutenção.
+
+\subsection{Expo}
+
+Expo é uma plataforma de código aberto para criar aplicações React Native universais. Segundo a documentação \cite{expo2023}, ``Expo é um conjunto de ferramentas e serviços construídos em torno do React Native que ajuda você a desenvolver, construir, implementar e iterar rapidamente em aplicações iOS, Android e web''.
+
+A escolha do Expo se deu pela facilidade de configuração do ambiente de desenvolvimento, capacidade de testar aplicações em dispositivos reais através do Expo Go, e pelos serviços integrados como EAS Build para compilação na nuvem.
+
+\subsection{Java}
+
+Java é uma linguagem de programação orientada a objetos, robusta e segura, amplamente utilizada no desenvolvimento de sistemas corporativos. Segundo \citeonline{deitel2017}, ``Java é a linguagem de programação mais popular do mundo, permitindo o desenvolvimento de aplicações seguras, portáveis e de alto desempenho''.
+
+Para o \textit{backend} do \textit{Appunture}, Java foi escolhido por sua tipagem estática, que previne erros em tempo de compilação, e por sua robustez no tratamento de regras de negócio complexas e integrações com serviços em nuvem.
+
+\subsection{Spring Boot}
+
+Spring Boot é um \textit{framework} que facilita a criação de aplicações baseadas em Spring autônomas e de nível de produção. Segundo \citeonline{walls2016}, ``Spring Boot muda a forma como desenvolvemos aplicações Spring, oferecendo configuração automática e eliminando a necessidade de configurações XML complexas''.
+
+O Spring Boot foi adotado no projeto por sua capacidade de acelerar o desenvolvimento, integração nativa com serviços do Google Cloud (como Firestore e Firebase), e por fornecer recursos prontos para segurança (Spring Security) e monitoramento.
+
+\subsection{Google Cloud Firestore}
+
+O Firestore é um banco de dados NoSQL flexível e escalável para desenvolvimento móvel, web e de servidor, oferecido pelo Google Cloud Platform. Segundo a documentação oficial \cite{google2023}, ``o Firestore mantém seus dados em sincronia entre aplicativos clientes através de ouvintes em tempo real e oferece suporte \textit{offline} para dispositivos móveis e web''.
+
+Para o \textit{Appunture}, o Firestore foi escolhido por sua estrutura de documentos flexível, ideal para armazenar dados hierárquicos de pontos de acupuntura, e por sua integração nativa com o ecossistema Firebase.
+
+\subsection{SQLite}
+
+SQLite é um mecanismo de banco de dados SQL embutido, que não requer servidor separado ou configuração. Segundo \citeonline{kreibich2010}, ``SQLite é uma biblioteca de software que implementa um mecanismo de banco de dados SQL transacional, autônomo, sem servidor e de configuração zero''.
+
+No aplicativo móvel \textit{Appunture}, SQLite foi implementado para garantir funcionamento \textit{offline} completo, armazenando localmente todos os pontos de acupuntura, sintomas e dados do usuário.

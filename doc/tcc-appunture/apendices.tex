@@ -1,0 +1,305 @@
+% ----------------------------------------------------------
+% APÊNDICES
+% ----------------------------------------------------------
+
+\chapter{DIAGRAMA DE CLASSES} \label{ap:classes}
+
+O diagrama de classes apresenta a estrutura das principais entidades do sistema \textit{Appunture} e seus relacionamentos.
+
+% Inserir figura do diagrama de classes
+% \figura{DIAGRAMA DE CLASSES DO SISTEMA}{0.9}{fig/diagrama-classes.png}{Os autores (2025)}{diagrama-classes}{}{}
+
+\section{CLASSES PRINCIPAIS}
+
+\begin{itemize}
+    \item \textbf{User}: Representa os usuários do sistema, com atributos como nome, email, senha (hash), tipo de perfil e data de cadastro.
+    
+    \item \textbf{AcupuncturePoint}: Representa um ponto de acupuntura, contendo informações como código, nome em português, nome em pinyin, localização anatômica, profundidade de punção, indicações, contraindicações e funções energéticas.
+    
+    \item \textbf{Meridian}: Representa os meridianos da MTC, com nome, código e lista de pontos associados.
+    
+    \item \textbf{Symptom}: Representa sintomas clínicos que podem ser associados aos pontos de acupuntura.
+    
+    \item \textbf{Favorite}: Representa a relação entre usuário e pontos favoritados.
+    
+    \item \textbf{Note}: Representa as anotações pessoais do usuário sobre pontos específicos.
+\end{itemize}
+
+\chapter{HISTÓRIAS DE USUÁRIO DETALHADAS} \label{ap:historias}
+
+\section{HISTÓRIA DE USUÁRIO 1: BUSCA POR SINTOMAS}
+
+\textbf{Como} usuário do aplicativo, \textbf{quero} buscar pontos de acupuntura por sintomas, \textbf{para} encontrar rapidamente os pontos indicados para tratamento.
+
+\textbf{Critérios de Aceitação:}
+\begin{enumerate}
+    \item O sistema deve aceitar entrada de texto livre descrevendo sintomas;
+    \item A busca deve funcionar mesmo com erros de digitação;
+    \item Os resultados devem ser ordenados por relevância;
+    \item Deve ser possível filtrar por múltiplos sintomas simultaneamente;
+    \item A busca deve funcionar em modo \textit{offline}.
+\end{enumerate}
+
+% Inserir diagrama de sequência se disponível
+
+\section{HISTÓRIA DE USUÁRIO 2: SINCRONIZAÇÃO DE DADOS}
+
+\textbf{Como} usuário do aplicativo, \textbf{quero} que meus dados sejam sincronizados automaticamente, \textbf{para} não perder minhas anotações e favoritos ao trocar de dispositivo.
+
+\textbf{Critérios de Aceitação:}
+\begin{enumerate}
+    \item A sincronização deve ocorrer automaticamente quando houver conexão;
+    \item Dados salvos \textit{offline} devem ser enviados ao \textit{backend} quando conectar;
+    \item Conflitos de dados devem ser resolvidos mantendo a versão mais recente;
+    \item O usuário deve ser notificado sobre o status da sincronização;
+    \item A sincronização não deve impactar a performance do aplicativo.
+\end{enumerate}
+
+\chapter{MODELO FÍSICO DO BANCO DE DADOS} \label{ap:banco}
+
+\section{ESTRUTURA DO BANCO DE DADOS LOCAL (SQLITE)}
+
+\begin{lstlisting}[language=SQL, caption={Estrutura do banco SQLite local}]
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    profile_type TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    synced_at DATETIME
+);
+
+CREATE TABLE acupuncture_points (
+    id INTEGER PRIMARY KEY,
+    code TEXT UNIQUE NOT NULL,
+    name_pt TEXT NOT NULL,
+    name_pinyin TEXT,
+    meridian_id INTEGER,
+    location TEXT,
+    depth TEXT,
+    indications TEXT,
+    contraindications TEXT,
+    functions TEXT,
+    special_characteristics TEXT,
+    svg_x REAL,
+    svg_y REAL,
+    FOREIGN KEY (meridian_id) REFERENCES meridians(id)
+);
+
+CREATE TABLE meridians (
+    id INTEGER PRIMARY KEY,
+    code TEXT UNIQUE NOT NULL,
+    name_pt TEXT NOT NULL,
+    name_cn TEXT,
+    element TEXT,
+    yin_yang TEXT
+);
+
+CREATE TABLE symptoms (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    category TEXT,
+    synonyms TEXT
+);
+
+CREATE TABLE point_symptoms (
+    point_id INTEGER,
+    symptom_id INTEGER,
+    relevance_score REAL,
+    PRIMARY KEY (point_id, symptom_id),
+    FOREIGN KEY (point_id) REFERENCES acupuncture_points(id),
+    FOREIGN KEY (symptom_id) REFERENCES symptoms(id)
+);
+
+CREATE TABLE favorites (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    point_id INTEGER,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    synced INTEGER DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (point_id) REFERENCES acupuncture_points(id)
+);
+
+CREATE TABLE notes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    point_id INTEGER,
+    content TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME,
+    synced INTEGER DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (point_id) REFERENCES acupuncture_points(id)
+);
+\end{lstlisting}
+
+\chapter{ESPECIFICAÇÃO DE APIs} \label{ap:apis}
+
+\section{AUTENTICAÇÃO}
+
+\subsection{POST /api/auth/login}
+
+\textbf{Descrição:} Autentica um usuário no sistema.
+
+\textbf{Request Body:}
+\begin{lstlisting}[language=json]
+{
+    "email": "usuario@email.com",
+    "password": "senha123"
+}
+\end{lstlisting}
+
+\textbf{Response (200 OK):}
+\begin{lstlisting}[language=json]
+{
+    "token": "eyJhbGciOiJIUzI1NiIs...",
+    "user": {
+        "id": 1,
+        "name": "Usuario",
+        "email": "usuario@email.com",
+        "profileType": "professional"
+    }
+}
+\end{lstlisting}
+
+\subsection{POST /api/auth/register}
+
+\textbf{Descrição:} Registra um novo usuário no sistema.
+
+\textbf{Request Body:}
+\begin{lstlisting}[language=json]
+{
+    "name": "Novo Usuario",
+    "email": "novo@email.com",
+    "password": "senha123",
+    "profileType": "student"
+}
+\end{lstlisting}
+
+\section{PONTOS DE ACUPUNTURA}
+
+\subsection{GET /api/points}
+
+\textbf{Descrição:} Retorna lista de pontos de acupuntura.
+
+\textbf{Query Parameters:}
+\begin{itemize}
+    \item \texttt{meridian}: Filtrar por meridiano
+    \item \texttt{search}: Termo de busca
+    \item \texttt{symptoms}: Lista de sintomas separados por vírgula
+\end{itemize}
+
+\subsection{GET /api/points/\{id\}}
+
+\textbf{Descrição:} Retorna detalhes de um ponto específico.
+
+\section{SINCRONIZAÇÃO}
+
+\subsection{POST /api/sync}
+
+\textbf{Descrição:} Sincroniza dados do dispositivo com o servidor.
+
+\textbf{Request Body:}
+\begin{lstlisting}[language=json]
+{
+    "lastSyncTimestamp": "2025-11-15T10:30:00Z",
+    "favorites": [...],
+    "notes": [...]
+}
+\end{lstlisting}
+
+\chapter{MODELOS DE INTELIGÊNCIA ARTIFICIAL} \label{ap:ia}
+
+\section{MOTOR DE BUSCA LOCAL (FUSE.JS)}
+
+O sistema de busca inteligente local do \textit{Appunture} utiliza a biblioteca Fuse.js para implementar busca difusa (\textit{fuzzy search}) com as seguintes configurações:
+
+\begin{lstlisting}[language=JavaScript, caption={Configuração do Fuse.js}]
+const fuseOptions = {
+    keys: [
+        { name: 'name_pt', weight: 0.4 },
+        { name: 'name_pinyin', weight: 0.2 },
+        { name: 'indications', weight: 0.3 },
+        { name: 'location', weight: 0.1 }
+    ],
+    threshold: 0.4,
+    includeScore: true,
+    minMatchCharLength: 2,
+    ignoreLocation: true
+};
+\end{lstlisting}
+
+\section{ASSISTENTE IA COM RAG (SPRING AI + GOOGLE GEMINI)}
+
+Quando conectado à internet, o sistema utiliza a arquitetura RAG (\textit{Retrieval-Augmented Generation}) para fornecer respostas mais precisas e contextualizadas.
+
+\begin{lstlisting}[language=Java, caption={Integração Spring AI com RAG}]
+@Service
+public class AcupunctureAssistantService {
+    
+    private final ChatClient chatClient;
+    private final PointRepository pointRepository;
+    private final SymptomRepository symptomRepository;
+    
+    public String getClinicAssistance(String userQuestion) {
+        // 1. Busca contexto relevante na base de dados
+        List<Point> relevantPoints = 
+            pointRepository.findBySymptoms(userQuestion);
+        List<Symptom> relevantSymptoms = 
+            symptomRepository.findByKeywords(userQuestion);
+        
+        // 2. Monta prompt enriquecido com contexto
+        String enrichedPrompt = buildPromptWithContext(
+            userQuestion, relevantPoints, relevantSymptoms);
+        
+        // 3. Chama o modelo de IA via Spring AI
+        return chatClient.prompt()
+            .system(ACUPUNCTURE_SYSTEM_PROMPT)
+            .user(enrichedPrompt)
+            .call()
+            .content();
+    }
+    
+    private String buildPromptWithContext(
+            String question, 
+            List<Point> points,
+            List<Symptom> symptoms) {
+        StringBuilder context = new StringBuilder();
+        context.append("Contexto dos pontos relevantes:\n");
+        for (Point p : points) {
+            context.append(String.format(
+                "- %s (%s): %s. Indicacoes: %s\n",
+                p.getNamePt(), p.getCode(),
+                p.getLocation(), p.getIndications()));
+        }
+        return context + "\n\nPergunta: " + question;
+    }
+}
+\end{lstlisting>
+
+\section{PIPELINE DE PROCESSAMENTO LOCAL}
+
+O processamento de linguagem natural local segue o seguinte \textit{pipeline}:
+
+\begin{enumerate}
+    \item \textbf{Normalização}: Conversão para minúsculas, remoção de acentos;
+    \item \textbf{Tokenização}: Separação do texto em palavras;
+    \item \textbf{Remoção de stopwords}: Eliminação de palavras comuns (de, para, o, a, etc.);
+    \item \textbf{Stemização}: Redução das palavras à sua raiz;
+    \item \textbf{Busca difusa}: Aplicação do algoritmo Fuse.js;
+    \item \textbf{Ranking}: Ordenação dos resultados por relevância.
+\end{enumerate}
+
+\section{EXEMPLO DE FUNCIONAMENTO}
+
+\textbf{Entrada do usuário:} ``dor de cabeça forte na testa''
+
+\textbf{Processamento:}
+\begin{enumerate}
+    \item Normalização: ``dor de cabeca forte na testa''
+    \item Tokenização: [``dor'', ``de'', ``cabeca'', ``forte'', ``na'', ``testa'']
+    \item Remoção de stopwords: [``dor'', ``cabeca'', ``forte'', ``testa'']
+    \item Busca: Procura por sintomas e indicações relacionados
+    \item Resultado: Pontos como VG20 (Baihui), VB14 (Yangbai), E8 (Touwei)
+\end{enumerate}

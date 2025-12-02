@@ -1,0 +1,284 @@
+% ----------------------------------------------------------
+% Capítulo 4 - TECNOLOGIAS E ARQUITETURA DO SISTEMA
+% ----------------------------------------------------------
+\chapter{TECNOLOGIAS E ARQUITETURA DO SISTEMA} \label{cha:tecnologias}
+
+Este capítulo apresenta o \textit{stack} tecnológico utilizado no desenvolvimento do \textit{Appunture}, detalhando a arquitetura do sistema, as tecnologias empregadas e as decisões técnicas que fundamentam a implementação da solução.
+
+\section{VISÃO GERAL DA ARQUITETURA} \label{sec:visao_arquitetura}
+
+O \textit{Appunture} foi desenvolvido seguindo uma arquitetura híbrida distribuída, composta por quatro camadas principais:
+
+\begin{itemize}
+    \item \textbf{Aplicativo Móvel (React Native + Expo)}: Interface principal do usuário com estratégia ``\textit{Offline-First}'';
+    \item \textbf{API Backend (Java + Spring Boot)}: Servidor de aplicação responsável pela lógica de negócio, sincronização e Inteligência Artificial;
+    \item \textbf{Interface Web Administrativa (React)}: Painel de administração para gestão de conteúdo;
+    \item \textbf{Ferramentas de Apoio (Python/HTML)}: Scripts de migração de dados e ferramenta de mapeamento de pontos.
+\end{itemize}
+
+Esta arquitetura garante alta disponibilidade, performance otimizada e experiência consistente mesmo em ambientes com conectividade limitada.
+
+\subsection{Diagrama de Arquitetura}
+
+O \textit{Appunture} foi desenvolvido seguindo uma arquitetura híbrida e modular, que integra funcionalidades \textit{offline} e \textit{online} para garantir alta disponibilidade, desempenho e usabilidade mesmo em ambientes com conexão limitada ou instável.
+
+% Inserir figura do diagrama de arquitetura
+% \figura{DIAGRAMA DE ARQUITETURA DO SISTEMA}{0.8}{fig/arquitetura.png}{Os autores (2025)}{arquitetura}{}{}
+
+\section{ARQUITETURA HÍBRIDA (OFFLINE + ONLINE)} \label{sec:arquitetura_hibrida}
+
+\subsection{Funcionamento Offline Completo}
+
+O aplicativo móvel foi projetado com estratégia ``\textit{offline-first}'', garantindo que todas as funcionalidades principais funcionem independentemente da conectividade:
+
+\textbf{Banco de Dados Local (SQLite):}
+\begin{itemize}
+    \item Armazena todos os 361 pontos de acupuntura dos meridianos principais;
+    \item Contém pontos extras, sintomas e suas relações terapêuticas;
+    \item Mantém favoritos e anotações do usuário;
+    \item Estrutura otimizada para consultas rápidas;
+    \item Garantia de performance instantânea e independência de rede.
+\end{itemize}
+
+\textbf{Sistema de Cache Inteligente (MMKV):}
+\begin{itemize}
+    \item Armazena configurações de usuário e estados da aplicação;
+    \item \textit{Cache} de imagens SVG e recursos visuais;
+    \item Dados de sessão e preferências de interface;
+    \item Performance até 30x superior ao AsyncStorage tradicional.
+\end{itemize}
+
+\subsection{Sincronização Inteligente}
+
+Quando conectado à internet, o sistema implementa sincronização bidirecional automática:
+
+\textbf{Sincronização Descendente (Backend $\rightarrow$ Mobile):}
+\begin{itemize}
+    \item Atualização automática de dados clínicos;
+    \item \textit{Download} incremental baseado em versionamento;
+    \item Compressão de dados para otimizar transferência;
+    \item Validação de integridade dos dados recebidos.
+\end{itemize}
+
+\textbf{Sincronização Ascendente (Mobile $\rightarrow$ Backend):}
+\begin{itemize}
+    \item \textit{Upload} de favoritos e anotações do usuário;
+    \item \textit{Backup} automático de preferências;
+    \item \textit{Logs} de uso para análise de performance;
+    \item Controle de conflitos com \textit{timestamp}.
+\end{itemize}
+
+\section{STACK TECNOLÓGICO DETALHADO} \label{sec:stack}
+
+\subsection{Frontend Mobile (React Native + Expo)}
+
+Segundo a documentação oficial \cite{reactnative2023}, ``React Native combina as melhores partes do desenvolvimento nativo com React, uma biblioteca JavaScript de ponta para construção de interfaces de usuário''.
+
+\textbf{React Native 0.72+ com Expo SDK 49+:}
+\begin{itemize}
+    \item \textit{Framework} multiplataforma para desenvolvimento nativo;
+    \item Expo Router para navegação baseada em arquivos;
+    \item Renderização otimizada de SVGs para o atlas anatômico;
+    \item Compatibilidade total com Android 8+ e iOS 12+.
+\end{itemize}
+
+\textbf{Atlas Anatômico Digital:}
+\begin{itemize}
+    \item 15 visualizações vetoriais (SVG) de alta fidelidade;
+    \item Organizadas por meridianos e vistas (frontal e posterior);
+    \item Zoom sem perda de qualidade;
+    \item Interação precisa (toque) em áreas pequenas;
+    \item Carga sob demanda das imagens para otimizar memória.
+\end{itemize}
+
+\subsection{Backend API (Java + Spring Boot)}
+
+Segundo \citeonline{walls2016}, ``Spring Boot muda a forma como desenvolvemos aplicações Spring, oferecendo configuração automática e eliminando a necessidade de configurações XML complexas''.
+
+\textbf{Java 17 LTS e Spring Boot 3.2+:}
+\begin{itemize}
+    \item Linguagem robusta, fortemente tipada e de alta performance;
+    \item \textit{Framework} que simplifica o desenvolvimento de aplicações Java;
+    \item Arquitetura baseada em injeção de dependência e inversão de controle;
+    \item Integração nativa com serviços Google Cloud.
+\end{itemize}
+
+\textbf{Spring AI - Integração com Inteligência Artificial:}
+
+Segundo a documentação oficial \cite{springai2024}, Spring AI é o \textit{framework} oficial do ecossistema Spring para integração com modelos de linguagem de grande escala (LLMs).
+
+\begin{itemize}
+    \item \textit{Framework} oficial do Spring para integração com modelos de IA;
+    \item Suporte nativo a múltiplos provedores de LLM;
+    \item Abstração unificada para chamadas de API de IA;
+    \item Gerenciamento de \textit{prompts} e contexto.
+\end{itemize}
+
+\textbf{Spring Security + Firebase Auth:}
+
+Segundo a documentação do Firebase \cite{firebase2024}, o Firebase Authentication fornece serviços de backend, SDKs fáceis de usar e bibliotecas de UI prontas para autenticar usuários em aplicativos.
+
+\begin{itemize}
+    \item Integração com Firebase Authentication para gestão de identidades;
+    \item Validação de \textit{tokens} JWT no \textit{backend};
+    \item Controle de acesso baseado em \textit{roles} (RBAC);
+    \item Suporte a autenticação biométrica no dispositivo móvel.
+\end{itemize}
+
+\subsection{Banco de Dados}
+
+\textbf{SQLite (Mobile - Local):}
+\begin{itemize}
+    \item Banco relacional embarcado de alta performance;
+    \item Zero configuração e manutenção;
+    \item ACID \textit{compliance} para integridade dos dados;
+    \item Tamanho reduzido ideal para mobile.
+\end{itemize}
+
+\textbf{Google Cloud Firestore (Backend - Remoto):}
+\begin{itemize}
+    \item Banco de dados NoSQL flexível, escalável e de alta performance;
+    \item Sincronização em tempo real e suporte \textit{offline} nativo;
+    \item Modelo de dados baseado em documentos e coleções;
+    \item Integração perfeita com o ecossistema Firebase e Google Cloud.
+\end{itemize}
+
+\section{INTELIGÊNCIA ARTIFICIAL E ASSISTÊNCIA CLÍNICA} \label{sec:ia}
+
+Diferente de abordagens tradicionais baseadas apenas em palavras-chave, o \textit{Appunture} implementa um sistema de RAG (\textit{Retrieval-Augmented Generation}) no \textit{backend}, oferecendo assistência clínica contextualizada e precisa.
+
+\subsection{Arquitetura RAG (Retrieval-Augmented Generation)}
+
+A arquitetura RAG (\textit{Retrieval-Augmented Generation}) foi introduzida por \citeonline{lewis2020} como uma abordagem que combina a recuperação de informações com a geração de texto, melhorando significativamente a precisão e confiabilidade das respostas em tarefas de conhecimento intensivo.
+
+\textbf{Modelo de IA:}
+
+O Google Gemini 1.5 Flash \cite{gemini2024} é um modelo de linguagem multimodal otimizado para respostas rápidas e contextualizadas.
+
+\begin{itemize}
+    \item Google Gemini 1.5 Flash via Spring AI;
+    \item Modelo otimizado para respostas rápidas e contextualizadas;
+    \item Integração nativa com o ecossistema Google Cloud.
+\end{itemize}
+
+\textbf{Funcionamento do Sistema:}
+\begin{enumerate}
+    \item O sistema intercepta a pergunta do usuário;
+    \item Busca contexto relevante na base de dados (pontos e sintomas relacionados);
+    \item Envia um \textit{prompt} enriquecido para o modelo de IA;
+    \item Retorna respostas clinicamente precisas, baseadas nos dados validados do sistema.
+\end{enumerate}
+
+\textbf{Benefícios da Abordagem RAG:}
+\begin{itemize}
+    \item Respostas baseadas em dados validados do sistema;
+    \item Redução significativa de alucinações do modelo;
+    \item Maior confiabilidade das informações clínicas;
+    \item Contextualização específica para acupuntura;
+    \item Rastreabilidade das fontes utilizadas nas respostas.
+\end{itemize}
+
+\subsection{Integração com Spring AI}
+
+O \autoref{qua:springai} apresenta um exemplo simplificado da integração com Spring AI para o assistente de acupuntura:
+
+\begin{quadro}[htb]
+\caption{Exemplo de integração Spring AI}
+\label{qua:springai}
+\centering
+\footnotesize
+\begin{verbatim}
+@Service
+public class AcupunctureAssistantService {
+    
+    private final ChatClient chatClient;
+    private final PointRepository pointRepository;
+    
+    public String getClinicAssistance(String userQuestion) {
+        // Busca contexto relevante na base de dados
+        List<Point> relevantPoints = 
+            pointRepository.findBySymptoms(userQuestion);
+        
+        // Monta prompt enriquecido com contexto
+        String enrichedPrompt = buildPromptWithContext(
+            userQuestion, relevantPoints);
+        
+        // Chama o modelo de IA via Spring AI
+        return chatClient.prompt()
+            .user(enrichedPrompt)
+            .call()
+            .content();
+    }
+}
+\end{verbatim}
+\fonte{Os autores (2025)}
+\end{quadro}
+
+\section{FERRAMENTAS DE DESENVOLVIMENTO E MAPEAMENTO} \label{sec:ferramentas}
+
+Para garantir a precisão da localização dos pontos de acupuntura sobre o atlas anatômico digital, foi desenvolvida uma ferramenta interna denominada ``\textit{Point Mapper}''.
+
+\subsection{Point Mapper - Ferramenta de Mapeamento}
+
+\textbf{Características:}
+\begin{itemize}
+    \item Interface Web para visualização dos 15 SVGs do atlas;
+    \item Sistema de coordenadas percentuais para garantir responsividade;
+    \item Funcionalidades de zoom e pan para precisão no posicionamento;
+    \item Exportação de dados em formato JSON para integração com o banco;
+    \item Validação cruzada com descrições anatômicas dos pontos.
+\end{itemize}
+
+\textbf{Sistema de Coordenadas:}
+\begin{itemize}
+    \item Utilização de coordenadas percentuais (0-100\%) ao invés de pixels;
+    \item Garantia de responsividade em diferentes tamanhos de tela;
+    \item Precisão milimétrica na localização dos pontos;
+    \item Compatibilidade com diferentes resoluções de dispositivos.
+\end{itemize}
+
+\subsection{Scripts de Migração e Integração}
+
+\textbf{Scripts Python:}
+\begin{itemize}
+    \item Migração de dados entre formatos (JSON, CSV, SQL);
+    \item Validação de integridade dos dados mapeados;
+    \item Geração automática de \textit{seeds} para o banco de dados;
+    \item Integração com a ferramenta de mapeamento.
+\end{itemize}
+
+\section{TECNOLOGIAS DE SUPORTE} \label{sec:suporte}
+
+\subsection{Gerenciamento de Estado (Mobile)}
+
+\textbf{Zustand:}
+\begin{itemize}
+    \item Biblioteca de estado minimalista e performática;
+    \item \textit{TypeScript-first} com inferência automática;
+    \item \textit{Persist middleware} para sincronização com \textit{storage} local.
+\end{itemize}
+
+\textbf{React Query:}
+\begin{itemize}
+    \item \textit{Cache} inteligente de requisições HTTP;
+    \item Invalidação automática e \textit{refetch} estratégico;
+    \item \textit{Offline support} com \textit{background sync}.
+\end{itemize}
+
+\subsection{Interface Web Administrativa (React)}
+
+\textbf{React 18+ com TypeScript:}
+\begin{itemize}
+    \item Biblioteca para interfaces reativas e componentizadas;
+    \item \textit{Hooks} para gerenciamento de estado eficiente;
+    \item \textit{Component library} customizada baseada em Material-UI.
+\end{itemize}
+
+\textbf{Funcionalidades Administrativas:}
+\begin{itemize}
+    \item CRUD completo de pontos de acupuntura;
+    \item Gestão de sintomas e relações terapêuticas;
+    \item Gestão da base de conhecimento que alimenta a IA;
+    \item \textit{Dashboard} com métricas de uso;
+    \item Sistema de permissões granular.
+\end{itemize}

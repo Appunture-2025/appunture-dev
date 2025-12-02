@@ -1,0 +1,97 @@
+%%
+%% Trabalho de Conclusão de Curso - APPUNTURE
+%% Baseado no modelo ufpr-abntex2
+%% Universidade Federal do Paraná
+%%
+%% Autores: Bruno Brugnerotto de Lara, Gabriel Francelino Voidaleski, Pedro Henrique Lopes
+%% Orientador: Prof. Dr. Paulo Sobreira Moraes
+%%
+%% 2025
+%%
+
+\documentclass[
+        12pt,
+        openright,
+        oneside,
+        a4paper,
+        chapter=TITLE,
+        section=TITLE,
+        subsection=Title,
+        english,
+        portugues,
+        ]{abntex2}
+
+\usepackage{UFPR}
+\input{00-pacotes}
+\input{00-dados}
+
+\makeindex
+
+\begin{document}
+
+% Adequando o uppercase titulo dos elementos nas suas respectivas legendas
+\renewcommand{\bibname}{{REFER\^ENCIAS}}
+\renewcommand{\tablename}{TABELA }
+\renewcommand{\figurename}{FIGURA }
+\renewcommand{\figureautorefname}{FIGURA}
+\renewcommand{\tableautorefname}{TABELA}
+\newcommand{\equationname}{equa\c{c}\~ao~}
+\renewcommand{\equationautorefname}{equa\c{c}\~ao~}
+\newcommand{\quadroautorefname}{QUADRO~}
+
+\aliaspagestyle{chapter}{chapfirst}
+
+\input{00-pretextual}
+
+% ----------------------------------------------------------
+% ELEMENTOS TEXTUAIS
+% ----------------------------------------------------------
+\textual
+\pagestyle{simplestextual}
+
+% Capítulos
+\input{cap01-introducao}
+\input{cap02-fundamentacao}
+\input{cap03-motivacoes}
+\input{cap04-tecnologias}
+\input{cap05-metodologia}
+\input{cap06-apresentacao}
+\input{cap07-consideracoes}
+
+% ----------------------------------------------------------
+% ELEMENTOS PÓS-TEXTUAIS
+% ----------------------------------------------------------
+\postextual
+
+\addtocontents{toc}{\vspace{-6pt}}
+
+% Referências bibliográficas
+\begingroup
+\printbibliography[heading=bay,notkeyword={consulta}, notkeyword={npub-informal}]
+\endgroup
+
+\addtocontents{toc}{\vspace{4pt}}
+
+% Apêndices
+\ifthenelse{\equal{\terApendice}{Sim}}
+{\begin{apendicesenv}
+        \renewcommand{\thechapter}{\Alph{chapter}}
+        \input{apendices}
+\end{apendicesenv}
+}{}
+
+% Anexos
+\ifthenelse{\equal{\terAnexo}{Sim}}{
+\begin{anexosenv}
+        \renewcommand{\thechapter}{\Alph{chapter}}
+        \input{anexos}
+\end{anexosenv}
+}{}
+
+% Índice Remissivo
+\ifthenelse{\equal{\terIndiceR}{Sim}}{
+\phantompart
+\printindex
+}{}
+
+\end{document}

@@ -1,0 +1,210 @@
+% ----------------------------------------------------------
+% Capítulo 6 - APRESENTAÇÃO DO SISTEMA
+% ----------------------------------------------------------
+\chapter{APRESENTAÇÃO DO SISTEMA} \label{cha:apresentacao}
+
+Neste capítulo o \textit{Appunture} é apresentado, pontuando os aspectos técnicos e as funcionalidades que constituem a aplicação.
+
+\section{ARQUITETURA DO SISTEMA} \label{sec:arq_sistema}
+
+O \textit{Appunture} foi desenvolvido seguindo uma arquitetura híbrida e modular que integra funcionalidades \textit{offline} e \textit{online} para garantir alta disponibilidade, desempenho e usabilidade mesmo em ambientes com conexão limitada ou instável. A arquitetura se divide em três módulos principais: aplicativo móvel (React Native/Expo), \textit{backend} (Java + Spring Boot) e painel administrativo web (React).
+
+\subsection{Arquitetura Híbrida (Offline + Online)}
+
+No núcleo do aplicativo móvel, o \textit{Appunture} utiliza um banco de dados local SQLite para armazenar informações clínicas essenciais, incluindo os 361 pontos dos meridianos principais, pontos extras, sintomas, relações terapêuticas, favoritos e anotações do usuário. Esta abordagem garante que o aplicativo funcione integralmente em modo \textit{offline}, permitindo consultas rápidas e uso em campo, sem depender da conexão com a internet.
+
+Quando a conexão estiver disponível, o sistema realiza sincronizações automáticas e seguras com um \textit{backend} remoto, desenvolvido em Java com Spring Boot, que hospeda o banco de dados Firestore centralizado. Esta sincronização atualiza dados clínicos, envia registros do usuário e mantém o histórico sempre preservado e atualizado.
+
+\subsection{Comunicação e Sincronização}
+
+A comunicação entre o app e o \textit{backend} é realizada via API RESTful, utilizando autenticação Firebase/JWT para controle seguro de acesso. O \textit{backend} disponibiliza \textit{endpoints} públicos para consulta de dados clínicos e \textit{endpoints} privados para operações que envolvem dados do usuário, como sincronização e autenticação.
+
+A sincronização implementa um mecanismo de controle de versões dos dados clínicos para evitar \textit{downloads} desnecessários e garantir que o aplicativo trabalhe sempre com as informações mais recentes. O processo ocorre automaticamente em \textit{background} sempre que uma conexão de internet é detectada.
+
+\subsection{Processamento de Linguagem Natural e Assistente IA}
+
+Para viabilizar a busca inteligente por sintomas, o aplicativo implementa dois níveis de processamento:
+
+\textbf{Busca Local (Offline):}
+O módulo local utiliza técnicas de normalização textual, remoção de \textit{stopwords} e busca difusa (\textit{fuzzy search}) com a biblioteca Fuse.js. Este sistema permite interpretar entradas do usuário em linguagem natural, incluindo correções automáticas de erros de digitação, e mapear sintomas a pontos de acupuntura clinicamente indicados.
+
+\textbf{Assistente IA com RAG (Online):}
+Quando conectado à internet, o sistema utiliza a arquitetura RAG (\textit{Retrieval-Augmented Generation}) integrada ao \textit{backend}. O assistente inteligente, alimentado pelo Google Gemini 1.5 Flash via Spring AI, interpreta perguntas complexas sobre sintomas e tratamentos, fornecendo respostas contextualizadas com a base de dados técnica do sistema. Esta abordagem reduz alucinações do modelo e aumenta a confiabilidade das sugestões clínicas.
+
+\subsection{Interface Interativa e Navegação}
+
+A interface do app é construída para promover uma experiência intuitiva e visualmente rica, com mapas anatômicos interativos baseados em SVG, que possibilitam a interação direta com os pontos de acupuntura. A navegação é estruturada para facilitar o acesso rápido às principais funcionalidades, como busca, visualização detalhada, favoritos e anotações, promovendo fluidez e usabilidade.
+
+\subsection{Backend e Web Admin}
+
+O \textit{backend} centraliza a gestão dos dados oficiais, incluindo o cadastro e atualização dos pontos, sintomas e suas relações. Uma interface administrativa web, desenvolvida em React, permite que gestores e especialistas mantenham o conteúdo sempre atualizado, garantindo a qualidade e a segurança das informações disponíveis no app.
+
+\section{AUTENTICAÇÃO E SEGURANÇA} \label{sec:autenticacao}
+
+Para garantir a segurança dos usuários e a integridade dos dados, o sistema implementa autenticação via Firebase Authentication, integrada ao Spring Security no \textit{backend}.
+
+\textbf{Métodos de Autenticação:}
+\begin{itemize}
+    \item Login com email e senha;
+    \item Autenticação biométrica no dispositivo móvel (impressão digital ou Face ID);
+    \item Validação de \textit{tokens} JWT no \textit{backend}.
+\end{itemize}
+
+Durante o processo de login, o Firebase Authentication gerencia a validação das credenciais e gera um \textit{token} JWT assinado. Este \textit{token} é utilizado para manter a sessão do usuário e validar o acesso aos recursos protegidos da API.
+
+A sessão é gerenciada pelo aplicativo móvel, que armazena o \textit{token} de forma segura no \textit{storage} local do dispositivo. Desta forma, o usuário permanece logado mesmo após fechar e reabrir o aplicativo. A cada interação que requer comunicação com o \textit{backend}, o \textit{token} é enviado via cabeçalho HTTP para validação e controle de acesso baseado em \textit{roles} (RBAC).
+
+\section{FUNCIONALIDADES DO SISTEMA} \label{sec:funcionalidades}
+
+\subsection{Tela Inicial e Onboarding}
+
+Quando o usuário inicia a utilização do aplicativo pela primeira vez, é apresentada uma sequência de telas de apresentação (\textit{onboarding}) que explicam as principais funcionalidades e benefícios do \textit{Appunture}. Esta experiência introdutória inclui informações sobre o uso \textit{offline}, a busca inteligente, os mapas anatômicos interativos e os diferentes perfis de usuário disponíveis.
+
+Na tela inicial, o usuário pode escolher entre realizar o processo de cadastro ou direcionar-se diretamente para a tela de login. O design foi pensado para transmitir profissionalismo e confiança, utilizando a identidade visual do projeto com cores que remetem à medicina tradicional chinesa e à modernidade tecnológica.
+
+\subsection{Cadastro e Perfis de Usuário}
+
+A tela de cadastro permite que diferentes tipos de profissionais da saúde se registrem no sistema, incluindo médicos, fisioterapeutas, terapeutas, enfermeiros, estudantes e outros profissionais relacionados. É fundamental destacar que durante o cadastro, o usuário deve informar seu perfil profissional, pois esta informação é utilizada para adaptar o conteúdo apresentado conforme o nível de formação e os limites éticos e legais de cada profissão.
+
+O sistema implementa diferentes níveis de acesso baseados no perfil declarado:
+
+\begin{itemize}
+    \item \textbf{Médicos e especialistas}: acesso completo a todas as informações técnicas;
+    \item \textbf{Profissionais de saúde}: acesso adaptado conforme a regulamentação da categoria;
+    \item \textbf{Estudantes}: acesso educativo com conteúdos didáticos;
+    \item \textbf{Outros profissionais}: acesso personalizado conforme a regulamentação da categoria.
+\end{itemize}
+
+\subsection{Tela Principal e Navegação}
+
+A tela principal do aplicativo apresenta as principais funcionalidades de forma organizada e acessível. A navegação é estruturada por abas (\textit{tabs}) na parte inferior da tela, permitindo acesso rápido às seções principais:
+
+\begin{itemize}
+    \item \textbf{Home}: Tela inicial com acesso rápido às funcionalidades principais;
+    \item \textbf{Busca}: Sistema de busca inteligente por sintomas ou nome de ponto;
+    \item \textbf{Corpo}: Mapa anatômico interativo;
+    \item \textbf{Favoritos}: Lista de pontos favoritados pelo usuário;
+    \item \textbf{Perfil}: Configurações do usuário e preferências.
+\end{itemize}
+
+\subsection{Mapa Anatômico Interativo}
+
+Uma das funcionalidades mais destacadas do \textit{Appunture} é o mapa anatômico interativo, implementado com tecnologia SVG (\textit{Scalable Vector Graphics}). Este recurso permite que o usuário visualize o corpo humano de forma detalhada e interaja diretamente com os pontos de acupuntura mapeados.
+
+Cada ponto é representado por um marcador visual que, ao ser tocado, exibe informações básicas sobre o ponto em um \textit{tooltip}. O usuário pode então optar por acessar a tela de detalhes completa do ponto selecionado.
+
+O mapa oferece 15 visualizações vetoriais de alta fidelidade, organizadas por meridianos:
+
+\begin{itemize}
+    \item Vista frontal do corpo completo;
+    \item Vista posterior do corpo completo;
+    \item Vistas específicas por meridiano (12 meridianos principais);
+    \item Vasos extraordinários (Ren Mai e Du Mai).
+\end{itemize}
+
+\subsection{Detalhes dos Pontos de Acupuntura}
+
+A tela de detalhes apresenta informações completas sobre cada ponto de acupuntura, organizadas em seções para facilitar a consulta:
+
+\begin{itemize}
+    \item \textbf{Identificação}: Nome em português, nome em chinês (pinyin), código internacional;
+    \item \textbf{Localização}: Descrição anatômica precisa da localização do ponto;
+    \item \textbf{Meridiano}: Identificação do meridiano ao qual o ponto pertence;
+    \item \textbf{Profundidade}: Indicação da profundidade de punção recomendada;
+    \item \textbf{Indicações}: Lista de condições clínicas para as quais o ponto é indicado;
+    \item \textbf{Contraindicações}: Alertas sobre situações em que o ponto não deve ser utilizado;
+    \item \textbf{Funções energéticas}: Descrição das funções segundo a MTC;
+    \item \textbf{Características especiais}: Pontos de alarme, pontos de assentimento, etc.
+\end{itemize}
+
+\subsection{Sistema de Busca Inteligente}
+
+O sistema de busca do \textit{Appunture} utiliza técnicas de processamento de linguagem natural para oferecer resultados relevantes mesmo quando o usuário não conhece o nome exato do ponto que procura. A busca pode ser realizada por:
+
+\begin{itemize}
+    \item Nome do ponto (em português ou pinyin);
+    \item Localização anatômica;
+    \item Sintomas ou condições clínicas;
+    \item Meridiano;
+    \item Funções terapêuticas.
+\end{itemize}
+
+O algoritmo de busca difusa (\textit{fuzzy search}) implementado com Fuse.js permite encontrar resultados mesmo com erros de digitação ou variações na escrita.
+
+\subsection{Assistente Inteligente com IA Generativa}
+
+O assistente inteligente integrado ao \textit{Appunture} permite que o usuário descreva sintomas em linguagem natural e receba sugestões de pontos de acupuntura baseadas em evidências. Esta funcionalidade utiliza a arquitetura RAG (\textit{Retrieval-Augmented Generation}):
+
+\textbf{Funcionamento do Sistema:}
+\begin{enumerate}
+    \item O sistema intercepta a pergunta do usuário;
+    \item Busca contexto relevante na base de dados (pontos e sintomas relacionados);
+    \item Envia um \textit{prompt} enriquecido para o modelo Google Gemini 1.5 Flash via Spring AI;
+    \item Retorna respostas clinicamente precisas, baseadas nos dados validados do sistema.
+\end{enumerate}
+
+\textbf{Benefícios da Abordagem:}
+\begin{itemize}
+    \item Respostas contextualizadas com a base de dados técnica;
+    \item Redução significativa de alucinações do modelo;
+    \item Maior confiabilidade das informações clínicas;
+    \item Rastreabilidade das fontes utilizadas nas respostas.
+\end{itemize}
+
+\subsection{Sistema de Favoritos e Anotações Pessoais}
+
+O \textit{Appunture} permite que o usuário salve pontos de acupuntura como favoritos para acesso rápido posterior. Além disso, é possível adicionar anotações pessoais a cada ponto, registrando observações clínicas, experiências ou lembretes.
+
+Estas informações são armazenadas localmente no dispositivo e sincronizadas com o \textit{backend} quando há conexão disponível, garantindo que o usuário não perca seus dados ao trocar de dispositivo.
+
+\subsection{Modo Auricular (Auriculoterapia)}
+
+Além do mapa corporal completo, o \textit{Appunture} oferece um modo específico para auriculoterapia, apresentando um mapa detalhado da orelha com os pontos auriculares mapeados. Esta funcionalidade segue a mesma lógica de interação do mapa corporal, permitindo visualização e consulta de informações específicas sobre cada ponto auricular.
+
+\section{PAINEL ADMINISTRATIVO WEB} \label{sec:admin}
+
+\subsection{Gerenciamento de Conteúdo}
+
+O painel administrativo web permite que gestores e especialistas mantenham o conteúdo do aplicativo sempre atualizado. As principais funcionalidades incluem:
+
+\begin{itemize}
+    \item CRUD completo de pontos de acupuntura;
+    \item Gestão de sintomas e suas relações com pontos;
+    \item \textit{Upload} e mapeamento de coordenadas SVG para os mapas anatômicos;
+    \item Gestão de meridianos e categorias;
+    \item Controle de versões do conteúdo;
+    \item Gestão da base de conhecimento que alimenta o assistente IA.
+\end{itemize}
+
+\subsection{Controle de Usuários e Analytics}
+
+O painel também oferece funcionalidades de gestão de usuários e análise de uso:
+
+\begin{itemize}
+    \item Visualização de usuários cadastrados;
+    \item Relatórios de uso do aplicativo;
+    \item Métricas de pontos mais acessados;
+    \item Análise de buscas realizadas;
+    \item Gestão de permissões e perfis.
+\end{itemize}
+
+\section{EXPERIÊNCIA DO USUÁRIO E USABILIDADE} \label{sec:ux}
+
+O desenvolvimento da interface do \textit{Appunture} seguiu princípios de design centrado no usuário, priorizando:
+
+\begin{itemize}
+    \item \textbf{Simplicidade}: Interface limpa e intuitiva, sem excesso de informações;
+    \item \textbf{Consistência}: Padrões visuais e de interação consistentes em todo o aplicativo;
+    \item \textbf{Feedback}: Respostas visuais claras para todas as ações do usuário;
+    \item \textbf{Acessibilidade}: Suporte a diferentes tamanhos de tela e orientações;
+    \item \textbf{Performance}: Carregamento rápido e transições fluidas.
+\end{itemize}
+
+\section{PROTÓTIPO DE TELAS} \label{sec:prototipo}
+
+O fluxo de telas do aplicativo foi projetado para proporcionar uma navegação intuitiva entre as diferentes funcionalidades. O usuário pode transitar facilmente entre login, cadastro, tela inicial, busca, detalhes dos pontos, favoritos e anotações, seguindo um fluxo lógico e previsível.
+
+% Aqui podem ser inseridas figuras dos protótipos de tela
+% \figura{TELA DE LOGIN}{0.5}{fig/tela-login.png}{Os autores (2025)}{tela-login}{}{}
+% \figura{TELA PRINCIPAL}{0.5}{fig/tela-principal.png}{Os autores (2025)}{tela-principal}{}{}
+% \figura{MAPA ANATÔMICO}{0.5}{fig/mapa-anatomico.png}{Os autores (2025)}{mapa-anatomico}{}{}

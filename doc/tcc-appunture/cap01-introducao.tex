@@ -1,0 +1,44 @@
+% ----------------------------------------------------------
+% Capítulo 1 - INTRODUÇÃO
+% ----------------------------------------------------------
+\chapter{INTRODUÇÃO} \label{cha:introducao}
+
+A prática da acupuntura no Brasil, embora cada vez mais difundida e procurada tanto no sistema público quanto no privado de saúde, ainda enfrenta desafios significativos no que diz respeito à regulamentação profissional, padronização de condutas, segurança técnica e formação dos praticantes. Trata-se de uma técnica milenar baseada na Medicina Tradicional Chinesa (MTC), que se expandiu no país por meio de cursos livres, técnicos e pós-graduações voltadas a diferentes profissionais da área da saúde. No entanto, a ausência de regulamentação federal clara e a disputa entre conselhos profissionais sobre quem pode exercer legalmente a acupuntura têm gerado um ambiente de insegurança jurídica, afetando não apenas os acupunturistas, mas também o acesso qualificado da população à prática.
+
+Além das disputas institucionais, o cenário atual é marcado pela fiscalização fragmentada, formação heterogênea e riscos crescentes à biossegurança e à saúde do paciente, especialmente em ambientes informais. Segundo diretrizes da Organização Mundial da Saúde (OMS), o uso inadequado de agulhas, a falta de higienização correta ou a aplicação indevida de técnicas podem resultar em infecções, lesões internas e outros agravos que comprometem gravemente a integridade dos usuários da acupuntura \cite{oms1999}.
+
+Outro desafio relevante é o caráter subjetivo e complexo do diagnóstico energético, próprio da MTC. O raciocínio clínico baseado em padrões de desarmonia (como deficiência de Qi, estagnação de sangue, entre outros) exige extenso treinamento e sensibilidade clínica. A falta de padronização e apoio didático dificulta a atuação de profissionais iniciantes ou com formação limitada, podendo comprometer a eficácia terapêutica.
+
+Diante desse contexto, o uso de Tecnologias Digitais de Informação e Comunicação (TDIC) apresenta-se como uma ferramenta estratégica para apoiar a qualificação da prática da acupuntura. Soluções como aplicativos educativos e interativos podem auxiliar na visualização de pontos, organização de informações terapêuticas, revisão diagnóstica e adequação de conteúdos conforme o nível de formação do usuário, promovendo maior segurança, padronização e confiabilidade.
+
+Neste cenário, propõe-se o desenvolvimento do \textit{Appunture}, um aplicativo multiplataforma (Android, iOS e Web) que funciona como um atlas digital de acupuntura interativo, voltado tanto para estudantes quanto para profissionais da área da saúde. A ferramenta oferece acesso \textit{offline} a um banco de dados completo contendo os 361 pontos dos meridianos principais, pontos extras, e um atlas anatômico composto por 15 visualizações vetoriais (SVG) de alta fidelidade, organizadas por meridianos e vistas (frontal e posterior). O aplicativo também conta com um assistente inteligente integrado que utiliza Inteligência Artificial Generativa (Spring AI + Google Gemini) para correlacionar sintomas e sugerir protocolos baseados em evidências.
+
+Com interface moderna e uso de tecnologias híbridas, o \textit{Appunture} foi desenvolvido com arquitetura ``\textit{offline-first}'', garantindo acesso total aos dados mesmo sem conexão à internet, com sincronização automática quando online. Para garantir a precisão dos dados anatômicos, foi desenvolvida uma ferramenta proprietária de mapeamento de pontos, assegurando a exatidão das coordenadas em relação às estruturas corporais. Complementarmente, um painel administrativo web permite que gestores e especialistas atualizem os conteúdos do sistema com segurança, mantendo a base sempre atualizada.
+
+Essa solução busca não apenas facilitar o acesso à informação qualificada, mas também contribuir para a padronização e segurança no uso da acupuntura no Brasil.
+
+\section{OBJETIVOS} \label{sec:objetivos}
+
+O principal objetivo deste projeto é desenvolver e implementar o aplicativo \textit{Appunture}, uma ferramenta digital educativa e interativa voltada à prática da acupuntura. O aplicativo tem como foco principal promover a padronização de condutas, aumentar a segurança técnica e oferecer suporte ao raciocínio clínico dos profissionais da área, por meio de recursos acessíveis, visuais e inteligentes. A iniciativa também busca contribuir para a formação contínua e o fortalecimento da prática multiprofissional, especialmente em um contexto de regulamentação incerta e formação heterogênea.
+
+\subsection{Objetivos Específicos}
+
+Entre os objetivos específicos, destacam-se:
+
+\begin{itemize}
+    \item \textbf{Visualização Didática e Interativa dos Pontos}: Oferecer um atlas anatômico digital composto por 15 visualizações vetoriais (SVG) de alta resolução, cobrindo vistas frontais e posteriores e todos os meridianos principais, permitindo interação precisa e responsiva.
+    
+    \item \textbf{Assistência Clínica com Inteligência Artificial}: Implementar um módulo de IA Generativa (RAG - \textit{Retrieval-Augmented Generation}) utilizando Spring AI e Google Gemini, capaz de interpretar perguntas complexas sobre sintomas e tratamentos, fornecendo respostas contextualizadas com a base de dados técnica do sistema.
+    
+    \item \textbf{Apoio à Formação Multiprofissional}: Disponibilizar conteúdos adaptados aos diferentes níveis de formação e áreas de atuação dos profissionais.
+    
+    \item \textbf{Organização Estruturada de Informações Terapêuticas}: Base de dados completa dos 361 pontos clássicos e pontos extras, com informações detalhadas sobre localização, indicações, contraindicações e funções energéticas.
+    
+    \item \textbf{Sincronização de Dados e Suporte Offline}: Arquitetura ``\textit{Offline-First}'' robusta, permitindo operação plena sem internet, com sincronização automática quando conectado.
+    
+    \item \textbf{Ferramenta de Mapeamento de Precisão}: Desenvolvimento de uma ferramenta web interna para mapeamento manual e validação das coordenadas de todos os pontos de acupuntura sobre os mapas vetoriais.
+    
+    \item \textbf{Gestão e Atualização de Conteúdo via Painel Administrativo Web}: Interface administrativa segura para gestores e especialistas, permitindo o cadastro e atualização de pontos, sintomas e relações clínicas.
+\end{itemize}
+
+Dessa forma, o \textit{Appunture} propõe-se não apenas como um recurso digital de apoio ao estudo da acupuntura, mas como um instrumento estratégico de educação, padronização e valorização profissional, alinhado às diretrizes das Práticas Integrativas e Complementares (PICS) e às demandas contemporâneas da saúde pública e privada.
