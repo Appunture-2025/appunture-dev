@@ -56,7 +56,7 @@ Quando conectado à internet, o sistema implementa sincronização bidirecional 
 
 \textbf{Sincronização Descendente (Backend $\rightarrow$ Mobile):}
 \begin{itemize}
-    \item Atualização automática de dados clínicos;
+    \item Atualização automática de dados do atlas;
     \item \textit{Download} incremental baseado em versionamento;
     \item Compressão de dados para otimizar transferência;
     \item Validação de integridade dos dados recebidos.
@@ -145,9 +145,9 @@ Segundo a documentação do Firebase \cite{firebase2024}, o Firebase Authenticat
     \item Integração perfeita com o ecossistema Firebase e Google Cloud.
 \end{itemize}
 
-\section{INTELIGÊNCIA ARTIFICIAL E ASSISTÊNCIA CLÍNICA} \label{sec:ia}
+\section{INTELIGÊNCIA ARTIFICIAL E SUPORTE À CONSULTA} \label{sec:ia}
 
-Diferente de abordagens tradicionais baseadas apenas em palavras-chave, o \textit{Appunture} implementa um sistema de RAG (\textit{Retrieval-Augmented Generation}) no \textit{backend}, oferecendo assistência clínica contextualizada e precisa.
+Diferente de abordagens tradicionais baseadas apenas em palavras-chave, o \textit{Appunture} implementa um sistema de RAG (\textit{Retrieval-Augmented Generation}) no \textit{backend}, oferecendo suporte contextualizado para consulta de informações.
 
 \subsection{Arquitetura RAG (Retrieval-Augmented Generation)}
 
@@ -168,14 +168,14 @@ O Google Gemini 1.5 Flash \cite{gemini2024} é um modelo de linguagem multimodal
     \item O sistema intercepta a pergunta do usuário;
     \item Busca contexto relevante na base de dados (pontos e sintomas relacionados);
     \item Envia um \textit{prompt} enriquecido para o modelo de IA;
-    \item Retorna respostas clinicamente precisas, baseadas nos dados validados do sistema.
+    \item Retorna respostas precisas e contextualizadas, baseadas nos dados validados do sistema.
 \end{enumerate}
 
 \textbf{Benefícios da Abordagem RAG:}
 \begin{itemize}
     \item Respostas baseadas em dados validados do sistema;
     \item Redução significativa de alucinações do modelo;
-    \item Maior confiabilidade das informações clínicas;
+    \item Maior confiabilidade das informações apresentadas;
     \item Contextualização específica para acupuntura;
     \item Rastreabilidade das fontes utilizadas nas respostas.
 \end{itemize}
@@ -196,7 +196,7 @@ public class AcupunctureAssistantService {
     private final ChatClient chatClient;
     private final PointRepository pointRepository;
     
-    public String getClinicAssistance(String userQuestion) {
+    public String getEducationalAssistance(String userQuestion) {
         // Busca contexto relevante na base de dados
         List<Point> relevantPoints = 
             pointRepository.findBySymptoms(userQuestion);

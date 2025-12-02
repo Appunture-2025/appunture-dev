@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.2)  2 DEC 2025 15:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.2)  2 DEC 2025 16:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1440,26 +1440,26 @@ AÚDE
 
 [14
 
-] [15] [16] [17]) (cap03-motivacoes.tex [18]
+] [15] [16] [17]) (cap03-motivacoes.tex [18] [19]
 Cap\'{\i }tulo 3.
-[19
+[20
 
-]) (cap04-tecnologias.tex [20] [21]
+]) (cap04-tecnologias.tex [21] [22]
 Cap\'{\i }tulo 4.
-[22
+[23
 
-] [23] [24] [25]
+] [24] [25] [26]
 LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 1
 92.
 
 (C:\Users\Usuario\AppData\Local\Programs\MiKTeX\tex/latex/base\t1cmtt.fd
 File: t1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
 )
-[26] [27] [28]) (cap05-metodologia.tex [29]
+[27] [28] [29]) (cap05-metodologia.tex [30]
 Cap\'{\i }tulo 5.
-[30
+[31
 
-] [31] [32] [33]
+] [32] [33] [34]
 Underfull \hbox (badness 1924) in paragraph at lines 134--134
 []|\T1/phv/m/n/10 Sistema de na-ve-ga-ção (tabs,
  []
@@ -1489,16 +1489,22 @@ Underfull \hbox (badness 1024) in paragraph at lines 162--162
 []|\T1/phv/m/n/10 Controle de acesso por per-fil
  []
 
-[34]
+[35]
 Underfull \hbox (badness 1178) in paragraph at lines 247--248
 []|\T1/phv/m/n/10 Backend com-pleto + pai-nel ad-mi-nis-tra-tivo
  []
 
-[35] [36]) (cap06-apresentacao.tex [37]
+[36] [37]) (cap06-apresentacao.tex [38]
 Cap\'{\i }tulo 6.
-[38
+[39
 
-] [39] [40] [41] [42] [43] [44]) (cap07-consideracoes.tex [45]
+] [40]
+Overfull \hbox (53.09352pt too wide) in paragraph at lines 77--78
+[]\T1/phv/m/n/12 Ao sub-me-ter o for-mu-lá-rio, o apli-ca-tivo uti-liza a fun-ç
+ão \T1/cmtt/m/n/12 createUserWithEmailAndPassword
+ []
+
+[41] [42] [43] [44]) (cap07-consideracoes.tex [45]
 Cap\'{\i }tulo 7.
 [46
 
@@ -1572,13 +1578,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 36063 strings out of 474485
- 688570 string characters out of 5742790
+ 36057 strings out of 474485
+ 688504 string characters out of 5742790
  2187542 words of memory out of 5000000
- 57258 multiletter control sequences out of 15000+600000
+ 57255 multiletter control sequences out of 15000+600000
  583972 words of font info for 69 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 117i,13n,121p,1006b,2457s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 117i,13n,121p,999b,2456s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\Usuario\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ec
 tt1200.pk> <C:\Users\Usuario\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/d
 pi600\ecrm1200.pk> <C:\Users\Usuario\AppData\Local\MiKTeX\fonts/pk/ljfour/jknap
@@ -1587,9 +1593,9 @@ pen/ec/dpi600\ectt1000.pk><C:/Users/Usuario/AppData/Local/Programs/MiKTeX/fonts
 iKTeX/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Users/Usuario/AppData/Local/Progr
 ams/MiKTeX/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Users/Usuario/AppData/Local/
 Programs/MiKTeX/fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on main.pdf (71 pages, 669678 bytes).
+Output written on main.pdf (71 pages, 672901 bytes).
 PDF statistics:
- 1495 PDF objects out of 1728 (max. 8388607)
- 533 named destinations out of 1000 (max. 500000)
- 754 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1494 PDF objects out of 1728 (max. 8388607)
+ 530 named destinations out of 1000 (max. 500000)
+ 730 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,5 +1,4 @@
 \sortitem {API} {Application Programming Interface}
-\sortitem {iOS} {iPhone Operating System}
 \sortitem {JWT} {JSON Web Token}
 \sortitem {LLM} {Large Language Model}
 \sortitem {MMKV} {Memory Mapped Key-Value}

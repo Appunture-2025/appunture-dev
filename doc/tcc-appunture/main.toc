@@ -16,7 +16,7 @@
 \addvspace {-3\p@ }
 \contentsline {section}{\numberline {2.1}ACESSIBILIDADE COMO DIREITO E FERRAMENTA DE IGUALDADE NA SAÚDE}{14}{section.2.1}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {2.2}TECNOLOGIAS DIGITAIS COMO APOIO À FORMAÇÃO E PRÁTICA SEGURA}{15}{section.2.2}%
+\contentsline {section}{\numberline {2.2}TECNOLOGIAS DIGITAIS COMO APOIO À FORMAÇÃO E AO ESTUDO}{15}{section.2.2}%
 \addvspace {-3\p@ }
 \contentsline {section}{\numberline {2.3}APLICATIVOS DE ACUPUNTURA: EXPERIÊNCIAS E RECURSOS TECNOLÓGICOS}{16}{section.2.3}%
 \addvspace {-3\p@ }
@@ -27,97 +27,94 @@
 \contentsline {section}{\numberline {2.6}NORMAS, DIRETRIZES E EVIDÊNCIAS CIENTÍFICAS}{18}{section.2.6}%
 \addvspace {-12\p@ }
 \setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
-\contentsline {chapter}{\chapternumberline {3}\bfseries \MakeTextUppercase []{MOTIVAÇÕES}}{19}{chapter.3}%
+\contentsline {chapter}{\chapternumberline {3}\bfseries \MakeTextUppercase []{MOTIVAÇÕES}}{20}{chapter.3}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {3.1}REGULAMENTAÇÃO E DISPUTA DE CATEGORIAS PROFISSIONAIS}{19}{section.3.1}%
+\contentsline {section}{\numberline {3.1}REGULAMENTAÇÃO E DISPUTA DE CATEGORIAS PROFISSIONAIS}{20}{section.3.1}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {3.2}FORMAÇÃO E FISCALIZAÇÃO INSUFICIENTES}{19}{section.3.2}%
+\contentsline {section}{\numberline {3.2}FORMAÇÃO E FISCALIZAÇÃO INSUFICIENTES}{20}{section.3.2}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {3.3}SEGURANÇA DO PACIENTE E BIOSSEGURANÇA}{20}{section.3.3}%
+\contentsline {section}{\numberline {3.3}SEGURANÇA DO PACIENTE E BIOSSEGURANÇA}{21}{section.3.3}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {3.4}DIAGNÓSTICO ENERGÉTICO: COMPLEXIDADE E SUBJETIVIDADE}{20}{section.3.4}%
+\contentsline {section}{\numberline {3.4}DIAGNÓSTICO ENERGÉTICO: COMPLEXIDADE E SUBJETIVIDADE}{21}{section.3.4}%
 \addvspace {-12\p@ }
 \setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
-\contentsline {chapter}{\chapternumberline {4}\bfseries \MakeTextUppercase []{TECNOLOGIAS E ARQUITETURA DO SISTEMA}}{22}{chapter.4}%
+\contentsline {chapter}{\chapternumberline {4}\bfseries \MakeTextUppercase []{TECNOLOGIAS E ARQUITETURA DO SISTEMA}}{23}{chapter.4}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {4.1}VISÃO GERAL DA ARQUITETURA}{22}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Diagrama de Arquitetura}{22}{subsection.4.1.1}%
+\contentsline {section}{\numberline {4.1}VISÃO GERAL DA ARQUITETURA}{23}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Diagrama de Arquitetura}{23}{subsection.4.1.1}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {4.2}ARQUITETURA HÍBRIDA (OFFLINE + ONLINE)}{22}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Funcionamento Offline}{22}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Sincronização Inteligente}{23}{subsection.4.2.2}%
+\contentsline {section}{\numberline {4.2}ARQUITETURA HÍBRIDA (OFFLINE + ONLINE)}{23}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Funcionamento Offline}{23}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Sincronização Inteligente}{24}{subsection.4.2.2}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {4.3}STACK TECNOLÓGICO DETALHADO}{24}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Frontend Mobile (React Native + Expo)}{24}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Backend API (Java + Spring Boot)}{24}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Banco de Dados}{25}{subsection.4.3.3}%
+\contentsline {section}{\numberline {4.3}STACK TECNOLÓGICO DETALHADO}{25}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Frontend Mobile (React Native + Expo)}{25}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Backend API (Java + Spring Boot)}{25}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Banco de Dados}{26}{subsection.4.3.3}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {4.4}INTELIGÊNCIA ARTIFICIAL E ASSISTÊNCIA CLÍNICA}{26}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Arquitetura RAG (Retrieval-Augmented Generation)}{26}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Integração com Spring AI}{27}{subsection.4.4.2}%
+\contentsline {section}{\numberline {4.4}INTELIGÊNCIA ARTIFICIAL E SUPORTE À CONSULTA}{27}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Arquitetura RAG (Retrieval-Augmented Generation)}{27}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Integração com Spring AI}{28}{subsection.4.4.2}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {4.5}FERRAMENTAS DE DESENVOLVIMENTO E MAPEAMENTO}{27}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Point Mapper - Ferramenta de Mapeamento}{27}{subsection.4.5.1}%
-\contentsline {subsection}{\numberline {4.5.2}Scripts de Migração e Integração}{28}{subsection.4.5.2}%
+\contentsline {section}{\numberline {4.5}FERRAMENTAS DE DESENVOLVIMENTO E MAPEAMENTO}{28}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Point Mapper - Ferramenta de Mapeamento}{28}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Scripts de Migração e Integração}{29}{subsection.4.5.2}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {4.6}TECNOLOGIAS DE SUPORTE}{28}{section.4.6}%
-\contentsline {subsection}{\numberline {4.6.1}Gerenciamento de Estado (Mobile)}{28}{subsection.4.6.1}%
-\contentsline {subsection}{\numberline {4.6.2}Interface Web Administrativa (React)}{28}{subsection.4.6.2}%
+\contentsline {section}{\numberline {4.6}TECNOLOGIAS DE SUPORTE}{29}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Gerenciamento de Estado (Mobile)}{29}{subsection.4.6.1}%
+\contentsline {subsection}{\numberline {4.6.2}Interface Web Administrativa (React)}{29}{subsection.4.6.2}%
 \addvspace {-12\p@ }
 \setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
-\contentsline {chapter}{\chapternumberline {5}\bfseries \MakeTextUppercase []{METODOLOGIA}}{30}{chapter.5}%
+\contentsline {chapter}{\chapternumberline {5}\bfseries \MakeTextUppercase []{METODOLOGIA}}{31}{chapter.5}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {5.1}METODOLOGIA DE DESENVOLVIMENTO}{30}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1}Scrum}{30}{subsection.5.1.1}%
+\contentsline {section}{\numberline {5.1}METODOLOGIA DE DESENVOLVIMENTO}{31}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Scrum}{31}{subsection.5.1.1}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {5.2}MODELAGEM DO PROJETO}{31}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}Diagrama de Casos de Uso}{31}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {5.2.2}Histórias de Usuário}{32}{subsection.5.2.2}%
-\contentsline {subsubsection}{\numberline {5.2.2.1}Histórias de Usuário do Projeto}{32}{subsubsection.5.2.2.1}%
-\contentsline {subsection}{\numberline {5.2.3}Diagrama Físico do Banco de Dados}{33}{subsection.5.2.3}%
+\contentsline {section}{\numberline {5.2}MODELAGEM DO PROJETO}{32}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Diagrama de Casos de Uso}{32}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Histórias de Usuário}{33}{subsection.5.2.2}%
+\contentsline {subsubsection}{\numberline {5.2.2.1}Histórias de Usuário do Projeto}{33}{subsubsection.5.2.2.1}%
+\contentsline {subsection}{\numberline {5.2.3}Diagrama Físico do Banco de Dados}{34}{subsection.5.2.3}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {5.3}PRODUCT BACKLOG}{34}{section.5.3}%
+\contentsline {section}{\numberline {5.3}PRODUCT BACKLOG}{35}{section.5.3}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {5.4}PLANEJAMENTO DE SPRINTS}{35}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}Estimativa Geral por Pontos de Função (PF)}{35}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}Cálculo de Esforço}{35}{subsection.5.4.2}%
+\contentsline {section}{\numberline {5.4}PLANEJAMENTO DE SPRINTS}{36}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Estimativa Geral por Pontos de Função (PF)}{36}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Cálculo de Esforço}{36}{subsection.5.4.2}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {5.5}FERRAMENTAS DE DESENVOLVIMENTO}{36}{section.5.5}%
-\contentsline {subsection}{\numberline {5.5.1}React Native}{36}{subsection.5.5.1}%
-\contentsline {subsection}{\numberline {5.5.2}Expo}{36}{subsection.5.5.2}%
-\contentsline {subsection}{\numberline {5.5.3}Java}{37}{subsection.5.5.3}%
-\contentsline {subsection}{\numberline {5.5.4}Spring Boot}{37}{subsection.5.5.4}%
-\contentsline {subsection}{\numberline {5.5.5}Google Cloud Firestore}{37}{subsection.5.5.5}%
-\contentsline {subsection}{\numberline {5.5.6}SQLite}{37}{subsection.5.5.6}%
+\contentsline {section}{\numberline {5.5}FERRAMENTAS DE DESENVOLVIMENTO}{37}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}React Native}{37}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Expo}{37}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.5.3}Java}{38}{subsection.5.5.3}%
+\contentsline {subsection}{\numberline {5.5.4}Spring Boot}{38}{subsection.5.5.4}%
+\contentsline {subsection}{\numberline {5.5.5}Google Cloud Firestore}{38}{subsection.5.5.5}%
+\contentsline {subsection}{\numberline {5.5.6}SQLite}{38}{subsection.5.5.6}%
 \addvspace {-12\p@ }
 \setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
-\contentsline {chapter}{\chapternumberline {6}\bfseries \MakeTextUppercase []{APRESENTAÇÃO DO SISTEMA}}{38}{chapter.6}%
+\contentsline {chapter}{\chapternumberline {6}\bfseries \MakeTextUppercase []{APRESENTAÇÃO DO SISTEMA}}{39}{chapter.6}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {6.1}ARQUITETURA DO SISTEMA}{38}{section.6.1}%
-\contentsline {subsection}{\numberline {6.1.1}Arquitetura Híbrida (Offline + Online)}{38}{subsection.6.1.1}%
-\contentsline {subsection}{\numberline {6.1.2}Comunicação e Sincronização}{38}{subsection.6.1.2}%
-\contentsline {subsection}{\numberline {6.1.3}Assistente de IA para Busca Inteligente}{39}{subsection.6.1.3}%
-\contentsline {subsection}{\numberline {6.1.4}Interface Interativa e Navegação}{39}{subsection.6.1.4}%
-\contentsline {subsection}{\numberline {6.1.5}Backend e Web Admin}{39}{subsection.6.1.5}%
+\contentsline {section}{\numberline {6.1}ARQUITETURA DO SISTEMA}{39}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Arquitetura Híbrida (Offline + Online)}{39}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}Comunicação e Sincronização}{39}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.1.3}Assistente de IA para Busca Inteligente}{40}{subsection.6.1.3}%
+\contentsline {subsection}{\numberline {6.1.4}Interface Interativa e Navegação}{40}{subsection.6.1.4}%
+\contentsline {subsection}{\numberline {6.1.5}Backend e Web Admin}{40}{subsection.6.1.5}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {6.2}AUTENTICAÇÃO E SEGURANÇA}{39}{section.6.2}%
+\contentsline {section}{\numberline {6.2}AUTENTICAÇÃO E SEGURANÇA}{40}{section.6.2}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {6.3}FUNCIONALIDADES DO SISTEMA}{40}{section.6.3}%
-\contentsline {subsection}{\numberline {6.3.1}Tela Inicial e Onboarding}{40}{subsection.6.3.1}%
-\contentsline {subsection}{\numberline {6.3.2}Cadastro e Perfis de Usuário}{40}{subsection.6.3.2}%
-\contentsline {subsection}{\numberline {6.3.3}Tela Principal e Navegação}{41}{subsection.6.3.3}%
-\contentsline {subsection}{\numberline {6.3.4}Mapa Anatômico Interativo}{41}{subsection.6.3.4}%
-\contentsline {subsection}{\numberline {6.3.5}Detalhes dos Pontos de Acupuntura}{42}{subsection.6.3.5}%
-\contentsline {subsection}{\numberline {6.3.6}Sistema de Busca Inteligente}{42}{subsection.6.3.6}%
-\contentsline {subsection}{\numberline {6.3.7}Assistente Inteligente com IA Generativa}{43}{subsection.6.3.7}%
-\contentsline {subsection}{\numberline {6.3.8}Sistema de Favoritos e Anotações Pessoais}{43}{subsection.6.3.8}%
-\contentsline {subsection}{\numberline {6.3.9}Modo Auricular (Auriculoterapia)}{43}{subsection.6.3.9}%
+\contentsline {section}{\numberline {6.3}FUNCIONALIDADES DO SISTEMA}{41}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Tela Inicial e Onboarding}{41}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Cadastro e Autenticação via Firebase}{41}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.3.3}Tela Principal e Navegação}{42}{subsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.3.4}Mapa Anatômico Interativo}{42}{subsection.6.3.4}%
+\contentsline {subsection}{\numberline {6.3.5}Detalhes dos Pontos de Acupuntura}{43}{subsection.6.3.5}%
+\contentsline {subsection}{\numberline {6.3.6}Sistema de Busca Inteligente}{43}{subsection.6.3.6}%
+\contentsline {subsection}{\numberline {6.3.7}Assistente Inteligente com IA Generativa}{44}{subsection.6.3.7}%
+\contentsline {subsection}{\numberline {6.3.8}Sistema de Favoritos e Anotações Pessoais}{44}{subsection.6.3.8}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {6.4}PAINEL ADMINISTRATIVO WEB}{44}{section.6.4}%
-\contentsline {subsection}{\numberline {6.4.1}Gerenciamento de Conteúdo}{44}{subsection.6.4.1}%
-\contentsline {subsection}{\numberline {6.4.2}Controle de Usuários e Analytics}{44}{subsection.6.4.2}%
+\contentsline {section}{\numberline {6.4}GESTÃO DE DADOS}{45}{section.6.4}%
 \addvspace {-3\p@ }
-\contentsline {section}{\numberline {6.5}EXPERIÊNCIA DO USUÁRIO E USABILIDADE}{44}{section.6.5}%
+\contentsline {section}{\numberline {6.5}EXPERIÊNCIA DO USUÁRIO E USABILIDADE}{45}{section.6.5}%
 \addvspace {-3\p@ }
 \contentsline {section}{\numberline {6.6}PROTÓTIPO DE TELAS}{45}{section.6.6}%
 \addvspace {-12\p@ }

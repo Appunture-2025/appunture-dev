@@ -7,26 +7,26 @@ Neste capítulo o \textit{Appunture} é apresentado, pontuando os aspectos técn
 
 \section{ARQUITETURA DO SISTEMA} \label{sec:arq_sistema}
 
-O \textit{Appunture} foi desenvolvido seguindo uma arquitetura híbrida e modular que integra funcionalidades \textit{offline} e \textit{online} para garantir alta disponibilidade, desempenho e usabilidade mesmo em ambientes com conexão limitada ou instável. A arquitetura se divide em três módulos principais: aplicativo móvel (React Native/Expo), \textit{backend} (Java + Spring Boot) e painel administrativo web (React).
+O \textit{Appunture} foi desenvolvido seguindo uma arquitetura híbrida e modular que integra funcionalidades \textit{offline} e \textit{online} para garantir alta disponibilidade, desempenho e usabilidade mesmo em ambientes com conexão limitada ou instável. A arquitetura se divide em dois módulos principais: aplicativo móvel (React Native/Expo) e \textit{backend} (Java + Spring Boot).
 
 \subsection{Arquitetura Híbrida (Offline + Online)}
 
-No núcleo do aplicativo móvel, o \textit{Appunture} utiliza um banco de dados local SQLite para armazenar informações clínicas essenciais, incluindo os 361 pontos dos meridianos principais, pontos extras, sintomas, relações terapêuticas, favoritos e anotações do usuário. Esta abordagem garante que o aplicativo funcione integralmente em modo \textit{offline}, permitindo consultas rápidas e uso em campo, sem depender da conexão com a internet.
+No núcleo do aplicativo móvel, o \textit{Appunture} utiliza um banco de dados local SQLite para armazenar informações do atlas, incluindo os 361 pontos dos meridianos principais, pontos extras, sintomas, relações terapêuticas, favoritos e anotações do usuário. Esta abordagem garante que o aplicativo funcione integralmente em modo \textit{offline}, permitindo consultas rápidas e uso em qualquer lugar, sem depender da conexão com a internet.
 
-Quando a conexão estiver disponível, o sistema realiza sincronizações automáticas e seguras com um \textit{backend} remoto, desenvolvido em Java com Spring Boot, que hospeda o banco de dados Firestore centralizado. Esta sincronização atualiza dados clínicos, envia registros do usuário e mantém o histórico sempre preservado e atualizado.
+Quando a conexão estiver disponível, o sistema realiza sincronizações automáticas e seguras com um \textit{backend} remoto, desenvolvido em Java com Spring Boot, que hospeda o banco de dados Firestore centralizado. Esta sincronização atualiza dados do atlas, envia registros do usuário e mantém o histórico sempre preservado e atualizado.
 
 \subsection{Comunicação e Sincronização}
 
-A comunicação entre o app e o \textit{backend} é realizada via API RESTful, utilizando autenticação Firebase/JWT para controle seguro de acesso. O \textit{backend} disponibiliza \textit{endpoints} públicos para consulta de dados clínicos e \textit{endpoints} privados para operações que envolvem dados do usuário, como sincronização e autenticação.
+A comunicação entre o app e o \textit{backend} é realizada via API RESTful, utilizando autenticação Firebase/JWT para controle seguro de acesso. O \textit{backend} disponibiliza \textit{endpoints} públicos para consulta de dados do atlas e \textit{endpoints} privados para operações que envolvem dados do usuário, como sincronização e autenticação.
 
-A sincronização implementa um mecanismo de controle de versões dos dados clínicos para evitar \textit{downloads} desnecessários e garantir que o aplicativo trabalhe sempre com as informações mais recentes. O processo ocorre automaticamente em \textit{background} sempre que uma conexão de internet é detectada.
+A sincronização implementa um mecanismo de controle de versões dos dados do atlas para evitar \textit{downloads} desnecessários e garantir que o aplicativo trabalhe sempre com as informações mais recentes. O processo ocorre automaticamente em \textit{background} sempre que uma conexão de internet é detectada.
 
 \subsection{Assistente de IA para Busca Inteligente}
 
 Para viabilizar a busca inteligente por sintomas, o aplicativo utiliza um assistente de inteligência artificial integrado ao \textit{backend}. Esta funcionalidade requer conexão com a internet para processamento.
 
 \textbf{Arquitetura RAG (Retrieval-Augmented Generation):}
-O sistema utiliza a arquitetura RAG integrada ao \textit{backend} Java. O assistente inteligente, alimentado pelo Google Gemini 1.5 Flash via Spring AI, interpreta perguntas do usuário sobre sintomas e tratamentos, fornecendo respostas contextualizadas com a base de dados técnica do sistema. Esta abordagem reduz alucinações do modelo e aumenta a confiabilidade das sugestões clínicas.
+O sistema utiliza a arquitetura RAG integrada ao \textit{backend} Java. O assistente inteligente, alimentado pelo Google Gemini 1.5 Flash via Spring AI, interpreta perguntas do usuário sobre sintomas e pontos de acupuntura, fornecendo respostas contextualizadas com a base de dados técnica do sistema. Esta abordagem reduz alucinações do modelo e aumenta a confiabilidade das informações apresentadas.
 
 \textbf{Navegação Offline:}
 Quando sem conexão, o usuário pode navegar manualmente pelo atlas anatômico e acessar as informações dos pontos já sincronizados no banco de dados local. A busca inteligente por sintomas fica indisponível até que uma conexão seja restabelecida.
@@ -37,7 +37,7 @@ A interface do app é construída para promover uma experiência intuitiva e vis
 
 \subsection{Backend e Web Admin}
 
-O \textit{backend} centraliza a gestão dos dados oficiais, incluindo o cadastro e atualização dos pontos, sintomas e suas relações. Uma interface administrativa web, desenvolvida em React, permite que gestores e especialistas mantenham o conteúdo sempre atualizado, garantindo a qualidade e a segurança das informações disponíveis no app.
+O \textit{backend} centraliza a gestão dos dados oficiais, incluindo o cadastro e atualização dos pontos, sintomas e suas relações. A gestão do conteúdo é realizada através de APIs REST protegidas, com \textit{endpoints} específicos para operações administrativas que requerem autenticação e permissões adequadas.
 
 \section{AUTENTICAÇÃO E SEGURANÇA} \label{sec:autenticacao}
 
@@ -46,8 +46,8 @@ Para garantir a segurança dos usuários e a integridade dos dados, o sistema im
 \textbf{Métodos de Autenticação:}
 \begin{itemize}
     \item Login com email e senha;
-    \item Autenticação biométrica no dispositivo móvel (impressão digital ou Face ID);
-    \item Validação de \textit{tokens} JWT no \textit{backend}.
+    \item Login social via Google (\textit{Google Sign-In});
+    \item Validação de \textit{tokens} JWT (Firebase ID Token) no \textit{backend}.
 \end{itemize}
 
 Durante o processo de login, o Firebase Authentication gerencia a validação das credenciais e gera um \textit{token} JWT assinado. Este \textit{token} é utilizado para manter a sessão do usuário e validar o acesso aos recursos protegidos da API.
@@ -58,31 +58,40 @@ A sessão é gerenciada pelo aplicativo móvel, que armazena o \textit{token} de
 
 \subsection{Tela Inicial e Onboarding}
 
-Quando o usuário inicia a utilização do aplicativo pela primeira vez, é apresentada uma sequência de telas de apresentação (\textit{onboarding}) que explicam as principais funcionalidades e benefícios do \textit{Appunture}. Esta experiência introdutória inclui informações sobre o uso \textit{offline}, a busca inteligente, os mapas anatômicos interativos e os diferentes perfis de usuário disponíveis.
+Quando o usuário inicia a utilização do aplicativo pela primeira vez, é apresentada uma sequência de telas de apresentação (\textit{onboarding}) que explicam as principais funcionalidades e benefícios do \textit{Appunture}. Esta experiência introdutória inclui informações sobre o uso \textit{offline}, a busca inteligente e os mapas anatômicos interativos.
 
 Na tela inicial, o usuário pode escolher entre realizar o processo de cadastro ou direcionar-se diretamente para a tela de login. O design foi pensado para transmitir profissionalismo e confiança, utilizando a identidade visual do projeto com cores que remetem à medicina tradicional chinesa e à modernidade tecnológica.
 
-\subsection{Cadastro e Perfis de Usuário}
+\subsection{Cadastro e Autenticação via Firebase}
 
-A tela de cadastro permite que diferentes tipos de profissionais da saúde se registrem no sistema, incluindo médicos, fisioterapeutas, terapeutas, enfermeiros, estudantes e outros profissionais relacionados. É fundamental destacar que durante o cadastro, o usuário deve informar seu perfil profissional, pois esta informação é utilizada para adaptar o conteúdo apresentado conforme o nível de formação e os limites éticos e legais de cada profissão.
-
-O sistema implementa diferentes níveis de acesso baseados no perfil declarado:
+O processo de autenticação do \textit{Appunture} é inteiramente gerenciado pelo \textit{Firebase Authentication}, serviço da Google que oferece segurança robusta e escalabilidade. A tela de cadastro foi projetada para ser simples e rápida, solicitando apenas as informações essenciais:
 
 \begin{itemize}
-    \item \textbf{Médicos e especialistas}: acesso completo a todas as informações técnicas;
-    \item \textbf{Profissionais de saúde}: acesso adaptado conforme a regulamentação da categoria;
-    \item \textbf{Estudantes}: acesso educativo com conteúdos didáticos;
-    \item \textbf{Outros profissionais}: acesso personalizado conforme a regulamentação da categoria.
+    \item \textbf{Nome completo}: Armazenado no \textit{displayName} do perfil Firebase;
+    \item \textbf{Email}: Identificador único do usuário no Firebase;
+    \item \textbf{Senha}: Com validação de força mínima (6 caracteres);
+    \item \textbf{Confirmação de senha}: Para evitar erros de digitação;
+    \item \textbf{Aceite dos termos}: Concordância com os termos de uso e política de privacidade.
 \end{itemize}
+
+Ao submeter o formulário, o aplicativo utiliza a função \texttt{createUserWithEmailAndPassword} do Firebase SDK para criar a conta. Em seguida, o \texttt{displayName} é atualizado com o nome informado via \texttt{updateProfile}. Por fim, os dados do usuário são sincronizados com o \textit{backend} Java através de uma chamada à API REST.
+
+O sistema também oferece autenticação via \textit{Google Sign-In}, implementada com o \textit{expo-auth-session}. Neste fluxo, o usuário autoriza o acesso via OAuth 2.0, e o \textit{token} retornado pelo Google é usado para criar uma credencial Firebase via \texttt{GoogleAuthProvider.credential}, completando a autenticação.
+
+Após a autenticação (por qualquer método), o \textit{Firebase ID Token} é obtido e armazenado de forma segura no dispositivo. Este \textit{token} é enviado em todas as requisições ao \textit{backend} para validação e autorização.
+
+Todos os usuários têm acesso igualitário a todas as funcionalidades do atlas educativo, independentemente do método de cadastro utilizado.
 
 \subsection{Tela Principal e Navegação}
 
 A tela principal do aplicativo apresenta as principais funcionalidades de forma organizada e acessível. A navegação é estruturada por abas (\textit{tabs}) na parte inferior da tela, permitindo acesso rápido às seções principais:
 
 \begin{itemize}
-    \item \textbf{Home}: Tela inicial com acesso rápido às funcionalidades principais;
-    \item \textbf{Busca}: Sistema de busca inteligente por sintomas ou nome de ponto;
-    \item \textbf{Corpo}: Mapa anatômico interativo;
+    \item \textbf{Início}: Tela inicial com acesso rápido às funcionalidades principais;
+    \item \textbf{Buscar}: Sistema de busca por nome de ponto ou código;
+    \item \textbf{Sintomas}: Lista de sintomas com pontos relacionados;
+    \item \textbf{Meridianos}: Navegação por meridianos com mapas SVG;
+    \item \textbf{Assistente}: Chat com IA para consultas contextualizadas;
     \item \textbf{Favoritos}: Lista de pontos favoritados pelo usuário;
     \item \textbf{Perfil}: Configurações do usuário e preferências.
 \end{itemize}
@@ -93,14 +102,14 @@ Uma das funcionalidades mais destacadas do \textit{Appunture} é o mapa anatômi
 
 Cada ponto é representado por um marcador visual que, ao ser tocado, exibe informações básicas sobre o ponto em um \textit{tooltip}. O usuário pode então optar por acessar a tela de detalhes completa do ponto selecionado.
 
-O mapa oferece 15 visualizações vetoriais de alta fidelidade, organizadas por meridianos:
+O mapa oferece 16 visualizações vetoriais de alta fidelidade, organizadas por meridianos:
 
 \begin{itemize}
-    \item Vista frontal do corpo completo;
-    \item Vista posterior do corpo completo;
-    \item Vistas específicas por meridiano (12 meridianos principais);
-    \item Vasos extraordinários (Ren Mai e Du Mai).
+    \item 12 meridianos principais: Pulmão (LU), Intestino Grosso (LI), Estômago (ST, ST2), Baço (SP), Coração (HT), Intestino Delgado (SI), Bexiga (BL), Rim (KI), Pericárdio (P), Triplo Aquecedor (TW), Vesícula Biliar (GB) e Fígado (LV);
+    \item 2 vasos extraordinários: Vaso Governador (GV/Du Mai) e Vaso Concepção (CV/Ren Mai).
 \end{itemize}
+
+Cada mapa SVG é carregado sob demanda, permitindo navegação fluida entre as diferentes visualizações de frente e costas do corpo.
 
 \subsection{Detalhes dos Pontos de Acupuntura}
 
@@ -133,61 +142,45 @@ O assistente de IA interpreta a intenção do usuário e retorna os pontos mais 
 
 \subsection{Assistente Inteligente com IA Generativa}
 
-O assistente inteligente integrado ao \textit{Appunture} permite que o usuário descreva sintomas em linguagem natural e receba sugestões de pontos de acupuntura baseadas em evidências. Esta funcionalidade utiliza a arquitetura RAG (\textit{Retrieval-Augmented Generation}):
+O assistente inteligente integrado ao \textit{Appunture} permite que o usuário descreva sintomas em linguagem natural e receba informações educativas sobre pontos de acupuntura. A funcionalidade utiliza a arquitetura RAG (\textit{Retrieval-Augmented Generation}):
 
 \textbf{Funcionamento do Sistema:}
 \begin{enumerate}
     \item O sistema intercepta a pergunta do usuário;
     \item Busca contexto relevante na base de dados (pontos e sintomas relacionados);
     \item Envia um \textit{prompt} enriquecido para o modelo Google Gemini 1.5 Flash via Spring AI;
-    \item Retorna respostas clinicamente precisas, baseadas nos dados validados do sistema.
+    \item Retorna respostas contextualizadas, baseadas nos dados validados do sistema.
 \end{enumerate}
 
 \textbf{Benefícios da Abordagem:}
 \begin{itemize}
     \item Respostas contextualizadas com a base de dados técnica;
-    \item Redução significativa de alucinações do modelo;
-    \item Maior confiabilidade das informações clínicas;
+    \item Redução significativa de alucinações do modelo através da abordagem RAG;
+    \item Maior confiabilidade das informações apresentadas;
     \item Rastreabilidade das fontes utilizadas nas respostas.
 \end{itemize}
 
 \subsection{Sistema de Favoritos e Anotações Pessoais}
 
-O \textit{Appunture} permite que o usuário salve pontos de acupuntura como favoritos para acesso rápido posterior. Além disso, é possível adicionar anotações pessoais a cada ponto, registrando observações clínicas, experiências ou lembretes.
+O \textit{Appunture} permite que o usuário salve pontos de acupuntura como favoritos para acesso rápido posterior. Além disso, é possível adicionar anotações pessoais a cada ponto, registrando observações de estudo, experiências ou lembretes.
 
 Estas informações são armazenadas localmente no dispositivo e sincronizadas com o \textit{backend} quando há conexão disponível, garantindo que o usuário não perca seus dados ao trocar de dispositivo.
 
-\subsection{Modo Auricular (Auriculoterapia)}
 
-Além do mapa corporal completo, o \textit{Appunture} oferece um modo específico para auriculoterapia, apresentando um mapa detalhado da orelha com os pontos auriculares mapeados. Esta funcionalidade segue a mesma lógica de interação do mapa corporal, permitindo visualização e consulta de informações específicas sobre cada ponto auricular.
 
-\section{PAINEL ADMINISTRATIVO WEB} \label{sec:admin}
+\section{GESTÃO DE DADOS} \label{sec:admin}
 
-\subsection{Gerenciamento de Conteúdo}
-
-O painel administrativo web permite que gestores e especialistas mantenham o conteúdo do aplicativo sempre atualizado. As principais funcionalidades incluem:
+A gestão do conteúdo do \textit{Appunture} é realizada através de APIs REST protegidas no \textit{backend}, com \textit{endpoints} específicos para operações administrativas (prefixo \texttt{/admin/}). As principais funcionalidades disponíveis incluem:
 
 \begin{itemize}
-    \item CRUD completo de pontos de acupuntura;
+    \item \textit{Endpoints} CRUD para pontos de acupuntura;
     \item Gestão de sintomas e suas relações com pontos;
-    \item \textit{Upload} e mapeamento de coordenadas SVG para os mapas anatômicos;
-    \item Gestão de meridianos e categorias;
-    \item Controle de versões do conteúdo;
-    \item Gestão da base de conhecimento que alimenta o assistente IA.
+    \item \textit{Upload} de imagens para o Firebase Storage;
+    \item Seed de dados inicial via \texttt{/admin/data/seed};
+    \item Controle de acesso baseado em \textit{roles} (RBAC) com Firebase Custom Claims.
 \end{itemize}
 
-\subsection{Controle de Usuários e Analytics}
-
-O painel também oferece funcionalidades de gestão de usuários e análise de uso:
-
-\begin{itemize}
-    \item Visualização de usuários cadastrados;
-    \item Relatórios de uso do aplicativo;
-    \item Métricas de pontos mais acessados;
-    \item Análise de buscas realizadas;
-    \item Gestão de permissões e perfis.
-\end{itemize}
-
+A documentação completa da API está disponível via Swagger/OpenAPI no \textit{endpoint} \texttt{/swagger-ui.html} do \textit{backend}.
 \section{EXPERIÊNCIA DO USUÁRIO E USABILIDADE} \label{sec:ux}
 
 O desenvolvimento da interface do \textit{Appunture} seguiu princípios de design centrado no usuário, priorizando:
