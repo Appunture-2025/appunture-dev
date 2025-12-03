@@ -6,6 +6,7 @@ frontend-mobile/appunture/.expo/
 arquivos-deploy/
 *-firebase-adminsdk-*.json
 *.json.bak
+downloaded-logs-*.json
 
 # Zip files
 *.zip
