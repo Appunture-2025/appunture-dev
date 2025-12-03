@@ -1,0 +1,29 @@
+sequenceDiagram
+    autonumber
+    participant U as Usuario
+    participant App as App Mobile
+    participant DB as SQLite Local
+    participant Net as Monitor de Rede
+    participant API as Backend API
+    participant FS as Firestore
+    
+    U->>App: Toca no icone de favorito
+    App->>DB: INSERT/DELETE favorites
+    DB-->>App: Operacao salva localmente
+    App-->>U: Atualiza icone visualmente
+    
+    App->>Net: Verifica conectividade
+    
+    alt Online
+        Net-->>App: Conectado
+        App->>API: POST /api/sync/favorites
+        API->>FS: Atualiza documento do usuario
+        FS-->>API: Confirmacao
+        API-->>App: Sync completo
+        App->>DB: UPDATE favorites SET synced = 1
+    else Offline
+        Net-->>App: Sem conexao
+        App->>DB: INSERT sync_queue (favorito pendente)
+        DB-->>App: Operacao enfileirada
+        Note over App: Sincroniza quando reconectar
+    end

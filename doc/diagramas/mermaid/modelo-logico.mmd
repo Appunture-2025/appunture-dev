@@ -1,0 +1,83 @@
+erDiagram
+    points {
+        TEXT id PK
+        TEXT code
+        TEXT name
+        TEXT chinese_name
+        TEXT meridian
+        TEXT location
+        TEXT functions
+        TEXT indications
+        TEXT contraindications
+        TEXT image_path
+        TEXT coordinates
+        INTEGER favorite_count
+        INTEGER synced
+        DATETIME last_sync
+    }
+    
+    symptoms {
+        TEXT id PK
+        TEXT name
+        TEXT synonyms
+        TEXT category
+        INTEGER use_count
+        INTEGER synced
+        DATETIME last_sync
+    }
+    
+    symptom_points {
+        TEXT symptom_id PK,FK
+        TEXT point_id PK,FK
+        REAL efficacy_score
+    }
+    
+    favorites {
+        INTEGER id PK
+        TEXT point_id FK
+        TEXT user_id
+        INTEGER synced
+        TEXT operation
+        DATETIME created_at
+        DATETIME updated_at
+    }
+    
+    notes {
+        INTEGER id PK
+        TEXT point_id FK
+        TEXT user_id
+        TEXT content
+        INTEGER synced
+        DATETIME created_at
+        DATETIME updated_at
+    }
+    
+    search_history {
+        INTEGER id PK
+        TEXT query
+        TEXT type
+        DATETIME created_at
+    }
+    
+    sync_status {
+        TEXT table_name PK
+        DATETIME last_sync
+        TEXT status
+    }
+    
+    image_sync_queue {
+        INTEGER id PK
+        TEXT point_id FK
+        TEXT image_uri
+        TEXT payload
+        TEXT status
+        INTEGER retry_count
+        DATETIME last_attempt
+        DATETIME created_at
+    }
+    
+    points ||--o{ symptom_points : "possui"
+    symptoms ||--o{ symptom_points : "relaciona"
+    points ||--o{ favorites : "favoritado"
+    points ||--o{ notes : "anotado"
+    points ||--o{ image_sync_queue : "imagem"

@@ -1,0 +1,25 @@
+sequenceDiagram
+    autonumber
+    participant U as Usuario
+    participant App as App Mobile
+    participant DB as SQLite Local
+    participant Cache as MMKV Cache
+    
+    U->>App: Seleciona ponto na lista
+    App->>DB: SELECT * FROM points WHERE id = ?
+    DB-->>App: Dados do ponto
+    App->>Cache: Busca imagem em cache
+    
+    alt Imagem em cache
+        Cache-->>App: Imagem SVG
+    else Sem cache
+        App->>DB: Carrega imagem local
+        DB-->>App: Imagem SVG
+        App->>Cache: Salva em cache
+    end
+    
+    App->>DB: SELECT * FROM favorites WHERE point_id = ?
+    DB-->>App: Status favorito
+    App->>DB: SELECT * FROM notes WHERE point_id = ?
+    DB-->>App: Anotacoes do usuario
+    App-->>U: Exibe tela de detalhes completa

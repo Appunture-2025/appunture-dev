@@ -1,0 +1,77 @@
+classDiagram
+    class User {
+        -String id
+        -String firebaseUid
+        -String email
+        -String name
+        -String role
+        -List favoritePointIds
+        -DateTime createdAt
+    }
+
+    class Point {
+        -String id
+        -String code
+        -String name
+        -String meridian
+        -String location
+        -String indication
+        -String description
+        -Map coordinates
+        -List symptomIds
+        -List imageUrls
+    }
+
+    class Symptom {
+        -String id
+        -String name
+        -String description
+        -String category
+        -List pointIds
+        -Integer useCount
+    }
+
+    class Favorite {
+        -Integer id
+        -String pointId
+        -String usrId
+        -Boolean synced
+        -DateTime createdAt
+    }
+
+    class Note {
+        -Integer id
+        -String pointId
+        -String userId
+        -String content
+        -Boolean synced
+        -DateTime createdAt
+    }
+
+    class PointService {
+        +findAll() List
+        +findById(id) Optional
+        +findByMeridian(meridian) List
+        +search(query) List
+    }
+
+    class AiChatService {
+        -ChatClient chatClient
+        -PointService pointService
+        +getEducationalAssistance(question) String
+    }
+
+    class SyncService {
+        +syncData(request) SyncResponse
+        +getFavorites(userId) List
+        +getNotes(userId) List
+    }
+
+    Point "*" -- "*" Symptom : relacionados
+    User "1" -- "*" Favorite : possui
+    User "1" -- "*" Note : cria
+    Point "1" -- "*" Favorite : recebe
+    Point "1" -- "*" Note : recebe
+
+    PointService --> Point
+    AiChatService --> PointService

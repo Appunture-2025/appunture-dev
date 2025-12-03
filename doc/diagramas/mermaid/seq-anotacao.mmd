@@ -1,0 +1,45 @@
+sequenceDiagram
+    autonumber
+    participant U as Usuario
+    participant App as App Mobile
+    participant DB as SQLite Local
+    participant Net as Monitor de Rede
+    participant API as Backend API
+    participant FS as Firestore
+    
+    U->>App: Abre campo de anotacao
+    App->>DB: SELECT * FROM notes WHERE point_id = ?
+    DB-->>App: Anotacoes existentes
+    App-->>U: Exibe anotacoes ou campo vazio
+    
+    U->>App: Digita e salva anotacao
+    App->>DB: INSERT/UPDATE notes
+    DB-->>App: Anotacao salva localmente
+    App-->>U: Confirma salvamento
+    
+    App->>Net: Verifica conectividade
+    
+    alt Online
+        Net-->>App: Conectado
+        App->>API: POST /api/sync/notes
+        API->>FS: Salva anotacao no documento
+        FS-->>API: Confirmacao
+        API-->>App: Sync completo
+        App->>DB: UPDATE notes SET synced = 1
+    else Offline
+        Net-->>App: Sem conexao
+        App->>DB: INSERT sync_queue (anotacao pendente)
+        Note over App: Sincroniza quando reconectar
+    end
+    
+    opt Editar anotacao
+        U->>App: Edita anotacao existente
+        App->>DB: UPDATE notes SET content = ?
+        App-->>U: Anotacao atualizada
+    end
+    
+    opt Excluir anotacao
+        U->>App: Exclui anotacao
+        App->>DB: DELETE FROM notes WHERE id = ?
+        App-->>U: Anotacao removida
+    end

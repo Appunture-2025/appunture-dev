@@ -1,0 +1,47 @@
+flowchart TB
+    subgraph Mobile["App Mobile (React Native + Expo)"]
+        UI[Interface do Usuario]
+        SQLite[(SQLite Local)]
+        MMKV[(Cache MMKV)]
+        NetMon[Monitor de Rede]
+    end
+    
+    subgraph Backend["Backend (Java + Spring Boot)"]
+        API[REST API]
+        Security[Spring Security]
+        SpringAI[Spring AI]
+        SyncService[Servico de Sync]
+    end
+    
+    subgraph Firebase["Firebase / Google Cloud"]
+        Auth[Firebase Auth]
+        Firestore[(Firestore)]
+        Storage[Cloud Storage]
+    end
+    
+    subgraph AI["Inteligencia Artificial"]
+        Gemini[Google Gemini 1.5 Flash]
+    end
+    
+    subgraph Tools["Ferramentas de Apoio"]
+        PointMapper[Point Mapper]
+        Scripts[Scripts Python]
+    end
+    
+    UI --> SQLite
+    UI --> MMKV
+    UI --> NetMon
+    NetMon -->|Online| API
+    
+    API --> Security
+    Security --> Auth
+    API --> SyncService
+    SyncService --> Firestore
+    API --> SpringAI
+    SpringAI -->|RAG| Gemini
+    SpringAI --> Firestore
+    
+    PointMapper -->|JSON| Firestore
+    Scripts -->|Seed| Firestore
+    
+    Firestore --> Storage

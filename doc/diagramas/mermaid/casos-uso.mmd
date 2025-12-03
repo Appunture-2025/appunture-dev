@@ -1,0 +1,61 @@
+flowchart TB
+    U[Usuario]
+    IA[Google Gemini]
+    FB[Firebase]
+
+    subgraph Autenticacao
+        UC1[Registrar Conta]
+        UC2[Fazer Login]
+        UC3[Login com Google]
+    end
+
+    subgraph Atlas_Anatomico
+        UC4[Navegar pelo Atlas SVG]
+        UC5[Interagir com Marcadores]
+        UC6[Zoom e Pan]
+    end
+
+    subgraph Busca_e_Consulta
+        UC7[Buscar por Nome/Codigo]
+        UC8[Buscar por Sintomas]
+        UC9[Visualizar Detalhes do Ponto]
+    end
+
+    subgraph Personalizacao
+        UC10[Gerenciar Favoritos]
+        UC11[Criar Anotacoes]
+    end
+
+    subgraph Assistente_IA
+        UC12[Enviar Pergunta]
+        UC13[Receber Resposta RAG]
+        UC14[Ver Pontos Sugeridos]
+    end
+
+    subgraph Sincronizacao
+        UC15[Acessar Dados Offline]
+        UC16[Sincronizar com Nuvem]
+    end
+
+    U --> UC1
+    U --> UC2
+    U --> UC3
+    U --> UC4
+    U --> UC5
+    U --> UC6
+    U --> UC7
+    U --> UC8
+    U --> UC9
+    U --> UC10
+    U --> UC11
+    U --> UC12
+    U --> UC13
+    U --> UC14
+    U --> UC15
+    U --> UC16
+
+    IA --> UC13
+    IA --> UC14
+    FB --> UC2
+    FB --> UC3
+    FB --> UC16

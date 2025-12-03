@@ -1,0 +1,30 @@
+sequenceDiagram
+    autonumber
+    participant U as Usuario
+    participant App as App Mobile
+    participant SVG as Renderizador SVG
+    participant DB as SQLite Local
+    participant Cache as MMKV Cache
+    
+    U->>App: Acessa tela do Atlas
+    App->>Cache: Busca vista selecionada
+    Cache-->>App: Vista anterior ou padrao
+    App->>SVG: Carrega imagem da vista
+    SVG-->>App: SVG renderizado
+    
+    App->>DB: SELECT * FROM points WHERE view = ?
+    DB-->>App: Pontos da vista atual
+    App->>SVG: Adiciona marcadores nos pontos
+    SVG-->>App: Marcadores posicionados
+    App-->>U: Exibe atlas com pontos interativos
+    
+    U->>App: Seleciona outra vista
+    App->>Cache: Salva vista selecionada
+    App->>SVG: Carrega nova imagem
+    App->>DB: Busca pontos da nova vista
+    App-->>U: Atualiza atlas
+    
+    U->>App: Toca em marcador de ponto
+    App->>DB: Busca dados do ponto
+    DB-->>App: Dados resumidos
+    App-->>U: Exibe tooltip com opcao de detalhes
