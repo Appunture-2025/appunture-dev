@@ -13,9 +13,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import jakarta.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @Configuration
 @Slf4j
@@ -42,20 +44,11 @@ public class FirestoreConfig {
 
         try {
             if (FirebaseApp.getApps().isEmpty()) {
-                GoogleCredentials credentials;
+                GoogleCredentials credentials = loadCredentials();
                 
-                // Prioridade: variável de ambiente > arquivo específico > default
-                if (System.getenv("GOOGLE_APPLICATION_CREDENTIALS") != null) {
-                    log.info("Usando credenciais da variável de ambiente GOOGLE_APPLICATION_CREDENTIALS");
-                    credentials = GoogleCredentials.getApplicationDefault();
-                } else if (serviceAccountKeyPath != null && !serviceAccountKeyPath.isEmpty()) {
-                    log.info("Usando credenciais do arquivo: {}", serviceAccountKeyPath);
-                    try (InputStream serviceAccount = new FileInputStream(serviceAccountKeyPath)) {
-                        credentials = GoogleCredentials.fromStream(serviceAccount);
-                    }
-                } else {
-                    log.info("Usando credenciais padrão do ambiente");
-                    credentials = GoogleCredentials.getApplicationDefault();
+                if (credentials == null) {
+                    log.warn("No credentials available, Firebase will not be initialized");
+                    return;
                 }
 
                 // Remove 'gs://' prefix if present (Firebase SDK doesn't accept it)
@@ -74,10 +67,39 @@ public class FirestoreConfig {
                 FirebaseApp.initializeApp(options);
                 log.info("Firebase inicializado com sucesso - Projeto: {}", projectId);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Erro ao inicializar Firebase: {}", e.getMessage(), e);
             throw new RuntimeException("Falha na inicialização do Firebase", e);
         }
+    }
+
+    private GoogleCredentials loadCredentials() throws IOException {
+        // Priority 1: GOOGLE_APPLICATION_CREDENTIALS env var
+        String credentialsEnv = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
+        if (credentialsEnv != null && !credentialsEnv.isEmpty()) {
+            // Check if it's JSON content (Cloud Run secrets) or a file path
+            if (credentialsEnv.trim().startsWith("{")) {
+                log.info("Usando credenciais do GOOGLE_APPLICATION_CREDENTIALS (conteúdo JSON)");
+                return GoogleCredentials.fromStream(
+                    new ByteArrayInputStream(credentialsEnv.getBytes(StandardCharsets.UTF_8))
+                );
+            } else {
+                log.info("Usando credenciais do arquivo GOOGLE_APPLICATION_CREDENTIALS: {}", credentialsEnv);
+                return GoogleCredentials.getApplicationDefault();
+            }
+        }
+        
+        // Priority 2: File path from config
+        if (serviceAccountKeyPath != null && !serviceAccountKeyPath.isEmpty()) {
+            log.info("Usando credenciais do arquivo configurado: {}", serviceAccountKeyPath);
+            try (InputStream serviceAccount = new FileInputStream(serviceAccountKeyPath)) {
+                return GoogleCredentials.fromStream(serviceAccount);
+            }
+        }
+        
+        // Priority 3: Application Default Credentials
+        log.info("Usando Application Default Credentials");
+        return GoogleCredentials.getApplicationDefault();
     }
 
     @Bean

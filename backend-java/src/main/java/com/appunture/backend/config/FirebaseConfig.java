@@ -31,17 +31,11 @@ public class FirebaseConfig {
     public void initializeFirebase() {
         try {
             if (FirebaseApp.getApps().isEmpty()) {
-                GoogleCredentials credentials;
+                GoogleCredentials credentials = loadCredentials();
                 
-                if (serviceAccountKey != null && !serviceAccountKey.isEmpty()) {
-                    // Usa service account key se fornecida
-                    ByteArrayInputStream stream = new ByteArrayInputStream(
-                        serviceAccountKey.getBytes(StandardCharsets.UTF_8)
-                    );
-                    credentials = GoogleCredentials.fromStream(stream);
-                } else {
-                    // Usa Application Default Credentials (para desenvolvimento local e produção)
-                    credentials = GoogleCredentials.getApplicationDefault();
+                if (credentials == null) {
+                    log.warn("No credentials available, Firebase will not be initialized");
+                    return;
                 }
 
                 // Remove 'gs://' prefix if present (Firebase SDK doesn't accept it)
@@ -60,11 +54,39 @@ public class FirebaseConfig {
                 FirebaseApp.initializeApp(options);
                 log.info("Firebase initialized successfully for project: {}", projectId);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Error initializing Firebase: {}", e.getMessage());
-            // Para desenvolvimento, continue sem Firebase se não configurado
             log.warn("Firebase not configured, authentication will be disabled");
         }
+    }
+
+    private GoogleCredentials loadCredentials() throws IOException {
+        // Priority 1: Direct service account key from config
+        if (serviceAccountKey != null && !serviceAccountKey.isEmpty()) {
+            log.info("Using credentials from firebase.service-account-key config");
+            return GoogleCredentials.fromStream(
+                new ByteArrayInputStream(serviceAccountKey.getBytes(StandardCharsets.UTF_8))
+            );
+        }
+        
+        // Priority 2: GOOGLE_APPLICATION_CREDENTIALS env var
+        String credentialsEnv = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
+        if (credentialsEnv != null && !credentialsEnv.isEmpty()) {
+            // Check if it's JSON content (Cloud Run secrets) or a file path
+            if (credentialsEnv.trim().startsWith("{")) {
+                log.info("Using credentials from GOOGLE_APPLICATION_CREDENTIALS env var (JSON content)");
+                return GoogleCredentials.fromStream(
+                    new ByteArrayInputStream(credentialsEnv.getBytes(StandardCharsets.UTF_8))
+                );
+            } else {
+                log.info("Using credentials from GOOGLE_APPLICATION_CREDENTIALS file path: {}", credentialsEnv);
+                return GoogleCredentials.getApplicationDefault();
+            }
+        }
+        
+        // Priority 3: Application Default Credentials
+        log.info("Using Application Default Credentials");
+        return GoogleCredentials.getApplicationDefault();
     }
 
     @Bean
