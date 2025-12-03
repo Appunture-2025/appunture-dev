@@ -1,5 +1,17 @@
 # application-prod.yml - Configuração para produção
 
+spring:
+  ai:
+    vertex:
+      ai:
+        gemini:
+          project-id: ${GOOGLE_CLOUD_PROJECT}
+          location: ${GOOGLE_CLOUD_LOCATION:us-central1}
+          chat:
+            options:
+              model: gemini-1.5-flash
+              temperature: 0.3
+
 server:
   port: 8080
   servlet:
@@ -74,6 +86,4 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
-    export:
-      prometheus:
-        enabled: true
+    

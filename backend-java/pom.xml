@@ -23,7 +23,7 @@
         <firebase.version>9.2.0</firebase.version>
         <google-cloud.version>0.207.0-alpha</google-cloud.version>
         <mockito.version>5.2.0</mockito.version>
-    <spring-ai.version>1.0.0-M3</spring-ai.version>
+        <spring-ai.version>1.0.0-M4</spring-ai.version>
     </properties>
 
     <repositories>
@@ -47,8 +47,7 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- Spring AI BOM - commented out due to repository access issues -->
-            <!--
+            <!-- Spring AI BOM -->
             <dependency>
                 <groupId>org.springframework.ai</groupId>
                 <artifactId>spring-ai-bom</artifactId>
@@ -56,27 +55,16 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            -->
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
-        <!-- Spring AI Google Gemini - Commented out due to repository access issues in CI -->
-        <!-- To enable AI features locally, uncomment these dependencies and add spring-ai-bom above -->
-        <!--
+        <!-- Spring AI Vertex AI Gemini (para Google Cloud Gemini) -->
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-vertex-ai-gemini-spring-boot-starter</artifactId>
             <version>${spring-ai.version}</version>
-            <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-core</artifactId>
-            <version>${spring-ai.version}</version>
-            <optional>true</optional>
-        </dependency>
-        -->
 
         <!-- Spring Boot Starters -->
         <dependency>

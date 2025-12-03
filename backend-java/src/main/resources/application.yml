@@ -4,13 +4,15 @@ spring:
   profiles:
     active: dev
   ai:
-    google:
+    vertex:
       ai:
         gemini:
-          api-key: ${GOOGLE_AI_API_KEY}
-          options:
-            model: gemini-1.5-flash
-            temperature: 0.3
+          project-id: ${GOOGLE_CLOUD_PROJECT:appunture-tcc}
+          location: ${GOOGLE_CLOUD_LOCATION:us-central1}
+          chat:
+            options:
+              model: gemini-1.5-flash
+              temperature: 0.3
   # PostgreSQL/JPA removido - usando Firestore
   # datasource:
   #   url: jdbc:postgresql://localhost:5432/appunture

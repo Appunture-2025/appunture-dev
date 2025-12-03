@@ -79,6 +79,11 @@ Conforme \citeonline{cohn2004}, os critérios de aceitação ``definem os limite
         \item Critérios de aceitação: Todas as informações devem estar organizadas em seções. Imagens e descrições devem estar disponíveis \textit{offline}.
     \end{itemize}
     
+    \item Como usuário, desejo salvar pontos de acupuntura como favoritos, para acessá-los rapidamente em consultas futuras.
+    \begin{itemize}
+        \item Critérios de aceitação: Deve ser possível adicionar e remover pontos dos favoritos. Os favoritos devem sincronizar entre dispositivos quando online.
+    \end{itemize}
+    
     \item Como usuário, desejo usar o app sem internet, para ter acesso ao conteúdo mesmo em locais sem sinal.
     \begin{itemize}
         \item Critérios de aceitação: O app deve funcionar com banco local. Ao conectar-se, os dados são sincronizados com o \textit{backend}.
@@ -142,21 +147,19 @@ O \autoref{qua:backlog} apresenta o \textit{Product Backlog} do projeto \textit{
 \hline
 9 & Funcionalidade de favoritar pontos & Mobile & 3 & Média \\
 \hline
-10 & Anotações personalizadas por ponto & Mobile & 3 & Média \\
+10 & Banco de dados local (SQLite) + versionamento & Mobile & 4 & Alta \\
 \hline
-11 & Banco de dados local (SQLite/MMKV) + versionamento & Mobile & 4 & Alta \\
+11 & Sistema de sincronização (favoritos) & Mobile/Backend & 6 & Alta \\
 \hline
-12 & Sistema de sincronização (favoritos, anotações) & Mobile/Backend & 6 & Alta \\
+12 & Backend RESTful (Java Firestore + JWT) & Backend & 5 & Alta \\
 \hline
-13 & Backend RESTful (Java Firestore + JWT) & Backend & 5 & Alta \\
+13 & APIs REST para gestão de pontos e sintomas & Backend & 6 & Alta \\
 \hline
-14 & APIs REST para gestão de pontos e sintomas & Backend & 6 & Alta \\
+14 & Ferramenta Point Mapper para coordenadas & Web & 3 & Média \\
 \hline
-15 & Ferramenta Point Mapper para coordenadas & Web & 3 & Média \\
+15 & Controle de acesso por perfil (user/admin) & Backend & 3 & Alta \\
 \hline
-16 & Controle de acesso por perfil (user/admin) & Backend & 3 & Alta \\
-\hline
-17 & Deploy e testes finais (Web Mobile) & Todas & 5 & Média \\
+16 & Deploy e testes finais (Web Mobile) & Todas & 5 & Média \\
 \hline
 \end{tabular}
 \fonte{Os autores (2025)}
@@ -188,7 +191,7 @@ Tela do corpo humano com hotspots interativos (SVG) & 14 \\
 \hline
 Tela de detalhes de um ponto & 6 \\
 \hline
-Funcionalidade de favoritos e anotações & 6 \\
+Funcionalidade de favoritos & 6 \\
 \hline
 Backend com autenticação e CRUD de pontos/sintomas & 8 \\
 \hline
@@ -237,7 +240,7 @@ Sprint 4 & 6--7 & 10 & Tela de resultados com imagens + início da tela de detal
 \hline
 Sprint 5 & 8--9 & 10 & Tela de corpo humano com SVG interativo \\
 \hline
-Sprint 6 & 10--11 & 10 & Favoritos, anotações, sincronização offline e online \\
+Sprint 6 & 10--11 & 10 & Favoritos, sincronização offline e online \\
 \hline
 Sprint 7 & 12--13 & 12 & Backend completo + ferramenta Point Mapper \\
 \hline
