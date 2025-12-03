@@ -1,414 +1,497 @@
-<!-- chatbot.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Appunture - Chatbot</title>
-    <link rel="stylesheet" href="../style.css" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Appunture - Assistente</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <style>
-      /* Minimal Design Overrides */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary: #007aff;
+        --secondary: #5856d6;
+        --background: #f8f9fa;
+        --surface: #ffffff;
+        --text: #000000;
+        --text-secondary: #666666;
+        --border: #e1e5e9;
+      }
+
       body {
-        background-color: #fafafa;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           sans-serif;
+        background: var(--background);
+        min-height: 100vh;
       }
 
       .container {
-        max-width: 1000px;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        max-width: 400px;
         margin: 0 auto;
+        width: 100%;
       }
 
-      .title {
-        font-size: 2.5rem;
-        font-weight: 300;
-        color: #1a1a1a;
-        text-align: center;
-        margin-bottom: 1rem;
-        letter-spacing: -0.02em;
-      }
-
-      .text-muted {
-        color: #6b7280;
-        text-align: center;
-        max-width: 600px;
-        margin: 0 auto 2rem;
-      }
-
-      .card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        border: 1px solid #e5e7eb;
-        transition: all 0.2s ease;
-      }
-
-      .chat-container {
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        background: white;
+      .header {
+        background: var(--surface);
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border);
         display: flex;
-        flex-direction: column;
-        height: 65vh;
-        min-height: 500px;
-        max-height: 700px;
-        overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-
-      .chat-messages {
-        flex: 1;
-        overflow-y: auto;
-        padding: 1.5rem;
-        background: #fafafa;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .chat-input {
-        padding: 1.25rem;
-        border-top: 1px solid #e5e7eb;
-        background: white;
-        border-radius: 0 0 12px 12px;
-      }
-
-      .input-container {
-        display: flex;
-        gap: 0.75rem;
         align-items: center;
+        gap: 12px;
+      }
+
+      .header-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+      }
+
+      .header-info {
+        flex: 1;
+      }
+
+      .header-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .header-status {
+        font-size: 13px;
+        color: #34c759;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .header-status i {
+        font-size: 8px;
+      }
+
+      .messages-container {
+        flex: 1;
+        padding: 16px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding-bottom: 80px;
       }
 
       .message {
-        padding: 0.875rem 1.25rem;
-        border-radius: 12px;
-        max-width: 75%;
-        animation: fadeIn 0.3s ease;
+        max-width: 85%;
+        padding: 12px 16px;
+        border-radius: 18px;
+        font-size: 15px;
         line-height: 1.5;
       }
 
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .chat-message {
-        display: flex;
-        margin-bottom: 0;
-      }
-
-      .chat-message.user {
-        justify-content: flex-end;
-      }
-
-      .chat-message.bot {
-        justify-content: flex-start;
+      .message.bot {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-bottom-left-radius: 4px;
+        align-self: flex-start;
       }
 
       .message.user {
-        background: linear-gradient(135deg, #007aff, #5856d6);
+        background: var(--primary);
         color: white;
-        margin-left: auto;
-        text-align: right;
+        border-bottom-right-radius: 4px;
+        align-self: flex-end;
       }
 
-      .message.bot {
-        background: white;
-        border: 1px solid #e5e7eb;
-        color: #1a1a1a;
+      .message-time {
+        font-size: 11px;
+        margin-top: 6px;
+        opacity: 0.7;
       }
 
-      .input-container input {
-        flex: 1;
-        padding: 0.875rem 1rem;
-        border: 1px solid #d4d4d4;
-        border-radius: 8px;
-        background: white;
-        transition: all 0.2s ease;
+      .typing-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        border-bottom-left-radius: 4px;
+        align-self: flex-start;
+        max-width: 100px;
       }
 
-      .input-container input:focus {
-        outline: none;
-        border-color: #007aff;
-        box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+      .typing-dots {
+        display: flex;
+        gap: 4px;
       }
 
-      .btn {
-        background: linear-gradient(135deg, #007aff, #5856d6);
-        color: white;
-        border: none;
-        padding: 0.875rem 1.5rem;
-        border-radius: 8px;
-        font-weight: 600;
+      .typing-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--text-secondary);
+        border-radius: 50%;
+        animation: typing 1.4s infinite ease-in-out;
+      }
+
+      .typing-dot:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      .typing-dot:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes typing {
+        0%,
+        60%,
+        100% {
+          transform: translateY(0);
+        }
+        30% {
+          transform: translateY(-6px);
+        }
+      }
+
+      .point-card-inline {
+        background: rgba(0, 122, 255, 0.1);
+        border-radius: 10px;
+        padding: 10px 12px;
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
         cursor: pointer;
-        transition: all 0.2s ease;
       }
 
-      .btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+      .point-card-inline:hover {
+        background: rgba(0, 122, 255, 0.15);
       }
 
-      /* Mobile Responsive */
-      @media (max-width: 768px) {
-        .title {
-          font-size: 2rem;
+      .point-inline-code {
+        font-weight: 700;
+        color: var(--primary);
+        font-size: 14px;
+      }
+
+      .point-inline-name {
+        color: var(--text);
+        font-size: 14px;
+      }
+
+      .input-container {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 400px;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        padding: 12px 16px;
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+      }
+
+      .input-wrapper {
+        flex: 1;
+        background: var(--background);
+        border-radius: 24px;
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+      }
+
+      .input-wrapper textarea {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 15px;
+        background: transparent;
+        color: var(--text);
+        resize: none;
+        max-height: 100px;
+        font-family: inherit;
+      }
+
+      .input-wrapper textarea::placeholder {
+        color: var(--text-secondary);
+      }
+
+      .send-btn {
+        width: 44px;
+        height: 44px;
+        background: var(--primary);
+        border: none;
+        border-radius: 50%;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 18px;
+        transition: transform 0.1s, opacity 0.2s;
+      }
+
+      .send-btn:active {
+        transform: scale(0.95);
+      }
+
+      .send-btn:disabled {
+        background: var(--border);
+        cursor: not-allowed;
+      }
+
+      .suggestions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 8px 16px;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+      }
+
+      .suggestion-chip {
+        background: var(--background);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 8px 14px;
+        font-size: 13px;
+        color: var(--text);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .suggestion-chip:hover {
+        background: rgba(0, 122, 255, 0.1);
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+
+      /* Mobile Phone Frame */
+      @media (min-width: 500px) {
+        body {
+          background: #1a1a2e;
+          padding: 20px;
+          display: flex;
+          justify-content: center;
         }
 
-        .chat-container {
-          height: 60vh;
-          min-height: 400px;
-          max-height: 500px;
+        .phone-frame {
+          max-width: 375px;
+          width: 100%;
+          background: var(--background);
+          border-radius: 40px;
+          overflow: hidden;
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+          position: relative;
         }
 
-        .chat-messages {
-          padding: 1rem;
-          gap: 0.75rem;
+        .phone-frame::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 150px;
+          height: 30px;
+          background: #000;
+          border-radius: 0 0 20px 20px;
+          z-index: 10;
         }
 
-        .message {
-          max-width: 85%;
-          padding: 0.75rem 1rem;
+        .container {
+          padding-top: 30px;
+          min-height: 750px;
+          max-height: 850px;
         }
 
         .input-container {
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-
-        .input-container input,
-        .btn {
-          width: 100%;
+          position: absolute;
+          left: 0;
+          transform: none;
+          max-width: none;
         }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <header class="header">
-        <div class="logo">Appunture</div>
-        <nav class="nav-links">
-          <a href="userHome.html">Home</a>
-          <a href="userBodyMap.html">Mapa</a>
-          <a href="userAllPoints.html">Todos os Pontos</a>
-          <a href="userSearch.html">Buscar Sintomas</a>
-          <a href="userFavorites.html">Favoritos</a>
-        </nav>
-        <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </header>
-
-      <!-- Mobile Navigation -->
-      <div class="mobile-nav" id="mobileNav" onclick="closeMobileMenu(event)">
-        <div class="mobile-nav-content">
-          <div class="mobile-nav-header">
-            <div class="logo">Appunture</div>
-            <div class="mobile-nav-close" onclick="closeMobileMenu()">
-              &times;
+    <div class="phone-frame">
+      <div class="container">
+        <div class="header">
+          <div class="header-icon">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div class="header-info">
+            <h1 class="header-title">Assistente IA</h1>
+            <div class="header-status">
+              <i class="fas fa-circle"></i>
+              Online • Powered by Gemini
             </div>
           </div>
-          <nav class="mobile-nav-links">
-            <a href="userHome.html" onclick="closeMobileMenu()">Home</a>
-            <a href="userBodyMap.html" onclick="closeMobileMenu()">Mapa</a>
-            <a href="userSearch.html" onclick="closeMobileMenu()"
-              >Buscar Sintomas</a
+        </div>
+
+        <div class="messages-container">
+          <!-- Bot Welcome Message -->
+          <div class="message bot">
+            <p>
+              Olá! 👋 Sou seu assistente de acupuntura. Como posso ajudá-lo
+              hoje?
+            </p>
+            <p style="margin-top: 8px">
+              Você pode me contar sobre seus sintomas ou fazer perguntas sobre
+              pontos de acupuntura.
+            </p>
+            <div class="message-time">10:30</div>
+          </div>
+
+          <!-- User Message -->
+          <div class="message user">
+            <p>
+              Estou com dor de cabeça frequente e tensão no pescoço. Quais
+              pontos podem ajudar?
+            </p>
+            <div class="message-time">10:32</div>
+          </div>
+
+          <!-- Bot Response -->
+          <div class="message bot">
+            <p>
+              Para <strong>dor de cabeça</strong> e
+              <strong>tensão no pescoço</strong>, recomendo os seguintes pontos:
+            </p>
+
+            <div
+              class="point-card-inline"
+              onclick="location.href='userPointsDetails.html'"
             >
-            <a href="userAllPoints.html" onclick="closeMobileMenu()"
-              >Todos os Pontos</a
+              <span class="point-inline-code">LI4</span>
+              <span class="point-inline-name">Hegu - Analgesia geral</span>
+              <i
+                class="fas fa-chevron-right"
+                style="color: var(--text-secondary); font-size: 12px"
+              ></i>
+            </div>
+
+            <div
+              class="point-card-inline"
+              onclick="location.href='userPointsDetails.html'"
             >
-            <a href="userFavorites.html" onclick="closeMobileMenu()"
-              >Favoritos</a
+              <span class="point-inline-code">GB20</span>
+              <span class="point-inline-name">Fengchi - Rigidez cervical</span>
+              <i
+                class="fas fa-chevron-right"
+                style="color: var(--text-secondary); font-size: 12px"
+              ></i>
+            </div>
+
+            <div
+              class="point-card-inline"
+              onclick="location.href='userPointsDetails.html'"
             >
-            <a href="userChatBot.html" onclick="closeMobileMenu()">Chatbot</a>
-            <a href="userLogin.html" onclick="closeMobileMenu()">Login</a>
-          </nav>
+              <span class="point-inline-code">GV20</span>
+              <span class="point-inline-name">Baihui - Cefaleia vertex</span>
+              <i
+                class="fas fa-chevron-right"
+                style="color: var(--text-secondary); font-size: 12px"
+              ></i>
+            </div>
+
+            <p style="margin-top: 12px">
+              💡 <strong>Dica:</strong> A combinação de LI4 com GB20 é muito
+              eficaz para cefaleias tensionais. Aplique pressão por 1-2 minutos
+              em cada ponto.
+            </p>
+
+            <div class="message-time">10:33</div>
+          </div>
+
+          <!-- User Follow-up -->
+          <div class="message user">
+            <p>Onde fica exatamente o ponto GB20?</p>
+            <div class="message-time">10:34</div>
+          </div>
+
+          <!-- Bot Response with Location -->
+          <div class="message bot">
+            <p>
+              O ponto <strong>GB20 (Fengchi)</strong> está localizado na base do
+              crânio:
+            </p>
+
+            <p style="margin-top: 8px">
+              📍 <strong>Localização:</strong> Na depressão entre os músculos
+              esternocleidomastoideo e trapézio, abaixo do osso occipital.
+            </p>
+
+            <p style="margin-top: 8px">
+              🔍 <strong>Como encontrar:</strong> Deslize os dedos pela nuca até
+              encontrar duas depressões dos lados da coluna, logo abaixo do
+              crânio.
+            </p>
+
+            <p style="margin-top: 8px">Quer que eu mostre no mapa corporal?</p>
+
+            <div class="message-time">10:34</div>
+          </div>
+        </div>
+
+        <div class="input-container">
+          <div class="input-wrapper">
+            <textarea
+              rows="1"
+              placeholder="Digite sua mensagem..."
+              id="messageInput"
+            ></textarea>
+          </div>
+          <button class="send-btn" onclick="sendMessage()">
+            <i class="fas fa-paper-plane"></i>
+          </button>
         </div>
       </div>
-      <main>
-        <h1 class="title">Assistente de Acupuntura</h1>
-        <p class="text-muted" style="margin-bottom: 2rem; font-size: 1.1rem">
-          Converse com nosso assistente inteligente para obter recomendações
-          personalizadas de pontos de acupuntura.
-        </p>
-
-        <div class="chat-container">
-          <div class="chat-messages" id="chatMessages">
-            <!-- Mensagem de boas-vindas -->
-            <div class="chat-message bot">
-              <div class="message">
-                Olá! 👋 Sou seu assistente de acupuntura. Descreva seus sintomas
-                ou desconfortos e eu recomendarei os melhores pontos para seu
-                tratamento.
-              </div>
-            </div>
-
-            <!-- Exemplo de conversa -->
-            <div class="chat-message user">
-              <div class="message">Tenho dor lombar e insônia.</div>
-            </div>
-            <div class="chat-message bot">
-              <div class="message">
-                Com base nos seus sintomas, recomendo os seguintes pontos:<br /><br />
-                🎯 <strong>B23 – Shenshu:</strong> Excelente para lombalgia e
-                fortalecimento dos rins.<br />
-                🎯 <strong>VG20 – Baihui:</strong> Auxilia na insônia e promove
-                equilíbrio mental.<br />
-                🎯 <strong>IG4 – Hegu:</strong> Ponto complementar para
-                relaxamento geral.<br /><br />
-                Gostaria de mais detalhes sobre algum destes pontos?
-              </div>
-            </div>
-          </div>
-          <div class="chat-input">
-            <div class="input-container">
-              <input
-                type="text"
-                id="chatInput"
-                placeholder="Digite seus sintomas ou dúvidas..."
-                onkeypress="handleKeyPress(event)"
-              />
-              <button class="btn" onclick="sendMessage()">Enviar</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Sugestões rápidas -->
-        <div style="margin-top: 2rem">
-          <h3 class="subtitle">Sugestões Rápidas</h3>
-          <div class="grid-4">
-            <button
-              class="btn btn-outline btn-sm"
-              onclick="quickMessage('Dor de cabeça')"
-            >
-              Dor de cabeça
-            </button>
-            <button
-              class="btn btn-outline btn-sm"
-              onclick="quickMessage('Ansiedade')"
-            >
-              Ansiedade
-            </button>
-            <button
-              class="btn btn-outline btn-sm"
-              onclick="quickMessage('Dor nas costas')"
-            >
-              Dor nas costas
-            </button>
-            <button
-              class="btn btn-outline btn-sm"
-              onclick="quickMessage('Insônia')"
-            >
-              Insônia
-            </button>
-          </div>
-        </div>
-      </main>
-      <footer class="footer">
-        © 2025 Appunture. Todos os direitos reservados.
-      </footer>
     </div>
-    <script src="../mobile-menu.js"></script>
+
     <script>
+      const textarea = document.getElementById("messageInput");
+
+      textarea.addEventListener("input", function () {
+        this.style.height = "auto";
+        this.style.height = Math.min(this.scrollHeight, 100) + "px";
+      });
+
       function sendMessage() {
-        const input = document.getElementById("chatInput");
-        const message = input.value.trim();
-
+        const message = textarea.value.trim();
         if (message) {
-          addMessage(message, "user");
-          input.value = "";
-
-          // Simular resposta do bot após um pequeno delay
-          setTimeout(() => {
-            const botResponse = generateBotResponse(message);
-            addMessage(botResponse, "bot");
-          }, 1000);
+          alert("Mensagem enviada: " + message);
+          textarea.value = "";
+          textarea.style.height = "auto";
         }
       }
 
-      function addMessage(text, sender) {
-        const chatMessages = document.getElementById("chatMessages");
-        const messageDiv = document.createElement("div");
-        messageDiv.className = `chat-message ${sender}`;
-
-        const messageContent = document.createElement("div");
-        messageContent.className = "message";
-        messageContent.innerHTML = text;
-
-        messageDiv.appendChild(messageContent);
-        chatMessages.appendChild(messageDiv);
-
-        // Scroll para a última mensagem
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
-
-      function generateBotResponse(userMessage) {
-        const message = userMessage.toLowerCase();
-
-        // Respostas baseadas em palavras-chave (simulação simples)
-        if (message.includes("dor de cabeça") || message.includes("cefaleia")) {
-          return `Para dor de cabeça, recomendo:<br /><br />
-            🎯 <strong>IG4 – Hegu:</strong> Ponto principal para cefaleia.<br />
-            🎯 <strong>VG20 – Baihui:</strong> Auxilia no alívio da tensão.<br />
-            🎯 <strong>Yintang:</strong> Ponto extra para relaxamento.<br /><br />
-            <a href="userPointsDetails.html?point=IG4" style="color: var(--primary-blue);">Ver detalhes do IG4</a>`;
-        }
-
-        if (message.includes("ansiedade") || message.includes("estresse")) {
-          return `Para ansiedade e estresse:<br /><br />
-            🎯 <strong>Shenmen (C7):</strong> Acalma a mente.<br />
-            🎯 <strong>VG20 – Baihui:</strong> Promove equilíbrio mental.<br />
-            🎯 <strong>Yintang:</strong> Reduz ansiedade.<br /><br />
-            Lembre-se: sempre consulte um profissional qualificado.`;
-        }
-
-        if (message.includes("dor nas costas") || message.includes("lombar")) {
-          return `Para dor lombar:<br /><br />
-            🎯 <strong>B23 – Shenshu:</strong> Principal ponto para lombalgia.<br />
-            🎯 <strong>B40 – Weizhong:</strong> Complementar para região lombar.<br />
-            🎯 <strong>IG4 – Hegu:</strong> Para alívio geral da dor.<br /><br />
-            <a href="userPointsDetails.html?point=B23" style="color: var(--primary-blue);">Ver detalhes do B23</a>`;
-        }
-
-        if (message.includes("insônia") || message.includes("sono")) {
-          return `Para problemas de sono:<br /><br />
-            🎯 <strong>VG20 – Baihui:</strong> Promove relaxamento.<br />
-            🎯 <strong>Shenmen (C7):</strong> Acalma a mente.<br />
-            🎯 <strong>Yintang:</strong> Auxilia no sono reparador.<br /><br />
-            Dica: pratique estes pontos 30min antes de dormir.`;
-        }
-
-        // Resposta padrão
-        return `Obrigado pela sua mensagem! Para uma avaliação mais específica dos seus sintomas "${userMessage}", recomendo:<br /><br />
-          🔍 <a href="userSearch.html" style="color: var(--primary-blue);">Use nossa busca por sintomas</a><br />
-          🗺️ <a href="userBodyMap.html" style="color: var(--primary-blue);">Explore o mapa corporal interativo</a><br />
-          📋 <a href="userAllPoints.html" style="color: var(--primary-blue);">Veja todos os pontos disponíveis</a><br /><br />
-          Lembre-se: sempre procure um acupunturista qualificado para tratamento adequado.`;
-      }
-
-      function quickMessage(symptom) {
-        document.getElementById("chatInput").value = symptom;
-        sendMessage();
-      }
-
-      function handleKeyPress(event) {
-        if (event.key === "Enter") {
+      textarea.addEventListener("keypress", function (e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
           sendMessage();
         }
-      }
-
-      // Auto-scroll inicial
-      document.addEventListener("DOMContentLoaded", function () {
-        const chatMessages = document.getElementById("chatMessages");
-        chatMessages.scrollTop = chatMessages.scrollHeight;
       });
     </script>
   </body>

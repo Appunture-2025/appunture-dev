@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=430, initial-scale=1.0" />
+    <title>Appunture - Detalhes do Ponto</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        background-color: #e5e5e5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .phone-frame {
+        width: 430px;
+        height: 932px;
+        background-color: #f8f9fa;
+        border-radius: 40px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        position: relative;
+      }
+
+      .status-bar {
+        height: 54px;
+        background-color: #f8f9fa;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 30px;
+      }
+
+      .time {
+        font-size: 17px;
+        font-weight: 600;
+        color: #000;
+      }
+
+      .status-icons {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+
+      .status-icons svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .nav-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 16px;
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e1e5e9;
+      }
+
+      .back-button {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: #007aff;
+        font-size: 17px;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      .nav-title {
+        font-size: 17px;
+        font-weight: 600;
+        color: #000;
+      }
+
+      .favorite-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 24px;
+      }
+
+      .screen-content {
+        height: calc(100% - 54px - 52px);
+        overflow-y: auto;
+      }
+
+      .image-gallery {
+        width: 100%;
+        height: 280px;
+        background-color: #f0f4f8;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .gallery-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        background: linear-gradient(135deg, #e8f4fd 0%, #d1e8fa 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #007aff;
+        font-size: 48px;
+      }
+
+      .gallery-dots {
+        position: absolute;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 6px;
+      }
+
+      .gallery-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 4px;
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+
+      .gallery-dot.active {
+        background-color: #fff;
+        width: 20px;
+      }
+
+      .content-section {
+        padding: 20px 16px;
+      }
+
+      .point-header {
+        margin-bottom: 20px;
+      }
+
+      .point-code {
+        background-color: #007aff;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 8px;
+        display: inline-block;
+        margin-bottom: 8px;
+      }
+
+      .point-name {
+        font-size: 28px;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 4px;
+      }
+
+      .point-chinese {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 8px;
+      }
+
+      .point-translation {
+        font-size: 14px;
+        color: #888;
+        font-style: italic;
+      }
+
+      .section {
+        margin-bottom: 24px;
+      }
+
+      .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #000;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .section-icon {
+        font-size: 20px;
+      }
+
+      .info-card {
+        background-color: #fff;
+        border-radius: 12px;
+        padding: 16px;
+        border: 1px solid #e1e5e9;
+      }
+
+      .info-row {
+        display: flex;
+        margin-bottom: 12px;
+      }
+
+      .info-row:last-child {
+        margin-bottom: 0;
+      }
+
+      .info-label {
+        font-size: 14px;
+        color: #666;
+        width: 100px;
+        flex-shrink: 0;
+      }
+
+      .info-value {
+        font-size: 14px;
+        color: #000;
+        flex: 1;
+      }
+
+      .description-text {
+        font-size: 15px;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .indications-list {
+        list-style: none;
+      }
+
+      .indication-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .indication-item:last-child {
+        border-bottom: none;
+      }
+
+      .indication-bullet {
+        width: 8px;
+        height: 8px;
+        background-color: #007aff;
+        border-radius: 50%;
+        margin-top: 6px;
+        flex-shrink: 0;
+      }
+
+      .indication-text {
+        font-size: 14px;
+        color: #333;
+        line-height: 1.5;
+      }
+
+      .techniques-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .technique-tag {
+        background-color: #f0f4f8;
+        color: #007aff;
+        font-size: 13px;
+        font-weight: 500;
+        padding: 10px 12px;
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      .alert-box {
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        gap: 12px;
+      }
+
+      .alert-icon {
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+
+      .alert-content {
+        flex: 1;
+      }
+
+      .alert-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #856404;
+        margin-bottom: 4px;
+      }
+
+      .alert-text {
+        font-size: 13px;
+        color: #856404;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone-frame">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 3C7.46 3 3.34 4.78.29 7.67c-.18.18-.29.43-.29.71 0 .28.11.53.29.71l2.48 2.48c.18.18.43.29.71.29.27 0 .52-.11.7-.28.79-.74 1.69-1.36 2.66-1.85.33-.16.56-.5.56-.9v-3.1c1.45-.48 3-.73 4.6-.73s3.15.25 4.6.72v3.1c0 .39.23.74.56.9.98.49 1.87 1.12 2.67 1.85.18.18.43.28.7.28.28 0 .53-.11.71-.29l2.48-2.48c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71C20.66 4.78 16.54 3 12 3z"
+            />
+          </svg>
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2 22h20V2z" />
+          </svg>
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <rect
+              x="2"
+              y="6"
+              width="18"
+              height="12"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="2"
+              fill="none"
+            />
+            <rect
+              x="20"
+              y="9"
+              width="2"
+              height="6"
+              rx="1"
+              fill="currentColor"
+            />
+            <rect
+              x="4"
+              y="8"
+              width="12"
+              height="8"
+              rx="1"
+              fill="currentColor"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <div class="nav-header">
+        <button class="back-button">‹ Voltar</button>
+        <span class="nav-title">Detalhes do Ponto</span>
+        <button class="favorite-button">❤️</button>
+      </div>
+
+      <div class="screen-content">
+        <div class="image-gallery">
+          <div class="gallery-image">📍</div>
+          <div class="gallery-dots">
+            <div class="gallery-dot active"></div>
+            <div class="gallery-dot"></div>
+            <div class="gallery-dot"></div>
+          </div>
+        </div>
+
+        <div class="content-section">
+          <div class="point-header">
+            <span class="point-code">LI4</span>
+            <h1 class="point-name">Hegu</h1>
+            <div class="point-chinese">合谷</div>
+            <div class="point-translation">"Vale da União"</div>
+          </div>
+
+          <div class="section">
+            <h2 class="section-title">
+              <span class="section-icon">📍</span>
+              Localização Anatômica
+            </h2>
+            <div class="info-card">
+              <div class="info-row">
+                <span class="info-label">Região:</span>
+                <span class="info-value">Mão, dorso</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Posição:</span>
+                <span class="info-value"
+                  >Entre o 1º e 2º metacarpos, no ponto mais alto do músculo
+                  quando o polegar e o indicador estão juntos</span
+                >
+              </div>
+              <div class="info-row">
+                <span class="info-label">Profundidade:</span>
+                <span class="info-value">0.5 - 1.0 cun</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2 class="section-title">
+              <span class="section-icon">🔮</span>
+              Meridiano
+            </h2>
+            <div class="info-card">
+              <div class="info-row">
+                <span class="info-label">Meridiano:</span>
+                <span class="info-value"
+                  >Intestino Grosso (Large Intestine)</span
+                >
+              </div>
+              <div class="info-row">
+                <span class="info-label">Elemento:</span>
+                <span class="info-value">Metal</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Ponto Nº:</span>
+                <span class="info-value">4 de 20</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Tipo:</span>
+                <span class="info-value">Ponto Yuan (Fonte)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2 class="section-title">
+              <span class="section-icon">⚡</span>
+              Função Energética
+            </h2>
+            <div class="info-card">
+              <p class="description-text">
+                Dispersa o Vento-Calor, libera o exterior, regula o Qi do
+                Pulmão, alivia a dor, restaura a consciência. É considerado o
+                "Grande Eliminador" e um dos pontos mais importantes da
+                acupuntura para analgesia.
+              </p>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2 class="section-title">
+              <span class="section-icon">✅</span>
+              Indicações Clínicas
+            </h2>
+            <div class="info-card">
+              <ul class="indications-list">
+                <li class="indication-item">
+                  <div class="indication-bullet"></div>
+                  <span class="indication-text">Cefaleia e enxaqueca</span>
+                </li>
+                <li class="indication-item">
+                  <div class="indication-bullet"></div>
+                  <span class="indication-text"
+                    >Dor de dente e problemas na mandíbula</span
+                  >
+                </li>
+                <li class="indication-item">
+                  <div class="indication-bullet"></div>
+                  <span class="indication-text"
+                    >Congestão nasal e sinusite</span
+                  >
+                </li>
+                <li class="indication-item">
+                  <div class="indication-bullet"></div>
+                  <span class="indication-text"
+                    >Dor de garganta e amigdalite</span
+                  >
+                </li>
+                <li class="indication-item">
+                  <div class="indication-bullet"></div>
+                  <span class="indication-text">Febre e resfriado comum</span>
+                </li>
+                <li class="indication-item">
+                  <div class="indication-bullet"></div>
+                  <span class="indication-text"
+                    >Dor e rigidez no pescoço e ombro</span
+                  >
+                </li>
+                <li class="indication-item">
+                  <div class="indication-bullet"></div>
+                  <span class="indication-text">Paralisia facial</span>
+                </li>
+                <li class="indication-item">
+                  <div class="indication-bullet"></div>
+                  <span class="indication-text">Ansiedade e estresse</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2 class="section-title">
+              <span class="section-icon">🔧</span>
+              Técnicas Aplicáveis
+            </h2>
+            <div class="techniques-grid">
+              <div class="technique-tag">Agulha fina</div>
+              <div class="technique-tag">Moxabustão</div>
+              <div class="technique-tag">Eletroacupuntura</div>
+              <div class="technique-tag">Acupressão</div>
+              <div class="technique-tag">Ventosa</div>
+              <div class="technique-tag">Laser</div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2 class="section-title">
+              <span class="section-icon">⚠️</span>
+              Precauções
+            </h2>
+            <div class="alert-box">
+              <span class="alert-icon">⚠️</span>
+              <div class="alert-content">
+                <div class="alert-title">Contraindicado na gravidez</div>
+                <div class="alert-text">
+                  Este ponto é contraindicado em mulheres grávidas,
+                  especialmente durante os primeiros meses de gestação, pois
+                  pode estimular contrações uterinas.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=430, initial-scale=1.0" />
+    <title>Appunture - Meridianos</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        background-color: #e5e5e5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .phone-frame {
+        width: 430px;
+        height: 932px;
+        background-color: #f8f9fa;
+        border-radius: 40px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        position: relative;
+      }
+
+      .status-bar {
+        height: 54px;
+        background-color: #f8f9fa;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 30px;
+      }
+
+      .time {
+        font-size: 17px;
+        font-weight: 600;
+        color: #000;
+      }
+
+      .status-icons {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+
+      .status-icons svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .screen-content {
+        height: calc(100% - 54px - 83px);
+        overflow-y: auto;
+        padding: 0 16px;
+      }
+
+      .header {
+        padding: 16px 0;
+      }
+
+      .header-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 4px;
+      }
+
+      .header-subtitle {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .meridians-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        padding-bottom: 16px;
+      }
+
+      .meridian-card {
+        border-radius: 16px;
+        padding: 16px;
+        position: relative;
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+      }
+
+      .meridian-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .abbreviation {
+        font-size: 20px;
+        font-weight: 700;
+        color: #000;
+      }
+
+      .point-count {
+        background-color: #007aff;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 10px;
+      }
+
+      .chevron {
+        color: #666;
+        font-size: 20px;
+      }
+
+      .meridian-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #000;
+        margin-bottom: 2px;
+      }
+
+      .chinese-name {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 10px;
+      }
+
+      .details-row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .detail-icon {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .detail-text {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .organ-text {
+        font-size: 12px;
+        color: #333;
+        font-weight: 500;
+      }
+
+      /* Cores específicas dos meridianos */
+      .lung {
+        background-color: #e3f2fd;
+      }
+      .large-intestine {
+        background-color: #fff3e0;
+      }
+      .stomach {
+        background-color: #fffde7;
+      }
+      .spleen {
+        background-color: #fff8e1;
+      }
+      .heart {
+        background-color: #ffebee;
+      }
+      .small-intestine {
+        background-color: #fce4ec;
+      }
+      .bladder {
+        background-color: #e8f5e9;
+      }
+      .kidney {
+        background-color: #e0f2f1;
+      }
+      .pericardium {
+        background-color: #f3e5f5;
+      }
+      .triple-energizer {
+        background-color: #ede7f6;
+      }
+      .gallbladder {
+        background-color: #e8eaf6;
+      }
+      .liver {
+        background-color: #e1f5fe;
+      }
+
+      .bottom-nav {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 83px;
+        background-color: #ffffff;
+        border-top: 1px solid #e1e5e9;
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        padding-top: 8px;
+      }
+
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        text-decoration: none;
+      }
+
+      .nav-icon {
+        font-size: 24px;
+        color: #666;
+      }
+
+      .nav-icon.active {
+        color: #007aff;
+      }
+
+      .nav-label {
+        font-size: 10px;
+        color: #666;
+      }
+
+      .nav-label.active {
+        color: #007aff;
+      }
+
+      .home-indicator {
+        position: absolute;
+        bottom: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 134px;
+        height: 5px;
+        background-color: #000;
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone-frame">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 3C7.46 3 3.34 4.78.29 7.67c-.18.18-.29.43-.29.71 0 .28.11.53.29.71l2.48 2.48c.18.18.43.29.71.29.27 0 .52-.11.7-.28.79-.74 1.69-1.36 2.66-1.85.33-.16.56-.5.56-.9v-3.1c1.45-.48 3-.73 4.6-.73s3.15.25 4.6.72v3.1c0 .39.23.74.56.9.98.49 1.87 1.12 2.67 1.85.18.18.43.28.7.28.28 0 .53-.11.71-.29l2.48-2.48c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71C20.66 4.78 16.54 3 12 3z"
+            />
+          </svg>
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2 22h20V2z" />
+          </svg>
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <rect
+              x="2"
+              y="6"
+              width="18"
+              height="12"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="2"
+              fill="none"
+            />
+            <rect
+              x="20"
+              y="9"
+              width="2"
+              height="6"
+              rx="1"
+              fill="currentColor"
+            />
+            <rect
+              x="4"
+              y="8"
+              width="12"
+              height="8"
+              rx="1"
+              fill="currentColor"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <div class="screen-content">
+        <div class="header">
+          <h1 class="header-title">Meridianos</h1>
+          <p class="header-subtitle">
+            12 meridianos principais da medicina tradicional chinesa
+          </p>
+        </div>
+
+        <div class="meridians-grid">
+          <!-- Pulmão -->
+          <div class="meridian-card lung">
+            <div class="card-header">
+              <div class="meridian-info">
+                <span class="abbreviation">LU</span>
+                <span class="point-count">11</span>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="meridian-name">Pulmão</div>
+            <div class="chinese-name">手太阴肺经</div>
+            <div class="details-row">
+              <div class="detail-item">
+                <span class="detail-icon">💧</span>
+                <span class="detail-text">Metal</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-icon">⏰</span>
+                <span class="detail-text">03-05h</span>
+              </div>
+            </div>
+            <div class="organ-text">Sistema Respiratório</div>
+          </div>
+
+          <!-- Intestino Grosso -->
+          <div class="meridian-card large-intestine">
+            <div class="card-header">
+              <div class="meridian-info">
+                <span class="abbreviation">LI</span>
+                <span class="point-count">20</span>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="meridian-name">Intestino Grosso</div>
+            <div class="chinese-name">手阳明大肠经</div>
+            <div class="details-row">
+              <div class="detail-item">
+                <span class="detail-icon">💧</span>
+                <span class="detail-text">Metal</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-icon">⏰</span>
+                <span class="detail-text">05-07h</span>
+              </div>
+            </div>
+            <div class="organ-text">Sistema Digestivo</div>
+          </div>
+
+          <!-- Estômago -->
+          <div class="meridian-card stomach">
+            <div class="card-header">
+              <div class="meridian-info">
+                <span class="abbreviation">ST</span>
+                <span class="point-count">45</span>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="meridian-name">Estômago</div>
+            <div class="chinese-name">足阳明胃经</div>
+            <div class="details-row">
+              <div class="detail-item">
+                <span class="detail-icon">💧</span>
+                <span class="detail-text">Terra</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-icon">⏰</span>
+                <span class="detail-text">07-09h</span>
+              </div>
+            </div>
+            <div class="organ-text">Sistema Digestivo</div>
+          </div>
+
+          <!-- Baço-Pâncreas -->
+          <div class="meridian-card spleen">
+            <div class="card-header">
+              <div class="meridian-info">
+                <span class="abbreviation">SP</span>
+                <span class="point-count">21</span>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="meridian-name">Baço-Pâncreas</div>
+            <div class="chinese-name">足太阴脾经</div>
+            <div class="details-row">
+              <div class="detail-item">
+                <span class="detail-icon">💧</span>
+                <span class="detail-text">Terra</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-icon">⏰</span>
+                <span class="detail-text">09-11h</span>
+              </div>
+            </div>
+            <div class="organ-text">Sistema Imunológico</div>
+          </div>
+
+          <!-- Coração -->
+          <div class="meridian-card heart">
+            <div class="card-header">
+              <div class="meridian-info">
+                <span class="abbreviation">HT</span>
+                <span class="point-count">9</span>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="meridian-name">Coração</div>
+            <div class="chinese-name">手少阴心经</div>
+            <div class="details-row">
+              <div class="detail-item">
+                <span class="detail-icon">💧</span>
+                <span class="detail-text">Fogo</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-icon">⏰</span>
+                <span class="detail-text">11-13h</span>
+              </div>
+            </div>
+            <div class="organ-text">Sistema Cardiovascular</div>
+          </div>
+
+          <!-- Intestino Delgado -->
+          <div class="meridian-card small-intestine">
+            <div class="card-header">
+              <div class="meridian-info">
+                <span class="abbreviation">SI</span>
+                <span class="point-count">19</span>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="meridian-name">Intestino Delgado</div>
+            <div class="chinese-name">手太阳小肠经</div>
+            <div class="details-row">
+              <div class="detail-item">
+                <span class="detail-icon">💧</span>
+                <span class="detail-text">Fogo</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-icon">⏰</span>
+                <span class="detail-text">13-15h</span>
+              </div>
+            </div>
+            <div class="organ-text">Sistema Digestivo</div>
+          </div>
+
+          <!-- Bexiga -->
+          <div class="meridian-card bladder">
+            <div class="card-header">
+              <div class="meridian-info">
+                <span class="abbreviation">BL</span>
+                <span class="point-count">67</span>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="meridian-name">Bexiga</div>
+            <div class="chinese-name">足太阳膀胱经</div>
+            <div class="details-row">
+              <div class="detail-item">
+                <span class="detail-icon">💧</span>
+                <span class="detail-text">Água</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-icon">⏰</span>
+                <span class="detail-text">15-17h</span>
+              </div>
+            </div>
+            <div class="organ-text">Sistema Urinário</div>
+          </div>
+
+          <!-- Rim -->
+          <div class="meridian-card kidney">
+            <div class="card-header">
+              <div class="meridian-info">
+                <span class="abbreviation">KI</span>
+                <span class="point-count">27</span>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="meridian-name">Rim</div>
+            <div class="chinese-name">足少阴肾经</div>
+            <div class="details-row">
+              <div class="detail-item">
+                <span class="detail-icon">💧</span>
+                <span class="detail-text">Água</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-icon">⏰</span>
+                <span class="detail-text">17-19h</span>
+              </div>
+            </div>
+            <div class="organ-text">Sistema Renal</div>
+          </div>
+
+          <!-- Pericárdio -->
+          <div class="meridian-card pericardium">
+            <div class="card-header">
+              <div class="meridian-info">
+                <span class="abbreviation">PC</span>
+                <span class="point-count">9</span>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="meridian-name">Pericárdio</div>
+            <div class="chinese-name">手厥阴心包经</div>
+            <div class="details-row">
+              <div class="detail-item">
+                <span class="detail-icon">💧</span>
+                <span class="detail-text">Fogo</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-icon">⏰</span>
+                <span class="detail-text">19-21h</span>
+              </div>
+            </div>
+            <div class="organ-text">Sistema Cardiovascular</div>
+          </div>
+
+          <!-- Triplo Aquecedor -->
+          <div class="meridian-card triple-energizer">
+            <div class="card-header">
+              <div class="meridian-info">
+                <span class="abbreviation">TE</span>
+                <span class="point-count">23</span>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="meridian-name">Triplo Aquecedor</div>
+            <div class="chinese-name">手少阳三焦经</div>
+            <div class="details-row">
+              <div class="detail-item">
+                <span class="detail-icon">💧</span>
+                <span class="detail-text">Fogo</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-icon">⏰</span>
+                <span class="detail-text">21-23h</span>
+              </div>
+            </div>
+            <div class="organ-text">Metabolismo</div>
+          </div>
+
+          <!-- Vesícula Biliar -->
+          <div class="meridian-card gallbladder">
+            <div class="card-header">
+              <div class="meridian-info">
+                <span class="abbreviation">GB</span>
+                <span class="point-count">44</span>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="meridian-name">Vesícula Biliar</div>
+            <div class="chinese-name">足少阳胆经</div>
+            <div class="details-row">
+              <div class="detail-item">
+                <span class="detail-icon">💧</span>
+                <span class="detail-text">Madeira</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-icon">⏰</span>
+                <span class="detail-text">23-01h</span>
+              </div>
+            </div>
+            <div class="organ-text">Sistema Biliar</div>
+          </div>
+
+          <!-- Fígado -->
+          <div class="meridian-card liver">
+            <div class="card-header">
+              <div class="meridian-info">
+                <span class="abbreviation">LR</span>
+                <span class="point-count">14</span>
+              </div>
+              <span class="chevron">›</span>
+            </div>
+            <div class="meridian-name">Fígado</div>
+            <div class="chinese-name">足厥阴肝经</div>
+            <div class="details-row">
+              <div class="detail-item">
+                <span class="detail-icon">💧</span>
+                <span class="detail-text">Madeira</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-icon">⏰</span>
+                <span class="detail-text">01-03h</span>
+              </div>
+            </div>
+            <div class="organ-text">Sistema Hepático</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="bottom-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">Início</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon">🔍</span>
+          <span class="nav-label">Buscar</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon active">📋</span>
+          <span class="nav-label active">Meridianos</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon">💬</span>
+          <span class="nav-label">Chat</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon">❤️</span>
+          <span class="nav-label">Favoritos</span>
+        </a>
+        <div class="home-indicator"></div>
+      </nav>
+    </div>
+  </body>
+</html>

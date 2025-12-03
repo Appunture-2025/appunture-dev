@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Appunture - Busca</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary: #007aff;
+        --secondary: #5856d6;
+        --background: #f8f9fa;
+        --surface: #ffffff;
+        --text: #000000;
+        --text-secondary: #666666;
+        --border: #e1e5e9;
+        --error: #ff3b30;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: var(--background);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
+      }
+
+      .phone-frame {
+        width: 375px;
+        height: 812px;
+        background: var(--background);
+        border-radius: 40px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        position: relative;
+        border: 12px solid #1a1a1a;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .phone-frame::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        height: 30px;
+        background: #1a1a1a;
+        border-radius: 0 0 20px 20px;
+        z-index: 10;
+      }
+
+      .header {
+        padding: 50px 16px 16px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .header-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 16px;
+      }
+
+      .search-bar {
+        display: flex;
+        align-items: center;
+        background: var(--background);
+        border-radius: 12px;
+        padding: 12px 16px;
+        gap: 12px;
+        border: 1px solid var(--border);
+      }
+
+      .search-bar i {
+        color: var(--text-secondary);
+        font-size: 18px;
+      }
+
+      .search-bar input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        color: var(--text);
+        background: transparent;
+      }
+
+      .search-bar input::placeholder {
+        color: var(--text-secondary);
+      }
+
+      .clear-btn {
+        background: var(--text-secondary);
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .clear-btn i {
+        color: white;
+        font-size: 10px;
+      }
+
+      .results-info {
+        padding: 12px 16px;
+        font-size: 14px;
+        color: var(--text-secondary);
+        border-bottom: 1px solid var(--border);
+        background: var(--surface);
+      }
+
+      .screen {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px;
+        padding-bottom: 80px;
+      }
+
+      .point-card {
+        background: var(--surface);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      .point-card:hover {
+        transform: translateY(-1px);
+      }
+
+      .point-content {
+        flex: 1;
+      }
+
+      .point-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+      }
+
+      .point-name {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .point-chinese {
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+
+      .point-meridian-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 8px;
+      }
+
+      .point-meridian-row i {
+        font-size: 10px;
+        color: var(--primary);
+      }
+
+      .point-meridian {
+        font-size: 14px;
+        color: var(--primary);
+        font-weight: 500;
+      }
+
+      .point-location {
+        font-size: 14px;
+        color: var(--text);
+        line-height: 1.4;
+        margin-bottom: 6px;
+      }
+
+      .point-indications {
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.4;
+      }
+
+      .point-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: 12px;
+      }
+
+      .favorite-btn {
+        background: none;
+        border: none;
+        padding: 8px;
+        cursor: pointer;
+        font-size: 22px;
+      }
+
+      .favorite-btn.active {
+        color: var(--error);
+      }
+
+      .favorite-btn:not(.active) {
+        color: var(--text-secondary);
+      }
+
+      .chevron {
+        color: var(--text-secondary);
+        font-size: 18px;
+      }
+
+      .highlight {
+        background: rgba(0, 122, 255, 0.15);
+        padding: 0 2px;
+        border-radius: 2px;
+      }
+
+      /* Tab Bar */
+      .tab-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-around;
+        padding: 8px 0 20px;
+      }
+
+      .tab-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 10px;
+        padding: 4px 8px;
+      }
+
+      .tab-item.active {
+        color: var(--primary);
+      }
+
+      .tab-item i {
+        font-size: 22px;
+      }
+
+      /* Para visualização em desktop */
+      @media (min-width: 500px) {
+        body {
+          background: #1a1a2e;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone-frame">
+      <div class="header">
+        <h1 class="header-title">Buscar</h1>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input
+            type="text"
+            placeholder="Buscar pontos, meridianos..."
+            value="dor de cabeça"
+          />
+          <button class="clear-btn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="results-info">5 resultados para "dor de cabeça"</div>
+
+      <div class="screen">
+        <!-- Point Card 1 -->
+        <div class="point-card">
+          <div class="point-content">
+            <div class="point-header">
+              <span class="point-name">Hegu</span>
+              <span class="point-chinese">(合谷)</span>
+            </div>
+            <div class="point-meridian-row">
+              <i class="fas fa-circle"></i>
+              <span class="point-meridian">Large Intestine (LI4)</span>
+            </div>
+            <div class="point-location">
+              Na região dorsal da mão, entre o 1º e 2º metacarpos
+            </div>
+            <div class="point-indications">
+              Indicações: <span class="highlight">Dor de cabeça</span>, dor
+              facial, dor de dente, analgesia geral
+            </div>
+          </div>
+          <div class="point-actions">
+            <button class="favorite-btn active">
+              <i class="fas fa-heart"></i>
+            </button>
+            <i class="fas fa-chevron-right chevron"></i>
+          </div>
+        </div>
+
+        <!-- Point Card 2 -->
+        <div class="point-card">
+          <div class="point-content">
+            <div class="point-header">
+              <span class="point-name">Fengchi</span>
+              <span class="point-chinese">(风池)</span>
+            </div>
+            <div class="point-meridian-row">
+              <i class="fas fa-circle"></i>
+              <span class="point-meridian">Gallbladder (GB20)</span>
+            </div>
+            <div class="point-location">
+              Na nuca, abaixo do osso occipital, na depressão entre os músculos
+            </div>
+            <div class="point-indications">
+              Indicações: <span class="highlight">Cefaleia</span>, rigidez
+              cervical, tontura, vertigem
+            </div>
+          </div>
+          <div class="point-actions">
+            <button class="favorite-btn">
+              <i class="far fa-heart"></i>
+            </button>
+            <i class="fas fa-chevron-right chevron"></i>
+          </div>
+        </div>
+
+        <!-- Point Card 3 -->
+        <div class="point-card">
+          <div class="point-content">
+            <div class="point-header">
+              <span class="point-name">Baihui</span>
+              <span class="point-chinese">(百会)</span>
+            </div>
+            <div class="point-meridian-row">
+              <i class="fas fa-circle"></i>
+              <span class="point-meridian">Governing Vessel (GV20)</span>
+            </div>
+            <div class="point-location">
+              No topo da cabeça, na linha média, 5 cun acima da linha do cabelo
+            </div>
+            <div class="point-indications">
+              Indicações: <span class="highlight">Cefaleia</span> no vértex,
+              tontura, prolapso, clareza mental
+            </div>
+          </div>
+          <div class="point-actions">
+            <button class="favorite-btn">
+              <i class="far fa-heart"></i>
+            </button>
+            <i class="fas fa-chevron-right chevron"></i>
+          </div>
+        </div>
+
+        <!-- Point Card 4 -->
+        <div class="point-card">
+          <div class="point-content">
+            <div class="point-header">
+              <span class="point-name">Taichong</span>
+              <span class="point-chinese">(太冲)</span>
+            </div>
+            <div class="point-meridian-row">
+              <i class="fas fa-circle"></i>
+              <span class="point-meridian">Liver (LR3)</span>
+            </div>
+            <div class="point-location">
+              No dorso do pé, entre o 1º e 2º metatarsos
+            </div>
+            <div class="point-indications">
+              Indicações: <span class="highlight">Enxaqueca</span>,
+              irritabilidade, hipertensão, olhos vermelhos
+            </div>
+          </div>
+          <div class="point-actions">
+            <button class="favorite-btn active">
+              <i class="fas fa-heart"></i>
+            </button>
+            <i class="fas fa-chevron-right chevron"></i>
+          </div>
+        </div>
+
+        <!-- Point Card 5 -->
+        <div class="point-card">
+          <div class="point-content">
+            <div class="point-header">
+              <span class="point-name">Touwei</span>
+              <span class="point-chinese">(头维)</span>
+            </div>
+            <div class="point-meridian-row">
+              <i class="fas fa-circle"></i>
+              <span class="point-meridian">Stomach (ST8)</span>
+            </div>
+            <div class="point-location">
+              Na testa, 0.5 cun acima da linha do cabelo, no canto da fronte
+            </div>
+            <div class="point-indications">
+              Indicações: <span class="highlight">Dor frontal</span>, visão
+              turva, lacrimejamento excessivo
+            </div>
+          </div>
+          <div class="point-actions">
+            <button class="favorite-btn">
+              <i class="far fa-heart"></i>
+            </button>
+            <i class="fas fa-chevron-right chevron"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Bar -->
+      <div class="tab-bar">
+        <a href="#" class="tab-item">
+          <i class="fas fa-home"></i>
+          <span>Início</span>
+        </a>
+        <a href="#" class="tab-item active">
+          <i class="fas fa-search"></i>
+          <span>Buscar</span>
+        </a>
+        <a href="#" class="tab-item">
+          <i class="fas fa-child"></i>
+          <span>Mapa</span>
+        </a>
+        <a href="#" class="tab-item">
+          <i class="fas fa-comments"></i>
+          <span>Chat</span>
+        </a>
+        <a href="#" class="tab-item">
+          <i class="fas fa-heart"></i>
+          <span>Favoritos</span>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

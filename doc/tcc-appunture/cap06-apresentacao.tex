@@ -102,7 +102,7 @@ Uma das funcionalidades mais destacadas do \textit{Appunture} é o mapa anatômi
 
 Cada ponto é representado por um marcador visual que, ao ser tocado, exibe informações básicas sobre o ponto em um \textit{tooltip}. O usuário pode então optar por acessar a tela de detalhes completa do ponto selecionado.
 
-O mapa oferece 16 visualizações vetoriais de alta fidelidade, organizadas por meridianos:
+O mapa oferece 15 visualizações vetoriais de alta fidelidade, organizadas por meridianos:
 
 \begin{itemize}
     \item 12 meridianos principais: Pulmão (LU), Intestino Grosso (LI), Estômago (ST, ST2), Baço (SP), Coração (HT), Intestino Delgado (SI), Bexiga (BL), Rim (KI), Pericárdio (P), Triplo Aquecedor (TW), Vesícula Biliar (GB) e Fígado (LV);
@@ -119,11 +119,9 @@ A tela de detalhes apresenta informações completas sobre cada ponto de acupunt
     \item \textbf{Identificação}: Nome em português, nome em chinês (pinyin), código internacional;
     \item \textbf{Localização}: Descrição anatômica precisa da localização do ponto;
     \item \textbf{Meridiano}: Identificação do meridiano ao qual o ponto pertence;
-    \item \textbf{Profundidade}: Indicação da profundidade de punção recomendada;
     \item \textbf{Indicações}: Lista de condições clínicas para as quais o ponto é indicado;
     \item \textbf{Contraindicações}: Alertas sobre situações em que o ponto não deve ser utilizado;
-    \item \textbf{Funções energéticas}: Descrição das funções segundo a MTC;
-    \item \textbf{Características especiais}: Pontos de alarme, pontos de assentimento, etc.
+    \item \textbf{Funções}: Descrição das funções terapêuticas do ponto.
 \end{itemize}
 
 \subsection{Sistema de Busca Inteligente}
@@ -196,11 +194,153 @@ O desenvolvimento da interface do \textit{Appunture} seguiu princípios de desig
     \item \textbf{Performance}: Carregamento rápido e transições fluidas.
 \end{itemize}
 
-\section{PROTÓTIPO DE TELAS} \label{sec:prototipo}
+\section{TELAS DO SISTEMA} \label{sec:telas}
 
-O fluxo de telas do aplicativo foi projetado para proporcionar uma navegação intuitiva entre as diferentes funcionalidades. O usuário pode transitar facilmente entre login, cadastro, tela inicial, busca, detalhes dos pontos, favoritos e anotações, seguindo um fluxo lógico e previsível.
+Esta seção apresenta as principais telas do aplicativo \textit{Appunture} implementado em React Native. As capturas de tela demonstram a interface final do sistema, seguindo os princípios de design centrado no usuário descritos anteriormente.
 
-% Aqui podem ser inseridas figuras dos protótipos de tela
-% \figura{TELA DE LOGIN}{0.5}{fig/tela-login.png}{Os autores (2025)}{tela-login}{}{}
-% \figura{TELA PRINCIPAL}{0.5}{fig/tela-principal.png}{Os autores (2025)}{tela-principal}{}{}
-% \figura{MAPA ANATÔMICO}{0.5}{fig/mapa-anatomico.png}{Os autores (2025)}{mapa-anatomico}{}{}
+\subsection{Tela de Login}
+
+A tela de login é o ponto de entrada do aplicativo para usuários que já possuem conta. A interface apresenta um design limpo e profissional, com os seguintes elementos:
+
+\begin{itemize}
+    \item \textbf{Logo e identidade visual}: O logotipo do \textit{Appunture} é exibido no topo, reforçando a identidade da marca;
+    \item \textbf{Campos de autenticação}: Email e senha com validação em tempo real;
+    \item \textbf{Login social}: Botão para autenticação via Google, integrado ao Firebase Authentication;
+    \item \textbf{Modo visitante}: Opção ``Continuar como visitante'' que permite explorar o aplicativo sem criar conta, com acesso limitado às funcionalidades que requerem internet;
+    \item \textbf{Links auxiliares}: Acesso rápido para cadastro e recuperação de senha.
+\end{itemize}
+
+\figura{TELA DE LOGIN}{0.35}{fig/tela-login.png}{Os autores (2025)}{tela-login}{}{}
+
+\subsection{Tela de Cadastro}
+
+O formulário de cadastro foi projetado para ser simples e rápido, solicitando apenas as informações essenciais para criação da conta:
+
+\begin{itemize}
+    \item \textbf{Nome completo}: Para personalização da experiência;
+    \item \textbf{Email}: Utilizado como identificador único da conta;
+    \item \textbf{Senha}: Com indicador visual de força e requisitos mínimos de segurança;
+    \item \textbf{Confirmação de senha}: Para evitar erros de digitação;
+    \item \textbf{Termos de uso}: Checkbox de aceite obrigatório.
+\end{itemize}
+
+O cadastro também pode ser realizado via Google Sign-In para maior conveniência.
+
+\figura{TELA DE CADASTRO}{0.35}{fig/tela-cadastro.png}{Os autores (2025)}{tela-cadastro}{}{}
+
+\subsection{Tela Principal (Home)}
+
+A tela principal é o hub central do aplicativo, apresentando uma visão geral das funcionalidades e informações relevantes ao usuário:
+
+\begin{itemize}
+    \item \textbf{Saudação personalizada}: Exibe o nome do usuário e status de sincronização;
+    \item \textbf{Indicador de conectividade}: Mostra se o aplicativo está online ou offline;
+    \item \textbf{Acesso rápido}: Cards para as principais funcionalidades (Buscar Pontos, Mapa Corporal, Assistente IA, Favoritos);
+    \item \textbf{Estatísticas}: Quantidade de pontos disponíveis e meridianos cadastrados;
+    \item \textbf{Pontos recentes}: Lista dos últimos pontos visualizados para acesso rápido.
+\end{itemize}
+
+A navegação principal é feita através da barra de abas na parte inferior da tela, seguindo o padrão de aplicativos móveis modernos.
+
+\figura{TELA PRINCIPAL (HOME)}{0.35}{fig/tela-home.png}{Os autores (2025)}{tela-home}{}{}
+
+\subsection{Tela de Busca}
+
+A funcionalidade de busca permite encontrar pontos de acupuntura através de consultas em linguagem natural, processadas pela inteligência artificial:
+
+\begin{itemize}
+    \item \textbf{Campo de busca}: Aceita termos como nome do ponto, código, meridiano ou sintomas;
+    \item \textbf{Resultados em tempo real}: A lista é atualizada conforme o usuário digita;
+    \item \textbf{Cards de resultado}: Cada ponto é exibido com código, nome, meridiano e indicações principais;
+    \item \textbf{Destaque de termos}: Os termos buscados são destacados nos resultados;
+    \item \textbf{Ação de favoritar}: Botão para adicionar/remover dos favoritos diretamente na lista.
+\end{itemize}
+
+A busca utiliza o modelo Gemini 1.5 Flash via RAG (\textit{Retrieval-Augmented Generation}) para encontrar pontos relevantes mesmo quando o usuário descreve sintomas em vez de usar termos técnicos.
+
+\figura{TELA DE BUSCA}{0.35}{fig/tela-busca.png}{Os autores (2025)}{tela-busca}{}{}
+
+\subsection{Tela de Meridianos}
+
+Esta tela apresenta os 12 meridianos principais da medicina tradicional chinesa em um layout de grade visual e intuitivo:
+
+\begin{itemize}
+    \item \textbf{Cards coloridos}: Cada meridiano possui uma cor característica baseada no seu elemento (Metal, Terra, Fogo, Água, Madeira);
+    \item \textbf{Código e contagem}: Abreviação internacional (LU, LI, ST, etc.) e quantidade de pontos;
+    \item \textbf{Nome e caracteres}: Nome em português e caracteres chineses para cada meridiano;
+    \item \textbf{Elemento e horário}: Informações sobre o elemento Wu Xing e horário de pico de energia;
+    \item \textbf{Órgão relacionado}: Sistema orgânico associado ao meridiano.
+\end{itemize}
+
+Ao tocar em um card, o usuário é direcionado para a lista de pontos daquele meridiano específico.
+
+\figura{TELA DE MERIDIANOS}{0.35}{fig/tela-meridianos.png}{Os autores (2025)}{tela-meridianos}{}{}
+
+\subsection{Mapa Anatômico Interativo}
+
+O mapa corporal é uma das funcionalidades mais destacadas do \textit{Appunture}, permitindo visualização espacial dos pontos de acupuntura:
+
+\begin{itemize}
+    \item \textbf{Visualização SVG}: Imagens vetoriais de alta qualidade baseadas no atlas oficial da OMS;
+    \item \textbf{Alternância de vistas}: Botões para alternar entre vista frontal e posterior;
+    \item \textbf{Navegação por camadas}: Controles para navegar entre as 15 camadas anatômicas disponíveis (8 frontais e 7 posteriores);
+    \item \textbf{Marcadores interativos}: Pontos clicáveis sobre a imagem anatômica;
+    \item \textbf{Lista de pontos visíveis}: Seção inferior listando os pontos presentes na camada atual.
+\end{itemize}
+
+Ao tocar em um marcador, o usuário é direcionado para a tela de detalhes do ponto correspondente.
+
+\figura{MAPA ANATÔMICO INTERATIVO}{0.35}{fig/tela-mapa.png}{Os autores (2025)}{tela-mapa}{}{}
+
+\subsection{Detalhes do Ponto de Acupuntura}
+
+A tela de detalhes apresenta informações completas sobre cada ponto, organizadas em seções para facilitar a consulta:
+
+\begin{itemize}
+    \item \textbf{Galeria de imagens}: Carrossel com fotos ilustrativas do ponto e sua localização;
+    \item \textbf{Identificação}: Código internacional, nome em pinyin e caracteres chineses;
+    \item \textbf{Meridiano}: Indicação do meridiano ao qual o ponto pertence;
+    \item \textbf{Localização anatômica}: Descrição detalhada de como encontrar o ponto;
+    \item \textbf{Anatomia}: Informações sobre inervação e vascularização;
+    \item \textbf{Indicações}: Lista das condições tratadas pelo ponto;
+    \item \textbf{Função terapêutica}: Descrição dos efeitos e ações do ponto;
+    \item \textbf{Técnicas aplicáveis}: Métodos de estimulação recomendados;
+    \item \textbf{Precauções}: Alertas sobre contraindicações quando aplicável.
+\end{itemize}
+
+O botão de favorito no cabeçalho permite salvar o ponto para acesso rápido posterior.
+
+\figura{DETALHES DO PONTO DE ACUPUNTURA}{0.35}{fig/tela-detalhes.png}{Os autores (2025)}{tela-detalhes}{}{}
+
+\subsection{Assistente de Inteligência Artificial}
+
+O chatbot com IA é a interface conversacional do sistema, permitindo consultas em linguagem natural:
+
+\begin{itemize}
+    \item \textbf{Interface de chat}: Design familiar de aplicativos de mensagens;
+    \item \textbf{Mensagens do usuário}: Exibidas à direita em cor primária;
+    \item \textbf{Respostas da IA}: Exibidas à esquerda com suporte a formatação Markdown;
+    \item \textbf{Sugestões de pontos}: Cards clicáveis dentro das respostas para acesso direto aos detalhes;
+    \item \textbf{Indicador de digitação}: Feedback visual enquanto a IA processa a resposta;
+    \item \textbf{Histórico da conversa}: Mantido durante a sessão para contexto.
+\end{itemize}
+
+O assistente utiliza a arquitetura RAG com o modelo Gemini 1.5 Flash, combinando o conhecimento do atlas de pontos com a capacidade de compreensão de linguagem natural para fornecer recomendações precisas baseadas nos sintomas descritos.
+
+\figura{ASSISTENTE DE INTELIGÊNCIA ARTIFICIAL}{0.35}{fig/tela-chat.png}{Os autores (2025)}{tela-chat}{}{}
+
+\subsection{Tela de Favoritos}
+
+A funcionalidade de favoritos permite ao usuário criar uma lista personalizada de pontos para consulta rápida:
+
+\begin{itemize}
+    \item \textbf{Lista personalizada}: Exibe apenas os pontos marcados como favoritos pelo usuário;
+    \item \textbf{Contagem}: Indica o número total de pontos favoritados;
+    \item \textbf{Informações completas}: Cada card exibe código, nome, meridiano e indicações;
+    \item \textbf{Gestão rápida}: Botão para remover da lista de favoritos;
+    \item \textbf{Acesso aos detalhes}: Toque no card para visualizar informações completas.
+\end{itemize}
+
+Os favoritos são sincronizados com a nuvem quando o usuário está autenticado, permitindo acesso em múltiplos dispositivos.
+
+\figura{TELA DE FAVORITOS}{0.35}{fig/tela-favoritos.png}{Os autores (2025)}{tela-favoritos}{}{}

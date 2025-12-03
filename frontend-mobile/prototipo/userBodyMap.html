@@ -1,11 +1,16 @@
-<!-- mapa.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>Appunture - Mapa Corporal</title>
-    <link rel="stylesheet" href="../style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <style>
       * {
         margin: 0;
@@ -14,917 +19,515 @@
       }
 
       :root {
-        --primary-blue: #007aff;
-        --primary-purple: #5856d6;
-        --color-gray-50: #fafafa;
-        --color-gray-100: #f5f5f5;
-        --color-gray-200: #e5e5e5;
-        --color-gray-300: #d4d4d4;
-        --color-gray-600: #525252;
-        --color-gray-800: #262626;
-        --accent-red: #ff3b30;
-        --accent-green: #34c759;
-        --text-primary: var(--color-gray-800);
+        --primary: #007aff;
+        --secondary: #5856d6;
+        --background: #f8f9fa;
+        --surface: #ffffff;
+        --text: #000000;
+        --text-secondary: #666666;
+        --border: #e1e5e9;
       }
 
       body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           sans-serif;
-        background: var(--color-gray-50);
-        color: var(--text-primary);
-        line-height: 1.6;
+        background: var(--background);
+        min-height: 100vh;
       }
 
       .container {
+        display: flex;
+        flex-direction: column;
         min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-      }
-
-      /* Header */
-      .header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--color-gray-200);
-        padding: 1rem 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        z-index: 100;
-        height: 70px;
-      }
-
-      .logo {
-        display: flex;
-        align-items: center;
-        font-weight: 700;
-        font-size: 1.2rem;
-        color: var(--color-gray-800);
-        text-decoration: none;
-      }
-
-      .nav-links {
-        display: flex;
-        gap: 2rem;
-      }
-
-      .nav-links a {
-        color: var(--color-gray-600);
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.2s ease;
-      }
-
-      .nav-links a:hover {
-        color: var(--primary-blue);
-      }
-
-      .mobile-menu-toggle {
-        display: none;
-        flex-direction: column;
-        cursor: pointer;
-        gap: 4px;
-      }
-
-      .mobile-menu-toggle span {
-        width: 24px;
-        height: 2px;
-        background: var(--color-gray-600);
-        transition: all 0.3s ease;
-      }
-
-      /* Mobile Navigation */
-      .mobile-nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.5);
-        display: none;
-        z-index: 200;
-      }
-
-      .mobile-nav.active {
-        display: flex;
-      }
-
-      .mobile-nav-content {
-        background: white;
-        width: 280px;
-        height: 100%;
-        padding: 2rem;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-      }
-
-      .mobile-nav.active .mobile-nav-content {
-        transform: translateX(0);
-      }
-
-      .mobile-nav-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid var(--color-gray-200);
-      }
-
-      .mobile-nav-close {
-        font-size: 1.5rem;
-        cursor: pointer;
-        padding: 0.5rem;
-      }
-
-      .mobile-nav-links {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .mobile-nav-links a {
-        color: var(--color-gray-600);
-        text-decoration: none;
-        font-weight: 500;
-        padding: 0.75rem 0;
-        border-bottom: 1px solid var(--color-gray-100);
-        transition: color 0.2s ease;
-      }
-
-      .mobile-nav-links a:hover {
-        color: var(--primary-blue);
-      }
-
-      /* Main Content */
-      main {
-        flex: 1;
-        padding: 100px 2rem 2rem;
-        max-width: 1200px;
+        max-width: 400px;
         margin: 0 auto;
         width: 100%;
       }
 
+      .content {
+        flex: 1;
+        padding: 16px;
+        padding-bottom: 80px;
+        overflow-y: auto;
+      }
+
+      .header {
+        margin-bottom: 16px;
+      }
+
       .title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: var(--color-gray-800);
-        margin-bottom: 2rem;
-        text-align: center;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
       }
 
-      .text-muted {
-        color: var(--color-gray-600);
-        text-align: center;
+      .subtitle {
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.4;
       }
 
-      /* Cards */
-      .card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-        border: 1px solid var(--color-gray-200);
-        transition: all 0.2s ease;
+      .controls {
+        margin-bottom: 16px;
       }
 
-      .body-map-container {
+      .plane-toggle {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 2rem;
-        margin-bottom: 2rem;
+        background: var(--surface);
+        border-radius: 10px;
+        padding: 4px;
+        margin-bottom: 12px;
+        border: 1px solid var(--border);
       }
 
-      /* Grid Layout */
-      .grid-3 {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-        margin-top: 2rem;
-      }
-
-      .quick-action-card {
+      .plane-button {
+        flex: 1;
+        padding: 10px;
         text-align: center;
-        padding: 2rem 1.5rem;
-        transition: transform 0.2s ease;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.2s;
       }
 
-      .quick-action-card:hover {
-        transform: translateY(-4px);
+      .plane-button.active {
+        background: var(--primary);
+        color: white;
       }
 
-      .quick-action-number {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: linear-gradient(
-          135deg,
-          var(--primary-blue),
-          var(--primary-purple)
-        );
+      .layer-controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .layer-button {
+        width: 36px;
+        height: 36px;
+        background: var(--primary);
+        border: none;
+        border-radius: 8px;
         color: white;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin: 0 auto 1rem;
+        cursor: pointer;
+        font-size: 14px;
       }
 
-      .quick-action-card h3 {
-        font-size: 1.2rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        color: var(--color-gray-800);
+      .layer-button:disabled {
+        background: var(--border);
+        color: var(--text-secondary);
+        cursor: not-allowed;
       }
 
-      /* Footer */
-      .footer {
-        background: white;
-        border-top: 1px solid var(--color-gray-200);
-        padding: 1.5rem 2rem;
+      .layer-info {
+        flex: 1;
         text-align: center;
-        color: var(--color-gray-600);
-        font-size: 0.9rem;
-        margin-top: auto;
       }
 
-      /* Responsive Design */
-      @media (max-width: 768px) {
-        .nav-links {
-          display: none;
-        }
+      .layer-info-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+      }
 
-        .mobile-menu-toggle {
+      .layer-info-subtitle {
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+
+      .body-map-container {
+        background: var(--surface);
+        border-radius: 16px;
+        padding: 16px;
+        border: 1px solid var(--border);
+        margin-bottom: 16px;
+        position: relative;
+      }
+
+      .body-map {
+        width: 100%;
+        aspect-ratio: 3/4;
+        background: linear-gradient(180deg, #e8f0fe 0%, #f0f4f8 100%);
+        border-radius: 12px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .body-silhouette {
+        width: 60%;
+        height: 85%;
+        position: relative;
+      }
+
+      .body-silhouette svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .point-marker {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        background: var(--primary);
+        border: 2px solid white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 2px 8px rgba(0, 122, 255, 0.4);
+        transition: transform 0.2s;
+      }
+
+      .point-marker:hover {
+        transform: translate(-50%, -50%) scale(1.2);
+      }
+
+      .point-marker.active {
+        background: #ff3b30;
+        transform: translate(-50%, -50%) scale(1.3);
+      }
+
+      .points-section {
+        background: var(--surface);
+        border-radius: 16px;
+        padding: 16px;
+        border: 1px solid var(--border);
+      }
+
+      .section-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .points-count {
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--text-secondary);
+      }
+
+      .visible-points-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .point-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        background: var(--background);
+        border-radius: 10px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .point-item-code {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--primary);
+        min-width: 40px;
+      }
+
+      .point-item-name {
+        font-size: 14px;
+        color: var(--text);
+        flex: 1;
+      }
+
+      .point-item-arrow {
+        color: var(--text-secondary);
+        font-size: 12px;
+      }
+
+      /* Bottom Navigation */
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 400px;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      }
+
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 11px;
+        padding: 4px 12px;
+      }
+
+      .nav-item.active {
+        color: var(--primary);
+      }
+
+      .nav-item i {
+        font-size: 22px;
+      }
+
+      /* Mobile Phone Frame */
+      @media (min-width: 500px) {
+        body {
+          background: #1a1a2e;
+          padding: 20px;
           display: flex;
+          justify-content: center;
         }
 
-        .header {
-          padding: 1rem;
+        .phone-frame {
+          max-width: 375px;
+          width: 100%;
+          background: var(--background);
+          border-radius: 40px;
+          overflow: hidden;
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+          position: relative;
         }
 
-        main {
-          padding: 90px 1rem 1rem;
+        .phone-frame::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 150px;
+          height: 30px;
+          background: #000;
+          border-radius: 0 0 20px 20px;
+          z-index: 10;
         }
 
-        .title {
-          font-size: 2rem;
+        .container {
+          padding-top: 30px;
+          min-height: 750px;
+          max-height: 850px;
+          overflow-y: auto;
         }
 
-        .body-map-container {
-          padding: 1rem;
-        }
-
-        .grid-3 {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .title {
-          font-size: 1.75rem;
-        }
-
-        .quick-action-card {
-          padding: 1.5rem 1rem;
+        .bottom-nav {
+          position: absolute;
+          left: 0;
+          transform: none;
+          max-width: none;
         }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <header class="header">
-        <div class="logo logo-with-icon">
-          <svg
-            class="app-icon"
-            viewBox="0 0 500 500"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <linearGradient
-                id="logoGradient"
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="100%"
+    <div class="phone-frame">
+      <div class="container">
+        <div class="content">
+          <div class="header">
+            <h1 class="title">Mapa Corporal</h1>
+            <p class="subtitle">
+              Visualize os pontos registrados diretamente sobre as camadas do
+              atlas oficial.
+            </p>
+          </div>
+
+          <div class="controls">
+            <div class="plane-toggle">
+              <div
+                class="plane-button active"
+                onclick="setPlane('front', this)"
               >
-                <stop
-                  offset="0%"
-                  style="stop-color: #007aff; stop-opacity: 1"
-                />
-                <stop
-                  offset="100%"
-                  style="stop-color: #5856d6; stop-opacity: 1"
-                />
-              </linearGradient>
-            </defs>
-            <path
-              fill="url(#logoGradient)"
-              d="m407.5 81.1c-1.1 0.6-11.9 11-24 23.1l-22 22c-9.3-7.4-15.1-11.6-19-14.2-3.9-2.6-11.7-7.1-17.5-10-5.8-2.9-15.7-7-22-9.1-6.3-2.1-15.1-4.5-19.5-5.4-4.4-0.9-13.9-2.1-21-2.6-8.5-0.7-17.5-0.6-26 0-7.1 0.6-17.5 2-23 3.2-5.5 1.2-15.1 3.9-21.3 6-6.1 2.2-15.4 6-20.4 8.5-5.1 2.6-12.7 6.9-16.8 9.7-4.1 2.7-10.6 7.5-14.4 10.6-3.8 3.1-10.7 9.7-15.3 14.6-4.7 4.9-11.5 13.5-15.3 19-3.7 5.5-8.7 13.8-11 18.5-2.4 4.7-5.7 12.3-7.6 17-1.8 4.7-4.4 13-5.8 18.5-1.4 5.5-3.1 14.7-3.7 20.5-0.7 6.5-0.9 17.3-0.6 28.5 0.5 12.7 1.2 20.7 2.7 27 1.1 4.9 3.4 13.3 5.1 18.5 1.8 5.2 5.1 13.5 7.4 18.5 2.3 5 6.8 13.3 10 18.5 3.3 5.2 8.8 13 12.2 17.3l6.3 7.7c-5 5.9-15.2 17.1-25.7 28.6-10.6 11.5-19.3 21.7-19.3 22.7 0 0.9 0.4 1.7 1 1.7 0.6 0 9.9-7.7 20.8-17.2 10.8-9.4 22.3-19.5 25.5-22.5l5.7-5.3c11.2 9 17.9 13.9 22 16.7 4.1 2.8 12 7.4 17.5 10.1 5.5 2.8 15.4 6.9 22 9.1 6.6 2.3 16.5 5.2 22 6.3 8.6 1.9 13.2 2.2 33 2.2 21.7 0 23.7-0.1 35-2.8 6.6-1.6 15.8-4.2 20.5-5.8 4.7-1.6 13.2-5.3 19-8.2 5.8-2.9 13.9-7.5 18-10.3 4.1-2.7 10.9-7.7 15-11 4.1-3.3 10.8-9.6 14.9-13.9 4-4.4 10.6-12.4 14.5-17.9 3.9-5.5 9.6-14.9 12.7-21 3-6 7.2-16 9.2-22 2-6 4.6-15.1 5.7-20 1.5-6.4 2.2-14.3 2.7-27.5 0.4-11.7 0.2-22.2-0.6-28.5-0.6-5.5-2.3-14.5-3.7-20-1.4-5.5-4.4-14.7-6.7-20.5-2.4-5.8-6.8-15-9.9-20.5-3.1-5.5-9-14.5-13.2-20l-7.6-10c45.8-45.8 46-46 46-50.3 0-3.5-0.5-4.6-3-6.7-1.6-1.4-4.2-2.5-5.7-2.5-1.6 0-3.7 0.6-4.8 1.1z"
-            />
-            <path
-              fill="#fbfbfb"
-              d="m242.8 101.8c-2.6 0.3-9.8 1.1-16 1.8-6.2 0.8-14.9 2.5-19.3 3.8-4.4 1.3-12.1 4-17 6.1-4.9 2-13.1 6.1-18 9-4.9 2.9-12.6 8.2-17 11.7-4.4 3.6-11.5 10.3-15.9 14.9-4.3 4.6-10.5 12.5-13.8 17.4-3.3 4.9-7.8 12.6-10 17-2.2 4.4-5.5 12.5-7.4 18-1.8 5.5-4.1 13.6-5 18-0.9 4.6-1.8 15.4-2.1 25.5-0.5 13.7-0.2 19.8 1.1 28 1 5.8 2.7 13.9 3.8 18 1.1 4.1 3.9 11.8 6 17 2.2 5.2 5.9 12.6 8.1 16.5 2.3 3.9 7.5 11.5 11.7 16.9l7.5 9.9c15.4-16.1 28.9-30.2 39.9-41.8 11.1-11.5 23.2-24.1 26.9-28l6.8-7c-3.5-6.2-5.1-10.5-5.8-13.5-0.7-3-1.3-8-1.3-11 0-3 0.7-8.2 1.5-11.5 0.9-3.3 2.8-8 4.2-10.5 1.5-2.5 4.7-6.5 7.3-9 2.5-2.5 7-5.9 10-7.6 3-1.7 7.5-3.7 10-4.4 2.6-0.7 8.2-1 13.5-0.8 7.5 0.3 10.1 0.8 15.2 3.3l6.2 3 74.6-74.6c-5.4-4.7-10.1-8.2-14-10.9-3.9-2.6-11-6.8-16-9.3-5-2.4-13.7-6.1-19.5-8.2-5.8-2-15.7-4.5-22-5.5-6.3-1-15.6-2-20.5-2.2-4.9-0.2-11.1-0.2-13.7 0zm81.5 87.5l-37.2 37.2c2.9 4.6 4.5 8.7 5.3 12 0.9 3.3 1.6 8.4 1.6 11.2 0 2.9-0.5 7.7-1.1 10.5-0.6 2.9-2.5 7.9-4.3 11.2-1.7 3.2-5.3 8-8.1 10.5-2.7 2.6-7 5.9-9.5 7.4-2.5 1.4-7.2 3.3-10.5 4.2-3.3 0.8-8.2 1.5-11 1.5-2.7 0-7-0.5-9.5-1.1-2.5-0.5-6.9-2.2-9.8-3.7l-5.3-2.7c-8.8 8.5-16.8 16.2-23.4 22.5-6.6 6.3-17 16.2-23 22-6.1 5.8-15.2 14.4-20.3 19.2l-9.2 8.8c7.4 6.4 13.3 10.7 18 13.8 4.7 3.1 13 7.7 18.5 10.3 5.5 2.7 14.1 6.1 19 7.8 4.9 1.6 13.3 3.7 18.5 4.7 6.9 1.3 14.4 1.8 27.5 1.8 13.1 0 20.4-0.4 27-1.7 5-1 13.3-3.1 18.5-4.8 5.2-1.7 13.1-4.8 17.5-6.8 4.4-2.1 11.1-5.7 15-8.1 3.9-2.3 10.6-7.1 15-10.5 4.4-3.4 11.5-10 15.8-14.6 4.4-4.6 11-13.1 14.9-18.9 3.9-5.8 8.7-14.1 10.8-18.5 2.1-4.4 5.2-12.3 6.9-17.5 1.7-5.2 4-14.7 5.1-21 1.4-8 2-16 2-26.3 0-10.2-0.6-18.3-2-26.5-1.2-6.4-3.4-15.5-4.9-20.2-1.6-4.7-4.7-12.3-6.9-17-2.2-4.7-6.7-12.6-9.9-17.5-3.3-4.9-7.4-10.7-9.1-12.8-1.8-2-3.5-3.7-4-3.7-0.4 0-17.5 16.8-37.9 37.2z"
-            />
-          </svg>
-          Appunture
+                Frente
+              </div>
+              <div class="plane-button" onclick="setPlane('back', this)">
+                Costas
+              </div>
+            </div>
+            <div class="layer-controls">
+              <button class="layer-button" disabled>
+                <i class="fas fa-arrow-left"></i>
+              </button>
+              <div class="layer-info">
+                <div class="layer-info-title">Corpo Inteiro</div>
+                <div class="layer-info-subtitle">Camada 1 de 8</div>
+              </div>
+              <button class="layer-button">
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="body-map-container">
+            <div class="body-map">
+              <div class="body-silhouette">
+                <svg
+                  viewBox="0 0 200 300"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <!-- Simplified human silhouette -->
+                  <ellipse cx="100" cy="30" rx="25" ry="28" fill="#c4d4e4" />
+                  <path
+                    d="M70 55 L60 130 L70 130 L75 180 L60 280 L80 280 L100 200 L120 280 L140 280 L125 180 L130 130 L140 130 L130 55 Z"
+                    fill="#c4d4e4"
+                  />
+                  <path d="M60 65 L35 140 L50 145 L65 85 Z" fill="#c4d4e4" />
+                  <path
+                    d="M140 65 L165 140 L150 145 L135 85 Z"
+                    fill="#c4d4e4"
+                  />
+                </svg>
+
+                <!-- Acupuncture Point Markers -->
+                <a
+                  href="userPointsDetails.html"
+                  class="point-marker"
+                  style="top: 12%; left: 50%"
+                  title="GV20 - Baihui"
+                  >GV20</a
+                >
+                <a
+                  href="userPointsDetails.html"
+                  class="point-marker"
+                  style="top: 32%; left: 38%"
+                  title="LI4 - Hegu"
+                  >LI4</a
+                >
+                <a
+                  href="userPointsDetails.html"
+                  class="point-marker"
+                  style="top: 32%; left: 62%"
+                  title="LI4 - Hegu"
+                  >LI4</a
+                >
+                <a
+                  href="userPointsDetails.html"
+                  class="point-marker active"
+                  style="top: 55%; left: 50%"
+                  title="CV12 - Zhongwan"
+                  >CV12</a
+                >
+                <a
+                  href="userPointsDetails.html"
+                  class="point-marker"
+                  style="top: 72%; left: 42%"
+                  title="ST36 - Zusanli"
+                  >ST36</a
+                >
+                <a
+                  href="userPointsDetails.html"
+                  class="point-marker"
+                  style="top: 72%; left: 58%"
+                  title="ST36 - Zusanli"
+                  >ST36</a
+                >
+                <a
+                  href="userPointsDetails.html"
+                  class="point-marker"
+                  style="top: 78%; left: 42%"
+                  title="SP6 - Sanyinjiao"
+                  >SP6</a
+                >
+                <a
+                  href="userPointsDetails.html"
+                  class="point-marker"
+                  style="top: 78%; left: 58%"
+                  title="SP6 - Sanyinjiao"
+                  >SP6</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="points-section">
+            <h2 class="section-title">
+              Pontos Visíveis
+              <span class="points-count">(6 pontos)</span>
+            </h2>
+            <div class="visible-points-list">
+              <a href="userPointsDetails.html" class="point-item">
+                <span class="point-item-code">GV20</span>
+                <span class="point-item-name">Baihui</span>
+                <i class="fas fa-chevron-right point-item-arrow"></i>
+              </a>
+              <a href="userPointsDetails.html" class="point-item">
+                <span class="point-item-code">LI4</span>
+                <span class="point-item-name">Hegu</span>
+                <i class="fas fa-chevron-right point-item-arrow"></i>
+              </a>
+              <a href="userPointsDetails.html" class="point-item">
+                <span class="point-item-code">CV12</span>
+                <span class="point-item-name">Zhongwan</span>
+                <i class="fas fa-chevron-right point-item-arrow"></i>
+              </a>
+              <a href="userPointsDetails.html" class="point-item">
+                <span class="point-item-code">ST36</span>
+                <span class="point-item-name">Zusanli</span>
+                <i class="fas fa-chevron-right point-item-arrow"></i>
+              </a>
+              <a href="userPointsDetails.html" class="point-item">
+                <span class="point-item-code">SP6</span>
+                <span class="point-item-name">Sanyinjiao</span>
+                <i class="fas fa-chevron-right point-item-arrow"></i>
+              </a>
+            </div>
+          </div>
         </div>
-        <nav class="nav-links">
-          <a href="userHome.html">Home</a>
-          <a href="userBodyMap.html">Mapa</a>
-          <a href="userSearch.html">Buscar Sintomas</a>
-          <a href="userAllPoints.html">Todos os Pontos</a>
-          <a href="userFavorites.html">Favoritos</a>
-          <a href="userChatBot.html">Chatbot</a>
-          <a href="userLogin.html">Login</a>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+          <a href="userHome.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Início</span>
+          </a>
+          <a href="userSearch.html" class="nav-item">
+            <i class="fas fa-search"></i>
+            <span>Buscar</span>
+          </a>
+          <a href="userBodyMap.html" class="nav-item active">
+            <i class="fas fa-child"></i>
+            <span>Mapa</span>
+          </a>
+          <a href="userChatBot.html" class="nav-item">
+            <i class="fas fa-comments"></i>
+            <span>Chat</span>
+          </a>
+          <a href="userFavorites.html" class="nav-item">
+            <i class="fas fa-heart"></i>
+            <span>Favoritos</span>
+          </a>
         </nav>
-        <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </header>
-
-      <!-- Mobile Navigation -->
-      <div class="mobile-nav" id="mobileNav" onclick="closeMobileMenu(event)">
-        <div class="mobile-nav-content">
-          <div class="mobile-nav-header">
-            <div class="logo logo-with-icon">
-              <svg
-                class="app-icon app-icon-sm"
-                viewBox="0 0 500 500"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <defs>
-                  <linearGradient
-                    id="mobileLogoGradient"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
-                  >
-                    <stop
-                      offset="0%"
-                      style="stop-color: #007aff; stop-opacity: 1"
-                    />
-                    <stop
-                      offset="100%"
-                      style="stop-color: #5856d6; stop-opacity: 1"
-                    />
-                  </linearGradient>
-                </defs>
-                <path
-                  fill="url(#mobileLogoGradient)"
-                  d="m407.5 81.1c-1.1 0.6-11.9 11-24 23.1l-22 22c-9.3-7.4-15.1-11.6-19-14.2-3.9-2.6-11.7-7.1-17.5-10-5.8-2.9-15.7-7-22-9.1-6.3-2.1-15.1-4.5-19.5-5.4-4.4-0.9-13.9-2.1-21-2.6-8.5-0.7-17.5-0.6-26 0-7.1 0.6-17.5 2-23 3.2-5.5 1.2-15.1 3.9-21.3 6-6.1 2.2-15.4 6-20.4 8.5-5.1 2.6-12.7 6.9-16.8 9.7-4.1 2.7-10.6 7.5-14.4 10.6-3.8 3.1-10.7 9.7-15.3 14.6-4.7 4.9-11.5 13.5-15.3 19-3.7 5.5-8.7 13.8-11 18.5-2.4 4.7-5.7 12.3-7.6 17-1.8 4.7-4.4 13-5.8 18.5-1.4 5.5-3.1 14.7-3.7 20.5-0.7 6.5-0.9 17.3-0.6 28.5 0.5 12.7 1.2 20.7 2.7 27 1.1 4.9 3.4 13.3 5.1 18.5 1.8 5.2 5.1 13.5 7.4 18.5 2.3 5 6.8 13.3 10 18.5 3.3 5.2 8.8 13 12.2 17.3l6.3 7.7c-5 5.9-15.2 17.1-25.7 28.6-10.6 11.5-19.3 21.7-19.3 22.7 0 0.9 0.4 1.7 1 1.7 0.6 0 9.9-7.7 20.8-17.2 10.8-9.4 22.3-19.5 25.5-22.5l5.7-5.3c11.2 9 17.9 13.9 22 16.7 4.1 2.8 12 7.4 17.5 10.1 5.5 2.8 15.4 6.9 22 9.1 6.6 2.3 16.5 5.2 22 6.3 8.6 1.9 13.2 2.2 33 2.2 21.7 0 23.7-0.1 35-2.8 6.6-1.6 15.8-4.2 20.5-5.8 4.7-1.6 13.2-5.3 19-8.2 5.8-2.9 13.9-7.5 18-10.3 4.1-2.7 10.9-7.7 15-11 4.1-3.3 10.8-9.6 14.9-13.9 4-4.4 10.6-12.4 14.5-17.9 3.9-5.5 9.6-14.9 12.7-21 3-6 7.2-16 9.2-22 2-6 4.6-15.1 5.7-20 1.5-6.4 2.2-14.3 2.7-27.5 0.4-11.7 0.2-22.2-0.6-28.5-0.6-5.5-2.3-14.5-3.7-20-1.4-5.5-4.4-14.7-6.7-20.5-2.4-5.8-6.8-15-9.9-20.5-3.1-5.5-9-14.5-13.2-20l-7.6-10c45.8-45.8 46-46 46-50.3 0-3.5-0.5-4.6-3-6.7-1.6-1.4-4.2-2.5-5.7-2.5-1.6 0-3.7 0.6-4.8 1.1z"
-                />
-                <path
-                  fill="#fbfbfb"
-                  d="m242.8 101.8c-2.6 0.3-9.8 1.1-16 1.8-6.2 0.8-14.9 2.5-19.3 3.8-4.4 1.3-12.1 4-17 6.1-4.9 2-13.1 6.1-18 9-4.9 2.9-12.6 8.2-17 11.7-4.4 3.6-11.5 10.3-15.9 14.9-4.3 4.6-10.5 12.5-13.8 17.4-3.3 4.9-7.8 12.6-10 17-2.2 4.4-5.5 12.5-7.4 18-1.8 5.5-4.1 13.6-5 18-0.9 4.6-1.8 15.4-2.1 25.5-0.5 13.7-0.2 19.8 1.1 28 1 5.8 2.7 13.9 3.8 18 1.1 4.1 3.9 11.8 6 17 2.2 5.2 5.9 12.6 8.1 16.5 2.3 3.9 7.5 11.5 11.7 16.9l7.5 9.9c15.4-16.1 28.9-30.2 39.9-41.8 11.1-11.5 23.2-24.1 26.9-28l6.8-7c-3.5-6.2-5.1-10.5-5.8-13.5-0.7-3-1.3-8-1.3-11 0-3 0.7-8.2 1.5-11.5 0.9-3.3 2.8-8 4.2-10.5 1.5-2.5 4.7-6.5 7.3-9 2.5-2.5 7-5.9 10-7.6 3-1.7 7.5-3.7 10-4.4 2.6-0.7 8.2-1 13.5-0.8 7.5 0.3 10.1 0.8 15.2 3.3l6.2 3 74.6-74.6c-5.4-4.7-10.1-8.2-14-10.9-3.9-2.6-11-6.8-16-9.3-5-2.4-13.7-6.1-19.5-8.2-5.8-2-15.7-4.5-22-5.5-6.3-1-15.6-2-20.5-2.2-4.9-0.2-11.1-0.2-13.7 0zm81.5 87.5l-37.2 37.2c2.9 4.6 4.5 8.7 5.3 12 0.9 3.3 1.6 8.4 1.6 11.2 0 2.9-0.5 7.7-1.1 10.5-0.6 2.9-2.5 7.9-4.3 11.2-1.7 3.2-5.3 8-8.1 10.5-2.7 2.6-7 5.9-9.5 7.4-2.5 1.4-7.2 3.3-10.5 4.2-3.3 0.8-8.2 1.5-11 1.5-2.7 0-7-0.5-9.5-1.1-2.5-0.5-6.9-2.2-9.8-3.7l-5.3-2.7c-8.8 8.5-16.8 16.2-23.4 22.5-6.6 6.3-17 16.2-23 22-6.1 5.8-15.2 14.4-20.3 19.2l-9.2 8.8c7.4 6.4 13.3 10.7 18 13.8 4.7 3.1 13 7.7 18.5 10.3 5.5 2.7 14.1 6.1 19 7.8 4.9 1.6 13.3 3.7 18.5 4.7 6.9 1.3 14.4 1.8 27.5 1.8 13.1 0 20.4-0.4 27-1.7 5-1 13.3-3.1 18.5-4.8 5.2-1.7 13.1-4.8 17.5-6.8 4.4-2.1 11.1-5.7 15-8.1 3.9-2.3 10.6-7.1 15-10.5 4.4-3.4 11.5-10 15.8-14.6 4.4-4.6 11-13.1 14.9-18.9 3.9-5.8 8.7-14.1 10.8-18.5 2.1-4.4 5.2-12.3 6.9-17.5 1.7-5.2 4-14.7 5.1-21 1.4-8 2-16 2-26.3 0-10.2-0.6-18.3-2-26.5-1.2-6.4-3.4-15.5-4.9-20.2-1.6-4.7-4.7-12.3-6.9-17-2.2-4.7-6.7-12.6-9.9-17.5-3.3-4.9-7.4-10.7-9.1-12.8-1.8-2-3.5-3.7-4-3.7-0.4 0-17.5 16.8-37.9 37.2z"
-                />
-              </svg>
-              Appunture
-            </div>
-            <div class="mobile-nav-close" onclick="closeMobileMenu()">
-              &times;
-            </div>
-          </div>
-          <nav class="mobile-nav-links">
-            <a href="userHome.html" onclick="closeMobileMenu()">Home</a>
-            <a href="userBodyMap.html" onclick="closeMobileMenu()">Mapa</a>
-            <a href="userSearch.html" onclick="closeMobileMenu()"
-              >Buscar Sintomas</a
-            >
-            <a href="userAllPoints.html" onclick="closeMobileMenu()"
-              >Todos os Pontos</a
-            >
-            <a href="userFavorites.html" onclick="closeMobileMenu()"
-              >Favoritos</a
-            >
-            <a href="userChatBot.html" onclick="closeMobileMenu()">Chatbot</a>
-            <a href="userLogin.html" onclick="closeMobileMenu()">Login</a>
-          </nav>
-        </div>
       </div>
-      <main>
-        <h1 class="title">Mapa Corporal Interativo</h1>
-        <div class="card body-map-container">
-          <svg
-            width="400"
-            height="600"
-            viewBox="0 0 400 600"
-            xmlns="http://www.w3.org/2000/svg"
-            style="width: 100%; max-width: 400px; height: auto"
-          >
-            <defs>
-              <linearGradient
-                id="bodyGradient"
-                x1="0%"
-                y1="0%"
-                x2="0%"
-                y2="100%"
-              >
-                <stop
-                  offset="0%"
-                  style="stop-color: #e0f2fe; stop-opacity: 1"
-                />
-                <stop
-                  offset="50%"
-                  style="stop-color: #f0f9ff; stop-opacity: 1"
-                />
-                <stop
-                  offset="100%"
-                  style="stop-color: #e0f2fe; stop-opacity: 1"
-                />
-              </linearGradient>
-
-              <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow
-                  dx="0"
-                  dy="2"
-                  stdDeviation="3"
-                  flood-color="#1f2937"
-                  flood-opacity="0.1"
-                />
-              </filter>
-
-              <style>
-                .body-outline {
-                  fill: url(#bodyGradient);
-                  stroke: #2563eb;
-                  stroke-width: 2;
-                  filter: url(#shadow);
-                }
-
-                .acupoint {
-                  fill: #f59e0b;
-                  stroke: #ffffff;
-                  stroke-width: 2;
-                  cursor: pointer;
-                  transition: all 0.3s ease;
-                }
-
-                .acupoint:hover {
-                  fill: #2563eb;
-                  r: 8;
-                  filter: url(#shadow);
-                  animation: pulse 1s infinite;
-                }
-
-                .point-label {
-                  font-family: "Inter", sans-serif;
-                  font-size: 10px;
-                  font-weight: 600;
-                  fill: #374151;
-                  text-anchor: middle;
-                  opacity: 0;
-                  transition: opacity 0.3s ease;
-                  pointer-events: none;
-                }
-
-                .acupoint:hover + .point-label {
-                  opacity: 1;
-                }
-
-                @keyframes pulse {
-                  0%,
-                  100% {
-                    r: 6;
-                  }
-                  50% {
-                    r: 10;
-                  }
-                }
-              </style>
-            </defs>
-
-            <!-- Body Outline -->
-            <g class="body-outline">
-              <!-- Head -->
-              <ellipse cx="200" cy="80" rx="45" ry="55" />
-
-              <!-- Neck -->
-              <rect x="185" y="130" width="30" height="25" rx="15" />
-
-              <!-- Torso -->
-              <ellipse cx="200" cy="250" rx="80" ry="120" />
-
-              <!-- Arms -->
-              <ellipse
-                cx="120"
-                cy="200"
-                rx="25"
-                ry="80"
-                transform="rotate(-15 120 200)"
-              />
-              <ellipse
-                cx="280"
-                cy="200"
-                rx="25"
-                ry="80"
-                transform="rotate(15 280 200)"
-              />
-
-              <!-- Forearms -->
-              <ellipse
-                cx="100"
-                cy="290"
-                rx="20"
-                ry="60"
-                transform="rotate(-25 100 290)"
-              />
-              <ellipse
-                cx="300"
-                cy="290"
-                rx="20"
-                ry="60"
-                transform="rotate(25 300 290)"
-              />
-
-              <!-- Hands -->
-              <ellipse
-                cx="85"
-                cy="350"
-                rx="15"
-                ry="25"
-                transform="rotate(-30 85 350)"
-              />
-              <ellipse
-                cx="315"
-                cy="350"
-                rx="15"
-                ry="25"
-                transform="rotate(30 315 350)"
-              />
-
-              <!-- Legs -->
-              <ellipse cx="165" cy="450" rx="30" ry="100" />
-              <ellipse cx="235" cy="450" rx="30" ry="100" />
-
-              <!-- Feet -->
-              <ellipse cx="165" cy="565" rx="20" ry="25" />
-              <ellipse cx="235" cy="565" rx="20" ry="25" />
-            </g>
-
-            <!-- Acupuncture Points -->
-            <!-- Head Points -->
-            <circle
-              class="acupoint"
-              cx="200"
-              cy="50"
-              r="6"
-              data-point="VG20"
-              onclick="openPointDetails('VG20')"
-            />
-            <text class="point-label" x="200" y="40">Baihui (VG20)</text>
-
-            <circle
-              class="acupoint"
-              cx="185"
-              cy="65"
-              r="6"
-              data-point="EX-HN5"
-              onclick="openPointDetails('EX-HN5')"
-            />
-            <text class="point-label" x="185" y="55">Taiyang</text>
-
-            <circle
-              class="acupoint"
-              cx="215"
-              cy="65"
-              r="6"
-              data-point="EX-HN5"
-              onclick="openPointDetails('EX-HN5')"
-            />
-            <text class="point-label" x="215" y="55">Taiyang</text>
-
-            <!-- Neck Points -->
-            <circle
-              class="acupoint"
-              cx="200"
-              cy="140"
-              r="6"
-              data-point="VC22"
-              onclick="openPointDetails('VC22')"
-            />
-            <text class="point-label" x="200" y="130">Tiantu (VC22)</text>
-
-            <!-- Chest Points -->
-            <circle
-              class="acupoint"
-              cx="200"
-              cy="180"
-              r="6"
-              data-point="VC17"
-              onclick="openPointDetails('VC17')"
-            />
-            <text class="point-label" x="200" y="170">Shanzhong (VC17)</text>
-
-            <circle
-              class="acupoint"
-              cx="170"
-              cy="190"
-              r="6"
-              data-point="E18"
-              onclick="openPointDetails('E18')"
-            />
-            <text class="point-label" x="170" y="180">Rugen (E18)</text>
-
-            <circle
-              class="acupoint"
-              cx="230"
-              cy="190"
-              r="6"
-              data-point="E18"
-              onclick="openPointDetails('E18')"
-            />
-            <text class="point-label" x="230" y="180">Rugen (E18)</text>
-
-            <!-- Abdomen Points -->
-            <circle
-              class="acupoint"
-              cx="200"
-              cy="220"
-              r="6"
-              data-point="VC12"
-              onclick="openPointDetails('VC12')"
-            />
-            <text class="point-label" x="200" y="210">Zhongwan (VC12)</text>
-
-            <circle
-              class="acupoint"
-              cx="200"
-              cy="260"
-              r="6"
-              data-point="VC8"
-              onclick="openPointDetails('VC8')"
-            />
-            <text class="point-label" x="200" y="250">Shenque (VC8)</text>
-
-            <circle
-              class="acupoint"
-              cx="200"
-              cy="300"
-              r="6"
-              data-point="VC6"
-              onclick="openPointDetails('VC6')"
-            />
-            <text class="point-label" x="200" y="290">Qihai (VC6)</text>
-
-            <!-- Arm Points -->
-            <circle
-              class="acupoint"
-              cx="130"
-              cy="160"
-              r="6"
-              data-point="IG15"
-              onclick="openPointDetails('IG15')"
-            />
-            <text class="point-label" x="130" y="150">Jianyu (IG15)</text>
-
-            <circle
-              class="acupoint"
-              cx="270"
-              cy="160"
-              r="6"
-              data-point="IG15"
-              onclick="openPointDetails('IG15')"
-            />
-            <text class="point-label" x="270" y="150">Jianyu (IG15)</text>
-
-            <circle
-              class="acupoint"
-              cx="110"
-              cy="220"
-              r="6"
-              data-point="IG11"
-              onclick="openPointDetails('IG11')"
-            />
-            <text class="point-label" x="110" y="210">Quchi (IG11)</text>
-
-            <circle
-              class="acupoint"
-              cx="290"
-              cy="220"
-              r="6"
-              data-point="IG11"
-              onclick="openPointDetails('IG11')"
-            />
-            <text class="point-label" x="290" y="210">Quchi (IG11)</text>
-
-            <circle
-              class="acupoint"
-              cx="95"
-              cy="280"
-              r="6"
-              data-point="IG4"
-              onclick="openPointDetails('IG4')"
-            />
-            <text class="point-label" x="95" y="270">Hegu (IG4)</text>
-
-            <circle
-              class="acupoint"
-              cx="305"
-              cy="280"
-              r="6"
-              data-point="IG4"
-              onclick="openPointDetails('IG4')"
-            />
-            <text class="point-label" x="305" y="270">Hegu (IG4)</text>
-
-            <!-- Back Points (visible from front) -->
-            <circle
-              class="acupoint"
-              cx="180"
-              cy="320"
-              r="6"
-              data-point="B23"
-              onclick="openPointDetails('B23')"
-            />
-            <text class="point-label" x="180" y="310">Shenshu (B23)</text>
-
-            <circle
-              class="acupoint"
-              cx="220"
-              cy="320"
-              r="6"
-              data-point="B23"
-              onclick="openPointDetails('B23')"
-            />
-            <text class="point-label" x="220" y="310">Shenshu (B23)</text>
-
-            <!-- Leg Points -->
-            <circle
-              class="acupoint"
-              cx="165"
-              cy="380"
-              r="6"
-              data-point="E36"
-              onclick="openPointDetails('E36')"
-            />
-            <text class="point-label" x="165" y="370">Zusanli (E36)</text>
-
-            <circle
-              class="acupoint"
-              cx="235"
-              cy="380"
-              r="6"
-              data-point="E36"
-              onclick="openPointDetails('E36')"
-            />
-            <text class="point-label" x="235" y="370">Zusanli (E36)</text>
-
-            <circle
-              class="acupoint"
-              cx="150"
-              cy="420"
-              r="6"
-              data-point="BP6"
-              onclick="openPointDetails('BP6')"
-            />
-            <text class="point-label" x="150" y="410">Sanyinjiao (BP6)</text>
-
-            <circle
-              class="acupoint"
-              cx="250"
-              cy="420"
-              r="6"
-              data-point="BP6"
-              onclick="openPointDetails('BP6')"
-            />
-            <text class="point-label" x="250" y="410">Sanyinjiao (BP6)</text>
-
-            <circle
-              class="acupoint"
-              cx="165"
-              cy="480"
-              r="6"
-              data-point="F3"
-              onclick="openPointDetails('F3')"
-            />
-            <text class="point-label" x="165" y="470">Taichong (F3)</text>
-
-            <circle
-              class="acupoint"
-              cx="235"
-              cy="480"
-              r="6"
-              data-point="F3"
-              onclick="openPointDetails('F3')"
-            />
-            <text class="point-label" x="235" y="470">Taichong (F3)</text>
-
-            <!-- Foot Points -->
-            <circle
-              class="acupoint"
-              cx="165"
-              cy="530"
-              r="6"
-              data-point="R1"
-              onclick="openPointDetails('R1')"
-            />
-            <text class="point-label" x="165" y="520">Yongquan (R1)</text>
-
-            <circle
-              class="acupoint"
-              cx="235"
-              cy="530"
-              r="6"
-              data-point="R1"
-              onclick="openPointDetails('R1')"
-            />
-            <text class="point-label" x="235" y="520">Yongquan (R1)</text>
-
-            <!-- Background decoration -->
-            <circle cx="50" cy="100" r="3" fill="#e0f2fe" opacity="0.5" />
-            <circle cx="350" cy="150" r="4" fill="#ddd6fe" opacity="0.5" />
-            <circle cx="80" cy="400" r="2" fill="#fef3c7" opacity="0.5" />
-            <circle cx="320" cy="450" r="3" fill="#ecfdf5" opacity="0.5" />
-          </svg>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="grid-3">
-          <div class="card quick-action-card">
-            <div class="quick-action-number">1</div>
-            <h3>Passe o Mouse</h3>
-            <p class="text-muted">
-              Passe o mouse sobre os pontos laranja para ver os nomes
-            </p>
-          </div>
-          <div class="card quick-action-card">
-            <div class="quick-action-number">2</div>
-            <h3>Clique nos Pontos</h3>
-            <p class="text-muted">
-              Clique nos pontos para ver detalhes completos
-            </p>
-          </div>
-          <div class="card quick-action-card">
-            <div class="quick-action-number">3</div>
-            <h3>Explore Regiões</h3>
-            <p class="text-muted">Explore diferentes regiões do corpo humano</p>
-          </div>
-        </div>
-      </main>
-      <footer class="footer">
-        © 2025 Appunture. Todos os direitos reservados.
-      </footer>
     </div>
-    <script src="../mobile-menu.js"></script>
+
     <script>
-      // Function to handle acupuncture point clicks
-      function openPointDetails(pointId) {
-        // Navigate to the point details page with the point ID
-        window.location.href = `userPointsDetails.html?id=${pointId}`;
+      function setPlane(plane, btn) {
+        document
+          .querySelectorAll(".plane-button")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
       }
-
-      // Add additional click handlers for better browser compatibility
-      document.addEventListener("DOMContentLoaded", function () {
-        const acupoints = document.querySelectorAll(".acupoint");
-
-        acupoints.forEach((point) => {
-          point.addEventListener("click", function (e) {
-            const pointId = this.getAttribute("data-point");
-            if (pointId) {
-              openPointDetails(pointId);
-            }
-          });
-
-          // Add keyboard accessibility
-          point.addEventListener("keydown", function (e) {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              const pointId = this.getAttribute("data-point");
-              if (pointId) {
-                openPointDetails(pointId);
-              }
-            }
-          });
-
-          // Make points focusable for keyboard navigation
-          point.setAttribute("tabindex", "0");
-          point.setAttribute("role", "button");
-          point.setAttribute(
-            "aria-label",
-            `Ponto de acupuntura ${this.getAttribute("data-point")}`
-          );
-        });
-
-        // Add visual feedback for points
-        acupoints.forEach((point) => {
-          point.addEventListener("mouseenter", function () {
-            this.style.transform = "scale(1.2)";
-          });
-
-          point.addEventListener("mouseleave", function () {
-            this.style.transform = "scale(1)";
-          });
-        });
-      });
     </script>
   </body>
 </html>

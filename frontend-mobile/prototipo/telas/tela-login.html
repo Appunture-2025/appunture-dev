@@ -36,78 +36,96 @@
         background: var(--background);
         min-height: 100vh;
         display: flex;
-        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
 
-      .container {
-        flex: 1;
+      .phone-frame {
+        width: 375px;
+        height: 812px;
+        background: var(--background);
+        border-radius: 40px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        position: relative;
+        border: 12px solid #1a1a1a;
+      }
+
+      .phone-frame::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        height: 30px;
+        background: #1a1a1a;
+        border-radius: 0 0 20px 20px;
+        z-index: 10;
+      }
+
+      .screen {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        padding: 60px 24px 24px;
         display: flex;
         flex-direction: column;
-        max-width: 400px;
-        margin: 0 auto;
-        padding: 20px;
-        width: 100%;
+        justify-content: center;
       }
 
       .header {
         text-align: center;
-        padding: 40px 0;
+        margin-bottom: 48px;
       }
 
       .logo-container {
-        width: 80px;
-        height: 80px;
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        border-radius: 20px;
+        width: 120px;
+        height: 120px;
+        border-radius: 60px;
+        background: var(--surface);
         display: flex;
-        align-items: center;
         justify-content: center;
-        margin: 0 auto 20px;
+        align-items: center;
+        margin: 0 auto 24px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
 
       .logo-container i {
-        font-size: 40px;
-        color: white;
+        font-size: 64px;
+        color: var(--primary);
       }
 
       .title {
-        font-size: 28px;
+        font-size: 32px;
         font-weight: 700;
         color: var(--text);
         margin-bottom: 8px;
       }
 
       .subtitle {
-        font-size: 16px;
+        font-size: 18px;
         color: var(--text-secondary);
       }
 
       .form {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
+        margin-bottom: 32px;
       }
 
       .input-container {
         display: flex;
         align-items: center;
         background: var(--surface);
-        border: 1px solid var(--border);
         border-radius: 12px;
-        padding: 0 16px;
-        height: 52px;
-        transition: border-color 0.2s;
-      }
-
-      .input-container:focus-within {
-        border-color: var(--primary);
+        padding: 4px 16px;
+        margin-bottom: 16px;
+        border: 1px solid var(--border);
       }
 
       .input-container i {
         color: var(--text-secondary);
-        font-size: 18px;
-        margin-right: 12px;
+        font-size: 20px;
+        width: 24px;
       }
 
       .input-container input {
@@ -115,8 +133,9 @@
         border: none;
         outline: none;
         font-size: 16px;
-        background: transparent;
         color: var(--text);
+        padding: 12px;
+        background: transparent;
       }
 
       .input-container input::placeholder {
@@ -124,53 +143,46 @@
       }
 
       .password-toggle {
+        background: none;
+        border: none;
         padding: 8px;
         cursor: pointer;
+        color: var(--text-secondary);
       }
 
       .forgot-password {
         text-align: right;
-        margin-top: -8px;
+        margin-bottom: 24px;
       }
 
       .forgot-password a {
+        font-size: 14px;
         color: var(--primary);
         text-decoration: none;
-        font-size: 14px;
       }
 
-      .btn {
-        height: 52px;
-        border-radius: 12px;
+      .login-button {
+        width: 100%;
+        background: var(--primary);
         border: none;
+        border-radius: 12px;
+        padding: 16px;
         font-size: 16px;
         font-weight: 600;
+        color: var(--surface);
         cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        transition: transform 0.1s, opacity 0.2s;
+        margin-bottom: 24px;
+        transition: opacity 0.2s;
       }
 
-      .btn:active {
-        transform: scale(0.98);
-      }
-
-      .btn-primary {
-        background: var(--primary);
-        color: white;
-      }
-
-      .btn-primary:hover {
+      .login-button:hover {
         opacity: 0.9;
       }
 
       .divider {
         display: flex;
         align-items: center;
-        gap: 16px;
-        margin: 8px 0;
+        margin-bottom: 24px;
       }
 
       .divider-line {
@@ -180,103 +192,104 @@
       }
 
       .divider-text {
-        color: var(--text-secondary);
+        margin: 0 16px;
         font-size: 14px;
+        color: var(--text-secondary);
       }
 
       .social-buttons {
         display: flex;
         gap: 12px;
+        margin-bottom: 24px;
       }
 
-      .btn-social {
+      .social-button {
         flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
         background: var(--surface);
         border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+        font-size: 16px;
+        font-weight: 500;
         color: var(--text);
+        cursor: pointer;
+        transition: background 0.2s;
       }
 
-      .btn-social i {
-        font-size: 20px;
+      .social-button:hover {
+        background: var(--background);
       }
 
-      .btn-social.google i {
+      .social-button i {
+        font-size: 24px;
+      }
+
+      .social-button .fa-google {
         color: #db4437;
       }
 
-      .btn-outline {
+      .register-button {
+        width: 100%;
         background: transparent;
         border: 1px solid var(--primary);
+        border-radius: 12px;
+        padding: 16px;
+        font-size: 16px;
+        font-weight: 600;
         color: var(--primary);
+        cursor: pointer;
+        transition: background 0.2s;
       }
 
-      .btn-ghost {
-        background: transparent;
-        color: var(--text-secondary);
-        border: none;
+      .register-button:hover {
+        background: rgba(0, 122, 255, 0.05);
       }
 
       .footer {
-        padding: 20px 0;
         text-align: center;
+        padding-top: 16px;
       }
 
-      /* Mobile Phone Frame */
+      .guest-button {
+        font-size: 14px;
+        color: var(--text-secondary);
+        text-decoration: underline;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 16px;
+      }
+
+      /* Para visualização em desktop */
       @media (min-width: 500px) {
         body {
           background: #1a1a2e;
           padding: 20px;
-          justify-content: center;
-        }
-
-        .phone-frame {
-          max-width: 375px;
-          margin: 0 auto;
-          background: var(--background);
-          border-radius: 40px;
-          overflow: hidden;
-          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-          position: relative;
-        }
-
-        .phone-frame::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 150px;
-          height: 30px;
-          background: #000;
-          border-radius: 0 0 20px 20px;
-          z-index: 10;
-        }
-
-        .container {
-          padding-top: 50px;
-          min-height: 700px;
         }
       }
     </style>
   </head>
   <body>
     <div class="phone-frame">
-      <div class="container">
+      <div class="screen">
         <div class="header">
           <div class="logo-container">
-            <i class="fas fa-spa"></i>
+            <i class="fas fa-staff-snake"></i>
           </div>
           <h1 class="title">Appunture</h1>
           <p class="subtitle">Acupuntura Digital</p>
         </div>
 
-        <form class="form" onsubmit="handleLogin(event)">
+        <form class="form">
           <div class="input-container">
             <i class="fas fa-envelope"></i>
             <input
               type="email"
               placeholder="Email"
-              id="email"
               value="usuario@exemplo.com"
             />
           </div>
@@ -289,16 +302,20 @@
               id="password"
               value="••••••••"
             />
-            <div class="password-toggle" onclick="togglePassword()">
+            <button
+              type="button"
+              class="password-toggle"
+              onclick="togglePassword()"
+            >
               <i class="fas fa-eye" id="eye-icon"></i>
-            </div>
+            </button>
           </div>
 
           <div class="forgot-password">
-            <a href="#" onclick="handleForgotPassword()">Esqueci minha senha</a>
+            <a href="#">Esqueci minha senha</a>
           </div>
 
-          <button type="submit" class="btn btn-primary">Entrar</button>
+          <button type="submit" class="login-button">Entrar</button>
 
           <div class="divider">
             <div class="divider-line"></div>
@@ -307,11 +324,7 @@
           </div>
 
           <div class="social-buttons">
-            <button
-              type="button"
-              class="btn btn-social google"
-              onclick="handleGoogleLogin()"
-            >
+            <button type="button" class="social-button">
               <i class="fab fa-google"></i>
               Google
             </button>
@@ -323,57 +336,28 @@
             <div class="divider-line"></div>
           </div>
 
-          <button
-            type="button"
-            class="btn btn-outline"
-            onclick="location.href='userRegister.html'"
-          >
-            Criar conta
-          </button>
+          <button type="button" class="register-button">Criar conta</button>
         </form>
 
         <div class="footer">
-          <button
-            type="button"
-            class="btn btn-ghost"
-            onclick="location.href='userHome.html'"
-          >
-            Continuar como visitante
-          </button>
+          <button class="guest-button">Continuar como visitante</button>
         </div>
       </div>
     </div>
 
     <script>
-      function handleLogin(e) {
-        e.preventDefault();
-        location.href = "userHome.html";
-      }
-
       function togglePassword() {
-        const input = document.getElementById("password");
-        const icon = document.getElementById("eye-icon");
-        if (input.type === "password") {
-          input.type = "text";
-          icon.classList.remove("fa-eye");
-          icon.classList.add("fa-eye-slash");
+        const password = document.getElementById("password");
+        const eyeIcon = document.getElementById("eye-icon");
+        if (password.type === "password") {
+          password.type = "text";
+          eyeIcon.classList.remove("fa-eye");
+          eyeIcon.classList.add("fa-eye-slash");
         } else {
-          input.type = "password";
-          icon.classList.remove("fa-eye-slash");
-          icon.classList.add("fa-eye");
+          password.type = "password";
+          eyeIcon.classList.remove("fa-eye-slash");
+          eyeIcon.classList.add("fa-eye");
         }
-      }
-
-      function handleForgotPassword() {
-        alert(
-          "Um email de recuperação será enviado para: " +
-            document.getElementById("email").value
-        );
-      }
-
-      function handleGoogleLogin() {
-        alert("Login com Google em desenvolvimento");
-        location.href = "userHome.html";
       }
     </script>
   </body>

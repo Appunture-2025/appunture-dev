@@ -97,6 +97,46 @@ Este diagrama representa o fluxo de mapeamento de sintomas para pontos de acupun
 
 \figura{DIAGRAMA DE SEQUÊNCIA - MAPEAMENTO DE SINTOMAS}{0.85}{fig/seq-mapper.png}{Os autores (2025)}{seq-mapper}{}{}
 
+% ------------------------------------------------------------------------------
+\section{HU-09: Autenticação de Usuário}
+\label{apendice:seq-auth}
+
+Os diagramas a seguir representam os fluxos de autenticação do sistema, incluindo login com email/senha, cadastro de novo usuário e login social via Google.
+
+\figura{DIAGRAMA DE SEQUÊNCIA - LOGIN COM EMAIL/SENHA}{0.75}{fig/seq-loginemailsenha.png}{Os autores (2025)}{seq-login}{}{}
+
+\figura{DIAGRAMA DE SEQUÊNCIA - CADASTRO DE USUÁRIO}{0.75}{fig/seq-cadastro.png}{Os autores (2025)}{seq-cadastro}{}{}
+
+\figura{DIAGRAMA DE SEQUÊNCIA - LOGIN SOCIAL (GOOGLE)}{0.75}{fig/seq-loginsocial.png}{Os autores (2025)}{seq-google}{}{}
+
+% ------------------------------------------------------------------------------
+\section{HU-10: Navegação por Meridianos}
+\label{apendice:seq-meridians}
+
+Os diagramas a seguir representam os fluxos de navegação pelos meridianos do sistema.
+
+\figura{DIAGRAMA DE SEQUÊNCIA - LISTAR MERIDIANOS}{0.75}{fig/seq-listarmeridianos.png}{Os autores (2025)}{seq-listarmeridianos}{}{}
+
+\figura{DIAGRAMA DE SEQUÊNCIA - ACESSAR MERIDIANO}{0.75}{fig/seq-acessarmeridiano.png}{Os autores (2025)}{seq-acessarmeridiano}{}{}
+
+\figura{DIAGRAMA DE SEQUÊNCIA - INFORMAÇÕES DO MERIDIANO}{0.70}{fig/seq-infosmeridiano.png}{Os autores (2025)}{seq-infosmeridiano}{}{}
+
+% ------------------------------------------------------------------------------
+\section{HU-11: Configurações e Personalização}
+\label{apendice:seq-config}
+
+Os diagramas a seguir representam os fluxos de configuração e personalização do aplicativo.
+
+\figura{DIAGRAMA DE SEQUÊNCIA - ALTERNAR TEMA}{0.75}{fig/seq-apptheme.png}{Os autores (2025)}{seq-theme}{}{}
+
+\figura{DIAGRAMA DE SEQUÊNCIA - NOTIFICAÇÕES}{0.75}{fig/seq-onoffnotifs.png}{Os autores (2025)}{seq-notifs}{}{}
+
+\figura{DIAGRAMA DE SEQUÊNCIA - MODO OFFLINE}{0.70}{fig/seq-offline.png}{Os autores (2025)}{seq-offline}{}{}
+
+\figura{DIAGRAMA DE SEQUÊNCIA - LOGOUT}{0.75}{fig/seq-logout.png}{Os autores (2025)}{seq-logout}{}{}
+
+\figura{DIAGRAMA DE SEQUÊNCIA - STATUS DE SINCRONIZAÇÃO}{0.70}{fig/seq-statussync.png}{Os autores (2025)}{seq-statussync}{}{}
+
 % ==============================================================================
 % APÊNDICE D - MODELO LÓGICO DO BANCO DE DADOS
 % ==============================================================================
@@ -134,6 +174,8 @@ Este apêndice apresenta as histórias de usuário detalhadas do sistema Appuntu
     \item O sistema deve sugerir correções para termos digitados incorretamente
 \end{enumerate}
 
+\figura{PROTÓTIPO - BUSCA DE PONTOS}{0.30}{fig/proto-busca.png}{Os autores (2025)}{hu01-busca}{}{}
+
 % ------------------------------------------------------------------------------
 \section{HU-02: Detalhes do Ponto de Acupuntura}
 \label{hu:detalhes}
@@ -154,6 +196,8 @@ Este apêndice apresenta as histórias de usuário detalhadas do sistema Appuntu
     \item O sistema deve indicar precauções e contraindicações
 \end{enumerate}
 
+\figura{PROTÓTIPO - DETALHES DO PONTO}{0.30}{fig/proto-detalhes.png}{Os autores (2025)}{hu02-detalhes}{}{}
+
 % ------------------------------------------------------------------------------
 \section{HU-03: Atlas Visual Interativo}
 \label{hu:atlas}
@@ -173,6 +217,8 @@ Este apêndice apresenta as histórias de usuário detalhadas do sistema Appuntu
     \item O sistema deve sincronizar a visualização com a busca textual
 \end{enumerate}
 
+\figura{PROTÓTIPO - ATLAS VISUAL}{0.30}{fig/proto-mapa.png}{Os autores (2025)}{hu03-mapa}{}{}
+
 % ------------------------------------------------------------------------------
 \section{HU-04: Gerenciamento de Favoritos}
 \label{hu:favoritos}
@@ -191,6 +237,8 @@ Este apêndice apresenta as histórias de usuário detalhadas do sistema Appuntu
     \item O sistema deve sincronizar favoritos com a conta do usuário
     \item O sistema deve permitir exportar lista de favoritos
 \end{enumerate}
+
+\figura{PROTÓTIPO - FAVORITOS}{0.30}{fig/proto-favoritos.png}{Os autores (2025)}{hu04-favoritos}{}{}
 
 % ------------------------------------------------------------------------------
 \section{HU-05: Anotações Clínicas}
@@ -250,6 +298,8 @@ Este apêndice apresenta as histórias de usuário detalhadas do sistema Appuntu
     \item O sistema deve indicar limitações e recomendar consulta profissional
 \end{enumerate}
 
+\figura{PROTÓTIPO - ASSISTENTE IA}{0.30}{fig/proto-chat.png}{Os autores (2025)}{hu07-chat}{}{}
+
 % ------------------------------------------------------------------------------
 \section{HU-08: Mapeamento de Sintomas}
 \label{hu:mapper}
@@ -269,5 +319,78 @@ Este apêndice apresenta as histórias de usuário detalhadas do sistema Appuntu
     \item O sistema deve salvar histórico de mapeamentos realizados
     \item O sistema deve incluir aviso de uso educacional apenas
 \end{enumerate}
+
+\figura{PROTÓTIPO - LISTA DE PONTOS}{0.30}{fig/proto-meridianos.png}{Os autores (2025)}{hu08-meridianos}{}{}
+
+% ------------------------------------------------------------------------------
+\section{HU-09: Autenticação de Usuário}
+\label{hu:autenticacao}
+
+\textbf{Como} usuário do aplicativo, \\
+\textbf{Quero} criar uma conta e realizar login de forma segura, \\
+\textbf{Para que} eu possa acessar recursos personalizados e sincronizar meus dados.
+
+\subsection*{Critérios de Aceitação}
+
+\begin{enumerate}
+    \item O sistema deve permitir cadastro com nome, email e senha
+    \item O sistema deve validar força mínima da senha (6 caracteres)
+    \item O sistema deve exigir confirmação de senha no cadastro
+    \item O sistema deve permitir login com email e senha
+    \item O sistema deve oferecer login social via Google
+    \item O sistema deve permitir recuperação de senha por email
+    \item O sistema deve manter sessão ativa entre execuções do app
+    \item O sistema deve permitir acesso como visitante com funcionalidades limitadas
+\end{enumerate}
+
+\figura{PROTÓTIPO - LOGIN}{0.30}{fig/proto-login.png}{Os autores (2025)}{hu09-login}{}{}
+
+\figura{PROTÓTIPO - CADASTRO}{0.30}{fig/proto-cadastro.png}{Os autores (2025)}{hu09-cadastro}{}{}
+
+% ------------------------------------------------------------------------------
+\section{HU-10: Navegação por Meridianos}
+\label{hu:meridianos}
+
+\textbf{Como} estudante ou profissional de acupuntura, \\
+\textbf{Quero} navegar pelos meridianos da medicina tradicional chinesa, \\
+\textbf{Para que} eu possa estudar os pontos organizados por canal energético.
+
+\subsection*{Critérios de Aceitação}
+
+\begin{enumerate}
+    \item O sistema deve listar os 12 meridianos principais e 2 vasos extraordinários
+    \item O sistema deve exibir nome em português, pinyin e caracteres chineses
+    \item O sistema deve mostrar o elemento Wu Xing associado a cada meridiano
+    \item O sistema deve indicar o horário de maior atividade energética
+    \item O sistema deve exibir o órgão relacionado ao meridiano
+    \item O sistema deve mostrar a quantidade de pontos em cada meridiano
+    \item O sistema deve permitir visualizar todos os pontos de um meridiano
+    \item O sistema deve usar cores características para cada elemento
+\end{enumerate}
+
+\figura{PROTÓTIPO - NAVEGAÇÃO POR MERIDIANOS}{0.30}{fig/proto-meridianos.png}{Os autores (2025)}{hu10-meridianos}{}{}
+
+% ------------------------------------------------------------------------------
+\section{HU-11: Configurações e Personalização}
+\label{hu:configuracoes}
+
+\textbf{Como} usuário do aplicativo, \\
+\textbf{Quero} personalizar as configurações do aplicativo, \\
+\textbf{Para que} eu possa adaptar a experiência às minhas preferências.
+
+\subsection*{Critérios de Aceitação}
+
+\begin{enumerate}
+    \item O sistema deve permitir alternar entre tema claro, escuro e automático
+    \item O sistema deve salvar a preferência de tema do usuário
+    \item O sistema deve permitir ativar ou desativar notificações push
+    \item O sistema deve exibir informações da conta do usuário logado
+    \item O sistema deve mostrar status de sincronização e última atualização
+    \item O sistema deve permitir ativar modo offline para economia de dados
+    \item O sistema deve permitir logout com confirmação
+    \item O sistema deve exibir versão do aplicativo e informações de suporte
+\end{enumerate}
+
+\figura{PROTÓTIPO - TELA INICIAL}{0.30}{fig/proto-home.png}{Os autores (2025)}{hu11-home}{}{}
 
 \end{apendicesenv}
