@@ -4,6 +4,8 @@
 \usepackage[utf8]{inputenc}		% Codificacao do documento (conversão automática dos acentos)
 \usepackage{lastpage}			% Usado pela Ficha catalográfica
 \usepackage{indentfirst}		% Indenta o primeiro parágrafo de cada seção.
+\usepackage{graphicx}			% Inclusão de gráficos e figuras
+\graphicspath{{./fig/}{./}}		% Define o caminho das imagens
 
 \usepackage{ifthen}		    	% para montar condicionais
 \usepackage[brazil]{babel}		% para utilizar termos em portugues
@@ -53,6 +55,38 @@
 \newlistentry{quadro}{loq}{0}
 \renewcommand{\cftquadroname}{QUADRO\space}
 \renewcommand*{\cftquadroaftersnum}{\hfill--\hfill}
+
+% Comando para inserir figuras
+% ----------------------------------------------------------
+%   Parametros:
+%    1 caption
+%    2 percent textwidth
+%    3 arquivo da figura
+%    4 fonte
+%    5 fig:label
+%    6 nota
+%    7 legenda
+\newcommand{\figura}[7]{
+  {\centering
+   \footnotesize
+   \begin{figure}[!ht]
+   \centering
+        \caption{\uppercase{#1}}
+        \includegraphics[width=#2\textwidth]{#3}
+        \label{fig:#5}
+    
+    \begin{minipage}{#2\textwidth} 
+        \vspace{2mm}\centering
+            \par FONTE:~#4
+            \ifthenelse{\equal{#6}{}}{}
+            { \par\hangindent=14mm NOTA: #6 }
+            
+            \ifthenelse{\equal{#7}{}}{}
+            { \par\hangindent=14mm LEGENDA: #7 }
+    \end{minipage}
+    \end{figure}
+    }
+}
 
 % ===========================================================
 % CITAÇÕES - Usando abntex2cite (NATIVO do abnTeX2)
