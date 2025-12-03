@@ -94,19 +94,14 @@ Conforme \citeonline{cohn2004}, os critérios de aceitação ``definem os limite
         \item Critérios de aceitação: Quando \textit{online}, deve utilizar IA Generativa (Spring AI + Google Gemini) para informações contextualizadas. Respostas devem ser baseadas na base de dados técnica do sistema.
     \end{itemize}
     
-    \item Como administrador, desejo acessar o painel web, para visualizar e gerenciar os dados do aplicativo.
+    \item Como administrador, desejo gerenciar os dados do sistema através dos consoles Firebase e Google Cloud, para manter o banco de dados atualizado.
     \begin{itemize}
-        \item Critérios de aceitação: Login restrito ao perfil administrador. Interface adaptada para \textit{desktop}.
+        \item Critérios de aceitação: Acesso aos consoles Firebase (Firestore, Auth, Storage) e GCP. Operações de CRUD nos documentos.
     \end{itemize}
     
-    \item Como administrador, desejo cadastrar e editar pontos de acupuntura, para manter o banco de dados atualizado.
+    \item Como administrador, desejo mapear as coordenadas dos pontos no atlas, para permitir a visualização correta pelos usuários.
     \begin{itemize}
-        \item Critérios de aceitação: Deve permitir adicionar nome, descrição, localização, meridiano, imagem etc. Interface amigável com validação dos campos.
-    \end{itemize}
-    
-    \item Como administrador, desejo consultar relatórios de uso, para entender como os usuários estão utilizando a plataforma.
-    \begin{itemize}
-        \item Critérios de aceitação: Relatórios por data, localização, pontos mais acessados. Visualização em gráfico ou tabela.
+        \item Critérios de aceitação: Ferramenta Point Mapper funcional. Exportação de coordenadas em JSON. Prévia visual do posicionamento.
     \end{itemize}
 \end{enumerate}
 
@@ -155,11 +150,11 @@ O \autoref{qua:backlog} apresenta o \textit{Product Backlog} do projeto \textit{
 \hline
 13 & Backend RESTful (Java Firestore + JWT) & Backend & 5 & Alta \\
 \hline
-14 & CRUD completo de pontos e sintomas (admin) & Web/Backend & 6 & Alta \\
+14 & APIs REST para gestão de pontos e sintomas & Backend & 6 & Alta \\
 \hline
-15 & Upload de imagens SVG e definição de coordenadas & Web Admin & 3 & Média \\
+15 & Ferramenta Point Mapper para coordenadas & Web & 3 & Média \\
 \hline
-16 & Controle de acesso por perfil (user/admin) & Todas & 3 & Alta \\
+16 & Controle de acesso por perfil (user/admin) & Backend & 3 & Alta \\
 \hline
 17 & Deploy e testes finais (Web Mobile) & Todas & 5 & Média \\
 \hline
@@ -197,7 +192,7 @@ Funcionalidade de favoritos e anotações & 6 \\
 \hline
 Backend com autenticação e CRUD de pontos/sintomas & 8 \\
 \hline
-Painel administrativo para cadastro e upload de imagens SVG & 4 \\
+Ferramenta Point Mapper para mapeamento de coordenadas & 4 \\
 \hline
 Sistema de sincronização (SQLite $\leftrightarrow$ Backend) & 6 \\
 \hline
@@ -244,7 +239,7 @@ Sprint 5 & 8--9 & 10 & Tela de corpo humano com SVG interativo \\
 \hline
 Sprint 6 & 10--11 & 10 & Favoritos, anotações, sincronização offline e online \\
 \hline
-Sprint 7 & 12--13 & 12 & Backend completo + painel administrativo com upload de SVG \\
+Sprint 7 & 12--13 & 12 & Backend completo + ferramenta Point Mapper \\
 \hline
 Sprint 8 & 14--15 & 0 & Testes finais, deploy mobile/web \\
 \hline

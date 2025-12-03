@@ -12,8 +12,7 @@ O \textit{Appunture} foi desenvolvido seguindo uma arquitetura híbrida distribu
 \begin{itemize}
     \item \textbf{Aplicativo Móvel (React Native + Expo)}: Interface principal do usuário com estratégia ``\textit{Offline-First}'';
     \item \textbf{API Backend (Java + Spring Boot)}: Servidor de aplicação responsável pela lógica de negócio, sincronização e Inteligência Artificial;
-    \item \textbf{Interface Web Administrativa (React)}: Painel de administração para gestão de conteúdo;
-    \item \textbf{Ferramentas de Apoio (Python/HTML)}: Scripts de migração de dados e ferramenta de mapeamento de pontos.
+    \item \textbf{Ferramentas de Apoio (Python/HTML)}: Scripts de migração de dados e ferramenta de mapeamento de pontos (Point Mapper).
 \end{itemize}
 
 Esta arquitetura garante alta disponibilidade, performance otimizada e experiência consistente mesmo em ambientes com conectividade limitada.
@@ -267,20 +266,17 @@ Para garantir a precisão da localização dos pontos de acupuntura sobre o atla
     \item \textit{Offline support} com \textit{background sync}.
 \end{itemize}
 
-\subsection{Interface Web Administrativa (React)}
+\subsection{Ferramenta de Mapeamento de Pontos (Point Mapper)}
 
-\textbf{React 18+ com TypeScript:}
+O Point Mapper é uma ferramenta web auxiliar desenvolvida em HTML, CSS e JavaScript puro, utilizada para mapear as coordenadas dos pontos de acupuntura sobre as imagens SVG do atlas anatômico.
+
+\textbf{Funcionalidades:}
 \begin{itemize}
-    \item Biblioteca para interfaces reativas e componentizadas;
-    \item \textit{Hooks} para gerenciamento de estado eficiente;
-    \item \textit{Component library} customizada baseada em Material-UI.
+    \item Seleção de meridiano e ponto a ser mapeado;
+    \item Seleção da vista anatômica (anterior, posterior, lateral, etc.);
+    \item Clique na imagem para definir coordenadas em formato percentual;
+    \item Prévia do marcador na posição selecionada;
+    \item Exportação dos mapeamentos em formato JSON.
 \end{itemize}
 
-\textbf{Funcionalidades Administrativas:}
-\begin{itemize}
-    \item CRUD completo de pontos de acupuntura;
-    \item Gestão de sintomas e relações terapêuticas;
-    \item Gestão da base de conhecimento que alimenta a IA;
-    \item \textit{Dashboard} com métricas de uso;
-    \item Sistema de permissões granular.
-\end{itemize}
+A gestão dos dados do sistema (pontos, sintomas, usuários) é realizada diretamente através das APIs REST protegidas do \textit{backend} e dos consoles administrativos do Firebase e Google Cloud Platform.

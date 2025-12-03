@@ -35,9 +35,9 @@ Quando sem conexão, o usuário pode navegar manualmente pelo atlas anatômico e
 
 A interface do app é construída para promover uma experiência intuitiva e visualmente rica, com mapas anatômicos interativos baseados em SVG, que possibilitam a interação direta com os pontos de acupuntura. A navegação é estruturada para facilitar o acesso rápido às principais funcionalidades, como busca, visualização detalhada, favoritos e anotações, promovendo fluidez e usabilidade.
 
-\subsection{Backend e Web Admin}
+\subsection{Backend e Gestão de Dados}
 
-O \textit{backend} centraliza a gestão dos dados oficiais, incluindo o cadastro e atualização dos pontos, sintomas e suas relações. A gestão do conteúdo é realizada através de APIs REST protegidas, com \textit{endpoints} específicos para operações administrativas que requerem autenticação e permissões adequadas.
+O \textit{backend} centraliza a gestão dos dados oficiais, incluindo o cadastro e atualização dos pontos, sintomas e suas relações. A gestão do conteúdo é realizada através de APIs REST protegidas no \textit{backend}, com acesso administrativo gerenciado pelos consoles do Firebase e Google Cloud Platform.
 
 \section{AUTENTICAÇÃO E SEGURANÇA} \label{sec:autenticacao}
 
@@ -170,17 +170,20 @@ Estas informações são armazenadas localmente no dispositivo e sincronizadas c
 
 \section{GESTÃO DE DADOS} \label{sec:admin}
 
-A gestão do conteúdo do \textit{Appunture} é realizada através de APIs REST protegidas no \textit{backend}, com \textit{endpoints} específicos para operações administrativas (prefixo \texttt{/admin/}). As principais funcionalidades disponíveis incluem:
+A gestão do conteúdo do \textit{Appunture} é realizada através de duas abordagens complementares:
+
+\textbf{APIs REST Protegidas:} O \textit{backend} disponibiliza \textit{endpoints} para operações administrativas que podem ser consumidos por ferramentas externas ou futuras interfaces. A documentação completa está disponível via Swagger/OpenAPI no \textit{endpoint} \texttt{/swagger-ui.html}.
+
+\textbf{Consoles Administrativos:} A gestão operacional dos dados é realizada diretamente através dos consoles do Firebase (Firestore, Authentication, Storage) e Google Cloud Platform, que oferecem interfaces completas para:
 
 \begin{itemize}
-    \item \textit{Endpoints} CRUD para pontos de acupuntura;
-    \item Gestão de sintomas e suas relações com pontos;
-    \item \textit{Upload} de imagens para o Firebase Storage;
-    \item Seed de dados inicial via \texttt{/admin/data/seed};
-    \item Controle de acesso baseado em \textit{roles} (RBAC) com Firebase Custom Claims.
+    \item Visualização e edição de documentos no Firestore;
+    \item Gerenciamento de usuários e permissões no Firebase Authentication;
+    \item \textit{Upload} e organização de imagens no Firebase Storage;
+    \item Monitoramento de logs e métricas no Google Cloud Console.
 \end{itemize}
 
-A documentação completa da API está disponível via Swagger/OpenAPI no \textit{endpoint} \texttt{/swagger-ui.html} do \textit{backend}.
+\textbf{Point Mapper:} Para o mapeamento das coordenadas dos pontos sobre as imagens SVG do atlas, foi desenvolvida uma ferramenta web auxiliar que permite definir visualmente a posição de cada ponto e exportar os dados em formato JSON.
 \section{EXPERIÊNCIA DO USUÁRIO E USABILIDADE} \label{sec:ux}
 
 O desenvolvimento da interface do \textit{Appunture} seguiu princípios de design centrado no usuário, priorizando:
