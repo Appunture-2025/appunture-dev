@@ -16,7 +16,7 @@ logging:
 # Configurações Firebase para produção
 firebase:
   project-id: ${GOOGLE_CLOUD_PROJECT}
-  service-account-key-path: ${GOOGLE_APPLICATION_CREDENTIALS}  # Usar ADC em produção
+  service-account-key-path: ${GOOGLE_APPLICATION_CREDENTIALS:}  # Usar ADC em produção (vazio = usar default credentials)
   storage:
     bucket: ${GOOGLE_CLOUD_PROJECT}.appspot.com
 

@@ -149,14 +149,6 @@ jobs:
       - name: Deploy to Cloud Run
         id: deploy
         run: |
-          # First, clear any previous secret/env var configuration for GOOGLE_APPLICATION_CREDENTIALS
-          gcloud run services update ${{ env.REPOSITORY }} \
-            --region us-central1 \
-            --clear-secrets \
-            --remove-env-vars "GOOGLE_APPLICATION_CREDENTIALS" \
-            --quiet 2>/dev/null || true
-
-          # Now deploy with correct configuration
           gcloud run deploy ${{ env.REPOSITORY }} \
             --image ${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
             --platform managed \
