@@ -43,6 +43,21 @@ class AiChatServiceTest {
         aiChatService = new AiChatService(pointService, symptomService, chatClientBuilder);
     }
 
+    /**
+     * Helper method to mock ChatClient behavior to throw exceptions.
+     * This simulates AI service failures for testing error handling.
+     */
+    private void mockChatClientToThrowException(String exceptionMessage) {
+        ChatClient.ChatClientRequest.CallPromptResponseSpec responseSpec = mock(ChatClient.ChatClientRequest.CallPromptResponseSpec.class);
+        ChatClient.ChatClientRequest.CallPromptResponseSpec callResponse = mock(ChatClient.ChatClientRequest.CallPromptResponseSpec.class);
+        ChatClient.ChatClientRequest.ChatClientRequestSpec requestSpec = mock(ChatClient.ChatClientRequest.ChatClientRequestSpec.class);
+        
+        when(chatClient.prompt()).thenReturn(requestSpec);
+        when(requestSpec.user(anyString())).thenReturn(responseSpec);
+        when(responseSpec.call()).thenReturn(callResponse);
+        when(callResponse.content()).thenThrow(new RuntimeException(exceptionMessage));
+    }
+
     @Test
     void sendMessage_ShouldReturnFallbackMessageWhenAiNotConfigured() {
         // Given
@@ -58,16 +73,7 @@ class AiChatServiceTest {
         
         when(pointService.findAll()).thenReturn(List.of(point));
         when(symptomService.findAll()).thenReturn(List.of(symptom));
-        
-        // Mock ChatClient to throw exception (AI not configured)
-        ChatClient.ChatClientRequest.CallPromptResponseSpec responseSpec = mock(ChatClient.ChatClientRequest.CallPromptResponseSpec.class);
-        ChatClient.ChatClientRequest.CallPromptResponseSpec callResponseSpec = mock(ChatClient.ChatClientRequest.CallPromptResponseSpec.class);
-        ChatClient.ChatClientRequest.ChatClientRequestSpec requestSpec = mock(ChatClient.ChatClientRequest.ChatClientRequestSpec.class);
-        
-        when(chatClient.prompt()).thenReturn(requestSpec);
-        when(requestSpec.user(anyString())).thenReturn(responseSpec);
-        when(responseSpec.call()).thenReturn(callResponseSpec);
-        when(callResponseSpec.content()).thenThrow(new RuntimeException("AI service temporarily unavailable"));
+        mockChatClientToThrowException("AI service temporarily unavailable");
 
         // When
         String response = aiChatService.sendMessage("O que é acupuntura?");
@@ -82,16 +88,7 @@ class AiChatServiceTest {
         // Given - empty data
         when(pointService.findAll()).thenReturn(List.of());
         when(symptomService.findAll()).thenReturn(List.of());
-        
-        // Mock ChatClient to throw exception
-        ChatClient.ChatClientRequest.CallPromptResponseSpec responseSpec = mock(ChatClient.ChatClientRequest.CallPromptResponseSpec.class);
-        ChatClient.ChatClientRequest.CallPromptResponseSpec callResponseSpec = mock(ChatClient.ChatClientRequest.CallPromptResponseSpec.class);
-        ChatClient.ChatClientRequest.ChatClientRequestSpec requestSpec = mock(ChatClient.ChatClientRequest.ChatClientRequestSpec.class);
-        
-        when(chatClient.prompt()).thenReturn(requestSpec);
-        when(requestSpec.user(anyString())).thenReturn(responseSpec);
-        when(responseSpec.call()).thenReturn(callResponseSpec);
-        when(callResponseSpec.content()).thenThrow(new RuntimeException("AI service error"));
+        mockChatClientToThrowException("AI service error");
 
         // When
         String response = aiChatService.sendMessage("Teste");
@@ -112,16 +109,7 @@ class AiChatServiceTest {
         
         when(pointService.findAll()).thenReturn(List.of(point));
         when(symptomService.findAll()).thenReturn(List.of());
-        
-        // Mock ChatClient to throw exception
-        ChatClient.ChatClientRequest.CallPromptResponseSpec responseSpec = mock(ChatClient.ChatClientRequest.CallPromptResponseSpec.class);
-        ChatClient.ChatClientRequest.CallPromptResponseSpec callResponseSpec = mock(ChatClient.ChatClientRequest.CallPromptResponseSpec.class);
-        ChatClient.ChatClientRequest.ChatClientRequestSpec requestSpec = mock(ChatClient.ChatClientRequest.ChatClientRequestSpec.class);
-        
-        when(chatClient.prompt()).thenReturn(requestSpec);
-        when(requestSpec.user(anyString())).thenReturn(responseSpec);
-        when(responseSpec.call()).thenReturn(callResponseSpec);
-        when(callResponseSpec.content()).thenThrow(new RuntimeException("AI service error"));
+        mockChatClientToThrowException("AI service error");
 
         // When
         String response = aiChatService.sendMessage("Consulta");
