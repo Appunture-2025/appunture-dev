@@ -27,15 +27,6 @@ public class SecurityProperties {
                 || !CollectionUtils.isEmpty(cors.getAllowedOriginPatterns()));
     }
 
-    /**
-     * Configuração CORS (Cross-Origin Resource Sharing)
-     * 
-     * ⚠️ ATENÇÃO: O padrão é RESTRITIVO por segurança.
-     * Sempre configure allowed-origins ou allowed-origin-patterns 
-     * explicitamente em application-{profile}.yml
-     * 
-     * NUNCA deixe allowedOrigins = ["*"] em produção!
-     */
     @Getter
     @Setter
     public static class Cors {
