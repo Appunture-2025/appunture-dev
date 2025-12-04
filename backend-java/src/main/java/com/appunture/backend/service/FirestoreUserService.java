@@ -11,10 +11,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Service para operações com usuários usando Firestore
- * Substitui o UserService com JPA
- */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -22,65 +18,41 @@ public class FirestoreUserService {
 
     private final FirestoreUserRepository userRepository;
 
-    /**
-     * Busca um usuário por email
-     */
     public Optional<FirestoreUser> findByEmail(String email) {
         log.debug("Buscando usuário por email: {}", email);
         return userRepository.findByEmail(email);
     }
 
-    /**
-     * Busca um usuário por Firebase UID
-     */
     public Optional<FirestoreUser> findByFirebaseUid(String firebaseUid) {
         log.debug("Buscando usuário por Firebase UID: {}", firebaseUid);
         return userRepository.findByFirebaseUid(firebaseUid);
     }
 
-    /**
-     * Busca um usuário por ID do documento Firestore
-     */
     public Optional<FirestoreUser> findById(String id) {
         log.debug("Buscando usuário por ID: {}", id);
         return userRepository.findById(id);
     }
 
-    /**
-     * Verifica se um email já está cadastrado
-     */
     public boolean existsByEmail(String email) {
         log.debug("Verificando se email existe: {}", email);
         return userRepository.existsByEmail(email);
     }
 
-    /**
-     * Verifica se um Firebase UID já está cadastrado
-     */
     public boolean existsByFirebaseUid(String firebaseUid) {
         log.debug("Verificando se Firebase UID existe: {}", firebaseUid);
         return userRepository.existsByFirebaseUid(firebaseUid);
     }
 
-    /**
-     * Lista todos os usuários (para admin)
-     */
     public List<FirestoreUser> findAll() {
         log.debug("Listando todos os usuários");
         return userRepository.findAll();
     }
 
-    /**
-     * Lista usuários por role
-     */
     public List<FirestoreUser> findByRole(String role) {
         log.debug("Listando usuários por role: {}", role);
         return userRepository.findByRole(role);
     }
 
-    /**
-     * Cria um novo usuário
-     */
     public FirestoreUser createUser(String firebaseUid, String email, String name, String role) {
         log.debug("Criando novo usuário: email={}, role={}", email, role);
         
@@ -106,9 +78,6 @@ public class FirestoreUserService {
         return userRepository.save(user);
     }
 
-    /**
-     * Atualiza um usuário existente
-     */
     public FirestoreUser updateUser(String id, FirestoreUser updates) {
         log.debug("Atualizando usuário: {}", id);
         
@@ -146,9 +115,6 @@ public class FirestoreUserService {
         return userRepository.save(user);
     }
 
-    /**
-     * Deleta um usuário
-     */
     public void deleteUser(String id) {
         log.debug("Deletando usuário: {}", id);
         
@@ -161,9 +127,6 @@ public class FirestoreUserService {
         log.info("Usuário deletado com sucesso: {}", id);
     }
 
-    /**
-     * Adiciona ponto aos favoritos do usuário
-     */
     public void addFavoritePoint(String userId, String pointId) {
         log.debug("Adicionando ponto {} aos favoritos do usuário {}", pointId, userId);
         
@@ -183,9 +146,6 @@ public class FirestoreUserService {
         log.debug("Ponto adicionado aos favoritos com sucesso");
     }
 
-    /**
-     * Remove ponto dos favoritos do usuário
-     */
     public void removeFavoritePoint(String userId, String pointId) {
         log.debug("Removendo ponto {} dos favoritos do usuário {}", pointId, userId);
         
@@ -202,9 +162,6 @@ public class FirestoreUserService {
         }
     }
 
-    /**
-     * Verifica se um ponto está nos favoritos do usuário
-     */
     public boolean isPointFavorited(String userId, String pointId) {
         Optional<FirestoreUser> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) {
@@ -215,9 +172,6 @@ public class FirestoreUserService {
         return user.getFavoritePointIds() != null && user.getFavoritePointIds().contains(pointId);
     }
 
-    /**
-     * Obtém lista de pontos favoritos do usuário
-     */
     public List<String> getFavoritePointIds(String userId) {
         Optional<FirestoreUser> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) {
@@ -228,9 +182,6 @@ public class FirestoreUserService {
         return user.getFavoritePointIds() != null ? user.getFavoritePointIds() : List.of();
     }
 
-    /**
-     * Converte FirestoreUser para UserProfileResponse
-     */
     public UserProfileResponse toProfileResponse(FirestoreUser user) {
         return UserProfileResponse.builder()
                 .id(user.getId())
@@ -246,16 +197,10 @@ public class FirestoreUserService {
                 .build();
     }
 
-    /**
-     * Conta total de usuários
-     */
     public long count() {
         return userRepository.count();
     }
 
-    /**
-     * Atualiza role do usuário
-     */
     public FirestoreUser updateUserRole(String userId, String newRole) {
         log.debug("Atualizando role do usuário {} para {}", userId, newRole);
         
@@ -271,9 +216,6 @@ public class FirestoreUserService {
         return userRepository.save(user);
     }
 
-    /**
-     * Ativa/desativa usuário
-     */
     public FirestoreUser toggleUserEnabled(String userId) {
         log.debug("Alternando status do usuário: {}", userId);
         
@@ -289,9 +231,6 @@ public class FirestoreUserService {
         return userRepository.save(user);
     }
 
-    /**
-     * Atualiza o FCM token do usuário para push notifications
-     */
     public void updateFcmToken(String userId, String fcmToken) {
         log.debug("Atualizando FCM token do usuário: {}", userId);
         
@@ -308,9 +247,6 @@ public class FirestoreUserService {
         log.info("FCM token atualizado para usuário: {}", userId);
     }
 
-    /**
-     * Remove o FCM token do usuário
-     */
     public void removeFcmToken(String userId) {
         log.debug("Removendo FCM token do usuário: {}", userId);
         
@@ -327,25 +263,16 @@ public class FirestoreUserService {
         log.info("FCM token removido do usuário: {}", userId);
     }
 
-    /**
-     * Obtém o FCM token do usuário
-     */
     public String getFcmToken(String userId) {
         Optional<FirestoreUser> userOpt = userRepository.findById(userId);
         return userOpt.map(FirestoreUser::getFcmToken).orElse(null);
     }
 
-    /**
-     * Obtém o FCM token do usuário por Firebase UID
-     */
     public String getFcmTokenByFirebaseUid(String firebaseUid) {
         Optional<FirestoreUser> userOpt = userRepository.findByFirebaseUid(firebaseUid);
         return userOpt.map(FirestoreUser::getFcmToken).orElse(null);
     }
 
-    /**
-     * Adiciona um tópico de notificação ao usuário
-     */
     public void addNotificationTopic(String userId, String topic) {
         log.debug("Adicionando tópico {} ao usuário {}", topic, userId);
         
@@ -365,9 +292,6 @@ public class FirestoreUserService {
         userRepository.save(user);
     }
 
-    /**
-     * Remove um tópico de notificação do usuário
-     */
     public void removeNotificationTopic(String userId, String topic) {
         log.debug("Removendo tópico {} do usuário {}", topic, userId);
         

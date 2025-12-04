@@ -4,20 +4,10 @@ import com.appunture.backend.model.firestore.FirestorePoint;
 import com.appunture.backend.model.firestore.FirestoreSymptom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * AI Chat Service - Provides AI-powered chat functionality using Spring AI with Google Gemini.
- * 
- * This service implements a RAG (Retrieval-Augmented Generation) pattern:
- * 1. Retrieves relevant context from the Firestore database (points and symptoms)
- * 2. Builds an enriched prompt with the context
- * 3. Sends the prompt to Google Gemini via Spring AI
- * 4. Returns contextualized responses about acupuncture
- */
 @Service
 @Slf4j
 public class AiChatService {
@@ -26,7 +16,6 @@ public class AiChatService {
     private final FirestoreSymptomService symptomService;
     private final ChatClient chatClient;
     
-    // Cache simples para não ler o Firestore a cada pergunta
     private String cachedContext = "";
     
     private static final String SYSTEM_PROMPT = """
@@ -44,7 +33,6 @@ public class AiChatService {
         Use os dados do sistema fornecidos abaixo para contextualizar suas respostas.
         """;
 
-    @Autowired
     public AiChatService(FirestorePointService pointService, 
                          FirestoreSymptomService symptomService,
                          ChatClient.Builder chatClientBuilder) {
@@ -58,11 +46,9 @@ public class AiChatService {
     private String buildSystemContext() {
         if (cachedContext.isEmpty()) {
             try {
-                // 1. Busca dados brutos
                 List<FirestorePoint> points = pointService.findAll();
                 List<FirestoreSymptom> symptoms = symptomService.findAll();
 
-                // 2. Formata como texto para a IA ler
                 StringBuilder sb = new StringBuilder();
                 sb.append("DADOS DO SISTEMA APPUNTURE:\n");
                 sb.append("=== PONTOS DE ACUPUNTURA ===\n");
@@ -90,29 +76,18 @@ public class AiChatService {
         return cachedContext;
     }
     
-    /**
-     * Clears the cached context, forcing a refresh on the next request.
-     */
     public void clearCache() {
         this.cachedContext = "";
         log.info("AI context cache cleared");
     }
 
-    /**
-     * Sends a message to the AI chat service using RAG pattern.
-     * 
-     * @param userMessage The user's question about acupuncture
-     * @return AI-generated response contextualized with Appunture data
-     */
     public String sendMessage(String userMessage) {
         log.info("AI Chat request received: {}", userMessage);
         
         try {
-            // Build context from database (RAG retrieval phase)
             String context = buildSystemContext();
             log.debug("Context built with {} characters", context.length());
             
-            // Build enriched prompt with context (RAG augmentation phase)
             String enrichedPrompt = String.format("""
                 CONTEXTO DO SISTEMA:
                 %s
@@ -123,7 +98,6 @@ public class AiChatService {
                 Por favor, responda à pergunta do usuário com base no contexto fornecido.
                 """, context, userMessage);
             
-            // Call AI model (RAG generation phase)
             String response = chatClient.prompt()
                     .user(enrichedPrompt)
                     .call()

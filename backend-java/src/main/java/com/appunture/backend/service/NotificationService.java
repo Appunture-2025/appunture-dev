@@ -8,25 +8,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Service for sending push notifications via Firebase Cloud Messaging (FCM).
- * Supports sending to single devices, multiple devices, and topics.
- */
 @Service
 public class NotificationService {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
 
-    /**
-     * Sends a notification to a single device.
-     *
-     * @param fcmToken Device FCM token
-     * @param title    Notification title
-     * @param body     Notification body
-     * @param data     Additional data payload (optional)
-     * @return Message ID from FCM
-     * @throws FirebaseMessagingException if sending fails
-     */
     public String sendToDevice(String fcmToken, String title, String body, Map<String, String> data)
             throws FirebaseMessagingException {
 
@@ -61,16 +47,6 @@ public class NotificationService {
         return response;
     }
 
-    /**
-     * Sends a notification to multiple devices.
-     *
-     * @param fcmTokens List of device FCM tokens
-     * @param title     Notification title
-     * @param body      Notification body
-     * @param data      Additional data payload (optional)
-     * @return BatchResponse with success/failure counts
-     * @throws FirebaseMessagingException if sending fails
-     */
     public BatchResponse sendToMultipleDevices(List<String> fcmTokens, String title, String body,
             Map<String, String> data) throws FirebaseMessagingException {
 
@@ -110,16 +86,6 @@ public class NotificationService {
         return response;
     }
 
-    /**
-     * Sends a notification to all devices subscribed to a topic.
-     *
-     * @param topic Topic name
-     * @param title Notification title
-     * @param body  Notification body
-     * @param data  Additional data payload (optional)
-     * @return Message ID from FCM
-     * @throws FirebaseMessagingException if sending fails
-     */
     public String sendToTopic(String topic, String title, String body, Map<String, String> data)
             throws FirebaseMessagingException {
 
@@ -140,14 +106,6 @@ public class NotificationService {
         return response;
     }
 
-    /**
-     * Subscribes devices to a topic.
-     *
-     * @param tokens List of FCM tokens
-     * @param topic  Topic name
-     * @return TopicManagementResponse with success/failure counts
-     * @throws FirebaseMessagingException if subscription fails
-     */
     public TopicManagementResponse subscribeToTopic(List<String> tokens, String topic)
             throws FirebaseMessagingException {
         
@@ -160,14 +118,6 @@ public class NotificationService {
         return response;
     }
 
-    /**
-     * Unsubscribes devices from a topic.
-     *
-     * @param tokens List of FCM tokens
-     * @param topic  Topic name
-     * @return TopicManagementResponse with success/failure counts
-     * @throws FirebaseMessagingException if unsubscription fails
-     */
     public TopicManagementResponse unsubscribeFromTopic(List<String> tokens, String topic)
             throws FirebaseMessagingException {
         
@@ -180,15 +130,6 @@ public class NotificationService {
         return response;
     }
 
-    /**
-     * Sends a data-only message (no visible notification).
-     * Useful for background sync triggers.
-     *
-     * @param fcmToken Device FCM token
-     * @param data     Data payload
-     * @return Message ID from FCM
-     * @throws FirebaseMessagingException if sending fails
-     */
     public String sendDataMessage(String fcmToken, Map<String, String> data)
             throws FirebaseMessagingException {
 

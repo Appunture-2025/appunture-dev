@@ -18,9 +18,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Service for loading and importing seed data from NDJSON files.
- */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -37,11 +34,6 @@ public class SeedDataService {
         return mapper;
     }
 
-    /**
-     * Load and import all seed data from resources/seed/*.ndjson files.
-     *
-     * @return Map with counts of imported records
-     */
     public Map<String, Object> importAllSeedData() {
         Map<String, Object> result = new HashMap<>();
 
@@ -66,9 +58,6 @@ public class SeedDataService {
         return result;
     }
 
-    /**
-     * Import points from points_seed.ndjson
-     */
     public int importPointsSeed() throws Exception {
         ClassPathResource resource = new ClassPathResource("seed/points_seed.ndjson");
 
@@ -107,9 +96,6 @@ public class SeedDataService {
         return count;
     }
 
-    /**
-     * Import symptoms from symptoms_seed.ndjson
-     */
     public int importSymptomsSeed() throws Exception {
         ClassPathResource resource = new ClassPathResource("seed/symptoms_seed.ndjson");
 

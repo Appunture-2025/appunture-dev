@@ -13,9 +13,6 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-/**
- * Repository para operações CRUD com pontos de acupuntura no Firestore
- */
 @Repository
 @RequiredArgsConstructor
 @Slf4j
@@ -24,9 +21,6 @@ public class FirestorePointRepository {
     private final Firestore firestore;
     private static final String COLLECTION_NAME = "points";
 
-    /**
-     * Buscar ponto por ID
-     */
     public Optional<FirestorePoint> findById(String id) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -54,9 +48,6 @@ public class FirestorePointRepository {
         }
     }
 
-    /**
-     * Buscar ponto por código
-     */
     public Optional<FirestorePoint> findByCode(String code) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -83,9 +74,6 @@ public class FirestorePointRepository {
         }
     }
 
-    /**
-     * Salvar ou atualizar ponto
-     */
     public FirestorePoint save(FirestorePoint point) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -115,9 +103,6 @@ public class FirestorePointRepository {
         }
     }
 
-    /**
-     * Deletar ponto por ID
-     */
     public void deleteById(String id) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -138,9 +123,6 @@ public class FirestorePointRepository {
         }
     }
 
-    /**
-     * Listar todos os pontos
-     */
     public List<FirestorePoint> findAll() {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -166,9 +148,6 @@ public class FirestorePointRepository {
         }
     }
 
-    /**
-     * Buscar pontos por meridiano
-     */
     public List<FirestorePoint> findByMeridian(String meridian) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -196,9 +175,6 @@ public class FirestorePointRepository {
         }
     }
 
-    /**
-     * Buscar pontos por sintoma
-     */
     public List<FirestorePoint> findBySymptomId(String symptomId) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -226,9 +202,6 @@ public class FirestorePointRepository {
         }
     }
 
-    /**
-     * Buscar pontos por nome (busca parcial)
-     */
     public List<FirestorePoint> findByNameContaining(String name) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -249,9 +222,6 @@ public class FirestorePointRepository {
         }
     }
 
-    /**
-     * Incrementar contador de favoritos
-     */
     public void incrementFavoriteCount(String pointId) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -278,9 +248,6 @@ public class FirestorePointRepository {
         }
     }
 
-    /**
-     * Decrementar contador de favoritos
-     */
     public void decrementFavoriteCount(String pointId) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -307,16 +274,10 @@ public class FirestorePointRepository {
         }
     }
 
-    /**
-     * Verificar se existe ponto com código
-     */
     public boolean existsByCode(String code) {
         return findByCode(code).isPresent();
     }
 
-    /**
-     * Contar total de pontos
-     */
     public long count() {
         return findAll().size();
     }
