@@ -9,10 +9,6 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Modelo Firestore para usuários
- * Substitui a entidade JPA User
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

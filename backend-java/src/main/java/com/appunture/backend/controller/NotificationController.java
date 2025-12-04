@@ -17,10 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Controller for managing push notifications.
- * Handles FCM token registration, topic subscriptions, and admin notifications.
- */
 @RestController
 @RequestMapping("/api/notifications")
 @RequiredArgsConstructor
@@ -32,9 +28,6 @@ public class NotificationController {
     private final NotificationService notificationService;
     private final FirestoreUserService userService;
 
-    /**
-     * Register FCM token for the authenticated user.
-     */
     @PostMapping("/register-token")
     @Operation(summary = "Register FCM token", description = "Register a device FCM token for push notifications")
     @ApiResponses(value = {
@@ -78,9 +71,6 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Unregister FCM token for the authenticated user.
-     */
     @DeleteMapping("/unregister-token")
     @Operation(summary = "Unregister FCM token", description = "Remove the FCM token for the current user")
     @ApiResponses(value = {
@@ -110,9 +100,6 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Subscribe the current user to a notification topic.
-     */
     @PostMapping("/subscribe/{topic}")
     @Operation(summary = "Subscribe to topic", description = "Subscribe the current user to a notification topic")
     @ApiResponses(value = {
@@ -163,9 +150,6 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Unsubscribe the current user from a notification topic.
-     */
     @DeleteMapping("/unsubscribe/{topic}")
     @Operation(summary = "Unsubscribe from topic", description = "Unsubscribe the current user from a notification topic")
     @ApiResponses(value = {
@@ -206,9 +190,6 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Get the current user's notification settings.
-     */
     @GetMapping("/settings")
     @Operation(summary = "Get notification settings", description = "Get the current user's notification settings and subscribed topics")
     public ResponseEntity<Map<String, Object>> getSettings(
@@ -238,15 +219,9 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Sanitize topic name to only allow alphanumeric characters, underscores, and hyphens.
-     */
     private String sanitizeTopic(String topic) {
         return topic.replaceAll("[^a-zA-Z0-9_-]", "");
     }
 
-    /**
-     * Request body for token registration.
-     */
     public record RegisterTokenRequest(String token) {}
 }

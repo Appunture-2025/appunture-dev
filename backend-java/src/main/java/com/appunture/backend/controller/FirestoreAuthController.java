@@ -29,9 +29,6 @@ import java.util.List;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-/**
- * Controller para autenticação usando Firebase Auth + Firestore
- */
 @RestController
 @RequestMapping("/auth")
 @Tag(name = "Auth", description = "Authentication and user profile endpoints (Firebase + Firestore)")

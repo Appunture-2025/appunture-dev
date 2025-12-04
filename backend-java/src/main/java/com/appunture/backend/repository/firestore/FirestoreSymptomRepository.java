@@ -13,9 +13,6 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-/**
- * Repository para operações CRUD com sintomas no Firestore
- */
 @Repository
 @RequiredArgsConstructor
 @Slf4j
@@ -24,9 +21,6 @@ public class FirestoreSymptomRepository {
     private final Firestore firestore;
     private static final String COLLECTION_NAME = "symptoms";
 
-    /**
-     * Buscar sintoma por ID
-     */
     public Optional<FirestoreSymptom> findById(String id) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -54,9 +48,6 @@ public class FirestoreSymptomRepository {
         }
     }
 
-    /**
-     * Buscar sintoma por nome
-     */
     public Optional<FirestoreSymptom> findByName(String name) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -83,9 +74,6 @@ public class FirestoreSymptomRepository {
         }
     }
 
-    /**
-     * Salvar ou atualizar sintoma
-     */
     public FirestoreSymptom save(FirestoreSymptom symptom) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -115,9 +103,6 @@ public class FirestoreSymptomRepository {
         }
     }
 
-    /**
-     * Deletar sintoma por ID
-     */
     public void deleteById(String id) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -138,9 +123,6 @@ public class FirestoreSymptomRepository {
         }
     }
 
-    /**
-     * Listar todos os sintomas
-     */
     public List<FirestoreSymptom> findAll() {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -166,9 +148,6 @@ public class FirestoreSymptomRepository {
         }
     }
 
-    /**
-     * Buscar sintomas por categoria
-     */
     public List<FirestoreSymptom> findByCategory(String category) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -196,9 +175,6 @@ public class FirestoreSymptomRepository {
         }
     }
 
-    /**
-     * Buscar sintomas por ponto associado
-     */
     public List<FirestoreSymptom> findByPointId(String pointId) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -226,9 +202,6 @@ public class FirestoreSymptomRepository {
         }
     }
 
-    /**
-     * Buscar sintomas por nome (busca parcial)
-     */
     public List<FirestoreSymptom> findByNameContaining(String name) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -248,9 +221,6 @@ public class FirestoreSymptomRepository {
         }
     }
 
-    /**
-     * Buscar sintomas por tag
-     */
     public List<FirestoreSymptom> findByTag(String tag) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -278,9 +248,6 @@ public class FirestoreSymptomRepository {
         }
     }
 
-    /**
-     * Incrementar contador de uso
-     */
     public void incrementUseCount(String symptomId) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -307,9 +274,6 @@ public class FirestoreSymptomRepository {
         }
     }
 
-    /**
-     * Buscar sintomas mais usados
-     */
     public List<FirestoreSymptom> findTopUsed(int limit) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -337,16 +301,10 @@ public class FirestoreSymptomRepository {
         }
     }
 
-    /**
-     * Verificar se existe sintoma com nome
-     */
     public boolean existsByName(String name) {
         return findByName(name).isPresent();
     }
 
-    /**
-     * Contar total de sintomas
-     */
     public long count() {
         return findAll().size();
     }

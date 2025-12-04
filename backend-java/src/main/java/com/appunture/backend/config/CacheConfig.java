@@ -9,19 +9,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Cache configuration using Caffeine for high-performance in-memory caching.
- * 
- * This configuration provides caching for:
- * - Points: Static acupuncture point data (TTL: 30 minutes)
- * - Meridians: Meridian data (TTL: 1 hour)
- * - Point lookups: Individual point queries (TTL: 15 minutes)
- * 
- * Performance benefits:
- * - Reduced Firestore read operations
- * - Lower latency for frequently accessed data
- * - Reduced costs (Firestore charges per read)
- */
 @Configuration
 @EnableCaching
 public class CacheConfig {

@@ -5,9 +5,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Request DTO for creating or updating a symptom
- */
 @Getter
 @Setter
 public class SymptomRequest {

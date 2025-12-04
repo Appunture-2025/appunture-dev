@@ -5,9 +5,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Request DTO for creating or updating an acupuncture point
- */
 @Getter
 @Setter
 public class PointRequest {

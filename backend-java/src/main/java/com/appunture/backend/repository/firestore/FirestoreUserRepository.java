@@ -13,9 +13,6 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-/**
- * Repository para operações CRUD com usuários no Firestore
- */
 @Repository
 @RequiredArgsConstructor
 @Slf4j
@@ -24,9 +21,6 @@ public class FirestoreUserRepository {
     private final Firestore firestore;
     private static final String COLLECTION_NAME = "users";
 
-    /**
-     * Buscar usuário por ID do documento Firestore
-     */
     public Optional<FirestoreUser> findById(String id) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -54,9 +48,6 @@ public class FirestoreUserRepository {
         }
     }
 
-    /**
-     * Buscar usuário por UID do Firebase Auth
-     */
     public Optional<FirestoreUser> findByFirebaseUid(String firebaseUid) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -83,9 +74,6 @@ public class FirestoreUserRepository {
         }
     }
 
-    /**
-     * Buscar usuário por email
-     */
     public Optional<FirestoreUser> findByEmail(String email) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -112,9 +100,6 @@ public class FirestoreUserRepository {
         }
     }
 
-    /**
-     * Salvar ou atualizar usuário
-     */
     public FirestoreUser save(FirestoreUser user) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -144,9 +129,6 @@ public class FirestoreUserRepository {
         }
     }
 
-    /**
-     * Deletar usuário por ID
-     */
     public void deleteById(String id) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -167,9 +149,6 @@ public class FirestoreUserRepository {
         }
     }
 
-    /**
-     * Listar todos os usuários
-     */
     public List<FirestoreUser> findAll() {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -195,23 +174,14 @@ public class FirestoreUserRepository {
         }
     }
 
-    /**
-     * Verificar se existe usuário com Firebase UID
-     */
     public boolean existsByFirebaseUid(String firebaseUid) {
         return findByFirebaseUid(firebaseUid).isPresent();
     }
 
-    /**
-     * Verificar se existe usuário com email
-     */
     public boolean existsByEmail(String email) {
         return findByEmail(email).isPresent();
     }
 
-    /**
-     * Buscar usuários por role
-     */
     public List<FirestoreUser> findByRole(String role) {
         if (firestore == null) {
             log.warn("Firestore não inicializado");
@@ -239,9 +209,6 @@ public class FirestoreUserRepository {
         }
     }
 
-    /**
-     * Contar total de usuários
-     */
     public long count() {
         return findAll().size();
     }

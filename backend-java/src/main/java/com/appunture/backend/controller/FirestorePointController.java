@@ -26,9 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Controller para pontos de acupuntura usando Firestore
- */
 @RestController
 @RequestMapping("/points")
 @Tag(name = "Points", description = "Acupuncture points operations (Firestore)")

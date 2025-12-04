@@ -16,25 +16,10 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import java.util.stream.Collectors;
 
-/**
- * Global exception handler for the application.
- * Provides consistent error response format across all endpoints.
- * 
- * Error codes:
- * - VALIDATION_ERROR (400): Input validation failed
- * - UNAUTHORIZED (401): Authentication required or failed
- * - FORBIDDEN (403): Access denied
- * - NOT_FOUND (404): Resource not found
- * - RATE_LIMIT_EXCEEDED (429): Too many requests
- * - INTERNAL_ERROR (500): Unexpected server error
- */
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 
-    /**
-     * Handles Jakarta Bean Validation errors from @Valid annotations
-     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(
             MethodArgumentNotValidException ex,
@@ -51,9 +36,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
-    /**
-     * Handles custom validation exceptions from business logic
-     */
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(
             ValidationException ex,
@@ -73,9 +55,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-    /**
-     * Handles missing request parameters
-     */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ErrorResponse> handleMissingParameter(
             MissingServletRequestParameterException ex,
@@ -90,9 +69,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-    /**
-     * Handles type mismatch errors (e.g., passing string when number expected)
-     */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponse> handleTypeMismatch(
             MethodArgumentTypeMismatchException ex,
@@ -107,9 +83,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-    /**
-     * Handles authentication failures
-     */
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentials(
             BadCredentialsException ex,
@@ -117,9 +90,6 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.UNAUTHORIZED, "INVALID_CREDENTIALS", ex.getMessage(), request);
     }
 
-    /**
-     * Handles general authentication exceptions
-     */
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> handleAuthentication(
             AuthenticationException ex,
@@ -135,9 +105,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
-    /**
-     * Handles access denied (authorization) errors
-     */
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDenied(
             AccessDeniedException ex,
@@ -153,9 +120,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
-    /**
-     * Handles resource not found exceptions
-     */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(
             ResourceNotFoundException ex,
@@ -171,9 +135,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
-    /**
-     * Handles legacy IllegalArgumentException for backwards compatibility
-     */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgument(
             IllegalArgumentException ex,
@@ -181,9 +142,6 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, "BAD_REQUEST", ex.getMessage(), request);
     }
 
-    /**
-     * Handles rate limiting
-     */
     @ExceptionHandler(RateLimitExceededException.class)
     public ResponseEntity<ErrorResponse> handleRateLimitExceeded(
             RateLimitExceededException ex,
@@ -191,10 +149,6 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.TOO_MANY_REQUESTS, "RATE_LIMIT_EXCEEDED", ex.getMessage(), request);
     }
 
-    /**
-     * Handles all unexpected exceptions
-     * Never expose stack traces in production
-     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(
             Exception ex,

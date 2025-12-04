@@ -11,10 +11,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Modelo Firestore para pontos de acupuntura
- * Substitui a entidade JPA Point
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

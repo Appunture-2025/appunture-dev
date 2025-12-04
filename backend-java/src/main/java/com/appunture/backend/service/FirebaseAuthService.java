@@ -31,9 +31,6 @@ public class FirebaseAuthService {
 
     private final Map<String, Bucket> verificationBuckets = new ConcurrentHashMap<>();
 
-    /**
-     * Verifica e decodifica um token ID do Firebase
-     */
     public FirebaseToken verifyToken(String idToken) throws FirebaseAuthException {
         if (firebaseAuth == null) {
             throw new IllegalStateException("Firebase Auth not configured");
@@ -41,9 +38,6 @@ public class FirebaseAuthService {
         return firebaseAuth.verifyIdToken(idToken);
     }
 
-    /**
-     * Busca um usuário pelo UID
-     */
     public UserRecord getUserByUid(String uid) throws FirebaseAuthException {
         if (firebaseAuth == null) {
             throw new IllegalStateException("Firebase Auth not configured");
@@ -51,9 +45,6 @@ public class FirebaseAuthService {
         return firebaseAuth.getUser(uid);
     }
 
-    /**
-     * Busca um usuário pelo email
-     */
     public UserRecord getUserByEmail(String email) throws FirebaseAuthException {
         if (firebaseAuth == null) {
             throw new IllegalStateException("Firebase Auth not configured");
@@ -61,9 +52,6 @@ public class FirebaseAuthService {
         return firebaseAuth.getUserByEmail(email);
     }
 
-    /**
-     * Cria um novo usuário no Firebase
-     */
     public UserRecord createUser(String email, String password, String displayName) throws FirebaseAuthException {
         if (firebaseAuth == null) {
             throw new IllegalStateException("Firebase Auth not configured");
@@ -78,9 +66,6 @@ public class FirebaseAuthService {
         return firebaseAuth.createUser(request);
     }
 
-    /**
-     * Atualiza um usuário no Firebase
-     */
     public UserRecord updateUser(String uid, String email, String displayName) throws FirebaseAuthException {
         if (firebaseAuth == null) {
             throw new IllegalStateException("Firebase Auth not configured");
@@ -93,9 +78,6 @@ public class FirebaseAuthService {
         return firebaseAuth.updateUser(request);
     }
 
-    /**
-     * Define custom claims para um usuário (ex: role)
-     */
     public void setCustomClaims(String uid, Map<String, Object> claims) throws FirebaseAuthException {
         if (firebaseAuth == null) {
             throw new IllegalStateException("Firebase Auth not configured");
@@ -103,18 +85,12 @@ public class FirebaseAuthService {
         firebaseAuth.setCustomUserClaims(uid, claims);
     }
 
-    /**
-     * Define role de um usuário
-     */
     public void setUserRole(String uid, String role) throws FirebaseAuthException {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
         setCustomClaims(uid, claims);
     }
 
-    /**
-     * Deleta um usuário do Firebase
-     */
     public void deleteUser(String uid) throws FirebaseAuthException {
         if (firebaseAuth == null) {
             throw new IllegalStateException("Firebase Auth not configured");
@@ -122,9 +98,6 @@ public class FirebaseAuthService {
         firebaseAuth.deleteUser(uid);
     }
 
-    /**
-     * Gera um link de verificação de email
-     */
     public String generateEmailVerificationLink(String email) throws FirebaseAuthException {
         if (firebaseAuth == null) {
             throw new IllegalStateException("Firebase Auth not configured");
@@ -132,9 +105,6 @@ public class FirebaseAuthService {
         return firebaseAuth.generateEmailVerificationLink(email);
     }
 
-    /**
-     * Gera um link de reset de senha
-     */
     public String generatePasswordResetLink(String email) throws FirebaseAuthException {
         if (firebaseAuth == null) {
             throw new IllegalStateException("Firebase Auth not configured");
@@ -142,16 +112,10 @@ public class FirebaseAuthService {
         return firebaseAuth.generatePasswordResetLink(email);
     }
 
-    /**
-     * Verifica se o Firebase Auth está disponível
-     */
     public boolean isAvailable() {
         return firebaseAuth != null;
     }
 
-    /**
-     * Reenvia email de verificação com limitação de rate limit por usuário.
-     */
     public void resendVerificationEmail(String uid) throws FirebaseAuthException {
         if (firebaseAuth == null) {
             throw new IllegalStateException("Firebase Auth not configured");

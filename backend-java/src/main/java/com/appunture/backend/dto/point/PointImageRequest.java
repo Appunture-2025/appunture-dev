@@ -6,9 +6,6 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Request DTO for adding an image to a point
- */
 @Getter
 @Setter
 @Schema(name = "PointImageRequest", description = "Payload para adicionar imagem ao ponto Firestore")

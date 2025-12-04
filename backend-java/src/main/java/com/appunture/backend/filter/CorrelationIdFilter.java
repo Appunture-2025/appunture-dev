@@ -13,10 +13,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.UUID;
 
-/**
- * Filter to add correlation ID to all requests for distributed tracing.
- * The correlation ID is added to MDC (Mapped Diagnostic Context) and can be used in logs.
- */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorrelationIdFilter extends OncePerRequestFilter {

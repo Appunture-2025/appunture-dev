@@ -29,9 +29,6 @@ public class FileUploadService {
 
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-    /**
-     * Faz upload de uma imagem
-     */
     public String uploadImage(MultipartFile file) throws IOException {
         validateImageFile(file);
         
@@ -61,9 +58,6 @@ public class FileUploadService {
         return fileName;
     }
 
-    /**
-     * Remove um arquivo
-     */
     public boolean deleteFile(String fileName) {
         try {
             Path filePath = Paths.get(uploadPath).resolve(fileName);
@@ -73,24 +67,15 @@ public class FileUploadService {
         }
     }
 
-    /**
-     * Verifica se o arquivo existe
-     */
     public boolean fileExists(String fileName) {
         Path filePath = Paths.get(uploadPath).resolve(fileName);
         return Files.exists(filePath);
     }
 
-    /**
-     * Obtém o caminho completo do arquivo
-     */
     public Path getFilePath(String fileName) {
         return Paths.get(uploadPath).resolve(fileName);
     }
 
-    /**
-     * Valida se o arquivo é uma imagem válida
-     */
     private void validateImageFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("File cannot be empty");
@@ -106,9 +91,6 @@ public class FileUploadService {
         }
     }
 
-    /**
-     * Obtém a extensão do arquivo
-     */
     private String getFileExtension(String fileName) {
         if (fileName == null || !fileName.contains(".")) {
             return "";
@@ -116,9 +98,6 @@ public class FileUploadService {
         return fileName.substring(fileName.lastIndexOf("."));
     }
 
-    /**
-     * Verifica se a extensão é válida e segura
-     */
     private boolean isValidExtension(String ext) {
         if (ext == null || ext.isEmpty()) {
             return false;
@@ -131,9 +110,6 @@ public class FileUploadService {
         return ALLOWED_EXTENSIONS.contains(ext);
     }
 
-    /**
-     * Lista todos os arquivos no diretório de upload
-     */
     public List<String> listFiles() throws IOException {
         Path uploadDir = Paths.get(uploadPath);
         if (!Files.exists(uploadDir)) {

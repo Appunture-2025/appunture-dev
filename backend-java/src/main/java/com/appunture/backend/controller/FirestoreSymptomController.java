@@ -18,9 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Controller para sintomas usando Firestore
- */
 @RestController
 @RequestMapping("/symptoms")
 @Tag(name = "Symptoms", description = "Symptoms operations (Firestore)")

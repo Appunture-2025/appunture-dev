@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-/**
- * Controller para verificação de saúde do sistema Firestore
- */
 @RestController
 @RequestMapping("/health")
 @Tag(name = "Health", description = "System health checks (Firestore)")
@@ -218,9 +215,6 @@ public class FirestoreHealthController {
         }
     }
 
-    /**
-     * Obtém informações de memória
-     */
     private Map<String, Object> getMemoryInfo() {
         Runtime runtime = Runtime.getRuntime();
         long maxMemory = runtime.maxMemory();
@@ -237,9 +231,6 @@ public class FirestoreHealthController {
         );
     }
 
-    /**
-     * Obtém informações de uptime
-     */
     private Map<String, Object> getUptimeInfo() {
         long uptimeMillis = System.currentTimeMillis() - 
             java.lang.management.ManagementFactory.getRuntimeMXBean().getStartTime();

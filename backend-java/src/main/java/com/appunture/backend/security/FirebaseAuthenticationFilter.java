@@ -122,9 +122,6 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
                uri.startsWith("/actuator");
     }
 
-    /**
-     * Classe para armazenar detalhes da autenticação Firebase
-     */
     public static class FirebaseAuthDetails {
         private final String uid;
         private final String email;

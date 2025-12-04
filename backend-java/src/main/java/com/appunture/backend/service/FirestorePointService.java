@@ -301,14 +301,6 @@ public class FirestorePointService {
         return source == null ? new ArrayList<>() : new ArrayList<>(source);
     }
 
-    /**
-     * Updates the coordinates of an acupuncture point on the body map.
-     *
-     * @param pointId The Firestore document ID of the point
-     * @param x The horizontal coordinate (0.0 to 1.0)
-     * @param y The vertical coordinate (0.0 to 1.0)
-     * @throws IllegalArgumentException if point not found
-     */
     public void updatePointCoordinates(String pointId, double x, double y) {
         log.debug("Atualizando coordenadas do ponto: {}", pointId);
         
@@ -325,52 +317,25 @@ public class FirestorePointService {
         log.debug("Coordenadas do ponto atualizadas com sucesso");
     }
 
-    /**
-     * Increments the favorite count for a point when a user favorites it.
-     *
-     * @param pointId The Firestore document ID of the point
-     */
     public void incrementFavoriteCount(String pointId) {
         log.debug("Incrementando contador de favoritos do ponto: {}", pointId);
         pointRepository.incrementFavoriteCount(pointId);
     }
 
-    /**
-     * Decrements the favorite count for a point when a user unfavorites it.
-     *
-     * @param pointId The Firestore document ID of the point
-     */
     public void decrementFavoriteCount(String pointId) {
         log.debug("Decrementando contador de favoritos do ponto: {}", pointId);
         pointRepository.decrementFavoriteCount(pointId);
     }
 
-    /**
-     * Checks if a point with the specified code already exists.
-     *
-     * @param code The point code to check
-     * @return true if a point with this code exists, false otherwise
-     */
     public boolean existsByCode(String code) {
         return pointRepository.existsByCode(code);
     }
 
-    /**
-     * Returns the total count of acupuncture points in the database.
-     *
-     * @return The total number of points
-     */
     @Cacheable(value = CacheConfig.CACHE_POINTS_COUNT)
     public long count() {
         return pointRepository.count();
     }
 
-    /**
-     * Retrieves the most favorited acupuncture points.
-     *
-     * @param limit Maximum number of points to return
-     * @return List of popular points sorted by favorite count (descending)
-     */
     @Cacheable(value = CacheConfig.CACHE_POPULAR_POINTS, key = "#limit")
     public List<FirestorePoint> findPopularPoints(int limit) {
         List<FirestorePoint> allPoints = pointRepository.findAll();
@@ -385,12 +350,6 @@ public class FirestorePointService {
                 .toList();
     }
 
-    /**
-     * Retrieves multiple points by their Firestore document IDs.
-     *
-     * @param ids List of Firestore document IDs to retrieve
-     * @return List of found points (may contain fewer items if some IDs not found)
-     */
     public List<FirestorePoint> findAllByIds(List<String> ids) {
         log.debug("Buscando {} pontos por ID (batch)", ids.size());
         if (ids.isEmpty()) {

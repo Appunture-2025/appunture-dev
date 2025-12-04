@@ -1,9 +1,5 @@
 package com.appunture.backend.exception;
 
-/**
- * Exception thrown when business validation fails.
- * Maps to HTTP 400 Bad Request.
- */
 public class ValidationException extends RuntimeException {
 
     private final String field;

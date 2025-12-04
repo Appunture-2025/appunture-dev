@@ -38,9 +38,6 @@ public class FirebaseStorageService {
     // Tamanho máximo: 10MB para o plano gratuito
     private static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-    /**
-     * Faz upload de um arquivo para o Firebase Storage
-     */
     public String uploadFile(MultipartFile file, String folder) throws IOException {
         if (!firebaseEnabled) {
             log.warn("Firebase Storage desabilitado - usando fallback local");
@@ -75,9 +72,6 @@ public class FirebaseStorageService {
         }
     }
 
-    /**
-     * Gera uma URL assinada para acesso temporário ao arquivo
-     */
     public String getSignedUrl(String fileName, int durationMinutes) throws IOException {
         if (!firebaseEnabled) {
             return "/uploads/" + fileName;
@@ -100,9 +94,6 @@ public class FirebaseStorageService {
         }
     }
 
-    /**
-     * Deleta um arquivo do Firebase Storage
-     */
     public void deleteFile(String fileName) throws IOException {
         if (!firebaseEnabled) {
             log.warn("Firebase Storage desabilitado - não é possível deletar");
@@ -126,9 +117,6 @@ public class FirebaseStorageService {
         }
     }
 
-    /**
-     * Verifica se um arquivo existe
-     */
     public boolean fileExists(String fileName) {
         if (!firebaseEnabled) {
             return false;
@@ -145,9 +133,6 @@ public class FirebaseStorageService {
         }
     }
 
-    /**
-     * Obtém o tamanho de um arquivo
-     */
     public long getFileSize(String fileName) throws IOException {
         if (!firebaseEnabled) {
             return 0;
@@ -169,9 +154,6 @@ public class FirebaseStorageService {
         }
     }
 
-    /**
-     * Lista arquivos em uma pasta
-     */
     public List<String> listFiles(String prefix) {
         if (!firebaseEnabled) {
             return List.of();
@@ -191,9 +173,6 @@ public class FirebaseStorageService {
         }
     }
 
-    /**
-     * Obtém informações detalhadas de um arquivo
-     */
     public FileInfo getFileInfo(String fileName) throws IOException {
         if (!firebaseEnabled) {
             throw new IOException("Firebase Storage not enabled");
@@ -221,9 +200,6 @@ public class FirebaseStorageService {
         }
     }
 
-    /**
-     * Valida o arquivo antes do upload
-     */
     private void validateFile(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new IOException("Arquivo não pode estar vazio");
@@ -240,9 +216,6 @@ public class FirebaseStorageService {
         }
     }
 
-    /**
-     * Gera um nome único para o arquivo
-     */
     private String generateFileName(MultipartFile file, String folder) {
         String originalName = file.getOriginalFilename();
         String extension = "";
@@ -260,16 +233,10 @@ public class FirebaseStorageService {
         return uniqueName;
     }
 
-    /**
-     * Verifica se o Firebase Storage está disponível
-     */
     public boolean isAvailable() {
         return firebaseEnabled && bucketName != null && !bucketName.isEmpty();
     }
 
-    /**
-     * Classe para informações de arquivo
-     */
     @lombok.Builder
     @lombok.Data
     public static class FileInfo {

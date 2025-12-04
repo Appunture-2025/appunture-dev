@@ -6,9 +6,6 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Request DTO for removing an image from a point
- */
 @Getter
 @Setter
 @Schema(name = "PointImageRemovalRequest", description = "Payload para remoção de imagem e auditoria de ponto")

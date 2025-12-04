@@ -9,10 +9,6 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Modelo Firestore para sintomas
- * Substitui a entidade JPA Symptom
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

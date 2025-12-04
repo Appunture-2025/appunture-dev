@@ -7,10 +7,6 @@ import lombok.Data;
 
 import java.time.Instant;
 
-/**
- * Standard error response DTO for consistent API error handling.
- * Matches the OpenAPI specification format.
- */
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -39,9 +35,6 @@ public class ErrorResponse {
         private String path;
     }
 
-    /**
-     * Create an error response with the given parameters.
-     */
     public static ErrorResponse of(String code, String message, String path) {
         return ErrorResponse.builder()
                 .error(ErrorDetails.builder()
@@ -53,9 +46,6 @@ public class ErrorResponse {
                 .build();
     }
 
-    /**
-     * Create a simple error response with just code and message.
-     */
     public static ErrorResponse of(String code, String message) {
         return ErrorResponse.builder()
                 .error(ErrorDetails.builder()

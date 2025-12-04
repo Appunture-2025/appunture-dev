@@ -22,9 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Controller administrativo para operações com Firestore
- */
 @RestController
 @RequestMapping("/admin")
 @Tag(name = "Admin", description = "Administrative operations (Firestore)")
