@@ -1,206 +1,153 @@
-# 🏥 Appunture
+# Appunture
 
-[![Backend CI](https://github.com/Appunture-2025/appunture-dev/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/Appunture-2025/appunture-dev/actions/workflows/backend-ci.yml)
-[![Frontend CI](https://github.com/Appunture-2025/appunture-dev/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/Appunture-2025/appunture-dev/actions/workflows/frontend-ci.yml)
+Aplicativo móvel para consulta de pontos de acupuntura com assistente inteligente baseado em IA.
 
-> Sistema completo de consulta e gerenciamento de pontos de acupuntura - um aplicativo móvel moderno para estudantes, profissionais e pacientes.
+## Descrição
 
-## 📋 Visão Geral
+Appunture é um sistema desenvolvido como TCC que permite consultar pontos de acupuntura, suas indicações terapêuticas e localização anatômica. O aplicativo conta com um assistente de IA que sugere pontos com base nos sintomas relatados pelo usuário.
 
-Appunture é uma plataforma digital completa para democratizar o acesso ao conhecimento em acupuntura, oferecendo:
+**Principais funcionalidades:**
 
-- 🔍 **Consulta rápida** de pontos e indicações
-- 🤖 **Assistente inteligente** para recomendações baseadas em sintomas
-- 🗺️ **Mapa corporal interativo** para localização visual de pontos
-- ❤️ **Sistema de favoritos** para acesso rápido
-- 📱 **Funcionamento offline** usando sincronização inteligente
-- 🌙 **Modo escuro** para conforto visual
+- Consulta de pontos de acupuntura por nome, código ou meridiano
+- Assistente de IA para recomendações baseadas em sintomas
+- Sistema de favoritos
+- Funcionamento offline com sincronização automática
+- Modo escuro
 
-## 🏗️ Arquitetura
+## Tecnologias
 
-```mermaid
-graph TB
-    subgraph "Mobile App"
-        A[React Native + Expo]
-        B[SQLite Local]
-    end
+- **Backend:** Spring Boot 3.2.5, Java 17, Spring AI com Vertex AI Gemini
+- **Frontend:** React Native 0.79, Expo SDK 53
+- **Banco de dados:** Firebase Firestore
+- **Autenticação:** Firebase Auth
+- **Deploy:** Google Cloud Run
 
-    subgraph "Backend"
-        D[Spring Boot 3.2.5]
-        E[Firebase Admin SDK]
-    end
-
-    subgraph "Google Cloud"
-        F[Cloud Run]
-        G[Firestore]
-        H[Firebase Auth]
-        I[Firebase Storage]
-    end
-
-    A --> D
-    A --> H
-    A --> B
-    D --> G
-    D --> H
-    D --> I
-    D --> F
-```
-
-## 📁 Estrutura do Projeto
+## Estrutura
 
 ```
 appunture-dev/
-├── backend-java/          # API REST (Spring Boot + Firebase)
-│   ├── src/               # Código fonte Java
-│   └── openapi/           # Documentação OpenAPI/Swagger
-│
-├── frontend-mobile/       # Aplicativo móvel
-│   └── appunture/         # React Native + Expo
-│
-├── docs/                  # Documentação adicional
-│   ├── adr/               # Architecture Decision Records
-│   └── setup/             # Guias de configuração
-│
-├── tools/                 # Scripts e utilitários
-└── data/                  # Dados de seed e processados
+├── backend-java/           # API REST Spring Boot
+├── frontend-mobile/
+│   └── appunture/          # App React Native
+└── doc/                    # Documentação do TCC
 ```
 
-## 🚀 Quick Start
+## Pré-requisitos
 
-### Pré-requisitos
+- Java 17+
+- Node.js 20+
+- Conta Firebase com projeto configurado
+- Conta Google Cloud (para IA e deploy)
 
-- **Java 17+** (backend)
-- **Node.js 20+** (frontend)
-- **Expo CLI** (`npm install -g eas-cli`)
-- Conta **Google Cloud/Firebase** configurada
+## Instalação
 
-### Setup Automático
+### 1. Clonar o repositório
 
 ```bash
-# Windows (PowerShell)
-.\setup.ps1
-
-# Linux/Mac
-chmod +x setup.sh && ./setup.sh
+git clone https://github.com/Appunture-2025/appunture-dev.git
+cd appunture-dev
 ```
 
-### Setup Manual
+### 2. Configurar Firebase
 
-### 1. Configurar Firebase
+1. Acesse [console.firebase.google.com](https://console.firebase.google.com)
+2. Crie um projeto ou use um existente
+3. Habilite: Authentication (Email/Google), Firestore, Storage
+4. Baixe o arquivo de credenciais do service account (JSON)
+5. Salve como `backend-java/src/main/resources/firebase-service-account.json`
 
-1. Crie um projeto em [console.firebase.google.com](https://console.firebase.google.com)
-2. Habilite: Authentication (Email, Google), Firestore, Storage
-3. Baixe o service-account-key.json
-
-### 2. Configurar variáveis de ambiente
-
-```bash
-# Copie os templates .env.example para .env em cada pasta:
-cp backend-java/.env.example backend-java/.env
-cp frontend-mobile/appunture/.env.example frontend-mobile/appunture/.env
-
-# Edite cada .env com suas credenciais Firebase
-```
-
-### 3. Iniciar o Backend
+### 3. Configurar o Backend
 
 ```bash
 cd backend-java
-mvn spring-boot:run
 
-# API disponível em: http://localhost:8080
-# Swagger UI: http://localhost:8080/swagger-ui.html
+# Criar arquivo de configuração
+cp src/main/resources/application.properties.example src/main/resources/application.properties
+
+# Editar application.properties com suas configurações:
+# - spring.cloud.gcp.project-id=SEU_PROJECT_ID
+# - spring.ai.vertex.ai.gemini.project-id=SEU_PROJECT_ID
 ```
 
-### 3. Iniciar o App Móvel
+**Variáveis importantes:**
+
+```properties
+spring.cloud.gcp.project-id=seu-projeto-firebase
+spring.ai.vertex.ai.gemini.project-id=seu-projeto-gcp
+app.firebase.enabled=true
+```
+
+### 4. Executar o Backend
+
+```bash
+cd backend-java
+
+# Com Maven Wrapper
+./mvnw spring-boot:run
+
+# Ou com Maven instalado
+mvn spring-boot:run
+```
+
+A API estará disponível em `http://localhost:8080`
+
+Swagger UI: `http://localhost:8080/swagger-ui.html`
+
+### 5. Configurar o Frontend
 
 ```bash
 cd frontend-mobile/appunture
-npm install
-npm start
 
-# Escaneie o QR code com Expo Go
+# Instalar dependências
+npm install
+
+# Criar arquivo de configuração
+cp .env.example .env
 ```
 
-## 📚 Documentação
+**Editar `.env` com as configurações do Firebase:**
 
-| Documento                                                    | Descrição                                 |
-| ------------------------------------------------------------ | ----------------------------------------- |
-| [🚀 Deploy Guide](DEPLOY_GUIDE.md)                           | **Guia completo de deploy para produção** |
-| [Backend README](backend-java/README.md)                     | API REST, endpoints, configuração         |
-| [Mobile README](frontend-mobile/appunture/README.md)         | App React Native, stores, sincronização   |
-| [Architecture Decisions](docs/adr/)                          | ADRs - decisões arquiteturais             |
-| [Local Development](docs/setup/local-development.md)         | Guia completo de setup local              |
-| [Firebase Setup](docs/setup/firebase-setup.md)               | Configuração do Firebase                  |
-| [Environment Variables](docs/setup/environment-variables.md) | Referência de variáveis                   |
-| [Troubleshooting](docs/setup/troubleshooting.md)             | Resolução de problemas                    |
-| [Integration Guide](docs/integration.md)                     | Contratos de API e integração             |
-| [Contributing](CONTRIBUTING.md)                              | Como contribuir                           |
+```env
+EXPO_PUBLIC_FIREBASE_API_KEY=sua-api-key
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=seu-projeto.firebaseapp.com
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=seu-projeto
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=seu-projeto.appspot.com
+EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
+EXPO_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abc123
+EXPO_PUBLIC_API_URL=http://localhost:8080
+```
 
-## 🧪 Testes
+### 6. Executar o Frontend
 
 ```bash
-# Backend - Testes unitários e integração
-cd backend-java
-mvn test
+cd frontend-mobile/appunture
 
-# Frontend Mobile - Testes Jest
+npm start
+```
+
+Escaneie o QR code com o app Expo Go (Android/iOS) ou pressione `a` para abrir no emulador Android.
+
+## Testes
+
+```bash
+# Backend
+cd backend-java
+./mvnw test
+
+# Frontend
 cd frontend-mobile/appunture
 npm test
 ```
 
-## 💰 Custos (Free Tier Firebase)
+## Deploy
 
-O projeto foi arquitetado para funcionar **100% gratuito** dentro dos limites do Firebase:
-
-| Serviço       | Limite Gratuito | Uso Típico TCC |
-| ------------- | --------------- | -------------- |
-| Firestore     | 50k reads/dia   | ~5k (10%)      |
-| Firebase Auth | Ilimitado       | ✅             |
-| Storage       | 5GB total       | ~500MB (10%)   |
-| Cloud Run     | 2M requests/mês | ~50k (2.5%)    |
-
-## 🔒 Segurança
-
-- ✅ Autenticação via Firebase Auth (Email/Google)
-- ✅ Tokens JWT verificados no backend
-- ✅ CORS configurado por ambiente (dev/prod)
-- ✅ Rate limiting implementado
-- ✅ Firestore Security Rules
-
-## 🤝 Contribuição
-
-Veja [CONTRIBUTING.md](CONTRIBUTING.md) para guias de estilo, convenções de commit e processo de PR.
+O backend está configurado para deploy no Google Cloud Run via Cloud Build:
 
 ```bash
-# 1. Fork o repositório
-# 2. Crie uma feature branch
-git checkout -b feature/minha-feature
-
-# 3. Faça suas alterações e commit
-git commit -m "feat: descrição da feature"
-
-# 4. Push e abra um PR
-git push origin feature/minha-feature
+cd backend-java
+gcloud builds submit --config=cloudbuild.yaml
 ```
 
-## 📈 Roadmap
+## Licença
 
-- [x] MVP com busca de pontos e favoritos
-- [x] Sincronização offline-first
-- [x] Modo escuro
-- [ ] Múltiplos idiomas
-- [ ] Integração com wearables
-- [ ] Painel administrativo web
-
-## 👥 Equipe
-
-Desenvolvido como projeto de TCC em Sistemas de Informação.
-
-## 📝 Licença
-
-Este projeto é parte de um TCC acadêmico.
-
----
-
-**Desenvolvido com ❤️ para a comunidade de acupuntura**
+Todos os direitos reservados. Este software é proprietário e não pode ser copiado, modificado ou distribuído sem autorização prévia dos autores.

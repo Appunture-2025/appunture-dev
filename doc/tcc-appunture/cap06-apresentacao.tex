@@ -11,7 +11,7 @@ O \textit{Appunture} foi desenvolvido seguindo uma arquitetura híbrida e modula
 
 \subsection{Arquitetura Híbrida (Offline + Online)}
 
-No núcleo do aplicativo móvel, o \textit{Appunture} utiliza um banco de dados local SQLite para armazenar informações do atlas, incluindo os 361 pontos dos meridianos principais, pontos extras, sintomas, relações terapêuticas, favoritos e anotações do usuário. Esta abordagem garante que o aplicativo funcione integralmente em modo \textit{offline}, permitindo consultas rápidas e uso em qualquer lugar, sem depender da conexão com a internet.
+No núcleo do aplicativo móvel, o \textit{Appunture} utiliza um banco de dados local SQLite para armazenar informações do atlas, incluindo os 361 pontos dos meridianos principais, pontos extras, sintomas, relações terapêuticas e favoritos do usuário. Esta abordagem garante que o aplicativo funcione integralmente em modo \textit{offline}, permitindo consultas rápidas e uso em qualquer lugar, sem depender da conexão com a internet.
 
 Quando a conexão estiver disponível, o sistema realiza sincronizações automáticas e seguras com um \textit{backend} remoto, desenvolvido em Java com Spring Boot, que hospeda o banco de dados Firestore centralizado. Esta sincronização atualiza dados do atlas, envia registros do usuário e mantém o histórico sempre preservado e atualizado.
 
@@ -33,7 +33,7 @@ Quando sem conexão, o usuário pode navegar manualmente pelo atlas anatômico e
 
 \subsection{Interface Interativa e Navegação}
 
-A interface do app é construída para promover uma experiência intuitiva e visualmente rica, com mapas anatômicos interativos baseados em SVG, que possibilitam a interação direta com os pontos de acupuntura. A navegação é estruturada para facilitar o acesso rápido às principais funcionalidades, como busca, visualização detalhada, favoritos e anotações, promovendo fluidez e usabilidade.
+A interface do app é construída para promover uma experiência intuitiva e visualmente rica, com mapas anatômicos interativos baseados em SVG, que possibilitam a interação direta com os pontos de acupuntura. A navegação é estruturada para facilitar o acesso rápido às principais funcionalidades, como busca, visualização detalhada e favoritos, promovendo fluidez e usabilidade.
 
 \subsection{Backend e Gestão de Dados}
 
@@ -158,13 +158,21 @@ O assistente inteligente integrado ao \textit{Appunture} permite que o usuário 
     \item Rastreabilidade das fontes utilizadas nas respostas.
 \end{itemize}
 
-\subsection{Sistema de Favoritos e Anotações Pessoais}
+\subsection{Sistema de Favoritos}
 
-O \textit{Appunture} permite que o usuário salve pontos de acupuntura como favoritos para acesso rápido posterior. Além disso, é possível adicionar anotações pessoais a cada ponto, registrando observações de estudo, experiências ou lembretes.
+O \textit{Appunture} oferece um sistema completo de favoritos, permitindo que o usuário personalize sua experiência de estudo e consulta com acesso rápido aos pontos mais relevantes.
 
-Estas informações são armazenadas localmente no dispositivo e sincronizadas com o \textit{backend} quando há conexão disponível, garantindo que o usuário não perca seus dados ao trocar de dispositivo.
+\textbf{Funcionalidade de Favoritos:}
+\begin{itemize}
+    \item \textbf{Adicionar/Remover favoritos}: O usuário pode marcar qualquer ponto de acupuntura como favorito com um único toque no ícone de coração presente nas telas de detalhes e listagem;
+    \item \textbf{Lista personalizada}: Todos os pontos favoritados são organizados em uma lista dedicada, acessível pela aba ``Favoritos'' na navegação principal;
+    \item \textbf{Acesso rápido}: A lista de favoritos permite consulta imediata dos pontos mais utilizados, sem necessidade de busca;
+    \item \textbf{Gestão simplificada}: Cada item da lista possui botão para remoção rápida dos favoritos;
+    \item \textbf{Sincronização na nuvem}: Os favoritos são sincronizados com o \textit{backend} quando o usuário está autenticado, permitindo acesso em múltiplos dispositivos;
+    \item \textbf{Optimistic Updates}: A interface atualiza imediatamente ao favoritar/desfavoritar, com rollback automático em caso de falha de sincronização.
+\end{itemize}
 
-
+Esta funcionalidade garante que o usuário não perca seus dados ao trocar de dispositivo, mantendo sua experiência personalizada sempre disponível.
 
 \section{GESTÃO DE DADOS} \label{sec:admin}
 

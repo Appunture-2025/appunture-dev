@@ -8,15 +8,18 @@ O desenvolvimento do \textit{Appunture} representou um desafio multidisciplinar 
 Os principais objetivos propostos no início do projeto foram alcançados:
 
 \begin{itemize}
-    \item A implementação do aplicativo Android permite o acesso à ferramenta em dispositivos móveis;
-    \item A arquitetura \textit{offline-first} permite o uso do aplicativo mesmo em ambientes sem conectividade;
-    \item O atlas anatômico digital com 15 visualizações vetoriais (SVG) auxilia na visualização dos pontos de acupuntura;
-    \item O assistente baseado em IA auxilia na busca e correlação entre sintomas e pontos;
-    \item A API REST do \textit{backend} permite a gestão dos conteúdos do sistema, complementada pelos consoles Firebase e Google Cloud;
-    \item A ferramenta Point Mapper auxiliou no posicionamento das coordenadas dos pontos sobre as imagens SVG.
+    \item A implementação do aplicativo Android com React Native 0.79.6 e Expo SDK 53 permite o acesso à ferramenta em dispositivos móveis com alta performance;
+    \item A arquitetura \textit{offline-first} com banco de dados SQLite local permite o uso do aplicativo mesmo em ambientes sem conectividade, com sincronização automática quando online;
+    \item O atlas anatômico digital com 15 visualizações vetoriais (SVG) organizadas por meridianos auxilia na visualização precisa dos pontos de acupuntura;
+    \item O sistema de busca inteligente e o assistente baseado em IA (arquitetura RAG com Google Gemini) auxiliam na correlação entre sintomas e pontos;
+    \item O \textit{backend} Java com Spring Boot 3.2.5 e Google Cloud Firestore fornece APIs REST robustas para gestão de dados e autenticação via Firebase;
+    \item O sistema de favoritos com sincronização na nuvem permite que usuários salvem e acessem seus pontos preferidos em múltiplos dispositivos;
+    \item A ferramenta Point Mapper auxiliou no mapeamento preciso das coordenadas dos pontos sobre as imagens SVG do atlas.
 \end{itemize}
 
-A adoção da metodologia Scrum permitiu um desenvolvimento iterativo e incremental, com entregas frequentes e ajustes baseados em \textit{feedback} contínuo. A escolha das tecnologias --- React Native com Expo para o aplicativo Android e Java com Spring Boot para o \textit{backend} --- mostrou-se adequada para os requisitos do projeto, oferecendo robustez, performance e facilidade de manutenção.
+A adoção da metodologia Scrum permitiu um desenvolvimento iterativo e incremental, com entregas frequentes e ajustes baseados em \textit{feedback} contínuo. O gerenciamento de estado com Zustand, combinado ao sistema de persistência via AsyncStorage e SecureStore, garantiu uma experiência fluida e segura para os usuários.
+
+A escolha do \textit{stack} tecnológico --- React Native com Expo para o aplicativo móvel e Java com Spring Boot para o \textit{backend} --- mostrou-se adequada para os requisitos do projeto, oferecendo robustez, performance e facilidade de manutenção. A integração com Firebase Authentication proporcionou autenticação segura com suporte a login tradicional e social (Google).
 
 O \textit{Appunture} surge em um contexto de crescimento das práticas integrativas e complementares no Brasil. A ferramenta busca contribuir como um recurso de apoio ao estudo, facilitando o acesso a informações organizadas sobre acupuntura. É importante ressaltar que o aplicativo não substitui a formação profissional adequada, mas pode servir como material complementar de consulta.
 
@@ -25,12 +28,13 @@ Como trabalhos futuros, sugerem-se:
 \begin{itemize}
     \item Implementação de recursos de realidade aumentada para visualização dos pontos em modelos 3D;
     \item Integração com sistemas de prontuário eletrônico;
-    \item Desenvolvimento de módulos de avaliação e certificação;
-    \item Expansão da base de conhecimento para incluir outras técnicas da MTC;
-    \item Implementação de recursos de acessibilidade avançados;
-    \item Tradução do conteúdo para outros idiomas;
-    \item Aprimoramento contínuo do assistente IA com novos modelos e técnicas de RAG;
-    \item Integração com \textit{wearables} para monitoramento de tratamentos.
+    \item Desenvolvimento de módulos de avaliação e certificação para verificar o aprendizado;
+    \item Expansão da base de conhecimento para incluir outras técnicas da MTC, como auriculoterapia e moxabustão;
+    \item Implementação de recursos de acessibilidade avançados, incluindo suporte a leitores de tela;
+    \item Tradução do conteúdo para outros idiomas, ampliando o alcance da ferramenta;
+    \item Aprimoramento contínuo do assistente IA com novos modelos e técnicas de RAG para respostas mais precisas;
+    \item Integração com \textit{wearables} para monitoramento e acompanhamento de tratamentos;
+    \item Desenvolvimento de versão para iOS e distribuição na App Store.
 \end{itemize}
 
-Em síntese, o \textit{Appunture} representa uma contribuição para o ecossistema de ferramentas educativas voltadas à acupuntura. A plataforma busca facilitar o acesso a informações organizadas e servir como recurso complementar de apoio ao estudo. Espera-se que a ferramenta possa evoluir com base no feedback dos usuários, mantendo seu foco na acessibilidade e na qualidade da informação disponibilizada.
+Em síntese, o \textit{Appunture} representa uma contribuição para o ecossistema de ferramentas educativas voltadas à acupuntura. A plataforma busca facilitar o acesso a informações organizadas e servir como recurso complementar de apoio ao estudo. Com uma base técnica sólida e arquitetura preparada para expansões, espera-se que a ferramenta possa evoluir continuamente com base no feedback dos usuários, mantendo seu foco na acessibilidade e na qualidade da informação disponibilizada.

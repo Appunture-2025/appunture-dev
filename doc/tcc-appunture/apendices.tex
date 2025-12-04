@@ -1,37 +1,54 @@
-﻿% Apêndices do TCC Appunture
-% Encoding: UTF-8
+﻿% Apendices do TCC Appunture
 
 \begin{apendicesenv}
 
-\partapendices
-
 % ==============================================================================
-% APÊNDICE A - DIAGRAMA DE CASOS DE USO
+% APENDICE A - DIAGRAMA DE CASOS DE USO
 % ==============================================================================
 \chapter{DIAGRAMA DE CASOS DE USO}
 \label{apendice:casos-uso}
 
-O diagrama de casos de uso apresenta as principais funcionalidades do sistema Appunture e suas interações com os atores do sistema.
+O diagrama de casos de uso apresenta as principais funcionalidades do sistema Appunture e suas interacoes com os atores do sistema, organizados por ordem de acao do usuario.
 
-\figura{DIAGRAMA DE CASOS DE USO DO SISTEMA APPUNTURE}{0.85}{fig/casos-uso.png}{Os autores (2025)}{casos-uso}{}{}
+\figura{DIAGRAMA DE CASOS DE USO DO SISTEMA APPUNTURE}{0.95}{fig/casos-de-uso.png}{Os autores (2025)}{casos-uso}{}{}
 
 % ==============================================================================
-% APÊNDICE B - DIAGRAMA DE CLASSES
+% APENDICE B - DIAGRAMA DE CLASSES
 % ==============================================================================
 \chapter{DIAGRAMA DE CLASSES}
 \label{apendice:classes}
 
-O diagrama de classes representa a estrutura estática do sistema, mostrando as principais entidades e seus relacionamentos.
+O diagrama de classes representa a estrutura estatica do sistema, mostrando as principais entidades e seus relacionamentos.
 
-\figura{DIAGRAMA DE CLASSES DO SISTEMA APPUNTURE}{0.9}{fig/classes.png}{Os autores (2025)}{classes}{}{}
+\figura{DIAGRAMA DE CLASSES DO SISTEMA APPUNTURE}{0.75}{fig/classes.png}{Os autores (2025)}{classes}{}{}
 
 % ==============================================================================
-% APÊNDICE C - DIAGRAMAS DE SEQUÊNCIA
+% APENDICE C - MODELO LOGICO DO BANCO DE DADOS
 % ==============================================================================
-\chapter{DIAGRAMAS DE SEQUÊNCIA}
+\chapter{MODELO LOGICO DO BANCO DE DADOS}
+\label{apendice:modelo-logico}
+
+O sistema Appunture utiliza uma arquitetura de dados hibrida, com dois bancos de dados distintos que trabalham em conjunto para garantir o funcionamento \textit{offline-first} do aplicativo.
+
+\section{Banco de Dados Local (SQLite)}
+
+O banco de dados SQLite e utilizado no aplicativo movel para armazenamento local dos dados, permitindo o funcionamento completo mesmo sem conexao com a internet. A estrutura foi projetada para sincronizacao bidirecional com o Firestore.
+
+\figura{MODELO LOGICO - SQLITE (MOBILE)}{0.75}{fig/modelo-logico-sqlite.png}{Os autores (2025)}{modelo-sqlite}{}{}
+
+\section{Banco de Dados em Nuvem (Firestore)}
+
+O Firestore e um banco de dados NoSQL orientado a documentos, utilizado no \textit{backend} para armazenamento centralizado e sincronizacao entre dispositivos. Por ser NoSQL, os relacionamentos sao implementados atraves de referencias por ID entre documentos.
+
+\figura{MODELO DE DADOS - FIRESTORE (BACKEND)}{0.75}{fig/modelo-logico-firestore.png}{Os autores (2025)}{modelo-firestore}{}{}
+
+% ==============================================================================
+% APENDICE D - DIAGRAMAS DE SEQUENCIA
+% ==============================================================================
+\chapter{DIAGRAMAS DE SEQUENCIA}
 \label{apendice:sequencia}
 
-Os diagramas de sequência apresentam o fluxo de interação entre os componentes do sistema para cada história de usuário implementada.
+Os diagramas de sequencia apresentam o fluxo de interacao entre os componentes do sistema para cada historia de usuario implementada.
 
 % ------------------------------------------------------------------------------
 \section{HU-01: Busca de Pontos de Acupuntura}
@@ -39,164 +56,146 @@ Os diagramas de sequência apresentam o fluxo de interação entre os componente
 
 Este diagrama representa o fluxo de busca de pontos de acupuntura no sistema.
 
-\figura{DIAGRAMA DE SEQUÊNCIA - BUSCA DE PONTOS}{0.85}{fig/seq-busca.png}{Os autores (2025)}{seq-busca}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - BUSCA DE PONTOS}{0.70}{fig/seq-busca.png}{Os autores (2025)}{seq-busca}{}{}
 
 % ------------------------------------------------------------------------------
 \section{HU-02: Detalhes do Ponto de Acupuntura}
 \label{apendice:seq-detalhes}
 
-Este diagrama representa o fluxo de visualização dos detalhes de um ponto de acupuntura.
+Este diagrama representa o fluxo de visualizacao dos detalhes de um ponto de acupuntura.
 
-\figura{DIAGRAMA DE SEQUÊNCIA - DETALHES DO PONTO}{0.85}{fig/seq-detalhes.png}{Os autores (2025)}{seq-detalhes}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - DETALHES DO PONTO}{0.70}{fig/seq-detalhes.png}{Os autores (2025)}{seq-detalhes}{}{}
 
 % ------------------------------------------------------------------------------
 \section{HU-03: Atlas Visual Interativo}
 \label{apendice:seq-atlas}
 
-Este diagrama representa o fluxo de interação com o atlas visual do corpo humano.
+Este diagrama representa o fluxo de interacao com o atlas visual do corpo humano.
 
-\figura{DIAGRAMA DE SEQUÊNCIA - ATLAS VISUAL}{0.85}{fig/seq-atlas.png}{Os autores (2025)}{seq-atlas}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - ATLAS VISUAL}{0.70}{fig/seq-atlas.png}{Os autores (2025)}{seq-atlas}{}{}
 
 % ------------------------------------------------------------------------------
 \section{HU-04: Gerenciamento de Favoritos}
 \label{apendice:seq-favoritos}
 
-Este diagrama representa o fluxo de adição e remoção de pontos favoritos.
+Este diagrama representa o fluxo de adicao e remocao de pontos favoritos.
 
-\figura{DIAGRAMA DE SEQUÊNCIA - FAVORITOS}{0.85}{fig/seq-favoritos.png}{Os autores (2025)}{seq-favoritos}{}{}
-
-% ------------------------------------------------------------------------------
-\section{HU-05: Anotações Clínicas}
-\label{apendice:seq-anotacao}
-
-Este diagrama representa o fluxo de criação e gerenciamento de anotações clínicas.
-
-\figura{DIAGRAMA DE SEQUÊNCIA - ANOTAÇÕES CLÍNICAS}{0.85}{fig/seq-anotacao.png}{Os autores (2025)}{seq-anotacao}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - FAVORITOS}{0.70}{fig/seq-favoritos.png}{Os autores (2025)}{seq-favoritos}{}{}
 
 % ------------------------------------------------------------------------------
-\section{HU-06: Sincronização de Dados}
+\section{HU-05: Sincronizacao de Dados}
 \label{apendice:seq-sync}
 
-Este diagrama representa o fluxo de sincronização de dados entre dispositivo e nuvem.
+Este diagrama representa o fluxo de sincronizacao de dados entre dispositivo e nuvem.
 
-\figura{DIAGRAMA DE SEQUÊNCIA - SINCRONIZAÇÃO}{0.85}{fig/seq-sync.png}{Os autores (2025)}{seq-sync}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - SINCRONIZACAO}{0.70}{fig/seq-sync.png}{Os autores (2025)}{seq-sync}{}{}
 
 % ------------------------------------------------------------------------------
-\section{HU-07: Assistente de Inteligência Artificial}
+\section{HU-06: Assistente de Inteligencia Artificial}
 \label{apendice:seq-ia}
 
-Este diagrama representa o fluxo de interação com o assistente de IA do sistema.
+Este diagrama representa o fluxo de interacao com o assistente de IA do sistema.
 
-\figura{DIAGRAMA DE SEQUÊNCIA - ASSISTENTE IA}{0.85}{fig/seq-ia.png}{Os autores (2025)}{seq-ia}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - ASSISTENTE IA}{0.70}{fig/seq-ia.png}{Os autores (2025)}{seq-ia}{}{}
 
 % ------------------------------------------------------------------------------
-\section{HU-08: Mapeamento de Sintomas}
+\section{HU-07: Mapeamento de Sintomas}
 \label{apendice:seq-mapper}
 
 Este diagrama representa o fluxo de mapeamento de sintomas para pontos de acupuntura.
 
-\figura{DIAGRAMA DE SEQUÊNCIA - MAPEAMENTO DE SINTOMAS}{0.85}{fig/seq-mapper.png}{Os autores (2025)}{seq-mapper}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - MAPEAMENTO DE SINTOMAS}{0.70}{fig/seq-mapper.png}{Os autores (2025)}{seq-mapper}{}{}
 
 % ------------------------------------------------------------------------------
-\section{HU-09: Autenticação de Usuário}
+\section{HU-08: Autenticacao de Usuario}
 \label{apendice:seq-auth}
 
-Os diagramas a seguir representam os fluxos de autenticação do sistema, incluindo login com email/senha, cadastro de novo usuário e login social via Google.
+Os diagramas a seguir representam os fluxos de autenticacao do sistema, incluindo login com email/senha, cadastro de novo usuario e login social via Google.
 
-\figura{DIAGRAMA DE SEQUÊNCIA - LOGIN COM EMAIL/SENHA}{0.75}{fig/seq-loginemailsenha.png}{Os autores (2025)}{seq-login}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - LOGIN COM EMAIL/SENHA}{0.65}{fig/seq-loginemailsenha.png}{Os autores (2025)}{seq-login}{}{}
 
-\figura{DIAGRAMA DE SEQUÊNCIA - CADASTRO DE USUÁRIO}{0.75}{fig/seq-cadastro.png}{Os autores (2025)}{seq-cadastro}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - CADASTRO DE USUARIO}{0.65}{fig/seq-cadastro.png}{Os autores (2025)}{seq-cadastro}{}{}
 
-\figura{DIAGRAMA DE SEQUÊNCIA - LOGIN SOCIAL (GOOGLE)}{0.75}{fig/seq-loginsocial.png}{Os autores (2025)}{seq-google}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - LOGIN SOCIAL (GOOGLE)}{0.65}{fig/seq-loginsocial.png}{Os autores (2025)}{seq-google}{}{}
 
 % ------------------------------------------------------------------------------
-\section{HU-10: Navegação por Meridianos}
+\section{HU-09: Navegacao por Meridianos}
 \label{apendice:seq-meridians}
 
-Os diagramas a seguir representam os fluxos de navegação pelos meridianos do sistema.
+Os diagramas a seguir representam os fluxos de navegacao pelos meridianos do sistema.
 
-\figura{DIAGRAMA DE SEQUÊNCIA - LISTAR MERIDIANOS}{0.75}{fig/seq-listarmeridianos.png}{Os autores (2025)}{seq-listarmeridianos}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - LISTAR MERIDIANOS}{0.65}{fig/seq-listarmeridianos.png}{Os autores (2025)}{seq-listarmeridianos}{}{}
 
-\figura{DIAGRAMA DE SEQUÊNCIA - ACESSAR MERIDIANO}{0.75}{fig/seq-acessarmeridiano.png}{Os autores (2025)}{seq-acessarmeridiano}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - ACESSAR MERIDIANO}{0.65}{fig/seq-acessarmeridiano.png}{Os autores (2025)}{seq-acessarmeridiano}{}{}
 
-\figura{DIAGRAMA DE SEQUÊNCIA - INFORMAÇÕES DO MERIDIANO}{0.70}{fig/seq-infosmeridiano.png}{Os autores (2025)}{seq-infosmeridiano}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - INFORMACOES DO MERIDIANO}{0.60}{fig/seq-infosmeridiano.png}{Os autores (2025)}{seq-infosmeridiano}{}{}
 
 % ------------------------------------------------------------------------------
-\section{HU-11: Configurações e Personalização}
+\section{HU-10: Configuracoes e Personalizacao}
 \label{apendice:seq-config}
 
-Os diagramas a seguir representam os fluxos de configuração e personalização do aplicativo.
+Os diagramas a seguir representam os fluxos de configuracao e personalizacao do aplicativo.
 
-\figura{DIAGRAMA DE SEQUÊNCIA - ALTERNAR TEMA}{0.75}{fig/seq-apptheme.png}{Os autores (2025)}{seq-theme}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - ALTERNAR TEMA}{0.65}{fig/seq-apptheme.png}{Os autores (2025)}{seq-theme}{}{}
 
-\figura{DIAGRAMA DE SEQUÊNCIA - NOTIFICAÇÕES}{0.75}{fig/seq-onoffnotifs.png}{Os autores (2025)}{seq-notifs}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - NOTIFICACOES}{0.65}{fig/seq-onoffnotifs.png}{Os autores (2025)}{seq-notifs}{}{}
 
-\figura{DIAGRAMA DE SEQUÊNCIA - MODO OFFLINE}{0.70}{fig/seq-offline.png}{Os autores (2025)}{seq-offline}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - MODO OFFLINE}{0.60}{fig/seq-offline.png}{Os autores (2025)}{seq-offline}{}{}
 
-\figura{DIAGRAMA DE SEQUÊNCIA - LOGOUT}{0.75}{fig/seq-logout.png}{Os autores (2025)}{seq-logout}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - LOGOUT}{0.65}{fig/seq-logout.png}{Os autores (2025)}{seq-logout}{}{}
 
-\figura{DIAGRAMA DE SEQUÊNCIA - STATUS DE SINCRONIZAÇÃO}{0.70}{fig/seq-statussync.png}{Os autores (2025)}{seq-statussync}{}{}
-
-% ==============================================================================
-% APÊNDICE D - MODELO LÓGICO DO BANCO DE DADOS
-% ==============================================================================
-\chapter{MODELO LÓGICO DO BANCO DE DADOS}
-\label{apendice:modelo-logico}
-
-O modelo lógico do banco de dados apresenta a estrutura de armazenamento de dados do sistema Appunture.
-
-\figura{MODELO LÓGICO DO BANCO DE DADOS}{0.9}{fig/modelo-logico.png}{Os autores (2025)}{modelo-logico}{}{}
+\figura{DIAGRAMA DE SEQUENCIA - STATUS DE SINCRONIZACAO}{0.60}{fig/seq-statussync.png}{Os autores (2025)}{seq-statussync}{}{}
 
 % ==============================================================================
-% APÊNDICE E - HISTÓRIAS DE USUÁRIO
+% APENDICE E - HISTORIAS DE USUARIO
 % ==============================================================================
-\chapter{HISTÓRIAS DE USUÁRIO}
+\chapter{HISTORIAS DE USUARIO}
 \label{apendice:historias}
 
-Este apêndice apresenta as histórias de usuário detalhadas do sistema Appunture, incluindo critérios de aceitação.
+Este apendice apresenta as historias de usuario detalhadas do sistema Appunture, incluindo criterios de aceitacao e prototipos de tela.
 
 % ------------------------------------------------------------------------------
 \section{HU-01: Busca de Pontos de Acupuntura}
 \label{hu:busca}
 
 \textbf{Como} estudante ou profissional de acupuntura, \\
-\textbf{Quero} buscar pontos de acupuntura por nome, código ou função, \\
-\textbf{Para que} eu possa encontrar rapidamente informações sobre pontos específicos.
+\textbf{Quero} buscar pontos de acupuntura por nome, codigo ou funcao, \\
+\textbf{Para que} eu possa encontrar rapidamente informacoes sobre pontos especificos.
 
-\subsection*{Critérios de Aceitação}
+\subsection*{Criterios de Aceitacao}
 
 \begin{enumerate}
-    \item O sistema deve permitir busca por nome do ponto em português ou pinyin
-    \item O sistema deve permitir busca por código alfanumérico (ex: LU1, ST36)
-    \item O sistema deve exibir resultados em tempo real conforme o usuário digita
-    \item O sistema deve destacar os termos buscados nos resultados
-    \item A busca deve retornar resultados em menos de 500ms
-    \item O sistema deve sugerir correções para termos digitados incorretamente
+    \item O sistema deve permitir busca por nome do ponto em portugues
+    \item O sistema deve permitir busca por codigo alfanumerico (ex: VG20, E36, IG4)
+    \item O sistema deve exibir resultados em tempo real com \textit{debounce} de 300ms
+    \item O sistema deve funcionar offline com dados em cache local (SQLite)
+    \item O sistema deve permitir alternar favoritos diretamente nos resultados
+    \item O sistema deve exibir mensagem quando nenhum resultado for encontrado
 \end{enumerate}
 
-\figura{PROTÓTIPO - BUSCA DE PONTOS}{0.30}{fig/proto-busca.png}{Os autores (2025)}{hu01-busca}{}{}
+\figura{PROTOTIPO - BUSCA DE PONTOS}{0.28}{fig/proto-busca.png}{Os autores (2025)}{hu01-busca}{}{}
 
 % ------------------------------------------------------------------------------
 \section{HU-02: Detalhes do Ponto de Acupuntura}
 \label{hu:detalhes}
 
 \textbf{Como} estudante ou profissional de acupuntura, \\
-\textbf{Quero} visualizar informações detalhadas de um ponto de acupuntura, \\
-\textbf{Para que} eu possa estudar suas características e aplicações clínicas.
+\textbf{Quero} visualizar informacoes detalhadas de um ponto de acupuntura, \\
+\textbf{Para que} eu possa estudar suas caracteristicas e aplicacoes clinicas.
 
-\subsection*{Critérios de Aceitação}
+\subsection*{Criterios de Aceitacao}
 
 \begin{enumerate}
-    \item O sistema deve exibir nome em português, pinyin e caracteres chineses
-    \item O sistema deve mostrar a localização anatômica precisa
-    \item O sistema deve apresentar as funções terapêuticas do ponto
-    \item O sistema deve listar as indicações clínicas baseadas na MTC
-    \item O sistema deve exibir imagem ilustrativa da localização
-    \item O sistema deve mostrar técnicas de inserção recomendadas
-    \item O sistema deve indicar precauções e contraindicações
+    \item O sistema deve exibir nome em portugues, pinyin e caracteres chineses
+    \item O sistema deve mostrar a localizacao anatomica precisa
+    \item O sistema deve apresentar as funcoes terapeuticas do ponto
+    \item O sistema deve listar as indicacoes clinicas baseadas na MTC
+    \item O sistema deve exibir imagem ilustrativa da localizacao
+    \item O sistema deve mostrar tecnicas de insercao recomendadas
+    \item O sistema deve indicar precaucoes e contraindicacoes
 \end{enumerate}
 
-\figura{PROTÓTIPO - DETALHES DO PONTO}{0.30}{fig/proto-detalhes.png}{Os autores (2025)}{hu02-detalhes}{}{}
+\figura{PROTOTIPO - DETALHES DO PONTO}{0.28}{fig/proto-detalhes.png}{Os autores (2025)}{hu02-detalhes}{}{}
 
 % ------------------------------------------------------------------------------
 \section{HU-03: Atlas Visual Interativo}
@@ -206,18 +205,18 @@ Este apêndice apresenta as histórias de usuário detalhadas do sistema Appuntu
 \textbf{Quero} navegar por um atlas visual do corpo humano, \\
 \textbf{Para que} eu possa localizar visualmente os pontos de acupuntura.
 
-\subsection*{Critérios de Aceitação}
+\subsection*{Criterios de Aceitacao}
 
 \begin{enumerate}
-    \item O sistema deve exibir modelo anatômico interativo do corpo humano
-    \item O sistema deve permitir zoom e rotação do modelo
-    \item O sistema deve destacar os meridianos no modelo
-    \item O sistema deve permitir seleção de pontos diretamente no modelo
-    \item O sistema deve filtrar pontos por meridiano ou região corporal
-    \item O sistema deve sincronizar a visualização com a busca textual
+    \item O sistema deve exibir modelo anatomico SVG interativo do corpo humano
+    \item O sistema deve permitir navegacao entre multiplas camadas anatomicas
+    \item O sistema deve permitir alternar entre visualizacao frontal e dorsal
+    \item O sistema deve exibir marcadores nos pontos com coordenadas cadastradas
+    \item O sistema deve permitir toque em marcador para navegar aos detalhes do ponto
+    \item O sistema deve exibir nome da camada atual e total de camadas disponiveis
 \end{enumerate}
 
-\figura{PROTÓTIPO - ATLAS VISUAL}{0.30}{fig/proto-mapa.png}{Os autores (2025)}{hu03-mapa}{}{}
+\figura{PROTOTIPO - ATLAS VISUAL}{0.28}{fig/proto-mapa.png}{Os autores (2025)}{hu03-mapa}{}{}
 
 % ------------------------------------------------------------------------------
 \section{HU-04: Gerenciamento de Favoritos}
@@ -225,172 +224,149 @@ Este apêndice apresenta as histórias de usuário detalhadas do sistema Appuntu
 
 \textbf{Como} estudante ou profissional de acupuntura, \\
 \textbf{Quero} salvar pontos de acupuntura como favoritos, \\
-\textbf{Para que} eu possa acessá-los rapidamente no futuro.
+\textbf{Para que} eu possa acessa-los rapidamente no futuro.
 
-\subsection*{Critérios de Aceitação}
+\subsection*{Criterios de Aceitacao}
 
 \begin{enumerate}
-    \item O sistema deve permitir adicionar pontos à lista de favoritos
+    \item O sistema deve exigir autenticacao para usar a funcionalidade de favoritos
+    \item O sistema deve permitir adicionar pontos a lista de favoritos
     \item O sistema deve permitir remover pontos da lista de favoritos
-    \item O sistema deve exibir lista de favoritos organizada
-    \item O sistema deve permitir criar categorias personalizadas de favoritos
-    \item O sistema deve sincronizar favoritos com a conta do usuário
-    \item O sistema deve permitir exportar lista de favoritos
+    \item O sistema deve exibir lista de favoritos com contagem total
+    \item O sistema deve sincronizar favoritos com a conta do usuario (\textit{offline-first})
+    \item O sistema deve usar \textit{optimistic update} para feedback imediato ao usuario
 \end{enumerate}
 
-\figura{PROTÓTIPO - FAVORITOS}{0.30}{fig/proto-favoritos.png}{Os autores (2025)}{hu04-favoritos}{}{}
+\figura{PROTOTIPO - FAVORITOS}{0.28}{fig/proto-favoritos.png}{Os autores (2025)}{hu04-favoritos}{}{}
 
 % ------------------------------------------------------------------------------
-\section{HU-05: Anotações Clínicas}
-\label{hu:anotacoes}
-
-\textbf{Como} profissional de acupuntura, \\
-\textbf{Quero} criar anotações pessoais sobre pontos de acupuntura, \\
-\textbf{Para que} eu possa registrar observações clínicas e experiências práticas.
-
-\subsection*{Critérios de Aceitação}
-
-\begin{enumerate}
-    \item O sistema deve permitir criar anotações vinculadas a pontos específicos
-    \item O sistema deve suportar formatação básica de texto nas anotações
-    \item O sistema deve permitir adicionar tags às anotações
-    \item O sistema deve permitir buscar anotações por conteúdo ou tags
-    \item O sistema deve exibir histórico de anotações com data e hora
-    \item O sistema deve permitir editar e excluir anotações
-    \item O sistema deve sincronizar anotações com a conta do usuário
-\end{enumerate}
-
-% ------------------------------------------------------------------------------
-\section{HU-06: Sincronização de Dados}
+\section{HU-05: Sincronizacao de Dados}
 \label{hu:sync}
 
-\textbf{Como} usuário do aplicativo, \\
+\textbf{Como} usuario do aplicativo, \\
 \textbf{Quero} sincronizar meus dados entre dispositivos, \\
-\textbf{Para que} eu possa acessar minhas informações em qualquer lugar.
+\textbf{Para que} eu possa acessar minhas informacoes em qualquer lugar.
 
-\subsection*{Critérios de Aceitação}
+\subsection*{Criterios de Aceitacao}
 
 \begin{enumerate}
-    \item O sistema deve sincronizar automaticamente quando conectado à internet
+    \item O sistema deve sincronizar automaticamente quando conectado a internet
     \item O sistema deve funcionar offline com dados em cache
-    \item O sistema deve resolver conflitos de sincronização automaticamente
-    \item O sistema deve notificar o usuário sobre status da sincronização
-    \item O sistema deve permitir sincronização manual sob demanda
-    \item O sistema deve manter histórico de sincronizações
+    \item O sistema deve resolver conflitos de sincronizacao automaticamente
+    \item O sistema deve notificar o usuario sobre status da sincronizacao
+    \item O sistema deve permitir sincronizacao manual sob demanda
+    \item O sistema deve manter historico de sincronizacoes
 \end{enumerate}
 
 % ------------------------------------------------------------------------------
-\section{HU-07: Assistente de Inteligência Artificial}
+\section{HU-06: Assistente de Inteligencia Artificial}
 \label{hu:ia}
 
 \textbf{Como} estudante ou profissional de acupuntura, \\
 \textbf{Quero} consultar um assistente de IA sobre acupuntura, \\
-\textbf{Para que} eu possa obter respostas contextualizadas às minhas dúvidas.
+\textbf{Para que} eu possa obter respostas contextualizadas as minhas duvidas.
 
-\subsection*{Critérios de Aceitação}
+\subsection*{Criterios de Aceitacao}
 
 \begin{enumerate}
     \item O sistema deve permitir fazer perguntas em linguagem natural
     \item O sistema deve fornecer respostas baseadas em literatura de acupuntura
     \item O sistema deve citar fontes quando apropriado
     \item O sistema deve manter contexto da conversa
-    \item O sistema deve sugerir pontos relacionados às perguntas
-    \item O sistema deve indicar limitações e recomendar consulta profissional
+    \item O sistema deve sugerir pontos relacionados as perguntas
+    \item O sistema deve indicar limitacoes e recomendar consulta profissional
 \end{enumerate}
 
-\figura{PROTÓTIPO - ASSISTENTE IA}{0.30}{fig/proto-chat.png}{Os autores (2025)}{hu07-chat}{}{}
+\figura{PROTOTIPO - ASSISTENTE IA}{0.28}{fig/proto-chat.png}{Os autores (2025)}{hu06-chat}{}{}
 
 % ------------------------------------------------------------------------------
-\section{HU-08: Mapeamento de Sintomas}
+\section{HU-07: Mapeamento de Sintomas}
 \label{hu:mapper}
 
 \textbf{Como} profissional de acupuntura, \\
 \textbf{Quero} mapear sintomas para pontos de acupuntura recomendados, \\
 \textbf{Para que} eu possa auxiliar no planejamento de tratamentos.
 
-\subsection*{Critérios de Aceitação}
+\subsection*{Criterios de Aceitacao}
 
 \begin{enumerate}
-    \item O sistema deve permitir selecionar múltiplos sintomas
-    \item O sistema deve sugerir pontos de acupuntura relacionados aos sintomas
-    \item O sistema deve indicar nível de evidência para cada sugestão
-    \item O sistema deve permitir filtrar sugestões por meridiano
-    \item O sistema deve exibir combinações de pontos recomendadas
-    \item O sistema deve salvar histórico de mapeamentos realizados
-    \item O sistema deve incluir aviso de uso educacional apenas
+    \item O sistema deve listar sintomas cadastrados no banco de dados
+    \item O sistema deve permitir filtrar sintomas por categoria
+    \item O sistema deve permitir buscar sintomas por nome
+    \item O sistema deve exibir indicador de severidade quando disponivel
+    \item O sistema deve navegar para detalhes mostrando pontos relacionados
+    \item O sistema deve incluir aviso de uso educacional na tela de detalhes
 \end{enumerate}
 
-\figura{PROTÓTIPO - LISTA DE PONTOS}{0.30}{fig/proto-meridianos.png}{Os autores (2025)}{hu08-meridianos}{}{}
-
 % ------------------------------------------------------------------------------
-\section{HU-09: Autenticação de Usuário}
+\section{HU-08: Autenticacao de Usuario}
 \label{hu:autenticacao}
 
-\textbf{Como} usuário do aplicativo, \\
+\textbf{Como} usuario do aplicativo, \\
 \textbf{Quero} criar uma conta e realizar login de forma segura, \\
 \textbf{Para que} eu possa acessar recursos personalizados e sincronizar meus dados.
 
-\subsection*{Critérios de Aceitação}
+\subsection*{Criterios de Aceitacao}
 
 \begin{enumerate}
     \item O sistema deve permitir cadastro com nome, email e senha
-    \item O sistema deve validar força mínima da senha (6 caracteres)
-    \item O sistema deve exigir confirmação de senha no cadastro
+    \item O sistema deve validar forca minima da senha (6 caracteres)
+    \item O sistema deve exigir confirmacao de senha no cadastro
     \item O sistema deve permitir login com email e senha
     \item O sistema deve oferecer login social via Google
-    \item O sistema deve permitir recuperação de senha por email
-    \item O sistema deve manter sessão ativa entre execuções do app
+    \item O sistema deve permitir recuperacao de senha por email
+    \item O sistema deve manter sessao ativa entre execucoes do app
     \item O sistema deve permitir acesso como visitante com funcionalidades limitadas
 \end{enumerate}
 
-\figura{PROTÓTIPO - LOGIN}{0.30}{fig/proto-login.png}{Os autores (2025)}{hu09-login}{}{}
+\figura{PROTOTIPO - LOGIN}{0.28}{fig/proto-login.png}{Os autores (2025)}{hu08-login}{}{}
 
-\figura{PROTÓTIPO - CADASTRO}{0.30}{fig/proto-cadastro.png}{Os autores (2025)}{hu09-cadastro}{}{}
+\figura{PROTOTIPO - CADASTRO}{0.28}{fig/proto-cadastro.png}{Os autores (2025)}{hu08-cadastro}{}{}
 
 % ------------------------------------------------------------------------------
-\section{HU-10: Navegação por Meridianos}
+\section{HU-09: Navegacao por Meridianos}
 \label{hu:meridianos}
 
 \textbf{Como} estudante ou profissional de acupuntura, \\
 \textbf{Quero} navegar pelos meridianos da medicina tradicional chinesa, \\
-\textbf{Para que} eu possa estudar os pontos organizados por canal energético.
+\textbf{Para que} eu possa estudar os pontos organizados por canal energetico.
 
-\subsection*{Critérios de Aceitação}
+\subsection*{Criterios de Aceitacao}
 
 \begin{enumerate}
-    \item O sistema deve listar os 12 meridianos principais e 2 vasos extraordinários
-    \item O sistema deve exibir nome em português, pinyin e caracteres chineses
+    \item O sistema deve listar os 12 meridianos principais e 2 vasos extraordinarios
+    \item O sistema deve exibir nome em portugues, pinyin e caracteres chineses
     \item O sistema deve mostrar o elemento Wu Xing associado a cada meridiano
-    \item O sistema deve indicar o horário de maior atividade energética
-    \item O sistema deve exibir o órgão relacionado ao meridiano
+    \item O sistema deve indicar o horario de maior atividade energetica
+    \item O sistema deve exibir o orgao relacionado ao meridiano
     \item O sistema deve mostrar a quantidade de pontos em cada meridiano
     \item O sistema deve permitir visualizar todos os pontos de um meridiano
-    \item O sistema deve usar cores características para cada elemento
+    \item O sistema deve usar cores caracteristicas para cada elemento
 \end{enumerate}
 
-\figura{PROTÓTIPO - NAVEGAÇÃO POR MERIDIANOS}{0.30}{fig/proto-meridianos.png}{Os autores (2025)}{hu10-meridianos}{}{}
+\figura{PROTOTIPO - NAVEGACAO POR MERIDIANOS}{0.28}{fig/proto-meridianos.png}{Os autores (2025)}{hu09-meridianos}{}{}
 
 % ------------------------------------------------------------------------------
-\section{HU-11: Configurações e Personalização}
+\section{HU-10: Configuracoes e Personalizacao}
 \label{hu:configuracoes}
 
-\textbf{Como} usuário do aplicativo, \\
-\textbf{Quero} personalizar as configurações do aplicativo, \\
-\textbf{Para que} eu possa adaptar a experiência às minhas preferências.
+\textbf{Como} usuario do aplicativo, \\
+\textbf{Quero} personalizar as configuracoes do aplicativo, \\
+\textbf{Para que} eu possa adaptar a experiencia as minhas preferencias.
 
-\subsection*{Critérios de Aceitação}
+\subsection*{Criterios de Aceitacao}
 
 \begin{enumerate}
-    \item O sistema deve permitir alternar entre tema claro, escuro e automático
-    \item O sistema deve salvar a preferência de tema do usuário
-    \item O sistema deve permitir ativar ou desativar notificações push
-    \item O sistema deve exibir informações da conta do usuário logado
-    \item O sistema deve mostrar status de sincronização e última atualização
+    \item O sistema deve permitir alternar entre tema claro, escuro e automatico
+    \item O sistema deve salvar a preferencia de tema do usuario
+    \item O sistema deve permitir ativar ou desativar notificacoes push
+    \item O sistema deve exibir informacoes da conta do usuario logado
+    \item O sistema deve mostrar status de sincronizacao e ultima atualizacao
     \item O sistema deve permitir ativar modo offline para economia de dados
-    \item O sistema deve permitir logout com confirmação
-    \item O sistema deve exibir versão do aplicativo e informações de suporte
+    \item O sistema deve permitir logout com confirmacao
+    \item O sistema deve exibir versao do aplicativo e informacoes de suporte
 \end{enumerate}
 
-\figura{PROTÓTIPO - TELA INICIAL}{0.30}{fig/proto-home.png}{Os autores (2025)}{hu11-home}{}{}
+\figura{PROTOTIPO - TELA INICIAL}{0.28}{fig/proto-home.png}{Os autores (2025)}{hu10-home}{}{}
 
 \end{apendicesenv}

@@ -33,19 +33,19 @@ O aplicativo móvel foi projetado com estratégia ``\textit{offline-first}'', ga
 \begin{itemize}
     \item Armazena todos os 361 pontos de acupuntura dos meridianos principais;
     \item Contém pontos extras, sintomas e suas relações terapêuticas;
-    \item Mantém favoritos e anotações do usuário;
+    \item Mantém favoritos do usuário;
     \item Estrutura otimizada para consultas rápidas;
     \item Garantia de performance instantânea e independência de rede.
 \end{itemize}
 
 \textbf{Nota:} A busca inteligente por sintomas utilizando o assistente de IA requer conexão com a internet. Quando \textit{offline}, o usuário pode navegar manualmente pelo atlas anatômico e acessar os detalhes dos pontos já sincronizados.
 
-\textbf{Sistema de Cache Inteligente (MMKV):}
+\textbf{Sistema de Armazenamento Seguro:}
 \begin{itemize}
-    \item Armazena configurações de usuário e estados da aplicação;
-    \item \textit{Cache} de imagens SVG e recursos visuais;
-    \item Dados de sessão e preferências de interface;
-    \item Performance até 30x superior ao AsyncStorage tradicional.
+    \item \textbf{SecureStore}: Armazenamento criptografado para tokens de autenticação JWT;
+    \item \textbf{AsyncStorage}: Persistência de configurações, preferências e dados de sessão;
+    \item \textit{Cache} de imagens e recursos visuais através do sistema de arquivos;
+    \item Persistência de estado via \textit{middleware persist} do Zustand integrado ao AsyncStorage.
 \end{itemize}
 
 \subsection{Sincronização Inteligente}
@@ -62,7 +62,7 @@ Quando conectado à internet, o sistema implementa sincronização bidirecional 
 
 \textbf{Sincronização Ascendente (Mobile $\rightarrow$ Backend):}
 \begin{itemize}
-    \item \textit{Upload} de favoritos e anotações do usuário;
+    \item \textit{Upload} de favoritos do usuário;
     \item \textit{Backup} automático de preferências;
     \item \textit{Logs} de uso para análise de performance;
     \item Controle de conflitos com \textit{timestamp}.
@@ -74,12 +74,13 @@ Quando conectado à internet, o sistema implementa sincronização bidirecional 
 
 Segundo a documentação oficial \cite{reactnative2023}, ``React Native combina as melhores partes do desenvolvimento nativo com React, uma biblioteca JavaScript de ponta para construção de interfaces de usuário''.
 
-\textbf{React Native 0.72+ com Expo SDK 49+:}
+\textbf{React Native 0.79.6 com Expo SDK 53:}
 \begin{itemize}
     \item \textit{Framework} multiplataforma para desenvolvimento nativo;
-    \item Expo Router para navegação baseada em arquivos;
-    \item Renderização otimizada de SVGs para o atlas anatômico;
-    \item Compatibilidade total com Android 8+ e iOS 12+.
+    \item Expo Router 5.1.7 para navegação baseada em arquivos;
+    \item Renderização otimizada de SVGs através do \texttt{react-native-svg} 15.11.2;
+    \item TypeScript 5.8.3 para tipagem estática e maior confiabilidade;
+    \item Nova arquitetura React Native habilitada (\texttt{newArchEnabled}).
 \end{itemize}
 
 \textbf{Atlas Anatômico Digital:}
@@ -251,18 +252,28 @@ Para garantir a precisão da localização dos pontos de acupuntura sobre o atla
 
 \subsection{Gerenciamento de Estado (Mobile)}
 
-\textbf{Zustand:}
+O gerenciamento de estado global da aplicação é realizado através de bibliotecas modernas que oferecem alta performance e integração nativa com React.
+
+\textbf{Zustand 4.4.7:}
+
+Zustand é uma biblioteca de gerenciamento de estado minimalista baseada em \textit{hooks}, escolhida por sua simplicidade e performance superior. O sistema utiliza cinco \textit{stores} principais:
+
 \begin{itemize}
-    \item Biblioteca de estado minimalista e performática;
-    \item \textit{TypeScript-first} com inferência automática;
-    \item \textit{Persist middleware} para sincronização com \textit{storage} local.
+    \item \textbf{authStore}: Gerencia autenticação via Firebase, armazenamento de tokens JWT e dados do perfil do usuário. Implementa login com email/senha e Google OAuth;
+    \item \textbf{pointsStore}: Controla pontos de acupuntura e sistema de favoritos com \textit{optimistic updates} --- a interface atualiza imediatamente enquanto a operação é processada em segundo plano, com \textit{rollback} automático em caso de falha;
+    \item \textbf{symptomsStore}: Gerencia lista de sintomas, categorias e relações com pontos de acupuntura;
+    \item \textbf{syncStore}: Coordena sincronização \textit{offline}/\textit{online} através de fila de operações (\texttt{sync\_queue}) com controle de conflitos baseado em \textit{timestamp} e \textit{retry} com \textit{exponential backoff};
+    \item \textbf{themeStore}: Controla tema visual da aplicação (claro/escuro/sistema) com persistência automática.
 \end{itemize}
 
-\textbf{React Query:}
+A persistência do estado é realizada através do \textit{middleware} \texttt{persist} do Zustand, integrado ao AsyncStorage para dados não sensíveis.
+
+\textbf{React Query (@tanstack/react-query) 5.x:}
 \begin{itemize}
-    \item \textit{Cache} inteligente de requisições HTTP;
-    \item Invalidação automática e \textit{refetch} estratégico;
-    \item \textit{Offline support} com \textit{background sync}.
+    \item \textit{Cache} inteligente de requisições HTTP com invalidação automática;
+    \item \textit{Refetch} estratégico baseado em foco da janela e reconexão;
+    \item Suporte a operações \textit{offline} com sincronização em segundo plano;
+    \item Deduplicação automática de requisições simultâneas.
 \end{itemize}
 
 \subsection{Ferramenta de Mapeamento de Pontos (Point Mapper)}
