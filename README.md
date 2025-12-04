@@ -12,7 +12,6 @@ Appunture é um sistema desenvolvido como TCC que permite consultar pontos de ac
 - Assistente de IA para recomendações baseadas em sintomas
 - Sistema de favoritos
 - Funcionamento offline com sincronização automática
-- Modo escuro
 
 ## Tecnologias
 
