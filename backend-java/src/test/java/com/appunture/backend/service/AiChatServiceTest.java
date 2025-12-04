@@ -13,7 +13,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,14 +47,7 @@ class AiChatServiceTest {
      * This simulates AI service failures for testing error handling.
      */
     private void mockChatClientToThrowException(String exceptionMessage) {
-        ChatClient.ChatClientRequest.CallPromptResponseSpec responseSpec = mock(ChatClient.ChatClientRequest.CallPromptResponseSpec.class);
-        ChatClient.ChatClientRequest.CallPromptResponseSpec callResponse = mock(ChatClient.ChatClientRequest.CallPromptResponseSpec.class);
-        ChatClient.ChatClientRequest.ChatClientRequestSpec requestSpec = mock(ChatClient.ChatClientRequest.ChatClientRequestSpec.class);
-        
-        when(chatClient.prompt()).thenReturn(requestSpec);
-        when(requestSpec.user(anyString())).thenReturn(responseSpec);
-        when(responseSpec.call()).thenReturn(callResponse);
-        when(callResponse.content()).thenThrow(new RuntimeException(exceptionMessage));
+        when(chatClient.prompt()).thenThrow(new RuntimeException(exceptionMessage));
     }
 
     @Test
