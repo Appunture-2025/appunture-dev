@@ -1,7 +1,6 @@
 package com.appunture.backend.model.firestore;
 
 import com.google.cloud.Timestamp;
-import com.google.cloud.firestore.annotation.DocumentId;
 import com.google.cloud.firestore.annotation.PropertyName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -22,7 +21,7 @@ import java.util.Map;
 @Schema(name = "FirestorePoint", description = "Representa um ponto de acupuntura armazenado no Firestore")
 public class FirestorePoint {
     
-    @DocumentId
+    // NOTA: Removido @DocumentId pois os documentos já têm campo 'id' armazenado explicitamente
     @Schema(description = "ID do documento Firestore", example = "VG20_DOC_123")
     private String id; // Firestore document ID
     

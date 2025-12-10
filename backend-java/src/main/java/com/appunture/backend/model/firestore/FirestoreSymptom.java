@@ -1,7 +1,6 @@
 package com.appunture.backend.model.firestore;
 
 import com.google.cloud.Timestamp;
-import com.google.cloud.firestore.annotation.DocumentId;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -18,7 +17,7 @@ import java.util.List;
 @Builder
 public class FirestoreSymptom {
     
-    @DocumentId
+    // NOTA: Removido @DocumentId pois os documentos já têm campo 'id' armazenado explicitamente
     private String id; // Firestore document ID
     
     private String name; // Nome do sintoma
