@@ -108,6 +108,12 @@ public class FirestoreAuthController {
         try {
             log.debug("Sincronizando usuário: {}", token.getUid());
             
+            String email = token.getEmail();
+            if (email == null || email.isBlank()) {
+                log.warn("SyncUser falhou: token sem email (uid={})", token.getUid());
+                return ResponseEntity.badRequest().build();
+            }
+
             // Verificar se usuário já existe no Firestore
             Optional<FirestoreUser> existingUser = userService.findByFirebaseUid(token.getUid());
             
@@ -155,6 +161,9 @@ public class FirestoreAuthController {
             UserProfileResponse profile = userService.toProfileResponse(newUser);
             return ResponseEntity.ok(profile);
 
+        } catch (IllegalArgumentException e) {
+            log.error("Erro de validação ao sincronizar usuário: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
         } catch (Exception e) {
             log.error("Erro ao sincronizar usuário: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
