@@ -36,7 +36,8 @@ app:
   firebase:
     enabled: true
   security:
-    require-email-verified: true
+    # Desabilitado temporariamente para TCC - contas Google já são verificadas pelo Google
+    require-email-verified: false
     cors:
       # ⚠️ PRODUÇÃO: Domínios permitidos para CORS
       allowed-origins:
