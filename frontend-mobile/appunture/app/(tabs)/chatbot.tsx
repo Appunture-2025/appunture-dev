@@ -15,6 +15,8 @@ import { Ionicons } from "@expo/vector-icons";
 import Markdown from "react-native-markdown-display";
 import { apiService } from "../../services/api";
 import { useThemeColors, useThemeStore } from "../../stores/themeStore";
+import { useAuthStore } from "../../stores/authStore";
+import { useRouter } from "expo-router";
 
 interface ChatMessage {
   id: string;
@@ -26,10 +28,14 @@ interface ChatMessage {
 export default function ChatBotScreen() {
   const colors = useThemeColors();
   const { isDark } = useThemeStore();
+  const { user, isAuthenticated } = useAuthStore();
+  const router = useRouter();
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "1",
-      text: "Olá! Sou seu assistente de acupuntura. Como posso ajudá-lo hoje? Você pode me contar sobre seus sintomas ou fazer perguntas sobre pontos de acupuntura.",
+      text: isAuthenticated
+        ? "Olá! Sou seu assistente de acupuntura. Como posso ajudá-lo hoje? Você pode me contar sobre seus sintomas ou fazer perguntas sobre pontos de acupuntura."
+        : "Olá! Para usar o assistente de IA, você precisa estar logado. Faça login para continuar.",
       isUser: false,
       timestamp: new Date(),
     },
@@ -62,6 +68,19 @@ export default function ChatBotScreen() {
 
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
+
+    // Check authentication before sending
+    if (!isAuthenticated) {
+      Alert.alert(
+        "Login necessário",
+        "Você precisa estar logado para usar o assistente de IA. Deseja fazer login agora?",
+        [
+          { text: "Cancelar", style: "cancel" },
+          { text: "Login", onPress: () => router.push("/auth") },
+        ]
+      );
+      return;
+    }
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),

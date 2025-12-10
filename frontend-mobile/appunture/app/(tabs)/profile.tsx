@@ -27,7 +27,7 @@ interface SettingsOption {
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const { user, logout } = useAuthStore();
+  const { user, logout, isAuthenticated } = useAuthStore();
   const { isOnline, lastSync } = useSyncStore();
   const { mode, setMode, isDark } = useThemeStore();
   const colors = useThemeColors();
@@ -63,7 +63,8 @@ export default function ProfileScreen() {
     }
   };
 
-  const settings: SettingsOption[] = [
+  // Build settings list - only show logout if authenticated
+  const baseSettings: SettingsOption[] = [
     {
       id: "notifications",
       title: "Notificações",
@@ -124,14 +125,31 @@ export default function ProfileScreen() {
         );
       },
     },
-    {
-      id: "logout",
-      title: "Sair da conta",
-      type: "action",
-      icon: "log-out-outline",
-      onPress: handleLogout,
-    },
   ];
+
+  // Add login or logout option based on authentication status
+  const settings: SettingsOption[] = isAuthenticated
+    ? [
+        ...baseSettings,
+        {
+          id: "logout",
+          title: "Sair da conta",
+          type: "action",
+          icon: "log-out-outline",
+          onPress: handleLogout,
+        },
+      ]
+    : [
+        ...baseSettings,
+        {
+          id: "login",
+          title: "Entrar na conta",
+          subtitle: "Faça login para sincronizar seus dados",
+          type: "action",
+          icon: "log-in-outline",
+          onPress: () => router.push("/login"),
+        },
+      ];
 
   const renderSettingItem = (item: SettingsOption) => {
     const isToggle = item.type === "toggle";
@@ -156,12 +174,15 @@ export default function ProfileScreen() {
               item.id === "logout" && {
                 backgroundColor: isDark ? "#4a2020" : "#fee2e2",
               },
+              item.id === "login" && {
+                backgroundColor: isDark ? "#1a4a2a" : "#dcfce7",
+              },
             ]}
           >
             <Ionicons
               name={item.icon}
               size={24}
-              color={item.id === "logout" ? colors.error : colors.primary}
+              color={item.id === "logout" ? colors.error : item.id === "login" ? colors.success : colors.primary}
               importantForAccessibility="no-hide-descendants"
             />
           </View>
@@ -171,6 +192,7 @@ export default function ProfileScreen() {
                 styles.settingTitle,
                 { color: colors.text },
                 item.id === "logout" && { color: colors.error },
+                item.id === "login" && { color: colors.success },
               ]}
             >
               {item.title}
@@ -222,79 +244,109 @@ export default function ProfileScreen() {
       <View
         style={[styles.userCard, { backgroundColor: colors.surface }]}
         accessibilityRole="header"
-        accessibilityLabel={`Perfil de ${user?.name || "Usuário"}`}
+        accessibilityLabel={isAuthenticated ? `Perfil de ${user?.name || "Usuário"}` : "Visitante - não logado"}
       >
         <View style={[styles.avatar, { backgroundColor: colors.background }]}>
           <Ionicons
-            name="person"
+            name={isAuthenticated ? "person" : "person-outline"}
             size={40}
             color={colors.primary}
             importantForAccessibility="no-hide-descendants"
           />
         </View>
-        <Text style={[styles.userName, { color: colors.text }]}>
-          {user?.name || "Usuário"}
-        </Text>
-        <Text style={[styles.userEmail, { color: colors.textSecondary }]}>
-          {user?.email || "email@exemplo.com"}
-        </Text>
-
-        {/* Email Verification Badge */}
-        {user?.emailVerified !== undefined && (
-          <View
-            style={[
-              styles.emailBadge,
-              {
-                backgroundColor: user.emailVerified
-                  ? colors.success
-                  : colors.warning,
-              },
-            ]}
-            accessibilityLabel={
-              user.emailVerified ? "Email verificado" : "Email não verificado"
-            }
-          >
-            <Ionicons
-              name={user.emailVerified ? "checkmark-circle" : "alert-circle"}
-              size={14}
-              color={colors.surface}
-              importantForAccessibility="no-hide-descendants"
-            />
-            <Text style={[styles.emailBadgeText, { color: colors.surface }]}>
-              {user.emailVerified ? "Email verificado" : "Email não verificado"}
+        
+        {isAuthenticated ? (
+          <>
+            <Text style={[styles.userName, { color: colors.text }]}>
+              {user?.name || "Usuário"}
             </Text>
-          </View>
-        )}
+            <Text style={[styles.userEmail, { color: colors.textSecondary }]}>
+              {user?.email || "email@exemplo.com"}
+            </Text>
 
-        {/* Sync Status */}
-        <View
-          style={styles.syncStatus}
-          accessibilityLabel={`Status de sincronização: ${
-            isOnline ? "Online" : "Offline"
-          }${
-            lastSync
-              ? `, última sincronização em ${new Date(lastSync).toLocaleString(
-                  "pt-BR"
-                )}`
-              : ""
-          }`}
-        >
-          <View
-            style={[
-              styles.statusIndicator,
-              { backgroundColor: isOnline ? colors.success : colors.warning },
-            ]}
-          />
-          <Text style={[styles.syncText, { color: colors.textSecondary }]}>
-            {isOnline ? "Online" : "Offline"}
-            {lastSync && (
-              <Text style={styles.lastSync}>
-                {" • Última sincronização: "}
-                {new Date(lastSync).toLocaleString("pt-BR")}
-              </Text>
+            {/* Email Verification Badge */}
+            {user?.emailVerified !== undefined && (
+              <View
+                style={[
+                  styles.emailBadge,
+                  {
+                    backgroundColor: user.emailVerified
+                      ? colors.success
+                      : colors.warning,
+                  },
+                ]}
+                accessibilityLabel={
+                  user.emailVerified ? "Email verificado" : "Email não verificado"
+                }
+              >
+                <Ionicons
+                  name={user.emailVerified ? "checkmark-circle" : "alert-circle"}
+                  size={14}
+                  color={colors.surface}
+                  importantForAccessibility="no-hide-descendants"
+                />
+                <Text style={[styles.emailBadgeText, { color: colors.surface }]}>
+                  {user.emailVerified ? "Email verificado" : "Email não verificado"}
+                </Text>
+              </View>
             )}
-          </Text>
-        </View>
+
+            {/* Sync Status */}
+            <View
+              style={styles.syncStatus}
+              accessibilityLabel={`Status de sincronização: ${
+                isOnline ? "Online" : "Offline"
+              }${
+                lastSync
+                  ? `, última sincronização em ${new Date(lastSync).toLocaleString(
+                      "pt-BR"
+                    )}`
+                  : ""
+              }`}
+            >
+              <View
+                style={[
+                  styles.statusIndicator,
+                  { backgroundColor: isOnline ? colors.success : colors.warning },
+                ]}
+              />
+              <Text style={[styles.syncText, { color: colors.textSecondary }]}>
+                {isOnline ? "Online" : "Offline"}
+                {lastSync && (
+                  <Text style={styles.lastSync}>
+                    {" • Última sincronização: "}
+                    {new Date(lastSync).toLocaleString("pt-BR")}
+                  </Text>
+                )}
+              </Text>
+            </View>
+          </>
+        ) : (
+          <>
+            <Text style={[styles.userName, { color: colors.text }]}>
+              Visitante
+            </Text>
+            <Text style={[styles.userEmail, { color: colors.textSecondary }]}>
+              Você está navegando como visitante
+            </Text>
+            
+            <TouchableOpacity
+              style={[styles.loginButton, { backgroundColor: colors.primary }]}
+              onPress={() => router.push("/login")}
+              accessibilityRole="button"
+              accessibilityLabel="Fazer login ou criar conta"
+            >
+              <Ionicons name="log-in-outline" size={20} color={colors.surface} />
+              <Text style={[styles.loginButtonText, { color: colors.surface }]}>
+                Entrar ou Criar Conta
+              </Text>
+            </TouchableOpacity>
+            
+            <Text style={[styles.guestHint, { color: colors.textSecondary }]}>
+              Faça login para sincronizar dados, salvar favoritos e usar a IA
+            </Text>
+          </>
+        )}
       </View>
 
       {/* Settings */}
@@ -381,6 +433,27 @@ const styles = StyleSheet.create({
   },
   lastSync: {
     fontSize: 12,
+  },
+  loginButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 24,
+    paddingVertical: 14,
+    borderRadius: 12,
+    marginTop: 16,
+    gap: 8,
+  },
+  loginButtonText: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  guestHint: {
+    fontSize: 13,
+    textAlign: "center",
+    marginTop: 12,
+    paddingHorizontal: 16,
+    lineHeight: 18,
   },
   settingsSection: {
     marginHorizontal: 16,

@@ -118,6 +118,8 @@ public class SecurityConfig {
                         // Endpoints de leitura públicos (modo visitante)
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/points/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/symptoms/**").permitAll()
+                        // Chat AI - requer autenticação Firebase mas é acessível a usuários autenticados
+                        .requestMatchers("/api/chat/**").authenticated()
                         // Swagger/OpenAPI
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                         // Endpoints protegidos

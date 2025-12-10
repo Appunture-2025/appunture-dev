@@ -5,16 +5,34 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { BodyMap, BodyMapMarker } from "../../components/BodyMap";
 import { usePointsStore } from "../../stores/pointsStore";
-import type { BodyAtlasPlane } from "../../assets/body-map/manifest";
-import { getAtlasLayerById, getLayersByPlane } from "../../utils/bodyMap";
+import { BODY_ATLAS_LAYERS, type BodyAtlasLayer } from "../../assets/body-map/manifest";
 import { COLORS } from "../../utils/constants";
 import { styles } from "./styles";
+
+// Agrupa os meridianos por sigla para fácil acesso
+const MERIDIAN_MAP = BODY_ATLAS_LAYERS.reduce<Record<string, BodyAtlasLayer>>(
+  (acc, layer) => {
+    acc[layer.id] = layer;
+    return acc;
+  },
+  {}
+);
+
+// Lista de meridianos ordenados (removendo ST2 duplicado)
+const MERIDIAN_LIST = BODY_ATLAS_LAYERS
+  .filter((layer) => layer.id !== "ST2")
+  .map((layer) => ({
+    id: layer.id,
+    label: layer.label,
+    plane: layer.plane,
+  }));
 
 export default function BodyMapScreen() {
   const router = useRouter();
@@ -23,8 +41,10 @@ export default function BodyMapScreen() {
     loading: state.loading,
     loadPoints: state.loadPoints,
   }));
-  const [plane, setPlane] = useState<BodyAtlasPlane>("front");
-  const [layerIndex, setLayerIndex] = useState(0);
+  
+  const [selectedMeridianId, setSelectedMeridianId] = useState<string>(
+    MERIDIAN_LIST[0]?.id ?? "LU"
+  );
   const [selectedPointId, setSelectedPointId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -33,83 +53,92 @@ export default function BodyMapScreen() {
     }
   }, [loadPoints, points.length]);
 
-  useEffect(() => {
-    setLayerIndex(0);
-    setSelectedPointId(null);
-  }, [plane]);
-
-  const layers = useMemo(() => getLayersByPlane(plane), [plane]);
-  const activeLayer = layers[layerIndex] ?? getAtlasLayerById();
-  const pointMap = useMemo(
-    () => new Map(points.map((point) => [point.id, point])),
-    [points]
+  // Layer ativo baseado no meridiano selecionado
+  const activeLayer = useMemo(
+    () => MERIDIAN_MAP[selectedMeridianId] ?? BODY_ATLAS_LAYERS[0],
+    [selectedMeridianId]
   );
 
-  const markers = useMemo<BodyMapMarker[]>(() => {
-    if (!activeLayer) {
-      return [];
-    }
-    const isDefaultLayer = layerIndex === 0;
+  // Filtra pontos do meridiano selecionado
+  const meridianPoints = useMemo(() => {
+    // Mapeia sigla do meridiano para possíveis nomes
+    const meridianMatches: Record<string, string[]> = {
+      LU: ["LU", "Pulmão", "Lung", "Pulmao"],
+      LI: ["LI", "Intestino Grosso", "Large Intestine", "IG"],
+      ST: ["ST", "Estômago", "Stomach", "E", "Estomago"],
+      SP: ["SP", "Baço", "Spleen", "BP", "Baco"],
+      HT: ["HT", "Coração", "Heart", "C", "Coracao"],
+      SI: ["SI", "Intestino Delgado", "Small Intestine", "ID"],
+      BL: ["BL", "Bexiga", "Bladder", "B"],
+      KI: ["KI", "Rim", "Kidney", "R"],
+      P: ["P", "PC", "Pericárdio", "Pericardium", "Pericardio", "CS"],
+      TW: ["TW", "TA", "Triplo Aquecedor", "Triple Warmer", "SJ", "Triple Heater"],
+      GB: ["GB", "VB", "Vesícula Biliar", "Gallbladder", "Vesicula Biliar"],
+      LV: ["LV", "Fígado", "Liver", "F", "Figado"],
+      GV: ["GV", "VG", "Vaso Governador", "Governing Vessel", "Du Mai", "Du"],
+      CV: ["CV", "VC", "Vaso Concepção", "Conception Vessel", "Ren Mai", "Ren", "Vaso Concepcao"],
+    };
 
-    return points.flatMap((point) => {
-      if (!point.bodyMapCoords?.length) {
-        return [];
-      }
-
-      return point.bodyMapCoords
-        .filter((coord) => {
-          if (!coord.layerId) {
-            return isDefaultLayer;
-          }
-          return coord.layerId === activeLayer.id;
-        })
-        .map((coord, coordIndex) => ({
-          id: `${point.id}-${coord.layerId ?? coordIndex}`,
-          pointId: point.id,
-          label: point.code || point.name,
-          coordinates: { x: coord.x, y: coord.y },
-        }));
-    });
-  }, [activeLayer, layerIndex, points]);
-
-  const visiblePoints = useMemo(() => {
-    const seen = new Set<string>();
-    const subset = [] as typeof points;
-
-    markers.forEach((marker) => {
-      if (seen.has(marker.pointId)) {
-        return;
-      }
-      const point = pointMap.get(marker.pointId);
-      if (point) {
-        seen.add(marker.pointId);
-        subset.push(point);
-      }
-    });
-
-    return subset;
-  }, [markers, pointMap]);
-
-  const handlePlaneChange = useCallback((nextPlane: BodyAtlasPlane) => {
-    setPlane(nextPlane);
-  }, []);
-
-  const handleLayerStep = useCallback(
-    (direction: "prev" | "next") => {
-      setLayerIndex((current) => {
-        if (direction === "prev") {
-          return Math.max(0, current - 1);
+    const matches = meridianMatches[selectedMeridianId] || [selectedMeridianId];
+    
+    return points.filter((point) => {
+      // Verifica pelo meridiano do ponto
+      if (point.meridian) {
+        const meridianLower = point.meridian.toLowerCase();
+        if (matches.some((m) => meridianLower.includes(m.toLowerCase()))) {
+          return true;
         }
-        return Math.min(layers.length - 1, current + 1);
+      }
+      // Verifica pelo código do ponto (ex: LU1, LU2, etc.)
+      if (point.code) {
+        const codeLower = point.code.toLowerCase();
+        if (matches.some((m) => codeLower.startsWith(m.toLowerCase()))) {
+          return true;
+        }
+      }
+      return false;
+    });
+  }, [points, selectedMeridianId]);
+
+  // Cria markers para os pontos do meridiano
+  const markers = useMemo<BodyMapMarker[]>(() => {
+    return meridianPoints
+      .filter((point) => point.bodyMapCoords?.length || point.coordinates)
+      .flatMap((point) => {
+        // Se tem bodyMapCoords, usa elas
+        if (point.bodyMapCoords?.length) {
+          return point.bodyMapCoords.map((coord, index) => ({
+            id: `${point.id}-${index}`,
+            pointId: point.id,
+            label: point.code || point.name,
+            coordinates: { x: coord.x, y: coord.y },
+          }));
+        }
+        // Se tem coordinates simples, usa ela
+        if (point.coordinates) {
+          return [{
+            id: point.id,
+            pointId: point.id,
+            label: point.code || point.name,
+            coordinates: { x: point.coordinates.x, y: point.coordinates.y },
+          }];
+        }
+        return [];
       });
-    },
-    [layers.length]
-  );
+  }, [meridianPoints]);
+
+  const handleMeridianSelect = useCallback((meridianId: string) => {
+    setSelectedMeridianId(meridianId);
+    setSelectedPointId(null);
+  }, []);
 
   const handleMarkerPress = useCallback(
     (marker: BodyMapMarker) => {
       setSelectedPointId(marker.pointId);
-      router.push(`/point/${marker.pointId}`);
+      router.push({
+        pathname: "/point-details",
+        params: { id: marker.pointId },
+      });
     },
     [router]
   );
@@ -117,9 +146,36 @@ export default function BodyMapScreen() {
   const handlePointPress = useCallback(
     (pointId: string) => {
       setSelectedPointId(pointId);
-      router.push(`/point/${pointId}`);
+      router.push({
+        pathname: "/point-details",
+        params: { id: pointId },
+      });
     },
     [router]
+  );
+
+  const renderMeridianItem = useCallback(
+    ({ item }: { item: typeof MERIDIAN_LIST[0] }) => (
+      <TouchableOpacity
+        style={[
+          styles.meridianChip,
+          selectedMeridianId === item.id && styles.meridianChipActive,
+        ]}
+        onPress={() => handleMeridianSelect(item.id)}
+        accessibilityRole="button"
+        accessibilityState={{ selected: selectedMeridianId === item.id }}
+      >
+        <Text
+          style={[
+            styles.meridianChipText,
+            selectedMeridianId === item.id && styles.meridianChipTextActive,
+          ]}
+        >
+          {item.id}
+        </Text>
+      </TouchableOpacity>
+    ),
+    [selectedMeridianId, handleMeridianSelect]
   );
 
   return (
@@ -129,89 +185,57 @@ export default function BodyMapScreen() {
         contentContainerStyle={styles.content}
       >
         <View style={styles.header} accessibilityRole="header">
-          <Text style={styles.title}>Mapa Corporal</Text>
+          <Text style={styles.title}>Mapa dos Meridianos</Text>
           <Text style={styles.subtitle}>
-            Visualize os pontos registrados diretamente sobre as camadas do
-            atlas oficial.
+            Selecione um meridiano para visualizar seus pontos no mapa corporal
           </Text>
         </View>
 
-        <View style={styles.controls}>
-          <View style={styles.planeToggle}>
-            {(["front", "back"] as BodyAtlasPlane[]).map((option) => (
-              <TouchableOpacity
-                key={option}
-                style={[
-                  styles.planeButton,
-                  plane === option && styles.planeButtonActive,
-                ]}
-                onPress={() => handlePlaneChange(option)}
-                accessibilityRole="button"
-                accessibilityState={{ selected: plane === option }}
-              >
-                <Text
-                  style={[
-                    styles.planeButtonText,
-                    plane === option && styles.planeButtonTextActive,
-                  ]}
-                >
-                  {option === "front" ? "Frente" : "Costas"}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          <View style={styles.layerControls}>
-            <TouchableOpacity
-              style={[
-                styles.layerButton,
-                layerIndex === 0 && styles.layerButtonDisabled,
-              ]}
-              onPress={() => handleLayerStep("prev")}
-              disabled={layerIndex === 0}
-              accessibilityLabel="Camada anterior"
-            >
-              <Ionicons name="arrow-back" size={18} color={COLORS.surface} />
-            </TouchableOpacity>
-            <View style={styles.layerInfo}>
-              <Text style={styles.layerInfoTitle}>{activeLayer.label}</Text>
-              <Text style={styles.layerInfoSubtitle}>
-                Camada {layerIndex + 1} de {layers.length}
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={[
-                styles.layerButton,
-                layerIndex === layers.length - 1 && styles.layerButtonDisabled,
-              ]}
-              onPress={() => handleLayerStep("next")}
-              disabled={layerIndex === layers.length - 1}
-              accessibilityLabel="Próxima camada"
-            >
-              <Ionicons name="arrow-forward" size={18} color={COLORS.surface} />
-            </TouchableOpacity>
-          </View>
+        {/* Seletor de Meridianos */}
+        <View style={styles.meridianSelector}>
+          <Text style={styles.sectionLabel}>Meridianos</Text>
+          <FlatList
+            horizontal
+            data={MERIDIAN_LIST}
+            renderItem={renderMeridianItem}
+            keyExtractor={(item) => item.id}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.meridianList}
+          />
         </View>
 
+        {/* Info do Meridiano Selecionado */}
+        <View style={styles.meridianInfo}>
+          <Text style={styles.meridianTitle}>{activeLayer.label}</Text>
+          <Text style={styles.meridianSubtitle}>
+            {meridianPoints.length} ponto{meridianPoints.length !== 1 ? "s" : ""} • 
+            {markers.length} com coordenadas
+          </Text>
+        </View>
+
+        {/* Mapa SVG */}
         <BodyMap
           layer={activeLayer}
-          plane={plane}
+          plane={activeLayer.plane}
           markers={markers}
           selectedPointId={selectedPointId}
           onMarkerPress={handleMarkerPress}
         />
 
-        {loading && !markers.length ? (
+        {loading && !meridianPoints.length ? (
           <View style={styles.loadingWrapper}>
             <ActivityIndicator color={COLORS.primary} />
             <Text style={styles.loadingText}>Carregando pontos...</Text>
           </View>
         ) : null}
 
+        {/* Lista de Pontos do Meridiano */}
         <View style={styles.pointsSection}>
-          <Text style={styles.sectionTitle}>Pontos nesta camada</Text>
-          {visiblePoints.length ? (
-            visiblePoints.map((point) => (
+          <Text style={styles.sectionTitle}>
+            Pontos do Meridiano {selectedMeridianId}
+          </Text>
+          {meridianPoints.length > 0 ? (
+            meridianPoints.map((point) => (
               <TouchableOpacity
                 key={point.id}
                 style={[
@@ -221,43 +245,58 @@ export default function BodyMapScreen() {
                 onPress={() => handlePointPress(point.id)}
                 accessibilityRole="button"
               >
-                <View>
-                  <Text style={styles.pointName}>{point.name}</Text>
-                  <Text style={styles.pointMeta}>
-                    {(point.code && point.code.trim()) || "Sem código"} ·{" "}
-                    {point.meridian}
-                  </Text>
+                <View style={styles.pointInfo}>
+                  <Text style={styles.pointCode}>{point.code || "—"}</Text>
+                  <View style={styles.pointDetails}>
+                    <Text style={styles.pointName} numberOfLines={1}>
+                      {point.name}
+                    </Text>
+                    {point.chineseName && (
+                      <Text style={styles.pointChinese}>{point.chineseName}</Text>
+                    )}
+                  </View>
                 </View>
-                <Ionicons
-                  name="chevron-forward"
-                  size={18}
-                  color={COLORS.textSecondary}
-                  importantForAccessibility="no-hide-descendants"
-                />
+                <View style={styles.pointStatus}>
+                  {(point.bodyMapCoords?.length || point.coordinates) ? (
+                    <Ionicons
+                      name="location"
+                      size={16}
+                      color={COLORS.success}
+                    />
+                  ) : (
+                    <Ionicons
+                      name="location-outline"
+                      size={16}
+                      color={COLORS.textSecondary}
+                    />
+                  )}
+                  <Ionicons
+                    name="chevron-forward"
+                    size={18}
+                    color={COLORS.textSecondary}
+                  />
+                </View>
               </TouchableOpacity>
             ))
           ) : (
             <Text style={styles.emptyListText}>
-              Ainda não há coordenadas cadastradas para esta camada.
+              {loading
+                ? "Carregando pontos..."
+                : "Nenhum ponto encontrado para este meridiano."}
             </Text>
           )}
         </View>
 
-        <View style={styles.instructionsCard} accessibilityRole="summary">
-          <Ionicons
-            name="information-circle"
-            size={24}
-            color={COLORS.primary}
-            style={styles.instructionsIcon}
-            importantForAccessibility="no-hide-descendants"
-          />
-          <View style={styles.instructionsContent}>
-            <Text style={styles.instructionsTitle}>Dicas rápidas</Text>
-            <Text style={styles.instructionsText}>
-              Use o seletor de plano para alternar entre frente e costas. Cada
-              camada agrupa uma faixa específica do atlas. Toque em um marcador
-              ou na lista para abrir os detalhes completos do ponto.
-            </Text>
+        {/* Legenda */}
+        <View style={styles.legendCard}>
+          <Text style={styles.legendTitle}>Legenda</Text>
+          <View style={styles.legendItem}>
+            <Ionicons name="location" size={16} color={COLORS.success} />
+            <Text style={styles.legendText}>Ponto com coordenadas no mapa</Text>
+          </View>
+          <View style={styles.legendItem}>
+            <Ionicons name="location-outline" size={16} color={COLORS.textSecondary} />
+            <Text style={styles.legendText}>Ponto sem coordenadas cadastradas</Text>
           </View>
         </View>
       </ScrollView>
