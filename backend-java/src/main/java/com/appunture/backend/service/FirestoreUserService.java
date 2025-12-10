@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +63,9 @@ public class FirestoreUserService {
             throw new IllegalArgumentException("Firebase UID já está em uso: " + firebaseUid);
         }
 
+        // Usar java.util.Date para compatibilidade com Firestore
+        java.util.Date now = new java.util.Date();
+        
         FirestoreUser user = FirestoreUser.builder()
                 .firebaseUid(firebaseUid)
                 .email(email)
@@ -71,8 +73,8 @@ public class FirestoreUserService {
                 .role(role != null ? role : "USER")
                 .enabled(true)
                 .emailVerified(false)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(now)
+                .updatedAt(now)
                 .build();
 
         return userRepository.save(user);
