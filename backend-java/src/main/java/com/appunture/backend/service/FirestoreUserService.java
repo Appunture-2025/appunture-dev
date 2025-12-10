@@ -92,6 +92,9 @@ public class FirestoreUserService {
         if (updates.getName() != null) {
             user.setName(updates.getName());
         }
+        if (updates.getFirebaseUid() != null) {
+            user.setFirebaseUid(updates.getFirebaseUid());
+        }
         if (updates.getEmail() != null && !updates.getEmail().equals(user.getEmail())) {
             if (existsByEmail(updates.getEmail())) {
                 throw new IllegalArgumentException("Email já está em uso: " + updates.getEmail());
@@ -108,8 +111,13 @@ public class FirestoreUserService {
             user.setPhoneNumber(updates.getPhoneNumber());
         }
         
-        user.setEmailVerified(updates.isEmailVerified());
-        user.setEnabled(updates.isEnabled());
+        // Atualiza flags apenas quando forem true (evita sobrescrever com false padrão do builder)
+        if (updates.isEmailVerified()) {
+            user.setEmailVerified(true);
+        }
+        if (updates.isEnabled()) {
+            user.setEnabled(true);
+        }
         user.setUpdatedAt(LocalDateTime.now());
 
         return userRepository.save(user);

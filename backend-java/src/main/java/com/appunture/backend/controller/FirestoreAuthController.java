@@ -117,9 +117,26 @@ public class FirestoreAuthController {
                 return ResponseEntity.ok(profile);
             }
 
-            // Criar novo usuário no Firestore
+            // Se não encontrou por UID, tente por email para evitar erro de duplicidade
             String email = token.getEmail();
-            String name = token.getName() != null ? token.getName() : email.split("@")[0];
+            if (email != null && !email.isBlank()) {
+                Optional<FirestoreUser> existingByEmail = userService.findByEmail(email);
+                if (existingByEmail.isPresent()) {
+                    // Atualiza o firebaseUid e emailVerified a partir do token
+                    FirestoreUser update = FirestoreUser.builder()
+                            .firebaseUid(token.getUid())
+                            .emailVerified(token.isEmailVerified())
+                            .enabled(true)
+                            .build();
+
+                    FirestoreUser updated = userService.updateUser(existingByEmail.get().getId(), update);
+                    UserProfileResponse profile = userService.toProfileResponse(updated);
+                    return ResponseEntity.ok(profile);
+                }
+            }
+
+            // Criar novo usuário no Firestore
+            String name = token.getName() != null ? token.getName() : (email != null ? email.split("@")[0] : "");
             
             FirestoreUser newUser = userService.createUser(
                 token.getUid(),
@@ -127,6 +144,13 @@ public class FirestoreAuthController {
                 name,
                 "USER" // Role padrão
             );
+
+            // Propaga status de verificação do email do token
+            FirestoreUser update = FirestoreUser.builder()
+                    .emailVerified(token.isEmailVerified())
+                    .enabled(true)
+                    .build();
+            newUser = userService.updateUser(newUser.getId(), update);
 
             UserProfileResponse profile = userService.toProfileResponse(newUser);
             return ResponseEntity.ok(profile);
