@@ -1,5 +1,6 @@
 package com.appunture.backend.model.firestore;
 
+import com.google.cloud.Timestamp;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -24,16 +25,34 @@ public class FirestoreUser {
     private String name;
     private String role; // USER, ADMIN
     private boolean enabled;
-    private Date createdAt; // Usando Date para compatibilidade com Firestore
-    private Date updatedAt;
+    private Object createdAt; // Usando Object para compatibilidade com Firestore
+    private Object updatedAt;
     
     // Métodos auxiliares para conversão de datas
     public LocalDateTime getCreatedAtAsLocalDateTime() {
-        return createdAt != null ? createdAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime() : null;
+        return convertToLocalDateTime(createdAt);
     }
     
     public LocalDateTime getUpdatedAtAsLocalDateTime() {
-        return updatedAt != null ? updatedAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime() : null;
+        return convertToLocalDateTime(updatedAt);
+    }
+    
+    private static LocalDateTime convertToLocalDateTime(Object value) {
+        if (value == null) return null;
+        if (value instanceof Timestamp) {
+            return ((Timestamp) value).toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        }
+        if (value instanceof Date) {
+            return ((Date) value).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        }
+        if (value instanceof String) {
+            try {
+                return LocalDateTime.parse((String) value);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return null;
     }
     
     // Favoritos como lista de IDs dos pontos

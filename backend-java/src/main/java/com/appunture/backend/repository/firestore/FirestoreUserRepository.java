@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -106,15 +107,13 @@ public class FirestoreUserRepository {
         }
         
         try {
-            java.util.Date now = new java.util.Date();
-            
             if (user.getId() == null || user.getId().isEmpty()) {
                 // Criar novo documento com ID gerado automaticamente
                 DocumentReference docRef = firestore.collection(COLLECTION_NAME).document();
                 user.setId(docRef.getId());
-                user.setCreatedAt(now);
+                user.setCreatedAt(LocalDateTime.now());
             }
-            user.setUpdatedAt(now);
+            user.setUpdatedAt(LocalDateTime.now());
             
             ApiFuture<WriteResult> future = firestore.collection(COLLECTION_NAME)
                     .document(user.getId()).set(user);
