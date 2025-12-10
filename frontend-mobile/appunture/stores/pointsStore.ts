@@ -80,16 +80,20 @@ const getActiveFavoriteIds = async (userId: string): Promise<Set<string>> => {
 };
 
 const applyFavoriteFlags = (
-  points: Point[],
+  points: Point[] | undefined | null,
   favoriteIds: Set<string>
-): Point[] =>
-  points.map((point) => {
+): Point[] => {
+  if (!points || !Array.isArray(points)) {
+    return [];
+  }
+  return points.map((point) => {
     const normalized = withGalleryMedia(point);
     return {
       ...normalized,
       isFavorite: favoriteIds.has(point.id) || Boolean(normalized.isFavorite),
     };
   });
+};
 
 const loadLocalFavorites = async (userId: string): Promise<Point[]> => {
   try {

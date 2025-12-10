@@ -322,10 +322,15 @@ class ApiService {
     offset?: number;
     meridian?: string;
   }): Promise<PointsResponse> {
-    const response = await this.client.get<PointsResponse>("/points", {
+    const response = await this.client.get<Point[] | PointsResponse>("/points", {
       params,
     });
-    return response.data;
+    // Backend may return array directly, normalize to PointsResponse format
+    const data = response.data;
+    if (Array.isArray(data)) {
+      return { points: data, count: data.length };
+    }
+    return data?.points ? data : { points: [], count: 0 };
   }
 
   async getPoint(id: string): Promise<{ point: PointWithSymptoms }> {
@@ -336,17 +341,27 @@ class ApiService {
   }
 
   async searchPoints(query: string): Promise<SearchResponse> {
-    const response = await this.client.get<SearchResponse>("/points/search", {
+    const response = await this.client.get<Point[] | SearchResponse>("/points/search", {
       params: { name: query }, // Backend uses 'name' parameter
     });
-    return response.data;
+    // Backend returns array directly, normalize to SearchResponse format
+    const data = response.data;
+    if (Array.isArray(data)) {
+      return { points: data, count: data.length, searchTerm: query };
+    }
+    return data?.points ? data : { points: [], count: 0, searchTerm: query };
   }
 
   async getPointsBySymptom(symptomId: string): Promise<PointsResponse> {
-    const response = await this.client.get<PointsResponse>(
+    const response = await this.client.get<Point[] | PointsResponse>(
       `/points/symptom/${symptomId}`
     );
-    return response.data;
+    // Backend returns array directly, normalize to PointsResponse format
+    const data = response.data;
+    if (Array.isArray(data)) {
+      return { points: data, count: data.length };
+    }
+    return data?.points ? data : { points: [], count: 0 };
   }
 
   async getPointByCode(code: string): Promise<{ point: PointWithSymptoms }> {
@@ -357,39 +372,58 @@ class ApiService {
   }
 
   async getPointsByMeridian(meridian: string): Promise<PointsResponse> {
-    const response = await this.client.get<PointsResponse>(
+    const response = await this.client.get<Point[] | PointsResponse>(
       `/points/meridian/${meridian}`
     );
-    return response.data;
+    // Backend returns array directly, normalize to PointsResponse format
+    const data = response.data;
+    if (Array.isArray(data)) {
+      return { points: data, count: data.length };
+    }
+    return data?.points ? data : { points: [], count: 0 };
   }
 
   async getPopularPoints(limit: number = 10): Promise<PointsResponse> {
-    const response = await this.client.get<PointsResponse>("/points/popular", {
+    const response = await this.client.get<Point[] | PointsResponse>("/points/popular", {
       params: { limit },
     });
-    return response.data;
+    // Backend returns array directly, normalize to PointsResponse format
+    const data = response.data;
+    if (Array.isArray(data)) {
+      return { points: data, count: data.length };
+    }
+    // Already in expected format or fallback
+    return data?.points ? data : { points: [], count: 0 };
   }
 
   async getMeridians(): Promise<MeridiansResponse> {
     // Backend doesn't have /points/meridians endpoint
     // We need to get distinct meridians from points
-    const response = await this.client.get<PointsResponse>("/points");
+    const response = await this.client.get<Point[] | PointsResponse>("/points");
+    // Normalize response - backend may return array directly
+    const data = response.data;
+    const points = Array.isArray(data) ? data : (data?.points || []);
+    
     const meridians = Array.from(
-      new Set(response.data.points.map((p) => p.meridian))
+      new Set(points.map((p) => p.meridian))
     ).map((meridian) => ({
       meridian,
-      point_count: response.data.points.filter((p) => p.meridian === meridian)
-        .length,
+      point_count: points.filter((p) => p.meridian === meridian).length,
     }));
     return { meridians };
   }
 
   // Symptoms endpoints
   async getSymptoms(params?: { category?: string }): Promise<SymptomsResponse> {
-    const response = await this.client.get<SymptomsResponse>("/symptoms", {
+    const response = await this.client.get<Symptom[] | SymptomsResponse>("/symptoms", {
       params,
     });
-    return response.data;
+    // Backend returns array directly, normalize to SymptomsResponse format
+    const data = response.data;
+    if (Array.isArray(data)) {
+      return { symptoms: data, count: data.length };
+    }
+    return data?.symptoms ? data : { symptoms: [], count: 0 };
   }
 
   async getSymptom(id: string): Promise<{ symptom: SymptomWithPoints }> {
@@ -400,13 +434,18 @@ class ApiService {
   }
 
   async searchSymptoms(query: string): Promise<SymptomsResponse> {
-    const response = await this.client.get<SymptomsResponse>(
+    const response = await this.client.get<Symptom[] | SymptomsResponse>(
       "/symptoms/search",
       {
         params: { name: query }, // Backend uses 'name' parameter
       }
     );
-    return response.data;
+    // Backend returns array directly, normalize to SymptomsResponse format
+    const data = response.data;
+    if (Array.isArray(data)) {
+      return { symptoms: data, count: data.length };
+    }
+    return data?.symptoms ? data : { symptoms: [], count: 0 };
   }
 
   async getSymptomCategories(): Promise<CategoriesResponse> {
@@ -417,34 +456,54 @@ class ApiService {
   }
 
   async getSymptomsByCategory(category: string): Promise<SymptomsResponse> {
-    const response = await this.client.get<SymptomsResponse>(
+    const response = await this.client.get<Symptom[] | SymptomsResponse>(
       `/symptoms/category/${category}`
     );
-    return response.data;
+    // Backend returns array directly, normalize to SymptomsResponse format
+    const data = response.data;
+    if (Array.isArray(data)) {
+      return { symptoms: data, count: data.length };
+    }
+    return data?.symptoms ? data : { symptoms: [], count: 0 };
   }
 
   async getSymptomsByTag(tag: string): Promise<SymptomsResponse> {
-    const response = await this.client.get<SymptomsResponse>(
+    const response = await this.client.get<Symptom[] | SymptomsResponse>(
       `/symptoms/tag/${tag}`
     );
-    return response.data;
+    // Backend returns array directly, normalize to SymptomsResponse format
+    const data = response.data;
+    if (Array.isArray(data)) {
+      return { symptoms: data, count: data.length };
+    }
+    return data?.symptoms ? data : { symptoms: [], count: 0 };
   }
 
   async getSymptomsByPoint(pointId: string): Promise<SymptomsResponse> {
-    const response = await this.client.get<SymptomsResponse>(
+    const response = await this.client.get<Symptom[] | SymptomsResponse>(
       `/symptoms/point/${pointId}`
     );
-    return response.data;
+    // Backend returns array directly, normalize to SymptomsResponse format
+    const data = response.data;
+    if (Array.isArray(data)) {
+      return { symptoms: data, count: data.length };
+    }
+    return data?.symptoms ? data : { symptoms: [], count: 0 };
   }
 
   async getPopularSymptoms(limit: number = 10): Promise<SymptomsResponse> {
-    const response = await this.client.get<SymptomsResponse>(
+    const response = await this.client.get<Symptom[] | SymptomsResponse>(
       "/symptoms/popular",
       {
         params: { limit },
       }
     );
-    return response.data;
+    // Backend returns array directly, normalize to SymptomsResponse format
+    const data = response.data;
+    if (Array.isArray(data)) {
+      return { symptoms: data, count: data.length };
+    }
+    return data?.symptoms ? data : { symptoms: [], count: 0 };
   }
 
   async incrementSymptomUse(symptomId: string): Promise<void> {
