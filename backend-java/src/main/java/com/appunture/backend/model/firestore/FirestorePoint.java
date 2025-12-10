@@ -31,8 +31,8 @@ public class FirestorePoint {
     private String name; // Nome do ponto
     @Schema(description = "Nome chinês do ponto", example = "百会")
     private String chineseName; // Nome em chinês
-    @Schema(description = "Tradução/significado do nome", example = "Cem Reuniões")
-    private String translation; // Tradução do nome
+    @Schema(description = "Tradução/significado do nome (pode ser String ou Map para múltiplos idiomas)")
+    private Object translation; // Tradução do nome - pode ser String ou Map<String,String>
     @Schema(description = "Descrição anatômica completa", example = "No ápice da cabeça, na interseção das linhas medianas")
     private String description; // Descrição detalhada
     @Schema(description = "Meridiano associado", example = "Du Mai")
