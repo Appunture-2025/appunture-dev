@@ -12,6 +12,7 @@ import { Stack, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useSyncStore } from "../stores/syncStore";
 import { useThemeColors } from "../stores/themeStore";
+import { COLORS } from "../utils/constants";
 import type { SyncOperation } from "../types/database";
 
 const EntityTypeLabels: Record<string, string> = {

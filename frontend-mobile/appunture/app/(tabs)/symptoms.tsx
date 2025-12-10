@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSymptomsStore } from "../../stores/symptomsStore";
-import { SPACING, SYMPTOM_CATEGORIES } from "../../utils/constants";
+import { SPACING, SYMPTOM_CATEGORIES, COLORS } from "../../utils/constants";
 import { useThemeColors } from "../../stores/themeStore";
 import SearchBar from "../../components/SearchBar";
 import { Symptom } from "../../types/api";

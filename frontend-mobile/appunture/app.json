@@ -39,6 +39,7 @@
       "typedRoutes": true
     },
     "scheme": "appunture",
+    "assetBundlePatterns": ["assets/**/*"],
     "extra": {
       "apiBaseUrl": "http://localhost:8080/api",
       "firebaseApiKey": "your-firebase-api-key",
@@ -50,7 +51,9 @@
       "firebaseMeasurementId": "your-measurement-id",
       "firebaseDatabaseUrl": "https://your-project.firebaseio.com",
       "enableStorageUpload": true,
-      "router": {},
+      "router": {
+        "appRoot": "./app"
+      },
       "eas": {
         "projectId": "864e35bc-9ecf-4e7a-866b-8507d1163044"
       }

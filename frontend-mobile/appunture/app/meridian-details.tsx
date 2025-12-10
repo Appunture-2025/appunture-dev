@@ -14,6 +14,7 @@ import { usePointsStore } from "../stores/pointsStore";
 import { useThemeColors } from "../stores/themeStore";
 import { MERIDIAN_DATA } from "../utils/meridianData";
 import { Point } from "../types/api";
+import { COLORS } from "../utils/constants";
 
 export default function MeridianDetailsScreen() {
   const colors = useThemeColors();

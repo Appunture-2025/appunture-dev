@@ -6,13 +6,44 @@ import type { ImagePickerAsset } from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import { STORAGE_KEYS } from "../utils/constants";
 import { User, AppSettings } from "../types/user";
-import { apiService } from "./api";
 import { storageLogger as logger } from "../utils/logger";
+
+// Note: apiService is imported dynamically to avoid circular dependency
+// api.ts imports storage.ts (getStoredToken), so we use dynamic import here
+
+// Web fallback for SecureStore (not available on web)
+const isWeb = Platform.OS === "web";
+
+const secureStoreSetItem = async (
+  key: string,
+  value: string
+): Promise<void> => {
+  if (isWeb) {
+    await AsyncStorage.setItem(key, value);
+  } else {
+    await SecureStore.setItemAsync(key, value);
+  }
+};
+
+const secureStoreGetItem = async (key: string): Promise<string | null> => {
+  if (isWeb) {
+    return await AsyncStorage.getItem(key);
+  }
+  return await SecureStore.getItemAsync(key);
+};
+
+const secureStoreDeleteItem = async (key: string): Promise<void> => {
+  if (isWeb) {
+    await AsyncStorage.removeItem(key);
+  } else {
+    await SecureStore.deleteItemAsync(key);
+  }
+};
 
 // Secure storage for sensitive data
 export const storeToken = async (token: string): Promise<void> => {
   try {
-    await SecureStore.setItemAsync(STORAGE_KEYS.AUTH_TOKEN, token);
+    await secureStoreSetItem(STORAGE_KEYS.AUTH_TOKEN, token);
   } catch (error) {
     logger.error("Error storing token:", error);
     throw error;
@@ -21,7 +52,7 @@ export const storeToken = async (token: string): Promise<void> => {
 
 export const getStoredToken = async (): Promise<string | null> => {
   try {
-    return await SecureStore.getItemAsync(STORAGE_KEYS.AUTH_TOKEN);
+    return await secureStoreGetItem(STORAGE_KEYS.AUTH_TOKEN);
   } catch (error) {
     logger.error("Error getting token:", error);
     return null;
@@ -30,7 +61,7 @@ export const getStoredToken = async (): Promise<string | null> => {
 
 export const removeToken = async (): Promise<void> => {
   try {
-    await SecureStore.deleteItemAsync(STORAGE_KEYS.AUTH_TOKEN);
+    await secureStoreDeleteItem(STORAGE_KEYS.AUTH_TOKEN);
   } catch (error) {
     logger.error("Error removing token:", error);
   }
@@ -245,6 +276,8 @@ export const mediaStorageService = {
       type: resolveMimeType(compressedUri),
     } as unknown as Blob);
 
+    // Dynamic import to avoid circular dependency (api.ts imports storage.ts)
+    const { apiService } = await import("./api");
     const response = await apiService.uploadFile(formData, onProgress);
     return response.url;
   },

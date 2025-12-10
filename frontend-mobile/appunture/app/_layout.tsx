@@ -85,12 +85,36 @@ export default function RootLayout() {
           <QueryClientProvider client={queryClient}>
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="admin" options={{ headerShown: false }} />
+              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <Stack.Screen name="welcome" options={{ headerShown: false }} />
+              <Stack.Screen name="login" options={{ headerShown: false }} />
+              <Stack.Screen name="login_new" options={{ headerShown: false }} />
+              <Stack.Screen name="register" options={{ headerShown: false }} />
               <Stack.Screen
-                name="point/[id]"
+                name="point-details"
                 options={{
                   title: "Detalhes do Ponto",
+                  headerBackTitle: "Voltar",
+                }}
+              />
+              <Stack.Screen
+                name="meridian-details"
+                options={{
+                  title: "Detalhes do Meridiano",
+                  headerBackTitle: "Voltar",
+                }}
+              />
+              <Stack.Screen
+                name="symptom-details"
+                options={{
+                  title: "Detalhes do Sintoma",
+                  headerBackTitle: "Voltar",
+                }}
+              />
+              <Stack.Screen
+                name="sync-status"
+                options={{
+                  title: "Status de Sincronização",
                   headerBackTitle: "Voltar",
                 }}
               />
@@ -99,13 +123,6 @@ export default function RootLayout() {
                 options={{
                   title: "Mapa Corporal",
                   presentation: "modal",
-                }}
-              />
-              <Stack.Screen
-                name="modal"
-                options={{
-                  presentation: "modal",
-                  headerShown: false,
                 }}
               />
             </Stack>

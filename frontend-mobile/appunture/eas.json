@@ -14,7 +14,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "http://localhost:8080/api",
+        "EXPO_PUBLIC_API_BASE_URL": "https://appunture-backend-756244484248.us-central1.run.app/api",
         "EXPO_PUBLIC_ENABLE_STORAGE_UPLOAD": "true"
       }
     },
@@ -27,7 +27,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "https://appunture-backend-XXXXX-uc.a.run.app/api",
+        "EXPO_PUBLIC_API_BASE_URL": "https://appunture-backend-756244484248.us-central1.run.app/api",
         "EXPO_PUBLIC_ENABLE_STORAGE_UPLOAD": "true"
       }
     },
@@ -41,8 +41,14 @@
         "autoIncrement": true
       },
       "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "https://appunture-backend-XXXXX-uc.a.run.app/api",
-        "EXPO_PUBLIC_ENABLE_STORAGE_UPLOAD": "true"
+        "EXPO_PUBLIC_API_BASE_URL": "https://appunture-backend-756244484248.us-central1.run.app/api",
+        "EXPO_PUBLIC_ENABLE_STORAGE_UPLOAD": "true",
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyA37SzSYX-_JAJsN6mw2X8hWDcXEiCMHog",
+        "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN": "appunture-tcc.firebaseapp.com",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "appunture-tcc",
+        "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET": "appunture-tcc.appspot.com",
+        "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "756244484248",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:756244484248:web:82482fed9b2b2f690d40ed"
       }
     }
   },
