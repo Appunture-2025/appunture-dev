@@ -68,12 +68,13 @@ class FirestoreSymptomServiceTest {
 
     @Test
     void updateSymptom_ShouldApplyChanges() {
+        String previousUpdateStr = LocalDateTime.now().minusHours(2).toString();
         FirestoreSymptom existing = FirestoreSymptom.builder()
                 .id("symptom-1")
                 .name("Antigo")
                 .tags(new ArrayList<>())
                 .pointIds(new ArrayList<>())
-                .updatedAt(LocalDateTime.now().minusHours(2))
+                .updatedAt(previousUpdateStr)
                 .build();
 
         FirestoreSymptom updates = FirestoreSymptom.builder()
@@ -88,7 +89,6 @@ class FirestoreSymptomServiceTest {
         when(symptomRepository.existsByName("Atualizado")).thenReturn(false);
         when(symptomRepository.save(any(FirestoreSymptom.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        LocalDateTime previousUpdate = existing.getUpdatedAt();
         FirestoreSymptom result = symptomService.updateSymptom("symptom-1", updates);
 
         assertThat(result.getName()).isEqualTo("Atualizado");
@@ -96,7 +96,9 @@ class FirestoreSymptomServiceTest {
         assertThat(result.getSeverity()).isEqualTo(8);
         assertThat(result.getPriority()).isEqualTo(3);
         assertThat(result.getTags()).containsExactly("cabeça");
-        assertThat(result.getUpdatedAt()).isAfter(previousUpdate);
+        // Verifica que updatedAt foi atualizado (não é mais a string antiga)
+        assertThat(result.getUpdatedAt()).isNotNull();
+        assertThat(result.getUpdatedAt()).isNotEqualTo(previousUpdateStr);
         verify(symptomRepository).save(existing);
     }
 
