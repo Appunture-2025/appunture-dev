@@ -11,9 +11,11 @@ import {
 } from "../types/database";
 import { DATABASE_NAME, DATABASE_VERSION } from "../utils/constants";
 import { createLogger } from "../utils/logger";
+import { getSeedData, SEED_DATA_VERSION } from "../assets/data";
 
 const dbLogger = createLogger("Database");
 const MAX_QUEUE_RETRIES = 5;
+const SEED_STATUS_KEY = "seed_data";
 
 type RawRow = Record<string, any>;
 
@@ -33,6 +35,7 @@ class DatabaseService {
       await this.db.execAsync("PRAGMA journal_mode = WAL;");
       await this.applyMigrations();
       await this.createIndexes();
+      await this.populateSeedDataIfNeeded();
       dbLogger.info("Database initialized successfully");
     } catch (error) {
       dbLogger.error("Error initializing database:", error);
@@ -395,6 +398,124 @@ class DatabaseService {
         status TEXT NOT NULL DEFAULT 'pending',
         created_at INTEGER NOT NULL
       )`);
+    }
+  }
+
+  /**
+   * Populates the database with bundled seed data on first launch.
+   * This ensures offline-first experience without requiring network.
+   */
+  private async populateSeedDataIfNeeded(): Promise<void> {
+    const db = this.getDb();
+
+    try {
+      // Check if seed data was already loaded
+      const syncStatus = (await db.getFirstAsync(
+        "SELECT * FROM sync_status WHERE table_name = ?",
+        [SEED_STATUS_KEY]
+      )) as RawRow | null;
+
+      const seedVersion = syncStatus?.status
+        ? parseInt(syncStatus.status, 10)
+        : 0;
+
+      if (seedVersion >= SEED_DATA_VERSION) {
+        dbLogger.info(
+          `Seed data already loaded (version ${seedVersion}), skipping`
+        );
+        return;
+      }
+
+      // Check if there's already data in the database
+      const pointCount = (await db.getFirstAsync(
+        "SELECT COUNT(*) as count FROM points"
+      )) as RawRow;
+
+      if (pointCount?.count > 0 && seedVersion > 0) {
+        dbLogger.info(
+          `Database has ${pointCount.count} points, seed version ${seedVersion}, skipping seed`
+        );
+        return;
+      }
+
+      dbLogger.info("Populating database with seed data...");
+
+      const seedData = getSeedData();
+      const now = new Date().toISOString();
+
+      await db.execAsync("BEGIN TRANSACTION");
+
+      try {
+        // Insert points
+        for (const point of seedData.points) {
+          await db.runAsync(
+            `INSERT OR REPLACE INTO points 
+             (id, code, name, chinese_name, meridian, location, functions, indications, contraindications, image_path, coordinates, favorite_count, synced, last_sync)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)`,
+            [
+              point.id,
+              point.code,
+              point.name,
+              point.chinese_name,
+              point.meridian,
+              point.location,
+              point.functions,
+              point.indications,
+              point.contraindications,
+              point.image_path,
+              point.coordinates,
+              point.favorite_count,
+              now,
+            ]
+          );
+        }
+
+        // Insert symptoms
+        for (const symptom of seedData.symptoms) {
+          await db.runAsync(
+            `INSERT OR REPLACE INTO symptoms 
+             (id, name, synonyms, category, use_count, synced, last_sync)
+             VALUES (?, ?, ?, ?, ?, 1, ?)`,
+            [
+              symptom.id,
+              symptom.name,
+              symptom.synonyms,
+              symptom.category,
+              symptom.use_count,
+              now,
+            ]
+          );
+        }
+
+        // Insert symptom-point relationships
+        for (const sp of seedData.symptomPoints) {
+          await db.runAsync(
+            `INSERT OR REPLACE INTO symptom_points 
+             (symptom_id, point_id, efficacy_score)
+             VALUES (?, ?, ?)`,
+            [sp.symptom_id, sp.point_id, sp.efficacy_score]
+          );
+        }
+
+        // Mark seed data as loaded
+        await db.runAsync(
+          `INSERT OR REPLACE INTO sync_status (table_name, last_sync, status)
+           VALUES (?, ?, ?)`,
+          [SEED_STATUS_KEY, now, String(SEED_DATA_VERSION)]
+        );
+
+        await db.execAsync("COMMIT");
+
+        dbLogger.info(
+          `Seed data loaded successfully: ${seedData.points.length} points, ${seedData.symptoms.length} symptoms, ${seedData.symptomPoints.length} relations`
+        );
+      } catch (error) {
+        await db.execAsync("ROLLBACK");
+        throw error;
+      }
+    } catch (error) {
+      dbLogger.error("Failed to populate seed data:", error);
+      // Don't throw - app should still work, just without seed data
     }
   }
 
