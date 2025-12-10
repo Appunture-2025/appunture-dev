@@ -38,14 +38,20 @@ app:
   security:
     require-email-verified: true
     cors:
-      # ⚠️ PRODUÇÃO: Sempre especificar domínios HTTPS explicitamente
-      # NUNCA usar "*" ou patterns permissivos em produção!
+      # ⚠️ PRODUÇÃO: Domínios permitidos para CORS
       allowed-origins:
         - https://appunture.com
         - https://app.appunture.com
         - https://admin.appunture.com
         - https://appunture-tcc.web.app
         - https://appunture-tcc.firebaseapp.com
+      # Patterns adicionais para mobile apps e desenvolvimento
+      allowed-origin-patterns:
+        - http://localhost:*
+        - http://127.0.0.1:*
+        - http://192.168.*.*:*
+        - http://10.*.*.*:*
+        - exp://*
       allowed-methods:
         - GET
         - POST

@@ -40,9 +40,9 @@ export const getFirebaseConfig = (): FirebaseConfig => {
     databaseURL: read("firebaseDatabaseUrl", "EXPO_PUBLIC_FIREBASE_DATABASE_URL") || undefined,
   };
 
-  const missingKeys = Object.entries(config)
-    .filter(([, value]) => !value)
-    .map(([key]) => key);
+  // Only check required fields (exclude optional ones: measurementId, databaseURL)
+  const requiredFields = ["apiKey", "authDomain", "projectId", "storageBucket", "messagingSenderId", "appId"];
+  const missingKeys = requiredFields.filter((key) => !config[key as keyof FirebaseConfig]);
 
   if (missingKeys.length) {
     throw new Error(
