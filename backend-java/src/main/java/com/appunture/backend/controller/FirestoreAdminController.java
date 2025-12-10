@@ -48,7 +48,14 @@ public class FirestoreAdminController {
             long totalSymptoms = symptomService.count();
             
             List<FirestoreUser> recentUsers = userService.findAll().stream()
-                .sorted((u1, u2) -> u2.getCreatedAt().compareTo(u1.getCreatedAt()))
+                .sorted((u1, u2) -> {
+                    var d1 = u1.getCreatedAtAsLocalDateTime();
+                    var d2 = u2.getCreatedAtAsLocalDateTime();
+                    if (d1 == null && d2 == null) return 0;
+                    if (d1 == null) return 1;
+                    if (d2 == null) return -1;
+                    return d2.compareTo(d1);
+                })
                 .limit(5)
                 .toList();
             

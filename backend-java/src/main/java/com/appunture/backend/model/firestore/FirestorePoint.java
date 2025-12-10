@@ -1,6 +1,8 @@
 package com.appunture.backend.model.firestore;
 
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.annotation.DocumentId;
+import com.google.cloud.firestore.annotation.PropertyName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -53,11 +57,38 @@ public class FirestorePoint {
     @Schema(description = "IDs de sintomas associados", example = "[\"insomnia\",\"stress\"]")
     private List<String> symptomIds;
     
-    // Metadados
+    // Metadados - usando Object para compatibilidade com Firestore (pode ser String, Timestamp ou Date)
     @Schema(description = "Data de criação", example = "2025-02-10T15:43:00")
-    private LocalDateTime createdAt;
+    private Object createdAt;
     @Schema(description = "Última atualização", example = "2025-03-01T09:12:11")
-    private LocalDateTime updatedAt;
+    private Object updatedAt;
+    
+    // Métodos auxiliares para conversão de datas
+    public LocalDateTime getCreatedAtAsLocalDateTime() {
+        return convertToLocalDateTime(createdAt);
+    }
+    
+    public LocalDateTime getUpdatedAtAsLocalDateTime() {
+        return convertToLocalDateTime(updatedAt);
+    }
+    
+    private static LocalDateTime convertToLocalDateTime(Object value) {
+        if (value == null) return null;
+        if (value instanceof Timestamp) {
+            return ((Timestamp) value).toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        }
+        if (value instanceof Date) {
+            return ((Date) value).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        }
+        if (value instanceof String) {
+            try {
+                return LocalDateTime.parse((String) value);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return null;
+    }
     @Schema(description = "UID Firebase do criador", example = "qwerty123456")
     private String createdBy; // ID do usuário que criou
     
@@ -102,7 +133,7 @@ public class FirestorePoint {
         @Schema(description = "Email do usuário responsável", example = "admin@appunture.dev")
         private String performedByEmail;
         @Schema(description = "Timestamp da operação", example = "2025-03-01T09:15:00")
-        private LocalDateTime timestamp;
+        private Object timestamp; // Pode ser String, Timestamp ou Date do Firestore
         @Schema(description = "Notas/contexto adicional", example = "Upload realizado via painel web")
         private String notes;
     }

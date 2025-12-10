@@ -192,7 +192,7 @@ public class FirestoreUserService {
                 .profileImageUrl(user.getProfileImageUrl())
                 .phoneNumber(user.getPhoneNumber())
                 .emailVerified(user.isEmailVerified())
-                .createdAt(user.getCreatedAt())
+                .createdAt(user.getCreatedAtAsLocalDateTime())
                 .favoritePointIds(user.getFavoritePointIds())
                 .build();
     }
