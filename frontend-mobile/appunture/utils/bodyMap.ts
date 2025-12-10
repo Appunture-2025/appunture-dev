@@ -37,6 +37,7 @@ export const getSvgAssetUri = async (
   source: ImageSourcePropType
 ): Promise<string | null> => {
   if (typeof source !== "number") {
+    console.warn("[bodyMap] getSvgAssetUri: source is not a number", source);
     return null;
   }
 
@@ -44,15 +45,27 @@ export const getSvgAssetUri = async (
     return svgAssetCache.get(source) ?? null;
   }
 
-  const asset = Asset.fromModule(source);
-  if (!asset.localUri && !asset.uri) {
-    await asset.downloadAsync();
+  try {
+    const asset = Asset.fromModule(source);
+    
+    // Download the asset if not already available
+    if (!asset.localUri && !asset.uri) {
+      await asset.downloadAsync();
+    }
+    
+    const uri = asset.localUri ?? asset.uri ?? null;
+    
+    if (uri) {
+      svgAssetCache.set(source, uri);
+    } else {
+      console.warn("[bodyMap] getSvgAssetUri: No URI found for asset", source);
+    }
+    
+    return uri;
+  } catch (error) {
+    console.error("[bodyMap] getSvgAssetUri error:", error);
+    return null;
   }
-  const uri = asset.localUri ?? asset.uri ?? null;
-  if (uri) {
-    svgAssetCache.set(source, uri);
-  }
-  return uri;
 };
 
 export const getSvgAssetUriSync = (

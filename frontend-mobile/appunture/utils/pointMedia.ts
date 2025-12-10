@@ -50,8 +50,13 @@ const buildRemoteImage = (
 const FALLBACK_ATLAS_IMAGE = buildAtlasImage(DEFAULT_BODY_ATLAS_LAYER_ID);
 
 export const buildPointGallerySources = (
-  point: Point
+  point: Point | null | undefined
 ): GalleryImageSource[] => {
+  // Guard against null/undefined point
+  if (!point) {
+    return FALLBACK_ATLAS_IMAGE ? [{ ...FALLBACK_ATLAS_IMAGE, id: `${FALLBACK_ATLAS_IMAGE.id}-fallback` }] : [];
+  }
+
   const images: GalleryImageSource[] = [];
 
   if (point.imageRefs?.length) {

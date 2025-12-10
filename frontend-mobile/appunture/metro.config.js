@@ -13,4 +13,9 @@ if (!config.resolver.assetExts.includes("db")) {
   config.resolver.assetExts.push("db");
 }
 
+// Ensure SVG files are treated as assets for BodyMap components
+if (!config.resolver.assetExts.includes("svg")) {
+  config.resolver.assetExts.push("svg");
+}
+
 module.exports = config;

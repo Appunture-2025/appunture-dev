@@ -51,11 +51,19 @@ export function BodyMap({
   useEffect(() => {
     let isMounted = true;
     setIsLoading(true);
+    setSvgUri(null); // Reset on layer change
+    
     getSvgAssetUri(layer.source)
       .then((uri) => {
         if (isMounted) {
           setSvgUri(uri);
+          if (!uri) {
+            console.warn("[BodyMap] Failed to get SVG URI for layer:", layer.id);
+          }
         }
+      })
+      .catch((error) => {
+        console.error("[BodyMap] Error loading SVG asset:", error);
       })
       .finally(() => {
         if (isMounted) {
@@ -66,7 +74,7 @@ export function BodyMap({
     return () => {
       isMounted = false;
     };
-  }, [layer.source]);
+  }, [layer.source, layer.id]);
 
   const handleLayout = useCallback((event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout;

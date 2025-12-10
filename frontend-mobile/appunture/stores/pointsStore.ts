@@ -23,7 +23,11 @@ const parseCoordinates = (value?: string | null) => {
   }
 };
 
-const withGalleryMedia = <T extends Point>(point: T): T => {
+const withGalleryMedia = <T extends Point>(point: T | null | undefined): T => {
+  // Guard against null/undefined point
+  if (!point) {
+    return point as T;
+  }
   const gallerySources = buildPointGallerySources(point);
   return {
     ...point,
@@ -255,7 +259,19 @@ export const usePointsStore = create<PointsState>((set, get) => {
 
       try {
         const response = await apiService.getPoint(id);
+        
+        // Guard against undefined response.point
+        if (!response?.point) {
+          throw new Error("Point not found in API response");
+        }
+        
         const normalizedPoint = withGalleryMedia(response.point);
+        
+        // Guard against withGalleryMedia returning undefined
+        if (!normalizedPoint) {
+          throw new Error("Failed to normalize point data");
+        }
+        
         let isFavorite = Boolean(normalizedPoint.isFavorite);
 
         if (!isFavorite) {
@@ -318,7 +334,19 @@ export const usePointsStore = create<PointsState>((set, get) => {
 
       try {
         const response = await apiService.getPointByCode(code);
+        
+        // Guard against undefined response.point
+        if (!response?.point) {
+          throw new Error("Point not found for code: " + code);
+        }
+        
         const normalizedPoint = withGalleryMedia(response.point);
+        
+        // Guard against withGalleryMedia returning undefined
+        if (!normalizedPoint) {
+          throw new Error("Failed to normalize point data");
+        }
+        
         let isFavorite = Boolean(normalizedPoint.isFavorite);
 
         if (!isFavorite) {
