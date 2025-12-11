@@ -69,7 +69,9 @@ describe("pointsStore", () => {
       },
     ];
 
-    (apiService.getPoints as jest.Mock).mockResolvedValue(mockPoints);
+    (apiService.getPoints as jest.Mock).mockResolvedValue({
+      points: mockPoints,
+    });
     (databaseService.getPoints as jest.Mock).mockResolvedValue(mockPoints);
 
     await act(async () => {

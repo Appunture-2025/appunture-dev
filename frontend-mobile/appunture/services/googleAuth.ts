@@ -12,6 +12,7 @@ import { Platform } from "react-native";
 import { createLogger } from "../utils/logger";
 
 const googleAuthLogger = createLogger("GoogleAuth");
+const APP_SCHEME = "appunture";
 
 // Complete browser auth session for proper cleanup
 WebBrowser.maybeCompleteAuthSession();
@@ -86,6 +87,19 @@ async function generateCodeChallenge(verifier: string): Promise<string> {
   return digest.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 }
 
+function resolveRedirectUri(): string {
+  const envRedirect = process.env.EXPO_PUBLIC_EXPO_REDIRECT_URI?.trim();
+  if (envRedirect) {
+    return envRedirect;
+  }
+
+  return AuthSession.makeRedirectUri({
+    // Typings don't include useProxy but runtime supports it
+    useProxy: true,
+    scheme: APP_SCHEME,
+  } as unknown as AuthSession.AuthSessionRedirectUriOptions);
+}
+
 /**
  * Initiate Google Sign-In flow
  *
@@ -109,10 +123,7 @@ export async function signInWithGoogle(
   const codeChallenge = await generateCodeChallenge(codeVerifier);
 
   // Create redirect URI based on environment
-  const redirectUri = AuthSession.makeRedirectUri({
-    scheme: "appunture",
-    path: "auth/google",
-  });
+  const redirectUri = resolveRedirectUri();
 
   // Build authorization request
   const authRequest = new AuthSession.AuthRequest({
@@ -126,7 +137,9 @@ export async function signInWithGoogle(
   });
 
   // Prompt user to sign in
-  const authResponse = await authRequest.promptAsync(discovery);
+  const authResponse = await authRequest.promptAsync(discovery, {
+    useProxy: true,
+  } as unknown as AuthSession.AuthRequestPromptOptions);
 
   if (authResponse.type === "cancel") {
     throw new Error("Login cancelado pelo usuário");
@@ -206,10 +219,7 @@ export async function signInWithGoogle(
 export function useGoogleAuthRequest(config: GoogleAuthConfig) {
   const clientId = getClientId(config);
 
-  const redirectUri = AuthSession.makeRedirectUri({
-    scheme: "appunture",
-    path: "auth/google",
-  });
+  const redirectUri = resolveRedirectUri();
 
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
@@ -222,5 +232,12 @@ export function useGoogleAuthRequest(config: GoogleAuthConfig) {
     discovery
   );
 
-  return { request, response, promptAsync };
+  const promptWithProxy = promptAsync
+    ? (options?: AuthSession.AuthRequestPromptOptions) =>
+        promptAsync({ useProxy: true, ...options } as unknown as
+          | AuthSession.AuthRequestPromptOptions
+          | undefined)
+    : null;
+
+  return { request, response, promptAsync: promptWithProxy };
 }

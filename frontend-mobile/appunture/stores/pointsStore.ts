@@ -233,8 +233,18 @@ export const usePointsStore = create<PointsState>((set, get) => {
       try {
         const response = await apiService.getPoints(params);
         const favoriteIds = await getActiveFavoriteIds(userId);
+        const apiPoints = Array.isArray(response?.points)
+          ? response.points
+          : [];
+
+        // Fallback to local cache if API returned empty or missing payload
+        const sourcePoints =
+          apiPoints.length > 0
+            ? apiPoints
+            : ((await databaseService.getPoints()) as any[] | undefined) ?? [];
+
         set({
-          points: applyFavoriteFlags(response.points, favoriteIds),
+          points: applyFavoriteFlags(sourcePoints, favoriteIds),
           loading: false,
         });
       } catch (error: any) {
@@ -259,19 +269,19 @@ export const usePointsStore = create<PointsState>((set, get) => {
 
       try {
         const response = await apiService.getPoint(id);
-        
+
         // Guard against undefined response.point
         if (!response?.point) {
           throw new Error("Point not found in API response");
         }
-        
+
         const normalizedPoint = withGalleryMedia(response.point);
-        
+
         // Guard against withGalleryMedia returning undefined
         if (!normalizedPoint) {
           throw new Error("Failed to normalize point data");
         }
-        
+
         let isFavorite = Boolean(normalizedPoint.isFavorite);
 
         if (!isFavorite) {
@@ -334,19 +344,19 @@ export const usePointsStore = create<PointsState>((set, get) => {
 
       try {
         const response = await apiService.getPointByCode(code);
-        
+
         // Guard against undefined response.point
         if (!response?.point) {
           throw new Error("Point not found for code: " + code);
         }
-        
+
         const normalizedPoint = withGalleryMedia(response.point);
-        
+
         // Guard against withGalleryMedia returning undefined
         if (!normalizedPoint) {
           throw new Error("Failed to normalize point data");
         }
-        
+
         let isFavorite = Boolean(normalizedPoint.isFavorite);
 
         if (!isFavorite) {

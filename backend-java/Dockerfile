@@ -11,6 +11,8 @@ FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 RUN addgroup -S app && adduser -S app -G app
 COPY --from=build /workspace/target/*.jar app.jar
+# Allow Firestore mapper to reflect over java.time classes on Java 17
+ENV JAVA_TOOL_OPTIONS="--add-opens=java.base/java.time.chrono=ALL-UNNAMED"
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD wget -qO- http://localhost:8080/api/actuator/health || exit 1
 USER app
