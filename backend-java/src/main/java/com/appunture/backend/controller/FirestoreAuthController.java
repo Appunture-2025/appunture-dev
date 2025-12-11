@@ -124,7 +124,6 @@ public class FirestoreAuthController {
             }
 
             // Se não encontrou por UID, tente por email para evitar erro de duplicidade
-            String email = token.getEmail();
             if (email != null && !email.isBlank()) {
                 Optional<FirestoreUser> existingByEmail = userService.findByEmail(email);
                 if (existingByEmail.isPresent()) {
