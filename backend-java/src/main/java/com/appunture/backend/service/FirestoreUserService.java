@@ -111,13 +111,9 @@ public class FirestoreUserService {
             user.setPhoneNumber(updates.getPhoneNumber());
         }
         
-        // Atualiza flags apenas quando forem true (evita sobrescrever com false padrão do builder)
-        if (updates.isEmailVerified()) {
-            user.setEmailVerified(true);
-        }
-        if (updates.isEnabled()) {
-            user.setEnabled(true);
-        }
+        // Atualiza flags explicitamente, permitindo desabilitar/verificar conforme solicitado
+        user.setEmailVerified(updates.isEmailVerified());
+        user.setEnabled(updates.isEnabled());
         user.setUpdatedAt(LocalDateTime.now());
 
         return userRepository.save(user);
