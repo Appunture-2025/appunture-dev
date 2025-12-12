@@ -1,6 +1,14 @@
 # Workspace-wide ignores
 .expo/
 frontend-mobile/appunture/.expo/
+frontend-mobile/appunture/.expo-shared/
+frontend-mobile/appunture/web-build/
+frontend-mobile/appunture/android/app/build/
+frontend-mobile/appunture/ios/build/
+frontend-mobile/appunture/android/.cxx/
+frontend-mobile/appunture/android/.gradle/
+node_modules/
+**/node_modules/
 
 # Sensitive files - NEVER commit these!
 arquivos-deploy/
