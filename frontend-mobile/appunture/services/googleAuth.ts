@@ -9,6 +9,7 @@ import * as AuthSession from "expo-auth-session";
 import * as WebBrowser from "expo-web-browser";
 import * as Crypto from "expo-crypto";
 import { Platform } from "react-native";
+import Constants from "expo-constants";
 import { createLogger } from "../utils/logger";
 
 const googleAuthLogger = createLogger("GoogleAuth");
@@ -52,7 +53,16 @@ export interface GoogleAuthResult {
 /**
  * Get the appropriate client ID based on platform
  */
-function getClientId(config: GoogleAuthConfig): string {
+function getClientId(
+  config: GoogleAuthConfig,
+  useProxy: boolean = false
+): string {
+  // When using the Expo auth proxy (web redirect via auth.expo.io), the flow
+  // expects a Web client ID. For native flows (no proxy) prefer platform IDs.
+  if (useProxy) {
+    return config.webClientId || config.expoClientId || "";
+  }
+
   if (Platform.OS === "ios" && config.iosClientId) {
     return config.iosClientId;
   }
@@ -90,12 +100,23 @@ async function generateCodeChallenge(verifier: string): Promise<string> {
 function resolveRedirectUri(): string {
   const envRedirect = process.env.EXPO_PUBLIC_EXPO_REDIRECT_URI?.trim();
   if (envRedirect) {
+    // Log for debugging to ensure the configured redirect URI is used
+    // (remove these logs after confirming behavior)
+    // eslint-disable-next-line no-console
+    console.log(
+      "[GoogleAuth] Using EXPO_PUBLIC_EXPO_REDIRECT_URI from env:",
+      envRedirect
+    );
     return envRedirect;
   }
 
+  // If running inside Expo Go (appOwnership === 'expo'), use the Expo auth proxy.
+  // For standalone / EAS-built apps (appOwnership !== 'expo') use a native redirect URI.
+  const isExpoGo = Constants?.appOwnership === "expo";
+
   return AuthSession.makeRedirectUri({
-    // Typings don't include useProxy but runtime supports it
-    useProxy: true,
+    // Typings don't include useProxy but runtime supports it when running in Expo Go
+    useProxy: isExpoGo,
     scheme: APP_SCHEME,
   } as unknown as AuthSession.AuthSessionRedirectUriOptions);
 }
@@ -110,7 +131,11 @@ function resolveRedirectUri(): string {
 export async function signInWithGoogle(
   config: GoogleAuthConfig
 ): Promise<GoogleAuthResult> {
-  const clientId = getClientId(config);
+  // Decide redirect URI first so we can pick the correct clientId for the flow
+  const redirectUri = resolveRedirectUri();
+  const useProxyRedirect = redirectUri.includes("auth.expo.io");
+
+  const clientId = getClientId(config, useProxyRedirect);
 
   if (!clientId) {
     throw new Error(
@@ -122,8 +147,16 @@ export async function signInWithGoogle(
   const codeVerifier = await generateCodeVerifier();
   const codeChallenge = await generateCodeChallenge(codeVerifier);
 
-  // Create redirect URI based on environment
-  const redirectUri = resolveRedirectUri();
+  // redirectUri already computed above
+
+  // Debug: log clientId and redirectUri to diagnose redirect_uri_mismatch
+  // eslint-disable-next-line no-console
+  console.log(
+    "[GoogleAuth] Google OAuth clientId:",
+    clientId,
+    "redirectUri:",
+    redirectUri
+  );
 
   // Build authorization request
   const authRequest = new AuthSession.AuthRequest({
@@ -138,8 +171,12 @@ export async function signInWithGoogle(
 
   // Prompt user to sign in
   const authResponse = await authRequest.promptAsync(discovery, {
-    useProxy: true,
+    useProxy: useProxyRedirect,
   } as unknown as AuthSession.AuthRequestPromptOptions);
+
+  // Debug: always log the full auth response for diagnosis
+  // eslint-disable-next-line no-console
+  console.log("[GoogleAuth] authResponse:", JSON.stringify(authResponse));
 
   if (authResponse.type === "cancel") {
     throw new Error("Login cancelado pelo usuário");
@@ -164,17 +201,27 @@ export async function signInWithGoogle(
   }
 
   // Exchange authorization code for tokens
-  const tokenResponse = await AuthSession.exchangeCodeAsync(
-    {
-      clientId,
-      code,
-      redirectUri,
-      extraParams: {
-        code_verifier: codeVerifier,
+  let tokenResponse;
+  try {
+    tokenResponse = await AuthSession.exchangeCodeAsync(
+      {
+        clientId,
+        code,
+        redirectUri,
+        extraParams: {
+          code_verifier: codeVerifier,
+        },
       },
-    },
-    discovery
-  );
+      discovery
+    );
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error("[GoogleAuth] exchangeCodeAsync failed:", err);
+    // Re-throw an informative error so UI shows something useful
+    throw new Error(
+      "Falha ao trocar o código de autorização pelo token. Veja logs para detalhes."
+    );
+  }
 
   if (!tokenResponse.idToken) {
     throw new Error("ID Token não recebido do Google");
@@ -217,9 +264,9 @@ export async function signInWithGoogle(
  * This is useful if you want to show a loading state while the request is being prepared
  */
 export function useGoogleAuthRequest(config: GoogleAuthConfig) {
-  const clientId = getClientId(config);
-
   const redirectUri = resolveRedirectUri();
+  const useProxyRedirect = redirectUri.includes("auth.expo.io");
+  const clientId = getClientId(config, useProxyRedirect);
 
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
@@ -234,7 +281,7 @@ export function useGoogleAuthRequest(config: GoogleAuthConfig) {
 
   const promptWithProxy = promptAsync
     ? (options?: AuthSession.AuthRequestPromptOptions) =>
-        promptAsync({ useProxy: true, ...options } as unknown as
+        promptAsync({ useProxy: useProxyRedirect, ...options } as unknown as
           | AuthSession.AuthRequestPromptOptions
           | undefined)
     : null;

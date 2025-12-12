@@ -49,10 +49,12 @@ export function getErrorMessage(error: ApiError): string {
   if (!error.status) {
     return "Não foi possível conectar ao servidor. Verifique sua conexão com a internet.";
   }
-  
+
   switch (error.status) {
     case 400:
-      return error.message || "Dados inválidos. Por favor, verifique as informações.";
+      return (
+        error.message || "Dados inválidos. Por favor, verifique as informações."
+      );
     case 401:
       return "Sua sessão expirou. Por favor, faça login novamente.";
     case 403:
@@ -67,7 +69,10 @@ export function getErrorMessage(error: ApiError): string {
     case 504:
       return "Erro no servidor. Por favor, tente novamente mais tarde.";
     default:
-      return error.message || "Ocorreu um erro inesperado. Por favor, tente novamente.";
+      return (
+        error.message ||
+        "Ocorreu um erro inesperado. Por favor, tente novamente."
+      );
   }
 }
 
@@ -98,7 +103,7 @@ class ApiService {
     if (!error.response) {
       return true;
     }
-    
+
     // Retry on server errors (5xx)
     const status = error.response.status;
     return status >= 500 && status < 600;
@@ -158,25 +163,31 @@ class ApiService {
         return response;
       },
       async (error: AxiosError) => {
-        const config = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
-        
+        const config = error.config as InternalAxiosRequestConfig & {
+          _retry?: boolean;
+        };
+
         // Handle retryable errors
         if (config && this.isRetryableError(error) && !config._retry) {
           const key = this.getRetryKey(config);
           const currentRetries = this.retryCount.get(key) || 0;
-          
+
           if (currentRetries < this.MAX_RETRIES) {
             this.retryCount.set(key, currentRetries + 1);
             config._retry = true;
-            
+
             // Exponential backoff
             const delay = this.RETRY_DELAY_MS * Math.pow(2, currentRetries);
-            apiLogger.info(`Retrying request (attempt ${currentRetries + 1}/${this.MAX_RETRIES}) after ${delay}ms`);
-            
-            await new Promise(resolve => setTimeout(resolve, delay));
+            apiLogger.info(
+              `Retrying request (attempt ${currentRetries + 1}/${
+                this.MAX_RETRIES
+              }) after ${delay}ms`
+            );
+
+            await new Promise((resolve) => setTimeout(resolve, delay));
             return this.client(config);
           }
-          
+
           // Max retries reached, clear count
           this.retryCount.delete(key);
         }
@@ -208,10 +219,11 @@ class ApiService {
             error?: string;
             message?: string;
           };
-          apiError.error = responseData?.code || responseData?.error || "Server Error";
+          apiError.error =
+            responseData?.code || responseData?.error || "Server Error";
           apiError.message = responseData?.message || error.message;
           apiError.status = error.response.status;
-          
+
           // Map status to error code
           switch (error.response.status) {
             case 400:
@@ -241,7 +253,8 @@ class ApiService {
             apiError.message = "Request timed out. Please try again.";
           } else {
             apiError.error = API_ERROR_CODES.NETWORK_ERROR;
-            apiError.message = "No response from server. Check your internet connection.";
+            apiError.message =
+              "No response from server. Check your internet connection.";
           }
           apiError.status = undefined;
         } else {
@@ -322,9 +335,12 @@ class ApiService {
     offset?: number;
     meridian?: string;
   }): Promise<PointsResponse> {
-    const response = await this.client.get<Point[] | PointsResponse>("/points", {
-      params,
-    });
+    const response = await this.client.get<Point[] | PointsResponse>(
+      "/points",
+      {
+        params,
+      }
+    );
     // Backend may return array directly, normalize to PointsResponse format
     const data = response.data;
     if (Array.isArray(data)) {
@@ -341,9 +357,12 @@ class ApiService {
   }
 
   async searchPoints(query: string): Promise<SearchResponse> {
-    const response = await this.client.get<Point[] | SearchResponse>("/points/search", {
-      params: { name: query }, // Backend uses 'name' parameter
-    });
+    const response = await this.client.get<Point[] | SearchResponse>(
+      "/points/search",
+      {
+        params: { name: query }, // Backend uses 'name' parameter
+      }
+    );
     // Backend returns array directly, normalize to SearchResponse format
     const data = response.data;
     if (Array.isArray(data)) {
@@ -384,9 +403,12 @@ class ApiService {
   }
 
   async getPopularPoints(limit: number = 10): Promise<PointsResponse> {
-    const response = await this.client.get<Point[] | PointsResponse>("/points/popular", {
-      params: { limit },
-    });
+    const response = await this.client.get<Point[] | PointsResponse>(
+      "/points/popular",
+      {
+        params: { limit },
+      }
+    );
     // Backend returns array directly, normalize to PointsResponse format
     const data = response.data;
     if (Array.isArray(data)) {
@@ -402,22 +424,25 @@ class ApiService {
     const response = await this.client.get<Point[] | PointsResponse>("/points");
     // Normalize response - backend may return array directly
     const data = response.data;
-    const points = Array.isArray(data) ? data : (data?.points || []);
-    
-    const meridians = Array.from(
-      new Set(points.map((p) => p.meridian))
-    ).map((meridian) => ({
-      meridian,
-      point_count: points.filter((p) => p.meridian === meridian).length,
-    }));
+    const points = Array.isArray(data) ? data : data?.points || [];
+
+    const meridians = Array.from(new Set(points.map((p) => p.meridian))).map(
+      (meridian) => ({
+        meridian,
+        point_count: points.filter((p) => p.meridian === meridian).length,
+      })
+    );
     return { meridians };
   }
 
   // Symptoms endpoints
   async getSymptoms(params?: { category?: string }): Promise<SymptomsResponse> {
-    const response = await this.client.get<Symptom[] | SymptomsResponse>("/symptoms", {
-      params,
-    });
+    const response = await this.client.get<Symptom[] | SymptomsResponse>(
+      "/symptoms",
+      {
+        params,
+      }
+    );
     // Backend returns array directly, normalize to SymptomsResponse format
     const data = response.data;
     if (Array.isArray(data)) {
@@ -531,10 +556,10 @@ class ApiService {
     return response.data;
   }
 
-  // Health check
+  // Health check keeps the /api context because the backend runs under that path
   async healthCheck(): Promise<{ status: string; timestamp: string }> {
-    // Remove /api from the base URL for health check
-    const healthUrl = API_BASE_URL.replace("/api", "") + "/health";
+    const base = API_BASE_URL.replace(/\/$/, "");
+    const healthUrl = `${base}/health`;
     const response = await axios.get(healthUrl);
     return response.data;
   }

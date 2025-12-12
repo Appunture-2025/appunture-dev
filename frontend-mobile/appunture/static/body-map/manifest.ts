@@ -8,16 +8,30 @@ export interface BodyAtlasLayer {
   plane: BodyAtlasPlane;
   source: ImageSourcePropType;
   viewBox: string;
+  /** Firebase storage object path used for cloud delivery */
+  remoteObject: string;
+  /** Version string used to invalidate cached copies */
+  version: string;
 }
 
 const VIEW_BOX = "0 0 1440 809.999993";
+export const BODY_ATLAS_ASSET_VERSION = "2025-12-11";
+const REMOTE_PREFIX = "body-map";
 
 const makeLayer = (
   id: string,
   label: string,
   plane: BodyAtlasPlane,
   source: ImageSourcePropType
-): BodyAtlasLayer => ({ id, label, plane, source, viewBox: VIEW_BOX });
+): BodyAtlasLayer => ({
+  id,
+  label,
+  plane,
+  source,
+  viewBox: VIEW_BOX,
+  remoteObject: `${REMOTE_PREFIX}/${id}.svg`,
+  version: BODY_ATLAS_ASSET_VERSION,
+});
 
 export const BODY_ATLAS_LAYERS: BodyAtlasLayer[] = [
   // 12 Meridianos Primários

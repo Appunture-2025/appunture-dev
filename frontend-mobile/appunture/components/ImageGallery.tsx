@@ -1,4 +1,10 @@
-import React, { useMemo, useState, useCallback, useRef } from "react";
+import React, {
+  useMemo,
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+} from "react";
 import {
   View,
   Image,
@@ -9,6 +15,7 @@ import {
   FlatList,
   StyleSheet,
 } from "react-native";
+import type { ImageSourcePropType } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 import {
@@ -21,9 +28,15 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { SvgUri } from "react-native-svg";
+import { SvgXml } from "react-native-svg";
 import type { GalleryImageSource } from "../types/media";
-import { getSvgAssetUriSync } from "../utils/bodyMap";
+import {
+  findAtlasLayer,
+  getLayerSvgXml,
+  getLayerSvgXmlSync,
+  getSvgXml,
+  getSvgXmlSync,
+} from "../utils/bodyMap";
 import { useThemeColors } from "../stores/themeStore";
 import { COLORS } from "../utils/constants";
 
@@ -36,10 +49,6 @@ export interface ImageGalleryProps {
 }
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
-
-type RenderableGalleryImage = GalleryImageSource & {
-  svgUri?: string | null;
-};
 
 const AnimatedContainer = Animated.createAnimatedComponent(View);
 
@@ -57,15 +66,7 @@ export function ImageGallery({
   const scale = useSharedValue(1);
   const carouselRef = useRef<ICarouselInstance>(null);
 
-  const resolvedImages = useMemo<RenderableGalleryImage[]>(
-    () =>
-      images.map((image) =>
-        image.type === "local-svg"
-          ? { ...image, svgUri: getSvgAssetUriSync(image.asset) }
-          : image
-      ),
-    [images]
-  );
+  const resolvedImages = useMemo<GalleryImageSource[]>(() => images, [images]);
 
   const remoteImageCount = useMemo(
     () =>
@@ -116,7 +117,7 @@ export function ImageGallery({
 
   const renderGalleryContent = useCallback(
     (
-      item: RenderableGalleryImage,
+      item: GalleryImageSource,
       style: any,
       resizeMode: "cover" | "contain" = "cover"
     ) => {
@@ -136,22 +137,24 @@ export function ImageGallery({
         );
       }
 
+      if (item.type === "local-svg") {
+        return (
+          <SvgAssetRenderer
+            asset={item.asset}
+            atlasLayerId={item.atlasLayerId}
+            style={style}
+            iconColor={colors.textSecondary}
+          />
+        );
+      }
+
       return (
         <View style={[style, styles.svgWrapper]}>
-          {item.svgUri ? (
-            <SvgUri
-              uri={item.svgUri}
-              width="100%"
-              height="100%"
-              preserveAspectRatio="xMidYMid meet"
-            />
-          ) : (
-            <Ionicons
-              name="image-outline"
-              size={48}
-              color={colors.textSecondary}
-            />
-          )}
+          <Ionicons
+            name="image-outline"
+            size={48}
+            color={colors.textSecondary}
+          />
         </View>
       );
     },
@@ -217,7 +220,7 @@ export function ImageGallery({
           item,
           index,
         }: {
-          item: RenderableGalleryImage;
+          item: GalleryImageSource;
           index: number;
         }) => {
           const remoteIndex =
@@ -435,6 +438,80 @@ export function ImageGallery({
     </View>
   );
 }
+
+interface SvgAssetRendererProps {
+  asset: ImageSourcePropType;
+  atlasLayerId?: string;
+  style: any;
+  iconColor: string;
+}
+
+const SvgAssetRenderer = ({
+  asset,
+  atlasLayerId,
+  style,
+  iconColor,
+}: SvgAssetRendererProps) => {
+  const atlasLayer = useMemo(
+    () => (atlasLayerId ? findAtlasLayer(atlasLayerId) : null),
+    [atlasLayerId]
+  );
+  const [svgXmlContent, setSvgXmlContent] = useState<string | null>(() => {
+    if (atlasLayer) {
+      return getLayerSvgXmlSync(atlasLayer);
+    }
+    return getSvgXmlSync(asset);
+  });
+
+  useEffect(() => {
+    const syncXml = atlasLayer
+      ? getLayerSvgXmlSync(atlasLayer)
+      : getSvgXmlSync(asset);
+    setSvgXmlContent((current) => {
+      const nextValue = syncXml ?? null;
+      return current === nextValue ? current : nextValue;
+    });
+  }, [asset, atlasLayer]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    if (!svgXmlContent) {
+      const loadPromise = atlasLayer
+        ? getLayerSvgXml(atlasLayer)
+        : getSvgXml(asset);
+
+      loadPromise
+        .then((xml) => {
+          if (isMounted) {
+            setSvgXmlContent(xml);
+          }
+        })
+        .catch((error) => {
+          console.error("[ImageGallery] Error loading SVG asset:", error);
+        });
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [asset, atlasLayer, svgXmlContent]);
+
+  return (
+    <View style={[style, styles.svgWrapper]}>
+      {svgXmlContent ? (
+        <SvgXml
+          xml={svgXmlContent}
+          width="100%"
+          height="100%"
+          preserveAspectRatio="xMidYMid meet"
+        />
+      ) : (
+        <Ionicons name="image-outline" size={48} color={iconColor} />
+      )}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

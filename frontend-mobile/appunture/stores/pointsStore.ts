@@ -23,14 +23,89 @@ const parseCoordinates = (value?: string | null) => {
   }
 };
 
+/**
+ * Normalizes body_map_coords from database/API format to Point format.
+ * 
+ * Database/API format: JSON string with array of { view: "LU", x: 47.35, y: 62.19 }
+ * where x/y are percentages (0-100) and view is the layer ID.
+ * 
+ * Point format: Array of { layerId: "LU", x: 0.4735, y: 0.6219 }
+ * where x/y are normalized to [0,1] and layerId is the layer identifier.
+ */
+const normalizeBodyMapCoords = (
+  value?: string | null | Array<{ view?: string; layerId?: string; x: number; y: number }>
+): Array<{ layerId: string; x: number; y: number }> | undefined => {
+  if (!value) {
+    return undefined;
+  }
+
+  try {
+    // If it's already an array (from API), use it directly
+    if (Array.isArray(value)) {
+      return value.map((coord) => {
+        // Handle both formats: { view, x, y } and { layerId, x, y }
+        const layerId = coord.layerId || coord.view;
+        if (!layerId || typeof coord.x !== "number" || typeof coord.y !== "number") {
+          return null;
+        }
+        
+        // Normalize coordinates from percentage (0-100) to [0,1]
+        // If already normalized (< 1), use as is; otherwise divide by 100
+        const x = coord.x > 1 ? coord.x / 100 : coord.x;
+        const y = coord.y > 1 ? coord.y / 100 : coord.y;
+        
+        return {
+          layerId,
+          x: Math.max(0, Math.min(1, x)),
+          y: Math.max(0, Math.min(1, y)),
+        };
+      }).filter((coord): coord is { layerId: string; x: number; y: number } => coord !== null);
+    }
+
+    // If it's a string, parse it first
+    const parsed = typeof value === "string" ? JSON.parse(value) : value;
+    
+    if (!Array.isArray(parsed)) {
+      return undefined;
+    }
+
+    return parsed.map((coord: any) => {
+      const layerId = coord.layerId || coord.view;
+      if (!layerId || typeof coord.x !== "number" || typeof coord.y !== "number") {
+        return null;
+      }
+      
+      // Normalize coordinates from percentage (0-100) to [0,1]
+      const x = coord.x > 1 ? coord.x / 100 : coord.x;
+      const y = coord.y > 1 ? coord.y / 100 : coord.y;
+      
+      return {
+        layerId,
+        x: Math.max(0, Math.min(1, x)),
+        y: Math.max(0, Math.min(1, y)),
+      };
+    }).filter((coord): coord is { layerId: string; x: number; y: number } => coord !== null);
+  } catch (error) {
+    pointsLogger.warn("Failed to normalize body_map_coords:", error);
+    return undefined;
+  }
+};
+
 const withGalleryMedia = <T extends Point>(point: T | null | undefined): T => {
   // Guard against null/undefined point
   if (!point) {
     return point as T;
   }
+  
+  // Normalize bodyMapCoords if present (from API or database)
+  const normalizedBodyMapCoords = point.bodyMapCoords 
+    ? normalizeBodyMapCoords(point.bodyMapCoords as any)
+    : undefined;
+  
   const gallerySources = buildPointGallerySources(point);
   return {
     ...point,
+    bodyMapCoords: normalizedBodyMapCoords,
     gallerySources,
     primaryGalleryImage: gallerySources[0] ?? null,
   } as T;
@@ -41,6 +116,9 @@ const mapLocalPointToPoint = (
   isFavorite: boolean
 ): Point => {
   const coordinates = parseCoordinates(local.coordinates);
+  const bodyMapCoords = normalizeBodyMapCoords(
+    (local as any).body_map_coords
+  );
   const imageUrl = local.image_path ?? undefined;
 
   return withGalleryMedia({
@@ -54,6 +132,7 @@ const mapLocalPointToPoint = (
     indications: local.indications ?? undefined,
     contraindications: local.contraindications ?? undefined,
     coordinates,
+    bodyMapCoords,
     image_url: imageUrl,
     imageUrls: imageUrl ? [imageUrl] : undefined,
     favoriteCount: local.favorite_count ?? undefined,

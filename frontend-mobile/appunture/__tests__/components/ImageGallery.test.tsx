@@ -5,10 +5,16 @@ import type { GalleryImageSource } from "../../types/media";
 
 jest.mock("react-native-svg", () => ({
   SvgUri: () => null,
+  SvgXml: () => null,
 }));
 
 jest.mock("../../utils/bodyMap", () => ({
   getSvgAssetUriSync: jest.fn(() => "mock-svg"),
+  getSvgXml: jest.fn(async () => "<svg />"),
+  getSvgXmlSync: jest.fn(() => "<svg />"),
+  getLayerSvgXml: jest.fn(async () => "<svg />"),
+  getLayerSvgXmlSync: jest.fn(() => "<svg />"),
+  findAtlasLayer: jest.fn(() => null),
 }));
 
 // Mock Carousel to render all items synchronously for testing

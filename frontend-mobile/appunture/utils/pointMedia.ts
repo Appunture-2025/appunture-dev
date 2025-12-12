@@ -1,7 +1,7 @@
 import {
   BODY_ATLAS_LAYER_MAP,
   DEFAULT_BODY_ATLAS_LAYER_ID,
-} from "../assets/body-map/manifest";
+} from "../static/body-map/manifest";
 import type { Point } from "../types/api";
 import type { GalleryImageSource } from "../types/media";
 
@@ -28,6 +28,7 @@ const buildAtlasImage = (ref: string): GalleryImageSource | null => {
     asset: layer.source,
     editable: false,
     label: layer.label,
+    atlasLayerId: layer.id,
   };
 };
 
@@ -54,7 +55,9 @@ export const buildPointGallerySources = (
 ): GalleryImageSource[] => {
   // Guard against null/undefined point
   if (!point) {
-    return FALLBACK_ATLAS_IMAGE ? [{ ...FALLBACK_ATLAS_IMAGE, id: `${FALLBACK_ATLAS_IMAGE.id}-fallback` }] : [];
+    return FALLBACK_ATLAS_IMAGE
+      ? [{ ...FALLBACK_ATLAS_IMAGE, id: `${FALLBACK_ATLAS_IMAGE.id}-fallback` }]
+      : [];
   }
 
   const images: GalleryImageSource[] = [];

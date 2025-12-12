@@ -1,22 +1,22 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import {
-  ActivityIndicator,
   LayoutChangeEvent,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { SvgUri } from "react-native-svg";
+import { SvgXml } from "react-native-svg";
 import type {
   BodyAtlasLayer,
   BodyAtlasPlane,
-} from "../assets/body-map/manifest";
+} from "../static/body-map/manifest";
 import type { NormalizedCoordinate } from "../utils/bodyMap";
 import {
   BODY_MAP_VIEWBOX,
+  getLayerSvgXml,
   getMarkerPosition,
-  getSvgAssetUri,
+  prefetchBodyMapLayers,
 } from "../utils/bodyMap";
 import { useThemeColors } from "../stores/themeStore";
 import { COLORS } from "../utils/constants";
@@ -44,37 +44,33 @@ export function BodyMap({
   onMarkerPress,
 }: BodyMapProps) {
   const colors = useThemeColors();
-  const [svgUri, setSvgUri] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [mapSize, setMapSize] = useState({ width: 0, height: 0 });
+  const [svgXml, setSvgXml] = useState<string | null>(null);
+
+  useEffect(() => {
+    prefetchBodyMapLayers().catch((error) => {
+      console.warn("[BodyMap] Failed to prefetch atlas layers", error);
+    });
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
-    setIsLoading(true);
-    setSvgUri(null); // Reset on layer change
-    
-    getSvgAssetUri(layer.source)
-      .then((uri) => {
-        if (isMounted) {
-          setSvgUri(uri);
-          if (!uri) {
-            console.warn("[BodyMap] Failed to get SVG URI for layer:", layer.id);
-          }
+    setSvgXml(null);
+
+    getLayerSvgXml(layer)
+      .then((xml) => {
+        if (isMounted && xml) {
+          setSvgXml(xml);
         }
       })
       .catch((error) => {
         console.error("[BodyMap] Error loading SVG asset:", error);
-      })
-      .finally(() => {
-        if (isMounted) {
-          setIsLoading(false);
-        }
       });
 
     return () => {
       isMounted = false;
     };
-  }, [layer.source, layer.id]);
+  }, [layer.id, layer.source, layer.version]);
 
   const handleLayout = useCallback((event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout;
@@ -132,16 +128,9 @@ export function BodyMap({
         ]}
         onLayout={handleLayout}
       >
-        {isLoading && (
-          <ActivityIndicator
-            style={styles.loader}
-            color={colors.primary}
-            accessibilityLabel="Carregando camada do atlas"
-          />
-        )}
-        {svgUri ? (
-          <SvgUri
-            uri={svgUri}
+        {svgXml ? (
+          <SvgXml
+            xml={svgXml}
             width="100%"
             height="100%"
             preserveAspectRatio="xMidYMid meet"
@@ -179,7 +168,7 @@ export function BodyMap({
         ))}
       </View>
 
-      {!markers.length && !isLoading && (
+      {!markers.length && (
         <Text style={[styles.emptyState, { color: colors.textSecondary }]}>
           Nenhum ponto com coordenadas foi localizado para esta camada.
         </Text>
@@ -222,14 +211,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
     borderWidth: 1,
     borderColor: COLORS.border,
-  },
-  loader: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    marginLeft: -12,
-    marginTop: -12,
-    zIndex: 2,
   },
   marker: {
     position: "absolute",

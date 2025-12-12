@@ -4,13 +4,15 @@ import {
 } from "../../utils/pointMedia";
 import type { Point } from "../../types/api";
 
-jest.mock("../../assets/body-map/manifest", () => {
+jest.mock("../../static/body-map/manifest", () => {
   const makeLayer = (id: string) => ({
     id,
     label: `Layer ${id}`,
     plane: "front" as const,
     source: { uri: `${id}.svg` } as any,
     viewBox: "0 0 10 10",
+    remoteObject: `body-map/${id}.svg`,
+    version: "test",
   });
 
   const layers = [makeLayer("front-01"), makeLayer("front-02")];

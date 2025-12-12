@@ -507,20 +507,30 @@ export const useSyncStore = create<SyncStore>((set, get) => {
     notificationMessage: null,
 
     checkConnection: async () => {
+      let hasNetwork = false;
       try {
-        const hasNetwork = await connectivityService.isOnline();
-        if (!hasNetwork) {
-          set({ isOnline: false });
-          return false;
-        }
-
-        await apiService.healthCheck();
-        set({ isOnline: true });
-        return true;
+        hasNetwork = await connectivityService.isOnline();
       } catch (error) {
+        logger.warn("Falha ao consultar estado de rede", error);
+      }
+
+      if (!hasNetwork) {
         set({ isOnline: false });
         return false;
       }
+
+      try {
+        await apiService.healthCheck();
+        set({ isOnline: true });
+      } catch (error) {
+        logger.warn(
+          "Health check falhou; mantendo status online e tentando sincronizar mesmo assim",
+          error
+        );
+        set({ isOnline: true });
+      }
+
+      return true;
     },
 
     syncAll: async () => {

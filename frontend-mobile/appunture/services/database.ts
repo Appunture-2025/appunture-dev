@@ -118,8 +118,8 @@ class DatabaseService {
 
       for (const point of points) {
         await db.runAsync(
-          `INSERT INTO points (id, code, name, chinese_name, meridian, location, functions, indications, contraindications, image_path, coordinates, favorite_count, synced, last_sync)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          `INSERT INTO points (id, code, name, chinese_name, meridian, location, functions, indications, contraindications, image_path, coordinates, body_map_coords, favorite_count, synced, last_sync)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             String(point.id),
             point.code ?? null,
@@ -132,6 +132,7 @@ class DatabaseService {
             point.contraindications ?? null,
             point.image_path ?? null,
             point.coordinates ?? null,
+            (point as any).body_map_coords ?? null,
             point.favorite_count ?? null,
             point.synced === 0 ? 0 : 1,
             point.last_sync ?? null,
@@ -234,10 +235,23 @@ class DatabaseService {
       contraindications TEXT,
       image_path TEXT,
       coordinates TEXT,
+      body_map_coords TEXT,
       favorite_count INTEGER,
       synced INTEGER DEFAULT 1,
       last_sync DATETIME
     )`);
+
+    // Add body_map_coords column if it doesn't exist (for existing databases)
+    try {
+      await db.execAsync(
+        "ALTER TABLE points ADD COLUMN body_map_coords TEXT"
+      );
+    } catch (error: any) {
+      // Column already exists, ignore error
+      if (!error?.message?.includes("duplicate column")) {
+        dbLogger.warn("Failed to add body_map_coords column:", error);
+      }
+    }
 
     await db.execAsync(`CREATE TABLE IF NOT EXISTS symptoms (
       id TEXT PRIMARY KEY,
@@ -450,8 +464,8 @@ class DatabaseService {
         for (const point of seedData.points) {
           await db.runAsync(
             `INSERT OR REPLACE INTO points 
-             (id, code, name, chinese_name, meridian, location, functions, indications, contraindications, image_path, coordinates, favorite_count, synced, last_sync)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)`,
+             (id, code, name, chinese_name, meridian, location, functions, indications, contraindications, image_path, coordinates, body_map_coords, favorite_count, synced, last_sync)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)`,
             [
               point.id,
               point.code,
@@ -464,6 +478,7 @@ class DatabaseService {
               point.contraindications,
               point.image_path,
               point.coordinates,
+              point.body_map_coords,
               point.favorite_count,
               now,
             ]
@@ -530,8 +545,8 @@ class DatabaseService {
     const db = this.getDb();
 
     await db.runAsync(
-      `INSERT INTO points (id, code, name, chinese_name, meridian, location, functions, indications, contraindications, image_path, coordinates, favorite_count, synced, last_sync)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `INSERT INTO points (id, code, name, chinese_name, meridian, location, functions, indications, contraindications, image_path, coordinates, body_map_coords, favorite_count, synced, last_sync)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(id) DO UPDATE SET
          code = excluded.code,
          name = excluded.name,
@@ -543,6 +558,7 @@ class DatabaseService {
          contraindications = excluded.contraindications,
          image_path = excluded.image_path,
          coordinates = excluded.coordinates,
+         body_map_coords = excluded.body_map_coords,
          favorite_count = excluded.favorite_count,
          synced = excluded.synced,
          last_sync = excluded.last_sync`,
@@ -558,6 +574,7 @@ class DatabaseService {
         point.contraindications ?? null,
         point.image_path ?? null,
         point.coordinates ?? null,
+        point.body_map_coords ?? null,
         point.favorite_count ?? null,
         point.synced ? 1 : 0,
         point.last_sync ?? new Date().toISOString(),

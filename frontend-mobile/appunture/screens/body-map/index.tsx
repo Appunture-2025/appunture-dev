@@ -12,7 +12,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { BodyMap, BodyMapMarker } from "../../components/BodyMap";
 import { usePointsStore } from "../../stores/pointsStore";
-import { BODY_ATLAS_LAYERS, type BodyAtlasLayer } from "../../assets/body-map/manifest";
+import {
+  BODY_ATLAS_LAYERS,
+  type BodyAtlasLayer,
+} from "../../static/body-map/manifest";
 import { COLORS } from "../../utils/constants";
 import { styles } from "./styles";
 
@@ -26,13 +29,13 @@ const MERIDIAN_MAP = BODY_ATLAS_LAYERS.reduce<Record<string, BodyAtlasLayer>>(
 );
 
 // Lista de meridianos ordenados (removendo ST2 duplicado)
-const MERIDIAN_LIST = BODY_ATLAS_LAYERS
-  .filter((layer) => layer.id !== "ST2")
-  .map((layer) => ({
-    id: layer.id,
-    label: layer.label,
-    plane: layer.plane,
-  }));
+const MERIDIAN_LIST = BODY_ATLAS_LAYERS.filter(
+  (layer) => layer.id !== "ST2"
+).map((layer) => ({
+  id: layer.id,
+  label: layer.label,
+  plane: layer.plane,
+}));
 
 export default function BodyMapScreen() {
   const router = useRouter();
@@ -41,7 +44,7 @@ export default function BodyMapScreen() {
     loading: state.loading,
     loadPoints: state.loadPoints,
   }));
-  
+
   const [selectedMeridianId, setSelectedMeridianId] = useState<string>(
     MERIDIAN_LIST[0]?.id ?? "LU"
   );
@@ -72,15 +75,30 @@ export default function BodyMapScreen() {
       BL: ["BL", "Bexiga", "Bladder", "B"],
       KI: ["KI", "Rim", "Kidney", "R"],
       P: ["P", "PC", "Pericárdio", "Pericardium", "Pericardio", "CS"],
-      TW: ["TW", "TA", "Triplo Aquecedor", "Triple Warmer", "SJ", "Triple Heater"],
+      TW: [
+        "TW",
+        "TA",
+        "Triplo Aquecedor",
+        "Triple Warmer",
+        "SJ",
+        "Triple Heater",
+      ],
       GB: ["GB", "VB", "Vesícula Biliar", "Gallbladder", "Vesicula Biliar"],
       LV: ["LV", "Fígado", "Liver", "F", "Figado"],
       GV: ["GV", "VG", "Vaso Governador", "Governing Vessel", "Du Mai", "Du"],
-      CV: ["CV", "VC", "Vaso Concepção", "Conception Vessel", "Ren Mai", "Ren", "Vaso Concepcao"],
+      CV: [
+        "CV",
+        "VC",
+        "Vaso Concepção",
+        "Conception Vessel",
+        "Ren Mai",
+        "Ren",
+        "Vaso Concepcao",
+      ],
     };
 
     const matches = meridianMatches[selectedMeridianId] || [selectedMeridianId];
-    
+
     return points.filter((point) => {
       // Verifica pelo meridiano do ponto
       if (point.meridian) {
@@ -100,32 +118,36 @@ export default function BodyMapScreen() {
     });
   }, [points, selectedMeridianId]);
 
-  // Cria markers para os pontos do meridiano
+  // Cria markers para os pontos do meridiano, filtrando pela camada ativa
   const markers = useMemo<BodyMapMarker[]>(() => {
     return meridianPoints
       .filter((point) => point.bodyMapCoords?.length || point.coordinates)
       .flatMap((point) => {
-        // Se tem bodyMapCoords, usa elas
+        // Se tem bodyMapCoords, filtra pela camada ativa e usa elas
         if (point.bodyMapCoords?.length) {
-          return point.bodyMapCoords.map((coord, index) => ({
-            id: `${point.id}-${index}`,
-            pointId: point.id,
-            label: point.code || point.name,
-            coordinates: { x: coord.x, y: coord.y },
-          }));
+          return point.bodyMapCoords
+            .filter((coord) => coord.layerId === activeLayer.id)
+            .map((coord, index) => ({
+              id: `${point.id}-${index}`,
+              pointId: point.id,
+              label: point.code || point.name,
+              coordinates: { x: coord.x, y: coord.y },
+            }));
         }
-        // Se tem coordinates simples, usa ela
+        // Se tem coordinates simples, usa ela (fallback para compatibilidade)
         if (point.coordinates) {
-          return [{
-            id: point.id,
-            pointId: point.id,
-            label: point.code || point.name,
-            coordinates: { x: point.coordinates.x, y: point.coordinates.y },
-          }];
+          return [
+            {
+              id: point.id,
+              pointId: point.id,
+              label: point.code || point.name,
+              coordinates: { x: point.coordinates.x, y: point.coordinates.y },
+            },
+          ];
         }
         return [];
       });
-  }, [meridianPoints]);
+  }, [meridianPoints, activeLayer.id]);
 
   const handleMeridianSelect = useCallback((meridianId: string) => {
     setSelectedMeridianId(meridianId);
@@ -155,7 +177,7 @@ export default function BodyMapScreen() {
   );
 
   const renderMeridianItem = useCallback(
-    ({ item }: { item: typeof MERIDIAN_LIST[0] }) => (
+    ({ item }: { item: (typeof MERIDIAN_LIST)[0] }) => (
       <TouchableOpacity
         style={[
           styles.meridianChip,
@@ -208,8 +230,9 @@ export default function BodyMapScreen() {
         <View style={styles.meridianInfo}>
           <Text style={styles.meridianTitle}>{activeLayer.label}</Text>
           <Text style={styles.meridianSubtitle}>
-            {meridianPoints.length} ponto{meridianPoints.length !== 1 ? "s" : ""} • 
-            {markers.length} com coordenadas
+            {meridianPoints.length} ponto
+            {meridianPoints.length !== 1 ? "s" : ""} •{markers.length} com
+            coordenadas
           </Text>
         </View>
 
@@ -252,12 +275,14 @@ export default function BodyMapScreen() {
                       {point.name}
                     </Text>
                     {point.chineseName && (
-                      <Text style={styles.pointChinese}>{point.chineseName}</Text>
+                      <Text style={styles.pointChinese}>
+                        {point.chineseName}
+                      </Text>
                     )}
                   </View>
                 </View>
                 <View style={styles.pointStatus}>
-                  {(point.bodyMapCoords?.length || point.coordinates) ? (
+                  {point.bodyMapCoords?.length || point.coordinates ? (
                     <Ionicons
                       name="location"
                       size={16}
@@ -295,8 +320,14 @@ export default function BodyMapScreen() {
             <Text style={styles.legendText}>Ponto com coordenadas no mapa</Text>
           </View>
           <View style={styles.legendItem}>
-            <Ionicons name="location-outline" size={16} color={COLORS.textSecondary} />
-            <Text style={styles.legendText}>Ponto sem coordenadas cadastradas</Text>
+            <Ionicons
+              name="location-outline"
+              size={16}
+              color={COLORS.textSecondary}
+            />
+            <Text style={styles.legendText}>
+              Ponto sem coordenadas cadastradas
+            </Text>
           </View>
         </View>
       </ScrollView>

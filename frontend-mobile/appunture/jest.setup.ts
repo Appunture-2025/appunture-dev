@@ -1,5 +1,61 @@
 import "@testing-library/jest-native/extend-expect";
 
+// Mock DevMenu TurboModule to prevent RN from trying to access native bindings during Jest runs
+jest.mock(
+  "react-native/src/private/specs_DEPRECATED/modules/NativeDevMenu",
+  () => ({
+    __esModule: true,
+    default: {
+      show: jest.fn(),
+      reload: jest.fn(),
+      setProfilingEnabled: jest.fn(),
+      setHotLoadingEnabled: jest.fn(),
+    },
+  })
+);
+
+jest.mock(
+  "react-native/src/private/specs_DEPRECATED/modules/NativeSettingsManager",
+  () => ({
+    __esModule: true,
+    default: {
+      getConstants: () => ({ settings: {} }),
+      setValues: jest.fn(),
+      deleteValues: jest.fn(),
+    },
+  })
+);
+
+// Mock react-native Platform
+jest.mock("react-native", () => {
+  const RN = jest.requireActual("react-native");
+  return {
+    ...RN,
+    Platform: {
+      OS: "ios",
+      select: jest.fn((obj) => obj.ios || obj.default),
+    },
+  };
+});
+
+// Mock react-native-svg components used by SvgAssetRenderer
+jest.mock("react-native-svg", () => {
+  const React = require("react");
+  const MockSvg = (props) => React.createElement("svg", props);
+  const MockComponent = (name) => (props) => React.createElement(name, props);
+
+  return {
+    __esModule: true,
+    default: MockSvg,
+    Svg: MockSvg,
+    Path: MockComponent("path"),
+    Rect: MockComponent("rect"),
+    Circle: MockComponent("circle"),
+    G: MockComponent("g"),
+    SvgXml: (props) => React.createElement("svg", props),
+  };
+});
+
 // Mock native animated helper
 jest.mock("react-native/Libraries/Animated/NativeAnimatedHelper");
 
@@ -68,13 +124,17 @@ jest.mock(
   () => ({
     documentDirectory: "file:///mock/document/",
     cacheDirectory: "file:///mock/cache/",
-    getInfoAsync: jest.fn(),
-    makeDirectoryAsync: jest.fn(),
-    deleteAsync: jest.fn(),
-    readDirectoryAsync: jest.fn(),
+    getInfoAsync: jest.fn(async () => ({
+      exists: false,
+      isDirectory: false,
+      uri: "file:///mock/cache/body-map",
+    })),
+    makeDirectoryAsync: jest.fn(async () => undefined),
+    deleteAsync: jest.fn(async () => undefined),
+    readDirectoryAsync: jest.fn(async () => []),
     downloadAsync: jest.fn(),
-    readAsStringAsync: jest.fn(),
-    writeAsStringAsync: jest.fn(),
+    readAsStringAsync: jest.fn(async () => ""),
+    writeAsStringAsync: jest.fn(async () => undefined),
     EncodingType: {
       UTF8: "utf8",
       Base64: "base64",

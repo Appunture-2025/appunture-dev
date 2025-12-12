@@ -18,6 +18,7 @@ export interface RemoteGalleryImage extends BaseGalleryImage {
 export interface LocalGalleryImage extends BaseGalleryImage {
   type: "local-image" | "local-svg";
   asset: ImageSourcePropType;
+  atlasLayerId?: string;
 }
 
 export type GalleryImageSource = RemoteGalleryImage | LocalGalleryImage;

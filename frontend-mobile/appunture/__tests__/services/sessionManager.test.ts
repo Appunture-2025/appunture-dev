@@ -21,6 +21,10 @@ jest.mock("react-native", () => ({
     addEventListener: jest.fn(() => ({ remove: jest.fn() })),
     currentState: "active",
   },
+  Platform: {
+    OS: "ios",
+    select: jest.fn((obj) => obj.ios || obj.default),
+  },
 }));
 
 const mockOnAuthStateChanged = onAuthStateChanged as jest.MockedFunction<

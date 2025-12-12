@@ -71,7 +71,10 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={homeStyles.container}>
-      <ScrollView style={homeStyles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={homeStyles.content}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Header */}
         <View style={homeStyles.header}>
           <Text style={homeStyles.title}>Appunture</Text>
@@ -169,11 +172,20 @@ export default function HomeScreen() {
             </View>
 
             {recentPoints.map((point) => (
-              <Link key={point.id} href={`/point/${String(point.id)}`} asChild>
+              <Link
+                key={point.id}
+                href={{
+                  pathname: "/point-details",
+                  params: { id: String(point.id) },
+                }}
+                asChild
+              >
                 <TouchableOpacity style={homeStyles.pointCard}>
                   <View>
                     <Text style={homeStyles.pointName}>{point.name}</Text>
-                    <Text style={homeStyles.pointMeridian}>{point.meridian}</Text>
+                    <Text style={homeStyles.pointMeridian}>
+                      {point.meridian}
+                    </Text>
                     <Text style={homeStyles.pointLocation} numberOfLines={2}>
                       {point.location}
                     </Text>

@@ -10,6 +10,7 @@ export interface LocalPoint {
   contraindications?: string;
   image_path?: string;
   coordinates?: string; // JSON string
+  body_map_coords?: string; // JSON string array
   code?: string;
   favorite_count?: number;
   synced: boolean;

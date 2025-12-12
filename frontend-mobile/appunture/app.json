@@ -40,7 +40,7 @@
       "typedRoutes": true
     },
     "scheme": "appunture",
-    "assetBundlePatterns": ["assets/**/*"],
+    "assetBundlePatterns": ["assets/**/*", "static/**/*"],
     "extra": {
       "apiBaseUrl": "https://appunture-backend-756244484248.us-central1.run.app/api",
       "firebaseApiKey": "AIzaSyA37SzSYX-_JAJsN6mw2X8hWDcXEiCMHog",

@@ -39,7 +39,13 @@ function PointCardComponent({
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface }]}>
-      <Link href={`/point/${point.id}`} asChild>
+      <Link
+        href={{
+          pathname: "/point-details",
+          params: { id: String(point.id) },
+        }}
+        asChild
+      >
         <TouchableOpacity
           style={styles.content}
           onPress={onPress}
