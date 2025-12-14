@@ -91,15 +91,29 @@ public class AiChatService {
 
         log.info("[AI] Initializing AiChatService");
 
-        String credentialsPath = "D:\\_repos\\appunture-dev\\serviceAccount.json";
-        System.setProperty("GOOGLE_APPLICATION_CREDENTIALS", credentialsPath);
+        // Try to get credentials from environment or system property
+        String credentialsPath = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
+        if (credentialsPath == null) {
+            credentialsPath = System.getProperty("GOOGLE_APPLICATION_CREDENTIALS");
+        }
+        if (credentialsPath == null) {
+            // Fallback for local development
+            credentialsPath = "serviceAccount.json";
+        }
+        
         System.setProperty("GOOGLE_CLOUD_PROJECT", "appunture-tcc");
         System.setProperty("GOOGLE_CLOUD_LOCATION", "us-central1");
 
         try {
-            GoogleCredentials credentials = GoogleCredentials
-                    .fromStream(new java.io.FileInputStream(credentialsPath))
+            GoogleCredentials credentials;
+            if (credentialsPath.equals("serviceAccount.json") && !new java.io.File(credentialsPath).exists()) {
+                credentials = GoogleCredentials.getApplicationDefault()
                     .createScoped("https://www.googleapis.com/auth/cloud-platform");
+            } else {
+                credentials = GoogleCredentials
+                        .fromStream(new java.io.FileInputStream(credentialsPath))
+                        .createScoped("https://www.googleapis.com/auth/cloud-platform");
+            }
 
             VertexAI vertexAI = new VertexAI.Builder()
                     .setProjectId("appunture-tcc")
