@@ -2,6 +2,7 @@ import {
   BODY_ATLAS_LAYER_MAP,
   DEFAULT_BODY_ATLAS_LAYER_ID,
 } from "../static/body-map/manifest";
+import { getPngForLayer } from "./svgAssets";
 import type { Point } from "../types/api";
 import type { GalleryImageSource } from "../types/media";
 
@@ -22,10 +23,12 @@ const buildAtlasImage = (ref: string): GalleryImageSource | null => {
     return null;
   }
 
+  const png = getPngForLayer(layer.id) ?? null;
+
   return {
     id: `atlas-${atlasId}`,
-    type: "local-svg",
-    asset: layer.source,
+    type: "local-atlas",
+    asset: png ?? layer.source,
     editable: false,
     label: layer.label,
     atlasLayerId: layer.id,

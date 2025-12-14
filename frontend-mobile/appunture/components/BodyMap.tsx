@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import type {
@@ -18,6 +19,11 @@ import {
   getMarkerPosition,
   prefetchBodyMapLayers,
 } from "../utils/bodyMap";
+import {
+  getSvgRenderableForLayer,
+  getSvgComponentForLayer,
+  getPngForLayer,
+} from "../utils/svgAssets";
 import { useThemeColors } from "../stores/themeStore";
 import { COLORS } from "../utils/constants";
 
@@ -46,6 +52,9 @@ export function BodyMap({
   const colors = useThemeColors();
   const [mapSize, setMapSize] = useState({ width: 0, height: 0 });
   const [svgXml, setSvgXml] = useState<string | null>(null);
+  const [SvgComponent, setSvgComponent] =
+    useState<React.ComponentType<any> | null>(null);
+  const [pngSource, setPngSource] = useState<any | null>(null);
 
   useEffect(() => {
     console.log("[BodyMap] Prefetching atlas layers");
@@ -59,39 +68,50 @@ export function BodyMap({
     console.log(`[BodyMap] useEffect triggered for layer: ${layer.id}`);
     setSvgXml(null);
 
-    getLayerSvgXml(layer)
-      .then((xml) => {
-        console.log(
-          `[BodyMap] getLayerSvgXml returned for ${layer.id}: ${xml ? xml.length + " bytes" : "null"}`
-        );
+    (async () => {
+      try {
+        const renderable = await getSvgRenderableForLayer(layer.id);
+        if (!isMounted) return;
+
+        if (renderable?.Component) {
+          setSvgXml(null);
+          setSvgComponent(renderable.Component ?? null);
+          return;
+        }
+
+        // ensure png visual source is available
+        try {
+          const png = getPngForLayer(layer.id);
+          setPngSource(png ?? null);
+        } catch (e) {
+          setPngSource(null);
+        }
+
+        let xml = renderable?.xml ?? null;
         if (xml) {
-          console.log(
-            `[BodyMap] SVG preview for ${layer.id}:`,
-            xml.substring(0, 200)
-          );
-
-          // Check if SVG has viewBox
           const hasViewBox = xml.includes("viewBox=");
-          console.log(`[BodyMap] SVG has viewBox: ${hasViewBox}`);
-
           if (!hasViewBox) {
-            console.warn(
-              `[BodyMap] SVG for ${layer.id} missing viewBox, adding default`
-            );
-            // Try to add viewBox if missing
             xml = xml.replace(
               "<svg",
               `<svg viewBox="0 0 ${BODY_MAP_VIEWBOX.width} ${BODY_MAP_VIEWBOX.height}"`
             );
           }
+          if (!xml.includes('style="opacity')) {
+            xml = xml.replace("<svg", `<svg style="opacity:0"`);
+          }
         }
-        if (isMounted && xml) {
-          setSvgXml(xml);
+        if (isMounted) {
+          if (xml) {
+            setSvgXml(xml);
+            setSvgComponent(null);
+          } else {
+            setSvgXml(null);
+          }
         }
-      })
-      .catch((error) => {
-        console.error("[BodyMap] Error loading SVG asset:", error);
-      });
+      } catch (err) {
+        console.error("[BodyMap] Error loading SVG:", err);
+      }
+    })();
 
     return () => {
       isMounted = false;
@@ -104,30 +124,23 @@ export function BodyMap({
   }, []);
 
   const markersWithPosition = useMemo(() => {
-    if (!mapSize.width || !mapSize.height) {
+    if (!mapSize.width || !mapSize.height)
       return [] as Array<BodyMapMarker & { left: number; top: number }>;
-    }
 
     return markers
       .map((marker) => {
         const absolutePosition = getMarkerPosition(marker.coordinates);
-        if (!absolutePosition) {
-          return null;
-        }
+        if (!absolutePosition) return null;
 
         const left =
           (absolutePosition.x / BODY_MAP_VIEWBOX.width) * mapSize.width;
         const top =
           (absolutePosition.y / BODY_MAP_VIEWBOX.height) * mapSize.height;
 
-        return {
-          ...marker,
-          left,
-          top,
-        };
+        return { ...marker, left, top };
       })
       .filter(Boolean) as Array<BodyMapMarker & { left: number; top: number }>;
-  }, [mapSize.height, mapSize.width, markers]);
+  }, [mapSize, markers]);
 
   return (
     <View
@@ -154,14 +167,24 @@ export function BodyMap({
         ]}
         onLayout={handleLayout}
       >
-        {svgXml ? (
+        {SvgComponent &&
+        (typeof SvgComponent === "function" ||
+          (SvgComponent &&
+            typeof SvgComponent === "object" &&
+            !React.isValidElement(SvgComponent))) ? (
+          <SvgComponent
+            width="100%"
+            height="100%"
+            preserveAspectRatio="xMidYMid meet"
+          />
+        ) : svgXml ? (
           <SvgXml
             xml={svgXml}
             width="100%"
             height="100%"
             preserveAspectRatio="xMidYMid meet"
             style={styles.svgLayer}
-            onError={(error) => {
+            onError={(error: any) => {
               console.error("[BodyMap] SvgXml render error:", error);
             }}
           />
@@ -256,6 +279,14 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
     bottom: 0,
+    zIndex: 1,
+  },
+  pngLayer: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
     zIndex: 0,
   },
   loadingContainer: {
@@ -282,7 +313,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     alignItems: "center",
     transform: [{ translateX: -10 }, { translateY: -10 }],
-    zIndex: 1,
+    zIndex: 2,
   },
   markerDot: {
     width: 20,

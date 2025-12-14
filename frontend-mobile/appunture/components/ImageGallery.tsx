@@ -12,8 +12,8 @@ import {
   Modal,
   Text,
   Dimensions,
-  FlatList,
   StyleSheet,
+  FlatList,
 } from "react-native";
 import type { ImageSourcePropType } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -30,8 +30,12 @@ import Animated, {
 } from "react-native-reanimated";
 import { SvgXml } from "react-native-svg";
 import type { GalleryImageSource } from "../types/media";
-import { findAtlasLayer, getLayerSvgXml } from "../utils/bodyMap";
-import { getEmbeddedSvgXmlSync } from "../utils/svgAssets";
+import { findAtlasLayer } from "../utils/bodyMap";
+import {
+  getEmbeddedSvgXmlSync,
+  getSvgComponentForLayer,
+  getSvgRenderableForLayer,
+} from "../utils/svgAssets";
 import { useThemeColors } from "../stores/themeStore";
 import { COLORS } from "../utils/constants";
 
@@ -73,7 +77,7 @@ export function ImageGallery({
   const pinchGesture = useMemo(
     () =>
       Gesture.Pinch()
-        .onUpdate((event) => {
+        .onUpdate((event: any) => {
           "worklet";
           const nextScale = Math.max(1, Math.min(event.scale, 4));
           scale.value = nextScale;
@@ -455,29 +459,44 @@ const SvgAssetRenderer = ({
     if (atlasLayer) {
       return getEmbeddedSvgXmlSync(atlasLayer.id);
     }
-    return null; // No longer supporting generic assets
+    return null;
   });
+  const [SvgComponent, setSvgComponent] =
+    useState<React.ComponentType<any> | null>(() => {
+      if (atlasLayer) {
+        return getSvgComponentForLayer(atlasLayer.id);
+      }
+      return null;
+    });
 
   useEffect(() => {
-    const syncXml = atlasLayer ? getEmbeddedSvgXmlSync(atlasLayer.id) : null; // No longer supporting generic assets
+    const syncXml = atlasLayer ? getEmbeddedSvgXmlSync(atlasLayer.id) : null;
+    const syncComp = atlasLayer ? getSvgComponentForLayer(atlasLayer.id) : null;
     setSvgXmlContent((current) => {
       const nextValue = syncXml ?? null;
       return current === nextValue ? current : nextValue;
     });
+    setSvgComponent((current: React.ComponentType<any> | null) =>
+      current === syncComp ? current : syncComp
+    );
   }, [asset, atlasLayer]);
 
   useEffect(() => {
     let isMounted = true;
 
-    if (!svgXmlContent) {
+    if (!svgXmlContent && !SvgComponent) {
       const loadPromise = atlasLayer
-        ? getLayerSvgXml(atlasLayer)
-        : Promise.resolve(null); // No longer supporting generic assets
+        ? getSvgRenderableForLayer(atlasLayer.id)
+        : Promise.resolve(null);
 
       loadPromise
-        .then((xml) => {
-          if (isMounted) {
-            setSvgXmlContent(xml);
+        .then((renderable) => {
+          if (!isMounted) return;
+          if (!renderable) return;
+          if (renderable.Component) {
+            setSvgComponent(renderable.Component ?? null);
+          } else if (renderable.xml) {
+            setSvgXmlContent(renderable.xml);
           }
         })
         .catch((error) => {
@@ -490,9 +509,21 @@ const SvgAssetRenderer = ({
     };
   }, [asset, atlasLayer, svgXmlContent]);
 
+  const isRenderableComponent =
+    SvgComponent &&
+    (typeof SvgComponent === "function" ||
+      (typeof SvgComponent === "object" &&
+        !React.isValidElement(SvgComponent)));
+
   return (
     <View style={[style, styles.svgWrapper]}>
-      {svgXmlContent ? (
+      {isRenderableComponent ? (
+        <SvgComponent
+          width="100%"
+          height="100%"
+          preserveAspectRatio="xMidYMid meet"
+        />
+      ) : svgXmlContent ? (
         <SvgXml
           xml={svgXmlContent}
           width="100%"

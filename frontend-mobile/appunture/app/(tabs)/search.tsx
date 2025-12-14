@@ -79,6 +79,7 @@ export default function SearchScreen() {
       onPress={() => handlePointPress(String(item.id))}
       onToggleFavorite={() => handleToggleFavorite(String(item.id))}
       showFavoriteButton={true}
+      isFavorite={item.isFavorite || false}
     />
   );
 

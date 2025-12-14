@@ -16,6 +16,7 @@ import { COLORS } from "../../utils/constants";
 import { styles } from "./styles";
 import { Point } from "../../types/api";
 import ImageGallery from "../../components/ImageGallery";
+import PointLocationMap from "../../components/PointLocationMap";
 import { mediaStorageService } from "../../services/storage";
 import { apiService } from "../../services/api";
 import { buildPointGallerySources } from "../../utils/pointMedia";
@@ -364,6 +365,18 @@ export default function PointDetailsScreen() {
               {resolvedPoint.location || "Localização não disponível"}
             </Text>
           </View>
+
+          {/* Show interactive map if point has coordinates */}
+          {resolvedPoint.bodyMapCoords && resolvedPoint.bodyMapCoords.length > 0 && (
+            <PointLocationMap
+              coordinates={{
+                x: resolvedPoint.bodyMapCoords[0].x,
+                y: resolvedPoint.bodyMapCoords[0].y,
+              }}
+              layerId={resolvedPoint.bodyMapCoords[0].layerId}
+              label={resolvedPoint.code || resolvedPoint.name}
+            />
+          )}
         </View>
 
         <View style={styles.section}>

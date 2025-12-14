@@ -9,6 +9,7 @@ export { default as BodyMap } from "./BodyMap";
 export { default as ChatBubble } from "./ChatBubble";
 export { default as ImageGallery } from "./ImageGallery";
 export { default as PointCard } from "./PointCard";
+export { default as PointLocationMap } from "./PointLocationMap";
 export { default as SearchBar } from "./SearchBar";
 export { default as SyncBanner } from "./SyncBanner";
 
