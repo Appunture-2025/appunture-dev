@@ -10,23 +10,28 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: SPACING.lg,
+    paddingHorizontal: SPACING.md,
+    paddingTop: SPACING.lg,
+    paddingBottom: SPACING.xl,
   },
   header: {
     alignItems: "center",
     marginBottom: SPACING.lg,
+    paddingHorizontal: SPACING.sm,
   },
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 28,
+    fontWeight: "700",
     color: COLORS.text,
     marginBottom: SPACING.sm,
+    textAlign: "center",
   },
   subtitle: {
     fontSize: 16,
     color: COLORS.textSecondary,
     textAlign: "center",
-    lineHeight: 22,
+    lineHeight: 24,
+    paddingHorizontal: SPACING.md,
   },
   // Meridian selector styles
   meridianSelector: {

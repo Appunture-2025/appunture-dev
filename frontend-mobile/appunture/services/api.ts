@@ -140,9 +140,8 @@ class ApiService {
           if (config.headers instanceof AxiosHeaders) {
             config.headers.set("Authorization", `Bearer ${token}`);
           } else {
-            (
-              config.headers as Record<string, string>
-            ).Authorization = `Bearer ${token}`;
+            (config.headers as Record<string, string>).Authorization =
+              `Bearer ${token}`;
           }
         }
         return config;
@@ -350,10 +349,18 @@ class ApiService {
   }
 
   async getPoint(id: string): Promise<{ point: PointWithSymptoms }> {
-    const response = await this.client.get<{ point: PointWithSymptoms }>(
-      `/points/${id}`
-    );
-    return response.data;
+    const response = await this.client.get<
+      PointWithSymptoms | { point: PointWithSymptoms }
+    >(`/points/${id}`);
+
+    // Backend pode retornar diretamente o ponto ou envelopado em { point: ... }
+    const data = response.data;
+    if ("point" in data && data.point) {
+      return { point: data.point };
+    }
+
+    // Se retornou diretamente o ponto, envelopar para manter compatibilidade
+    return { point: data as PointWithSymptoms };
   }
 
   async searchPoints(query: string): Promise<SearchResponse> {
@@ -384,10 +391,18 @@ class ApiService {
   }
 
   async getPointByCode(code: string): Promise<{ point: PointWithSymptoms }> {
-    const response = await this.client.get<{ point: PointWithSymptoms }>(
-      `/points/code/${code}`
-    );
-    return response.data;
+    const response = await this.client.get<
+      PointWithSymptoms | { point: PointWithSymptoms }
+    >(`/points/code/${code}`);
+
+    // Backend pode retornar diretamente o ponto ou envelopado em { point: ... }
+    const data = response.data;
+    if ("point" in data && data.point) {
+      return { point: data.point };
+    }
+
+    // Se retornou diretamente o ponto, envelopar para manter compatibilidade
+    return { point: data as PointWithSymptoms };
   }
 
   async getPointsByMeridian(meridian: string): Promise<PointsResponse> {
@@ -761,12 +776,38 @@ class ApiService {
 
   // AI Chat
   async chatWithAi(message: string): Promise<string> {
+    console.log(
+      "[API] chatWithAi called with message:",
+      message.substring(0, 100) + "..."
+    );
+    console.log("[API] API base URL:", this.baseURL);
+
     try {
+      console.log("[API] Making POST request to /chat");
       const response = await this.client.post<{ response: string }>("/chat", {
         message,
       });
+      console.log("[API] Chat request successful");
+      console.log("[API] Response status:", response.status);
+      console.log("[API] Response data keys:", Object.keys(response.data));
+      console.log(
+        "[API] Response content length:",
+        response.data.response?.length || 0
+      );
+
       return response.data.response;
-    } catch (error) {
+    } catch (error: any) {
+      console.error("[API] Chat request failed");
+      console.error("[API] Error type:", error.constructor.name);
+      console.error("[API] Error message:", error.message);
+      console.error("[API] Error response status:", error.response?.status);
+      console.error("[API] Error response data:", error.response?.data);
+      console.error("[API] Error config:", {
+        url: error.config?.url,
+        method: error.config?.method,
+        baseURL: error.config?.baseURL,
+      });
+
       apiLogger.error("AI Chat Error:", error);
       return "Desculpe, estou tendo dificuldades para me conectar ao servidor de inteligência no momento. Por favor, tente novamente mais tarde.";
     }

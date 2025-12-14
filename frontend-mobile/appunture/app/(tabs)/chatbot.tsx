@@ -67,10 +67,18 @@ export default function ChatBotScreen() {
   };
 
   const handleSendMessage = async () => {
-    if (!inputText.trim()) return;
+    console.log("[CHATBOT] handleSendMessage called");
+    console.log("[CHATBOT] Input text:", inputText.trim());
+    console.log("[CHATBOT] Is authenticated:", isAuthenticated);
+
+    if (!inputText.trim()) {
+      console.log("[CHATBOT] Empty message, returning");
+      return;
+    }
 
     // Check authentication before sending
     if (!isAuthenticated) {
+      console.log("[CHATBOT] User not authenticated, showing login alert");
       Alert.alert(
         "Login necessário",
         "Você precisa estar logado para usar o assistente de IA. Deseja fazer login agora?",
@@ -82,6 +90,7 @@ export default function ChatBotScreen() {
       return;
     }
 
+    console.log("[CHATBOT] Creating user message");
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       text: inputText.trim(),
@@ -89,13 +98,22 @@ export default function ChatBotScreen() {
       timestamp: new Date(),
     };
 
+    console.log("[CHATBOT] Adding user message to chat");
     setMessages((prev) => [...prev, userMessage]);
     setInputText("");
     setIsLoading(true);
     scrollToBottom();
 
     try {
+      console.log(
+        "[CHATBOT] Calling apiService.chatWithAi with message:",
+        userMessage.text
+      );
       const responseText = await apiService.chatWithAi(userMessage.text);
+      console.log(
+        "[CHATBOT] Received response from AI:",
+        responseText.substring(0, 100) + "..."
+      );
 
       const botMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
@@ -104,15 +122,17 @@ export default function ChatBotScreen() {
         timestamp: new Date(),
       };
 
+      console.log("[CHATBOT] Adding bot message to chat");
       setMessages((prev) => [...prev, botMessage]);
       scrollToBottom();
     } catch (error) {
-      console.error("Erro ao processar mensagem:", error);
+      console.error("[CHATBOT] Error in handleSendMessage:", error);
       Alert.alert(
         "Erro",
         "Não foi possível processar sua mensagem. Tente novamente."
       );
     } finally {
+      console.log("[CHATBOT] Setting loading to false");
       setIsLoading(false);
     }
   };

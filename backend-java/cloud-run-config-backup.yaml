@@ -1,0 +1,89 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  annotations:
+    run.googleapis.com/client-name: gcloud
+    run.googleapis.com/client-version: 549.0.0
+    run.googleapis.com/ingress: all
+    run.googleapis.com/ingress-status: all
+    run.googleapis.com/operation-id: cfde9930-d1a2-413e-a8a9-0249bab90d2e
+    run.googleapis.com/urls: '["https://appunture-backend-756244484248.us-central1.run.app","https://appunture-backend-tmjfb7ysza-uc.a.run.app"]'
+    serving.knative.dev/creator: firebase-adminsdk-fbsvc@appunture-tcc.iam.gserviceaccount.com
+    serving.knative.dev/lastModifier: firebase-adminsdk-fbsvc@appunture-tcc.iam.gserviceaccount.com
+  creationTimestamp: '2025-12-02T23:17:37.944722Z'
+  generation: 24
+  labels:
+    cloud.googleapis.com/location: us-central1
+  name: appunture-backend
+  namespace: '756244484248'
+  resourceVersion: AAZFyRA7gGw
+  selfLink: /apis/serving.knative.dev/v1/namespaces/756244484248/services/appunture-backend
+  uid: cc8f2e5b-1ab2-4d42-8a6e-67935cf58fe3
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: '10'
+        run.googleapis.com/client-name: gcloud
+        run.googleapis.com/client-version: 549.0.0
+        run.googleapis.com/startup-cpu-boost: 'true'
+      labels:
+        client.knative.dev/nonce: zgvuujazrs
+        run.googleapis.com/startupProbeType: Default
+    spec:
+      containerConcurrency: 80
+      containers:
+      - env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: firebase-service-account
+        - name: SPRING_PROFILES_ACTIVE
+          value: prod
+        - name: FIREBASE_PROJECT_ID
+          value: appunture-tcc
+        - name: FIREBASE_STORAGE_BUCKET
+          value: appunture-tcc.firebasestorage.app
+        - name: GOOGLE_CLOUD_PROJECT
+          value: appunture-tcc
+        image: us-central1-docker.pkg.dev/appunture-tcc/appunture-backend/backend:e41a31f99e2a45f19cb41edaeca7de18a02bc5ec
+        ports:
+        - containerPort: 8080
+          name: http1
+        resources:
+          limits:
+            cpu: '1'
+            memory: 1Gi
+        startupProbe:
+          failureThreshold: 1
+          periodSeconds: 240
+          tcpSocket:
+            port: 8080
+          timeoutSeconds: 240
+      serviceAccountName: 756244484248-compute@developer.gserviceaccount.com
+      timeoutSeconds: 300
+  traffic:
+  - latestRevision: true
+    percent: 100
+status:
+  address:
+    url: https://appunture-backend-tmjfb7ysza-uc.a.run.app
+  conditions:
+  - lastTransitionTime: '2025-12-12T22:48:43.341932Z'
+    status: 'True'
+    type: Ready
+  - lastTransitionTime: '2025-12-12T22:48:23.951089Z'
+    status: 'True'
+    type: ConfigurationsReady
+  - lastTransitionTime: '2025-12-12T22:48:43.303218Z'
+    status: 'True'
+    type: RoutesReady
+  latestCreatedRevisionName: appunture-backend-00024-rfq
+  latestReadyRevisionName: appunture-backend-00024-rfq
+  observedGeneration: 24
+  traffic:
+  - latestRevision: true
+    percent: 100
+    revisionName: appunture-backend-00024-rfq
+  url: https://appunture-backend-tmjfb7ysza-uc.a.run.app

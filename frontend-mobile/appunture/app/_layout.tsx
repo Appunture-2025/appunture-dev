@@ -10,6 +10,8 @@ import { useThemeStore } from "../stores/themeStore";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import { ThemeProvider } from "../components/ThemeProvider";
 import { createLogger } from "../utils/logger";
+import { preloadAllSvgAssets } from "../utils/svgAssets";
+import { apiService } from "../services/api";
 
 const logger = createLogger("RootLayout");
 
@@ -60,6 +62,21 @@ export default function RootLayout() {
           processSyncQueue().catch((error: any) => {
             logger.warn("Auto-sync failed on app start:", error);
           });
+        }
+
+        // Prefetch SVG layers for better performance
+        logger.info("Prefetching SVG layers...");
+        preloadAllSvgAssets().catch((error: any) => {
+          logger.warn("SVG prefetch failed on app start:", error);
+        });
+
+        // Preload points data
+        logger.info("Preloading points data...");
+        try {
+          const points = await apiService.getPoints();
+          logger.info(`Preloaded ${points.points.length} points`);
+        } catch (error: any) {
+          logger.warn("Points preload failed on app start:", error);
         }
 
         logger.info("App initialized successfully");

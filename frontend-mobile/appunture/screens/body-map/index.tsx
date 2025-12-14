@@ -10,12 +10,19 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { BodyMap, BodyMapMarker } from "../../components/BodyMap";
+import {
+  BodyMapInteractive as BodyMap,
+  BodyMapMarker,
+} from "../../components/BodyMapInteractive";
 import { usePointsStore } from "../../stores/pointsStore";
 import {
   BODY_ATLAS_LAYERS,
   type BodyAtlasLayer,
 } from "../../static/body-map/manifest";
+import {
+  pointMatchesMeridian,
+  getAliasesFor,
+} from "../../utils/meridianAliases";
 import { COLORS } from "../../utils/constants";
 import { styles } from "./styles";
 
@@ -62,71 +69,27 @@ export default function BodyMapScreen() {
     [selectedMeridianId]
   );
 
-  // Filtra pontos do meridiano selecionado
   const meridianPoints = useMemo(() => {
-    // Mapeia sigla do meridiano para possíveis nomes
-    const meridianMatches: Record<string, string[]> = {
-      LU: ["LU", "Pulmão", "Lung", "Pulmao"],
-      LI: ["LI", "Intestino Grosso", "Large Intestine", "IG"],
-      ST: ["ST", "Estômago", "Stomach", "E", "Estomago"],
-      SP: ["SP", "Baço", "Spleen", "BP", "Baco"],
-      HT: ["HT", "Coração", "Heart", "C", "Coracao"],
-      SI: ["SI", "Intestino Delgado", "Small Intestine", "ID"],
-      BL: ["BL", "Bexiga", "Bladder", "B"],
-      KI: ["KI", "Rim", "Kidney", "R"],
-      P: ["P", "PC", "Pericárdio", "Pericardium", "Pericardio", "CS"],
-      TW: [
-        "TW",
-        "TA",
-        "Triplo Aquecedor",
-        "Triple Warmer",
-        "SJ",
-        "Triple Heater",
-      ],
-      GB: ["GB", "VB", "Vesícula Biliar", "Gallbladder", "Vesicula Biliar"],
-      LV: ["LV", "Fígado", "Liver", "F", "Figado"],
-      GV: ["GV", "VG", "Vaso Governador", "Governing Vessel", "Du Mai", "Du"],
-      CV: [
-        "CV",
-        "VC",
-        "Vaso Concepção",
-        "Conception Vessel",
-        "Ren Mai",
-        "Ren",
-        "Vaso Concepcao",
-      ],
-    };
-
-    const matches = meridianMatches[selectedMeridianId] || [selectedMeridianId];
-
-    return points.filter((point) => {
-      // Verifica pelo meridiano do ponto
-      if (point.meridian) {
-        const meridianLower = point.meridian.toLowerCase();
-        if (matches.some((m) => meridianLower.includes(m.toLowerCase()))) {
-          return true;
-        }
-      }
-      // Verifica pelo código do ponto (ex: LU1, LU2, etc.)
-      if (point.code) {
-        const codeLower = point.code.toLowerCase();
-        if (matches.some((m) => codeLower.startsWith(m.toLowerCase()))) {
-          return true;
-        }
-      }
-      return false;
-    });
+    return points.filter((point) =>
+      pointMatchesMeridian(point, selectedMeridianId)
+    );
   }, [points, selectedMeridianId]);
 
-  // Cria markers para os pontos do meridiano, filtrando pela camada ativa
+  const getCoordLayer = (coord: unknown): string => {
+    const raw = (coord as any)?.layerId ?? (coord as any)?.["view"] ?? "";
+    return String(raw).toUpperCase();
+  };
+
   const markers = useMemo<BodyMapMarker[]>(() => {
     return meridianPoints
       .filter((point) => point.bodyMapCoords?.length || point.coordinates)
       .flatMap((point) => {
-        // Se tem bodyMapCoords, filtra pela camada ativa e usa elas
         if (point.bodyMapCoords?.length) {
           return point.bodyMapCoords
-            .filter((coord) => coord.layerId === activeLayer.id)
+            .filter((coord) => {
+              const coordLayer = getCoordLayer(coord);
+              return coordLayer === activeLayer.id;
+            })
             .map((coord, index) => ({
               id: `${point.id}-${index}`,
               pointId: point.id,
@@ -134,7 +97,6 @@ export default function BodyMapScreen() {
               coordinates: { x: coord.x, y: coord.y },
             }));
         }
-        // Se tem coordinates simples, usa ela (fallback para compatibilidade)
         if (point.coordinates) {
           return [
             {

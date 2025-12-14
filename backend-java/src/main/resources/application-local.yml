@@ -1,0 +1,76 @@
+# application-local.yml - Configuração para desenvolvimento local
+
+spring:
+  ai:
+    vertex:
+      ai:
+        gemini:
+          project-id: appunture-tcc
+          location: us-central1
+          chat:
+            options:
+              model: gemini-2.5-flash
+              temperature: 0.3
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+logging:
+  level:
+    root: DEBUG
+    com.appunture.backend: DEBUG
+    com.google.cloud: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Configurações Firebase para local
+firebase:
+  project-id: appunture-tcc
+  # Caminho para o arquivo serviceAccount.json na raiz do projeto
+  service-account-key-path: ${SERVICE_ACCOUNT_PATH:./serviceAccount.json}
+  storage:
+    bucket: appunture-tcc.firebasestorage.app
+
+app:
+  firebase:
+    enabled: true
+  security:
+    # Desabilitado temporariamente para TCC - contas Google já são verificadas pelo Google
+    require-email-verified: false
+    cors:
+      # ⚠️ LOCAL: Permitir todos os origins para desenvolvimento
+      allowed-origins:
+        - http://localhost:3000
+        - http://localhost:19006
+        - http://localhost:8081
+        - http://127.0.0.1:3000
+        - http://127.0.0.1:19006
+        - http://127.0.0.1:8081
+      # Patterns adicionais para mobile apps e desenvolvimento
+      allowed-origin-patterns:
+        - http://localhost:*
+        - http://127.0.0.1:*
+        - http://192.168.*.*:*
+        - http://10.*.*.*:*
+        - exp://*
+        - capacitor://*
+      allowed-methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - OPTIONS
+      allowed-headers:
+        - "*"
+      allow-credentials: true
+      max-age: 3600
+
+# Configurações de rate limiting mais permissivas para desenvolvimento
+app.security.rate-limit:
+  enabled: true
+  requests-per-minute: 1000 # Mais permissivo para testes locais

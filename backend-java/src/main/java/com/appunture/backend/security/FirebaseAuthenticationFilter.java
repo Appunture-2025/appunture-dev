@@ -33,11 +33,24 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
                                   FilterChain filterChain) throws ServletException, IOException {
         
-        // Skip authentication for public endpoints
-        if (isPublicEndpoint(request.getRequestURI())) {
+        String requestURI = request.getRequestURI();
+        log.debug("[FIREBASE_FILTER] Processing request: {} {}", request.getMethod(), requestURI);
+        
+        // TEMPORÁRIO: Skip authentication for /api/chat for testing
+        if (requestURI.startsWith("/api/chat")) {
+            log.debug("[FIREBASE_FILTER] TEMP: Skipping authentication for /api/chat: {}", requestURI);
             filterChain.doFilter(request, response);
             return;
         }
+        
+        // Skip authentication for public endpoints
+        if (isPublicEndpoint(requestURI)) {
+            log.debug("[FIREBASE_FILTER] Skipping authentication for public endpoint: {}", requestURI);
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
+        log.debug("[FIREBASE_FILTER] Endpoint requires authentication: {}", requestURI);
 
         String token = getTokenFromRequest(request);
         
@@ -110,16 +123,20 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isPublicEndpoint(String uri) {
-        return uri.startsWith("/api/public") ||
+        boolean isPublic = uri.startsWith("/api/public") ||
                uri.startsWith("/api/health") ||
                uri.startsWith("/api/points") ||    // Modo visitante - leitura de pontos
                uri.startsWith("/api/symptoms") ||  // Modo visitante - leitura de sintomas
+               uri.startsWith("/api/chat") ||      // TEMPORÁRIO: Chat público para testes
                uri.startsWith("/points") ||        // Modo visitante - leitura de pontos (sem /api)
                uri.startsWith("/symptoms") ||      // Modo visitante - leitura de sintomas (sem /api)
                uri.startsWith("/swagger-ui") ||
                uri.startsWith("/v3/api-docs") ||
                uri.equals("/") ||
                uri.startsWith("/actuator");
+        
+        log.debug("[FIREBASE_FILTER] URI: {}, isPublic: {}", uri, isPublic);
+        return isPublic;
     }
 
     public static class FirebaseAuthDetails {

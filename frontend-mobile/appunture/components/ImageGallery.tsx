@@ -30,13 +30,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { SvgXml } from "react-native-svg";
 import type { GalleryImageSource } from "../types/media";
-import {
-  findAtlasLayer,
-  getLayerSvgXml,
-  getLayerSvgXmlSync,
-  getSvgXml,
-  getSvgXmlSync,
-} from "../utils/bodyMap";
+import { findAtlasLayer, getLayerSvgXml } from "../utils/bodyMap";
+import { getEmbeddedSvgXmlSync } from "../utils/svgAssets";
 import { useThemeColors } from "../stores/themeStore";
 import { COLORS } from "../utils/constants";
 
@@ -458,15 +453,13 @@ const SvgAssetRenderer = ({
   );
   const [svgXmlContent, setSvgXmlContent] = useState<string | null>(() => {
     if (atlasLayer) {
-      return getLayerSvgXmlSync(atlasLayer);
+      return getEmbeddedSvgXmlSync(atlasLayer.id);
     }
-    return getSvgXmlSync(asset);
+    return null; // No longer supporting generic assets
   });
 
   useEffect(() => {
-    const syncXml = atlasLayer
-      ? getLayerSvgXmlSync(atlasLayer)
-      : getSvgXmlSync(asset);
+    const syncXml = atlasLayer ? getEmbeddedSvgXmlSync(atlasLayer.id) : null; // No longer supporting generic assets
     setSvgXmlContent((current) => {
       const nextValue = syncXml ?? null;
       return current === nextValue ? current : nextValue;
@@ -479,7 +472,7 @@ const SvgAssetRenderer = ({
     if (!svgXmlContent) {
       const loadPromise = atlasLayer
         ? getLayerSvgXml(atlasLayer)
-        : getSvgXml(asset);
+        : Promise.resolve(null); // No longer supporting generic assets
 
       loadPromise
         .then((xml) => {

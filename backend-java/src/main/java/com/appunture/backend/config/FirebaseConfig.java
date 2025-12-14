@@ -21,6 +21,9 @@ public class FirebaseConfig {
     @Value("${firebase.service-account-key:}")
     private String serviceAccountKey;
 
+    @Value("${firebase.service-account-key-path:}")
+    private String serviceAccountKeyPath;
+
     @Value("${firebase.project-id:appunture-tcc}")
     private String projectId;
 
@@ -61,7 +64,7 @@ public class FirebaseConfig {
     }
 
     private GoogleCredentials loadCredentials() throws IOException {
-        // Priority 1: Direct service account key from config
+        // Priority 1: Direct service account key from config (JSON content)
         if (serviceAccountKey != null && !serviceAccountKey.isEmpty()) {
             log.info("Using credentials from firebase.service-account-key config");
             return GoogleCredentials.fromStream(
@@ -69,7 +72,18 @@ public class FirebaseConfig {
             );
         }
         
-        // Priority 2: GOOGLE_APPLICATION_CREDENTIALS env var
+        // Priority 2: Service account key file path from config
+        if (serviceAccountKeyPath != null && !serviceAccountKeyPath.isEmpty()) {
+            java.io.File credFile = new java.io.File(serviceAccountKeyPath);
+            if (credFile.exists()) {
+                log.info("Using credentials from firebase.service-account-key-path: {}", serviceAccountKeyPath);
+                return GoogleCredentials.fromStream(new java.io.FileInputStream(credFile));
+            } else {
+                log.warn("Service account file not found at: {}", serviceAccountKeyPath);
+            }
+        }
+        
+        // Priority 3: GOOGLE_APPLICATION_CREDENTIALS env var
         String credentialsEnv = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
         if (credentialsEnv != null && !credentialsEnv.isEmpty()) {
             // Check if it's JSON content (Cloud Run secrets) or a file path
@@ -84,7 +98,7 @@ public class FirebaseConfig {
             }
         }
         
-        // Priority 3: Application Default Credentials
+        // Priority 4: Application Default Credentials
         log.info("Using Application Default Credentials");
         return GoogleCredentials.getApplicationDefault();
     }

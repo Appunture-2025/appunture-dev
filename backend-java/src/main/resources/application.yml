@@ -11,7 +11,7 @@ spring:
           location: ${GOOGLE_CLOUD_LOCATION:us-central1}
           chat:
             options:
-              model: gemini-1.5-flash
+              model: gemini-2.5-flash
               temperature: 0.3
   # PostgreSQL/JPA removido - usando Firestore
   # datasource:

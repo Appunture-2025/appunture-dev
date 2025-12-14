@@ -1,0 +1,24 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Permitir leitura pública para os SVGs do mapa corporal
+    match /body-map/{allPaths=**} {
+      allow read: if true; // Público para todos
+      allow write: if false; // Ninguém pode alterar via API
+    }
+    
+    // Outras regras existentes...
+    // Usuários autenticados podem fazer upload de imagens
+    match /user-uploads/{userId}/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Fallback: negar tudo por padrão
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

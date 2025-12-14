@@ -1,15 +1,36 @@
 # application-dev.yml - Configuração para desenvolvimento local
 
+spring:
+  ai:
+    vertex:
+      ai:
+        gemini:
+          project-id: appunture-tcc
+          location: us-central1
+          # Usa as mesmas credenciais do Firebase para o Vertex AI
+          credentials:
+            uri: file:../serviceAccount.json
+          chat:
+            options:
+              model: gemini-2.5-flash
+              temperature: 0.3
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
 # Configurações Firebase - Para desenvolvimento local
 firebase:
   project-id: appunture-tcc
-  service-account-key: ""  # Deixe vazio para usar ADC ou defina JSON completo
+  # Caminho relativo ao diretório do projeto ou caminho absoluto
+  service-account-key-path: ${SERVICE_ACCOUNT_PATH:../serviceAccount.json}
   storage:
-    bucket: appunture-tcc.appspot.com
+    bucket: appunture-tcc.firebasestorage.app
 
 app:
   firebase:
-    enabled: false  # Desabilite para desenvolvimento sem Firebase
+    enabled: true # Habilitado para desenvolvimento local com Firebase
   security:
     require-email-verified: false
     cors:

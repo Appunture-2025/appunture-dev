@@ -48,6 +48,7 @@ export function BodyMap({
   const [svgXml, setSvgXml] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log("[BodyMap] Prefetching atlas layers");
     prefetchBodyMapLayers().catch((error) => {
       console.warn("[BodyMap] Failed to prefetch atlas layers", error);
     });
@@ -55,10 +56,35 @@ export function BodyMap({
 
   useEffect(() => {
     let isMounted = true;
+    console.log(`[BodyMap] useEffect triggered for layer: ${layer.id}`);
     setSvgXml(null);
 
     getLayerSvgXml(layer)
       .then((xml) => {
+        console.log(
+          `[BodyMap] getLayerSvgXml returned for ${layer.id}: ${xml ? xml.length + " bytes" : "null"}`
+        );
+        if (xml) {
+          console.log(
+            `[BodyMap] SVG preview for ${layer.id}:`,
+            xml.substring(0, 200)
+          );
+
+          // Check if SVG has viewBox
+          const hasViewBox = xml.includes("viewBox=");
+          console.log(`[BodyMap] SVG has viewBox: ${hasViewBox}`);
+
+          if (!hasViewBox) {
+            console.warn(
+              `[BodyMap] SVG for ${layer.id} missing viewBox, adding default`
+            );
+            // Try to add viewBox if missing
+            xml = xml.replace(
+              "<svg",
+              `<svg viewBox="0 0 ${BODY_MAP_VIEWBOX.width} ${BODY_MAP_VIEWBOX.height}"`
+            );
+          }
+        }
         if (isMounted && xml) {
           setSvgXml(xml);
         }
@@ -134,8 +160,20 @@ export function BodyMap({
             width="100%"
             height="100%"
             preserveAspectRatio="xMidYMid meet"
+            style={styles.svgLayer}
+            onError={(error) => {
+              console.error("[BodyMap] SvgXml render error:", error);
+            }}
           />
-        ) : null}
+        ) : (
+          <View style={styles.loadingContainer}>
+            <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
+              Carregando mapa corporal...
+            </Text>
+            {/* Debug: Add a colored background to verify positioning */}
+            <View style={styles.debugBackground} />
+          </View>
+        )}
 
         {markersWithPosition.map((marker) => (
           <TouchableOpacity
@@ -212,10 +250,39 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
   },
+  svgLayer: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 0,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.background,
+  },
+  loadingText: {
+    fontSize: 16,
+    color: COLORS.textSecondary,
+    textAlign: "center",
+  },
+  debugBackground: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(255, 0, 0, 0.1)", // Light red background for debugging
+    zIndex: -1,
+  },
   marker: {
     position: "absolute",
     alignItems: "center",
     transform: [{ translateX: -10 }, { translateY: -10 }],
+    zIndex: 1,
   },
   markerDot: {
     width: 20,
