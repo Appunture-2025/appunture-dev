@@ -76,9 +76,9 @@ export default function PointDetailsScreen() {
     };
   }, [pointId, loadPoint]);
 
-  const resolvedPoint: (Point & { function?: string }) | null = useMemo(() => {
+  const resolvedPoint: (Point & { function?: string; indication?: string }) | null = useMemo(() => {
     if (selectedPoint && selectedPoint.id === pointId) {
-      return selectedPoint as Point & { function?: string };
+      return selectedPoint as Point & { function?: string; indication?: string };
     }
 
     return (
@@ -102,19 +102,22 @@ export default function PointDetailsScreen() {
 
   const isFavorite = favorites.some((p) => p.id === resolvedPoint?.id);
   const indicationsList = useMemo(() => {
-    if (!resolvedPoint?.indications) {
+    // Backend uses 'indication' (singular), frontend may have 'indications'
+    const indicationsText = resolvedPoint?.indication || resolvedPoint?.indications;
+    
+    if (!indicationsText) {
       return [] as string[];
     }
 
-    if (Array.isArray(resolvedPoint.indications)) {
-      return resolvedPoint.indications;
+    if (Array.isArray(indicationsText)) {
+      return indicationsText;
     }
 
-    return resolvedPoint.indications
+    return indicationsText
       .split(/\n|;|•|,/)
-      .map((item) => item.trim())
+      .map((item: string) => item.trim())
       .filter(Boolean);
-  }, [resolvedPoint?.indications]);
+  }, [resolvedPoint?.indication, resolvedPoint?.indications]);
 
   // Removed image management functions - focusing on map location only
 
@@ -251,7 +254,7 @@ export default function PointDetailsScreen() {
             />
             <Text style={styles.cardTitle}>Ação Terapêutica</Text>
             <Text style={styles.cardContent}>
-              {resolvedPoint.function || "Função terapêutica não especificada"}
+              {resolvedPoint.functions || resolvedPoint.function || "Função terapêutica não especificada"}
             </Text>
           </View>
         </View>

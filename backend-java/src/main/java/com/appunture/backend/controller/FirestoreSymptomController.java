@@ -1,6 +1,8 @@
 package com.appunture.backend.controller;
 
+import com.appunture.backend.model.firestore.FirestorePoint;
 import com.appunture.backend.model.firestore.FirestoreSymptom;
+import com.appunture.backend.service.FirestorePointService;
 import com.appunture.backend.service.FirestoreSymptomService;
 import com.google.firebase.auth.FirebaseToken;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,6 +28,7 @@ import java.util.Optional;
 public class FirestoreSymptomController {
 
     private final FirestoreSymptomService symptomService;
+    private final FirestorePointService pointService;
 
     @GetMapping
     @Operation(summary = "List all symptoms", description = "List all symptoms from Firestore")
@@ -42,13 +45,39 @@ public class FirestoreSymptomController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get symptom by ID", description = "Returns a specific symptom by Firestore document ID")
+    @Operation(summary = "Get symptom by ID", description = "Returns a specific symptom by Firestore document ID with related points")
     @SecurityRequirement(name = "firebase")
-    public ResponseEntity<FirestoreSymptom> getSymptomById(@PathVariable String id) {
+    public ResponseEntity<Map<String, Object>> getSymptomById(@PathVariable String id) {
         try {
-            Optional<FirestoreSymptom> symptom = symptomService.findById(id);
-            return symptom.map(ResponseEntity::ok)
-                         .orElse(ResponseEntity.notFound().build());
+            Optional<FirestoreSymptom> symptomOpt = symptomService.findById(id);
+            if (symptomOpt.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            
+            FirestoreSymptom symptom = symptomOpt.get();
+            
+            // Build response with symptom data and related points
+            Map<String, Object> response = new java.util.HashMap<>();
+            response.put("id", symptom.getId());
+            response.put("name", symptom.getName());
+            response.put("description", symptom.getDescription());
+            response.put("category", symptom.getCategory());
+            response.put("tags", symptom.getTags());
+            response.put("severity", symptom.getSeverity());
+            response.put("useCount", symptom.getUseCount());
+            response.put("createdAt", symptom.getCreatedAt());
+            response.put("updatedAt", symptom.getUpdatedAt());
+            
+            // Fetch related points if pointIds exist
+            List<FirestorePoint> relatedPoints = new java.util.ArrayList<>();
+            if (symptom.getPointIds() != null && !symptom.getPointIds().isEmpty()) {
+                for (String pointId : symptom.getPointIds()) {
+                    pointService.findById(pointId).ifPresent(relatedPoints::add);
+                }
+            }
+            response.put("points", relatedPoints);
+            
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.error("Erro ao buscar sintoma {}: {}", id, e.getMessage(), e);
             return ResponseEntity.internalServerError().build();

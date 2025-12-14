@@ -10,9 +10,11 @@ export interface Point {
   chineseName?: string; // Backend uses camelCase
   meridian: string;
   location: string;
-  indications?: string;
+  description?: string; // Descrição detalhada do ponto
+  indication?: string; // Backend uses singular 'indication'
+  indications?: string; // Alias for compatibility
   contraindications?: string;
-  functions?: string;
+  functions?: string; // Ação terapêutica
   coordinates?: {
     x: number;
     y: number;

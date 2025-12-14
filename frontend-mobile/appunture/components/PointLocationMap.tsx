@@ -58,7 +58,7 @@ const SVG_WIDTH = 1440;
 const SVG_HEIGHT = 809.999993;
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const DEFAULT_MAP_HEIGHT = 350;
+const DEFAULT_MAP_HEIGHT = 400; // Increased for better visibility
 
 interface PointLocationMapProps {
   height?: number;
@@ -147,7 +147,7 @@ export function PointLocationMap({
           contentContainerStyle={{ width: scaledWidth, height: scaledHeight }}
           horizontal={true}
           maximumZoomScale={5}
-          minimumZoomScale={0.8}
+          minimumZoomScale={0.5}
           showsHorizontalScrollIndicator={true}
           showsVerticalScrollIndicator={true}
           bouncesZoom={true}

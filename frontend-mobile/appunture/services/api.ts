@@ -472,10 +472,32 @@ class ApiService {
   }
 
   async getSymptom(id: string): Promise<{ symptom: SymptomWithPoints }> {
-    const response = await this.client.get<{ symptom: SymptomWithPoints }>(
+    const response = await this.client.get<any>(
       `/symptoms/${id}`
     );
-    return response.data;
+    
+    const data = response.data;
+    
+    // Backend retorna objeto com campos do sintoma + points array
+    // Normalizar para SymptomWithPoints
+    const symptom: SymptomWithPoints = {
+      id: data.id,
+      name: data.name,
+      description: data.description,
+      category: data.category,
+      tags: data.tags,
+      severity: data.severity,
+      useCount: data.useCount,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+      points: (data.points || []).map((p: any) => ({
+        ...p,
+        efficacy_score: p.efficacy_score || 80, // Default efficacy score
+        isFavorite: false,
+      })),
+    };
+    
+    return { symptom };
   }
 
   async searchSymptoms(query: string): Promise<SymptomsResponse> {
@@ -494,10 +516,21 @@ class ApiService {
   }
 
   async getSymptomCategories(): Promise<CategoriesResponse> {
-    const response = await this.client.get<CategoriesResponse>(
+    const response = await this.client.get<string[] | CategoriesResponse>(
       "/symptoms/categories"
     );
-    return response.data;
+    
+    // Backend retorna array de strings, normalizar para CategoriesResponse
+    const data = response.data;
+    if (Array.isArray(data)) {
+      return {
+        categories: data.map((category) => ({
+          category,
+          symptom_count: 0, // Backend não retorna contagem
+        })),
+      };
+    }
+    return data;
   }
 
   async getSymptomsByCategory(category: string): Promise<SymptomsResponse> {

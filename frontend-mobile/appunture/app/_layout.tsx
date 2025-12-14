@@ -7,6 +7,8 @@ import { databaseService } from "../services/database";
 import { useAuthStore } from "../stores/authStore";
 import { useSyncStore } from "../stores/syncStore";
 import { useThemeStore } from "../stores/themeStore";
+import { usePointsStore } from "../stores/pointsStore";
+import { useSymptomsStore } from "../stores/symptomsStore";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import { ThemeProvider } from "../components/ThemeProvider";
 import { createLogger } from "../utils/logger";
@@ -70,13 +72,26 @@ export default function RootLayout() {
           logger.warn("SVG prefetch failed on app start:", error);
         });
 
-        // Preload points data
-        logger.info("Preloading points data...");
+        // Preload all data (points, symptoms, meridians) for better UX
+        logger.info("Preloading app data...");
         try {
-          const points = await apiService.getPoints();
-          logger.info(`Preloaded ${points.points.length} points`);
+          // Load points into store
+          const { loadPoints, loadMeridians } = usePointsStore.getState();
+          const { fetchSymptoms, fetchPopularSymptoms } = useSymptomsStore.getState();
+          
+          // Load all data in parallel
+          await Promise.all([
+            loadPoints().catch((e: any) => logger.warn("Points preload failed:", e)),
+            loadMeridians().catch((e: any) => logger.warn("Meridians preload failed:", e)),
+            fetchSymptoms().catch((e: any) => logger.warn("Symptoms preload failed:", e)),
+            fetchPopularSymptoms(10).catch((e: any) => logger.warn("Popular symptoms preload failed:", e)),
+          ]);
+          
+          const pointsState = usePointsStore.getState();
+          const symptomsState = useSymptomsStore.getState();
+          logger.info(`Preloaded ${pointsState.points.length} points, ${symptomsState.symptoms.length} symptoms`);
         } catch (error: any) {
-          logger.warn("Points preload failed on app start:", error);
+          logger.warn("Data preload failed on app start:", error);
         }
 
         logger.info("App initialized successfully");
