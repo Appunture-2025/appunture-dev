@@ -75,11 +75,17 @@ public class FirebaseConfig {
         // Priority 2: Service account key file path from config
         if (serviceAccountKeyPath != null && !serviceAccountKeyPath.isEmpty()) {
             java.io.File credFile = new java.io.File(serviceAccountKeyPath);
+            if (!credFile.isAbsolute()) {
+                // If relative path, resolve it relative to the project root
+                String projectRoot = System.getProperty("user.dir");
+                credFile = new java.io.File(projectRoot, serviceAccountKeyPath);
+            }
+            
             if (credFile.exists()) {
-                log.info("Using credentials from firebase.service-account-key-path: {}", serviceAccountKeyPath);
+                log.info("Using credentials from firebase.service-account-key-path: {}", credFile.getAbsolutePath());
                 return GoogleCredentials.fromStream(new java.io.FileInputStream(credFile));
             } else {
-                log.warn("Service account file not found at: {}", serviceAccountKeyPath);
+                log.warn("Service account file not found at: {} (resolved to: {})", serviceAccountKeyPath, credFile.getAbsolutePath());
             }
         }
         
@@ -106,9 +112,22 @@ public class FirebaseConfig {
     @Bean
     public FirebaseAuth firebaseAuth() {
         try {
-            return FirebaseAuth.getInstance();
+            // Ensure Firebase is initialized first by calling the initializeFirebase method
+            if (FirebaseApp.getApps().isEmpty()) {
+                log.warn("No Firebase apps found, attempting to initialize...");
+                initializeFirebase(); // This will initialize Firebase if not already done
+            }
+            
+            if (FirebaseApp.getApps().isEmpty()) {
+                log.error("Firebase initialization failed, Firebase Auth not available");
+                return null;
+            }
+            
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            log.info("Firebase Auth bean created successfully");
+            return auth;
         } catch (Exception e) {
-            log.warn("Firebase Auth not available: {}", e.getMessage());
+            log.error("Failed to create Firebase Auth bean: {}", e.getMessage(), e);
             return null;
         }
     }

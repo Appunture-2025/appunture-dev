@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -45,6 +46,11 @@ public class FirestoreAuthController {
     @SecurityRequirement(name = "firebase")
     public ResponseEntity<UserProfileResponse> getProfile(@AuthenticationPrincipal FirebaseToken token) {
         try {
+            if (token == null) {
+                log.warn("Tentativa de acesso ao perfil sem autenticação");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            
             log.debug("Obtendo perfil do usuário: {}", token.getUid());
             
             Optional<FirestoreUser> userOpt = userService.findByFirebaseUid(token.getUid());
@@ -68,6 +74,10 @@ public class FirestoreAuthController {
             @AuthenticationPrincipal FirebaseToken token,
             @RequestBody Map<String, Object> updates) {
         try {
+            if (token == null) {
+                log.warn("Tentativa de atualizar perfil sem autenticação");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
             log.debug("Atualizando perfil do usuário: {}", token.getUid());
             
             Optional<FirestoreUser> userOpt = userService.findByFirebaseUid(token.getUid());
@@ -106,6 +116,11 @@ public class FirestoreAuthController {
     @SecurityRequirement(name = "firebase")
     public ResponseEntity<UserProfileResponse> syncUser(@AuthenticationPrincipal FirebaseToken token) {
         try {
+            if (token == null) {
+                log.warn("Tentativa de sincronizar usuário sem autenticação");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            
             log.debug("Sincronizando usuário: {}", token.getUid());
             
             String email = token.getEmail();
@@ -174,6 +189,12 @@ public class FirestoreAuthController {
     @SecurityRequirement(name = "firebase")
     public ResponseEntity<Map<String, Object>> getCurrentUser(@AuthenticationPrincipal FirebaseToken token) {
         try {
+            if (token == null) {
+                log.warn("Tentativa de obter usuário atual sem autenticação");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Authentication required", "message", "Token de autenticação necessário"));
+            }
+            
             log.debug("Obtendo informações do usuário atual: {}", token.getUid());
             
             // Informações do Firebase Token
@@ -208,6 +229,10 @@ public class FirestoreAuthController {
             @AuthenticationPrincipal FirebaseToken token,
             @PathVariable String pointId) {
         try {
+            if (token == null) {
+                log.warn("Tentativa de adicionar favorito sem autenticação");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
             log.debug("Adicionando ponto {} aos favoritos do usuário {}", pointId, token.getUid());
             
             Optional<FirestoreUser> userOpt = userService.findByFirebaseUid(token.getUid());
@@ -231,6 +256,10 @@ public class FirestoreAuthController {
             @AuthenticationPrincipal FirebaseToken token,
             @PathVariable String pointId) {
         try {
+            if (token == null) {
+                log.warn("Tentativa de remover favorito sem autenticação");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
             log.debug("Removendo ponto {} dos favoritos do usuário {}", pointId, token.getUid());
             
             Optional<FirestoreUser> userOpt = userService.findByFirebaseUid(token.getUid());
@@ -263,6 +292,12 @@ public class FirestoreAuthController {
     @SecurityRequirement(name = "firebase")
     public ResponseEntity<MessageResponse> resendVerificationEmail(@AuthenticationPrincipal FirebaseToken token) {
         try {
+            if (token == null) {
+                log.warn("Tentativa de reenviar email de verificação sem autenticação");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new MessageResponse("Token de autenticação necessário"));
+            }
+            
             String uid = token.getUid();
             log.debug("Solicitando reenvio de email de verificação para usuário {}", uid);
             firebaseAuthService.resendVerificationEmail(uid);
@@ -290,6 +325,12 @@ public class FirestoreAuthController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int limit) {
         try {
+            if (token == null) {
+                log.warn("Tentativa de acesso a favoritos sem autenticação");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Authentication required", "message", "Token de autenticação necessário"));
+            }
+            
             log.debug("Obtendo favoritos do usuário: {}, page={}, limit={}", token.getUid(), page, limit);
             
             Optional<FirestoreUser> userOpt = userService.findByFirebaseUid(token.getUid());

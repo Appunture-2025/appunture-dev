@@ -29,15 +29,18 @@ export const styles = StyleSheet.create({
   },
   statusContainer: {
     alignItems: "flex-end",
+    maxWidth: 120,
+    minWidth: 80,
   },
   statusText: {
     fontSize: 12,
     color: COLORS.textSecondary,
-    marginBottom: 4,
+    marginBottom: 2,
   },
   onlineStatus: {
     flexDirection: "row",
     alignItems: "center",
+    marginBottom: 2,
   },
   statusIndicator: {
     width: 8,
@@ -181,20 +184,7 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  syncInfo: {
-    flex: 1,
-  },
-  syncTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: COLORS.text,
-    marginBottom: 4,
-  },
-  syncDescription: {
-    fontSize: 12,
-    color: COLORS.textSecondary,
-    lineHeight: 16,
-  },
+
   syncButton: {
     backgroundColor: COLORS.primary,
     borderRadius: 8,

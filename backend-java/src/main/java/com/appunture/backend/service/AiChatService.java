@@ -1,5 +1,6 @@
 package com.appunture.backend.service;
 
+import com.appunture.backend.config.AiConfiguration;
 import com.appunture.backend.model.firestore.FirestorePoint;
 import com.appunture.backend.model.firestore.FirestoreSymptom;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.google.cloud.vertexai.VertexAI;
 import com.google.auth.oauth2.GoogleCredentials;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -21,6 +23,7 @@ public class AiChatService {
 
     private final FirestorePointService pointService;
     private final FirestoreSymptomService symptomService;
+    private final AiConfiguration aiConfiguration;
     private ChatClient chatClient;
 
     private String cachedContext = "";
@@ -84,32 +87,94 @@ public class AiChatService {
      * =========================
      */
     public AiChatService(FirestorePointService pointService,
-            FirestoreSymptomService symptomService) {
+            FirestoreSymptomService symptomService,
+            AiConfiguration aiConfiguration) {
 
         this.pointService = pointService;
         this.symptomService = symptomService;
+        this.aiConfiguration = aiConfiguration;
+
+        // Check if AI is disabled via configuration
+        if (!aiConfiguration.isEnabled()) {
+            log.info("[AI] AI disabled via configuration - skipping Vertex AI initialization");
+            this.chatClient = null;
+            return;
+        }
+        
+        // Check if we're in test environment
+        String[] activeProfiles = System.getProperty("spring.profiles.active", "").split(",");
+        boolean isTestEnvironment = java.util.Arrays.asList(activeProfiles).contains("test");
+        
+        if (isTestEnvironment) {
+            log.info("[AI] Test environment detected - skipping Vertex AI initialization");
+            this.chatClient = null;
+            return;
+        }
+        
+        // Also check Spring profiles through environment
+        String springProfiles = System.getenv("SPRING_PROFILES_ACTIVE");
+        if (springProfiles != null && springProfiles.contains("test")) {
+            log.info("[AI] Test environment detected via SPRING_PROFILES_ACTIVE - skipping Vertex AI initialization");
+            this.chatClient = null;
+            return;
+        }
 
         log.info("[AI] Initializing AiChatService");
 
-        String credentialsPath = "D:\\_repos\\appunture-dev\\serviceAccount.json";
-        System.setProperty("GOOGLE_APPLICATION_CREDENTIALS", credentialsPath);
-        System.setProperty("GOOGLE_CLOUD_PROJECT", "appunture-tcc");
-        System.setProperty("GOOGLE_CLOUD_LOCATION", "us-central1");
+        // Try to get credentials from environment or system property
+        String credentialsEnv = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
+        String credentialsPath = System.getProperty("GOOGLE_APPLICATION_CREDENTIALS");
+        
+        System.setProperty("GOOGLE_CLOUD_PROJECT", aiConfiguration.getProjectId());
+        System.setProperty("GOOGLE_CLOUD_LOCATION", aiConfiguration.getLocation());
 
         try {
-            GoogleCredentials credentials = GoogleCredentials
-                    .fromStream(new java.io.FileInputStream(credentialsPath))
+            GoogleCredentials credentials;
+            
+            // Check if GOOGLE_APPLICATION_CREDENTIALS contains JSON content directly
+            if (credentialsEnv != null && credentialsEnv.trim().startsWith("{")) {
+                log.info("[AI] Using credentials from environment variable (JSON content)");
+                credentials = GoogleCredentials
+                        .fromStream(new java.io.ByteArrayInputStream(credentialsEnv.getBytes()))
+                        .createScoped("https://www.googleapis.com/auth/cloud-platform");
+            } 
+            // Check if it's a file path
+            else if (credentialsEnv != null && new java.io.File(credentialsEnv).exists()) {
+                log.info("[AI] Using credentials from file path: {}", credentialsEnv);
+                credentials = GoogleCredentials
+                        .fromStream(new java.io.FileInputStream(credentialsEnv))
+                        .createScoped("https://www.googleapis.com/auth/cloud-platform");
+            }
+            // Check system property
+            else if (credentialsPath != null && new java.io.File(credentialsPath).exists()) {
+                log.info("[AI] Using credentials from system property file: {}", credentialsPath);
+                credentials = GoogleCredentials
+                        .fromStream(new java.io.FileInputStream(credentialsPath))
+                        .createScoped("https://www.googleapis.com/auth/cloud-platform");
+            }
+            // Check local development file
+            else if (new java.io.File("serviceAccount.json").exists()) {
+                log.info("[AI] Using local development credentials file");
+                credentials = GoogleCredentials
+                        .fromStream(new java.io.FileInputStream("serviceAccount.json"))
+                        .createScoped("https://www.googleapis.com/auth/cloud-platform");
+            }
+            // Fallback to application default credentials
+            else {
+                log.info("[AI] Using application default credentials");
+                credentials = GoogleCredentials.getApplicationDefault()
                     .createScoped("https://www.googleapis.com/auth/cloud-platform");
+            }
 
             VertexAI vertexAI = new VertexAI.Builder()
-                    .setProjectId("appunture-tcc")
-                    .setLocation("us-central1")
+                    .setProjectId(aiConfiguration.getProjectId())
+                    .setLocation(aiConfiguration.getLocation())
                     .setCredentials(credentials)
                     .build();
 
             VertexAiGeminiChatOptions options = VertexAiGeminiChatOptions.builder()
-                    .withModel("gemini-2.5-flash")
-                    .withTemperature(0.3)
+                    .withModel(aiConfiguration.getModel())
+                    .withTemperature(aiConfiguration.getTemperature())
                     .build();
 
             VertexAiGeminiChatModel chatModel = new VertexAiGeminiChatModel(vertexAI, options);
@@ -120,7 +185,8 @@ public class AiChatService {
 
         } catch (Exception e) {
             log.error("[AI] Failed to initialize AI service", e);
-            throw new RuntimeException("Vertex AI initialization failed", e);
+            log.warn("[AI] AI service will be disabled - falling back to error messages");
+            this.chatClient = null;
         }
     }
 

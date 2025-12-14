@@ -27,7 +27,6 @@ export default function RegisterScreen() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [acceptTerms, setAcceptTerms] = useState(false);
 
   const handleRegister = async () => {
     const { name, email, password, confirmPassword } = formData;
@@ -58,10 +57,6 @@ export default function RegisterScreen() {
       return;
     }
 
-    if (!acceptTerms) {
-      Alert.alert("Erro", "Você deve aceitar os termos de uso para continuar.");
-      return;
-    }
 
     try {
       await register({
@@ -200,23 +195,6 @@ export default function RegisterScreen() {
               />
             </TouchableOpacity>
           </View>
-
-          <TouchableOpacity
-            style={styles.termsContainer}
-            onPress={() => setAcceptTerms(!acceptTerms)}
-          >
-            <View
-              style={[styles.checkbox, acceptTerms && styles.checkedCheckbox]}
-            >
-              {acceptTerms && (
-                <Ionicons name="checkmark" size={12} style={styles.checkmark} />
-              )}
-            </View>
-            <Text style={styles.termsText}>
-              Eu aceito os <Text style={styles.termsLink}>termos de uso</Text> e{" "}
-              <Text style={styles.termsLink}>política de privacidade</Text>
-            </Text>
-          </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.registerButton, isLoading && styles.disabledButton]}

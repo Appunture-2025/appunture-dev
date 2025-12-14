@@ -68,14 +68,27 @@ export default function LoginScreen() {
       await loginWithGoogle();
       router.replace("/(tabs)");
     } catch (error: any) {
-      // Don't show alert for "not implemented" errors
-      if (!error.message?.includes("configuração adicional")) {
+      console.log('[Login] Google login error:', error);
+      
+      // Check if user is actually authenticated despite the error
+      const { isAuthenticated } = useAuthStore.getState();
+      if (isAuthenticated) {
+        console.log('[Login] User is authenticated despite error, redirecting...');
+        router.replace("/(tabs)");
+        return;
+      }
+      
+      // Don't show alert for "not implemented" errors or dismiss/cancel errors
+      if (error.message?.includes("configuração adicional")) {
+        Alert.alert("Em desenvolvimento", error.message);
+      } else if (error.message?.includes("cancelado") || error.message?.includes("fechado")) {
+        // User cancelled, don't show error
+        return;
+      } else {
         Alert.alert(
           "Erro",
           error.message || "Erro ao fazer login com Google. Tente novamente."
         );
-      } else {
-        Alert.alert("Em desenvolvimento", error.message);
       }
     }
   };

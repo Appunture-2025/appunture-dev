@@ -1,13 +1,29 @@
 {
-  "extends": "./node_modules/expo/tsconfig.base",
+  "extends": "./node_modules/expo/tsconfig.base.json",
   "compilerOptions": {
     "strict": true,
     "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "allowJs": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "types": ["react-native", "expo", "jest"]
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
+  "include": [
+    "**/*.ts", 
+    "**/*.tsx", 
+    ".expo/types/**/*.ts", 
+    "expo-env.d.ts",
+    "types/**/*.d.ts",
+    "node_modules/@types/react-native/index.d.ts"
+  ],
   "exclude": ["node_modules"]
 }

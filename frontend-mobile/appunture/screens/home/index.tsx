@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -12,16 +12,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
 import { usePointsStore } from "../../stores/pointsStore";
-import { useSyncStore } from "../../stores/syncStore";
 import { useAuthStore } from "../../stores/authStore";
-import { COLORS, SPACING, MERIDIANS } from "../../utils/constants";
+import { SyncStatusIndicator } from "../../components/SyncStatusIndicator";
+
+import { useOfflineMode } from "../../hooks/useOfflineMode";
+import { COLORS, MERIDIANS } from "../../utils/constants";
 import { styles } from "./styles";
 
 export default function HomeScreen() {
   const router = useRouter();
   const { points, loading, loadPoints } = usePointsStore();
-  const { isOnline, lastSync, syncAll, syncInProgress } = useSyncStore();
   const { user, isAuthenticated } = useAuthStore();
+  const { isOnline, syncInProgress, syncNow, checkConnection } = useOfflineMode();
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
@@ -39,8 +41,11 @@ export default function HomeScreen() {
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
+      // Check connection first
+      await checkConnection();
+      
       if (isOnline) {
-        await syncAll();
+        await syncNow();
       }
       await loadPoints({ limit: 10 });
     } catch (error) {
@@ -55,26 +60,14 @@ export default function HomeScreen() {
   };
 
   const handleSync = async () => {
-    if (!isOnline) {
-      Alert.alert(
-        "Sem conexão",
-        "Você precisa estar online para sincronizar os dados.",
-        [{ text: "OK" }]
-      );
-      return;
-    }
-
     try {
-      await syncAll();
+      await syncNow();
       Alert.alert("Sucesso", "Dados sincronizados com sucesso!", [
         { text: "OK" },
       ]);
     } catch (error) {
-      Alert.alert(
-        "Erro",
-        "Falha na sincronização. Tente novamente mais tarde.",
-        [{ text: "OK" }]
-      );
+      const message = error instanceof Error ? error.message : "Falha na sincronização. Tente novamente mais tarde.";
+      Alert.alert("Erro", message, [{ text: "OK" }]);
     }
   };
 
@@ -113,24 +106,7 @@ export default function HomeScreen() {
             </Text>
           </View>
           
-          <View style={styles.statusContainer}>
-            <Text style={styles.statusText}>
-              {lastSync
-                ? `Última sync: ${new Date(lastSync).toLocaleDateString("pt-BR")}`
-                : "Nunca sincronizado"}
-            </Text>
-            <View style={styles.onlineStatus}>
-              <View
-                style={[
-                  styles.statusIndicator,
-                  isOnline ? styles.online : styles.offline,
-                ]}
-              />
-              <Text style={styles.statusText}>
-                {isOnline ? "Online" : "Offline"}
-              </Text>
-            </View>
-          </View>
+          <SyncStatusIndicator variant="compact" showLastSync={true} />
         </View>
       </View>
 
@@ -310,16 +286,11 @@ export default function HomeScreen() {
               <Text style={styles.sectionTitle} accessibilityRole="header">Sincronização</Text>
             </View>
             <View style={styles.syncCard}>
-              <View style={styles.syncInfo}>
-                <Text style={styles.syncTitle}>
-                  {isOnline ? "Sincronizar Dados" : "Sem Conexão"}
-                </Text>
-                <Text style={styles.syncDescription}>
-                  {isOnline
-                    ? "Mantenha seus dados atualizados na nuvem"
-                    : "Conecte-se à internet para sincronizar"}
-                </Text>
-              </View>
+              <SyncStatusIndicator 
+                variant="detailed" 
+                showLastSync={true}
+                style={{ flex: 1, marginRight: 12 }}
+              />
               <TouchableOpacity
                 style={[
                   styles.syncButton,

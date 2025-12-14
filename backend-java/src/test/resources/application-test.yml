@@ -1,27 +1,56 @@
-spring:
-  application:
-    name: appunture-backend-test
-  main:
-    allow-bean-definition-overriding: true
+# ===========================================
+# Appunture Backend - Test Configuration
+# ===========================================
+# Esta configuração é usada durante a execução dos testes
+# Desabilita serviços que dependem de credenciais externas
 
-# Disable Firebase for tests
+spring:
+  profiles:
+    active: test
+  
+  # Configuração do banco H2 em memória para testes
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+# Configurações de segurança para testes
 app:
-  firebase:
-    enabled: false
   security:
     cors:
-      allowed-origin-patterns:
-        - http://localhost:*
-        - http://127.0.0.1:*
-    rate-limit:
-      enabled: false
+      allowed-origins:
+        - "http://localhost:3000"
+        - "http://localhost:8081"
+      allowed-methods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+      allowed-headers:
+        - "*"
+      allow-credentials: true
 
+# Desabilitar serviços externos em testes
 firebase:
-  project-id: test-project
-  storage:
-    bucket: test-bucket
+  enabled: false
 
+# Desabilitar AI em testes
+ai:
+  enabled: false
+
+# Configurações de logging para testes
 logging:
   level:
-    root: WARN
     com.appunture: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG

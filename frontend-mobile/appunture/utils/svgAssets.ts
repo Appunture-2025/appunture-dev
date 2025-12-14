@@ -40,22 +40,22 @@ const SVG_ASSETS = {
   CV: CV_SVG,
 } as const;
 
-// PNG assets mapping (visual layer)
-const LU_PNG = require("../static/body-map/LU.png");
-const LI_PNG = require("../static/body-map/LI.png");
-const ST_PNG = require("../static/body-map/ST.png");
-const ST2_PNG = require("../static/body-map/ST2.png");
-const SP_PNG = require("../static/body-map/SP.png");
-const HT_PNG = require("../static/body-map/HT.png");
-const SI_PNG = require("../static/body-map/SI.png");
-const BL_PNG = require("../static/body-map/BL.png");
-const KI_PNG = require("../static/body-map/KI.png");
-const P_PNG = require("../static/body-map/P.png");
-const TW_PNG = require("../static/body-map/TW.png");
-const GB_PNG = require("../static/body-map/GB.png");
-const LV_PNG = require("../static/body-map/LV.png");
-const GV_PNG = require("../static/body-map/GV.png");
-const CV_PNG = require("../static/body-map/CV.png");
+// PNG assets mapping (visual layer) - Using Asset.fromModule for better Expo Go compatibility
+import LU_PNG from "../static/body-map/LU.png";
+import LI_PNG from "../static/body-map/LI.png";
+import ST_PNG from "../static/body-map/ST.png";
+import ST2_PNG from "../static/body-map/ST2.png";
+import SP_PNG from "../static/body-map/SP.png";
+import HT_PNG from "../static/body-map/HT.png";
+import SI_PNG from "../static/body-map/SI.png";
+import BL_PNG from "../static/body-map/BL.png";
+import KI_PNG from "../static/body-map/KI.png";
+import P_PNG from "../static/body-map/P.png";
+import TW_PNG from "../static/body-map/TW.png";
+import GB_PNG from "../static/body-map/GB.png";
+import LV_PNG from "../static/body-map/LV.png";
+import GV_PNG from "../static/body-map/GV.png";
+import CV_PNG from "../static/body-map/CV.png";
 
 const PNG_ASSETS = {
   LU: LU_PNG,
@@ -191,8 +191,28 @@ export const getEmbeddedSvgModule = (layerId: string): any | null => {
   return SVG_ASSETS[layerId as keyof typeof SVG_ASSETS] ?? null;
 };
 
+// Cache for PNG assets to avoid repeated lookups
+const pngAssetCache = new Map<string, any>();
+
 export const getPngForLayer = (layerId: string): any | null => {
-  return PNG_ASSETS[layerId as keyof typeof PNG_ASSETS] ?? null;
+  // Check cache first
+  if (pngAssetCache.has(layerId)) {
+    return pngAssetCache.get(layerId);
+  }
+
+  const pngAsset = PNG_ASSETS[layerId as keyof typeof PNG_ASSETS] ?? null;
+  
+  if (pngAsset) {
+    // Return the asset directly - same approach as working PngTestComponent
+    console.log(`[svgAssets] ✓ PNG asset loaded for ${layerId}:`, typeof pngAsset);
+    pngAssetCache.set(layerId, pngAsset);
+    return pngAsset;
+  }
+  
+  // Cache null result too
+  pngAssetCache.set(layerId, null);
+  console.warn(`[svgAssets] ❌ No PNG asset found for layer ${layerId}`);
+  return null;
 };
 
 /**
@@ -206,8 +226,7 @@ export const getSvgComponentForLayer = (
 };
 
 /**
- * Return either XML or a React component for the requested layer.
- * Caller should prefer component if available (transformer output).
+ * Return PNG only - SVG completely disabled to prevent crashes.
  */
 export const getSvgRenderableForLayer = async (
   layerId: string
@@ -217,44 +236,59 @@ export const getSvgRenderableForLayer = async (
   Component?: React.ComponentType<any> | null;
 }> => {
   const pngSource = getPngForLayer(layerId);
-  const Component = getSvgComponentForLayer(layerId);
-  if (Component) return { pngSource, Component, xml: null };
-  const xml = await getEmbeddedSvgXml(layerId);
-  return { pngSource, xml, Component: null };
+  
+  // Completely disable SVG to prevent crashes
+  console.log(`[svgAssets] SVG disabled for layer ${layerId}, returning PNG only`);
+  return { pngSource, xml: null, Component: null };
 };
 
 /**
- * Preload all SVG assets into memory for instant access
+ * Preload all PNG assets for better Expo Go compatibility
  */
-export const preloadAllSvgAssets = async (): Promise<void> => {
-  console.log("[svgAssets] Preloading all SVG assets...");
+export const preloadAllPngAssets = async (): Promise<void> => {
+  console.log("[svgAssets] Preloading all PNG assets...");
 
   const results = await Promise.all(
-    Object.keys(SVG_ASSETS).map(async (layerId) => {
+    Object.keys(PNG_ASSETS).map(async (layerId) => {
       try {
-        // Prefer transformer-produced component
-        const Component = getSvgComponentForLayer(layerId);
-        if (Component) return { layerId, success: true, type: "component" };
-
-        const xml = await getEmbeddedSvgXml(layerId);
-        return { layerId, success: xml !== null, type: xml ? "xml" : "none" };
+        const pngModule = PNG_ASSETS[layerId as keyof typeof PNG_ASSETS];
+        if (pngModule) {
+          const asset = Asset.fromModule(pngModule);
+          if (!asset.downloaded) {
+            await asset.downloadAsync();
+          }
+          console.log(`[svgAssets] ✓ Preloaded PNG for ${layerId}`);
+          return { layerId, success: true, uri: asset.uri };
+        }
+        return { layerId, success: false, uri: null };
       } catch (error) {
-        console.error(`[svgAssets] Failed to preload ${layerId}:`, error);
-        return { layerId, success: false, type: "error" };
+        console.error(`[svgAssets] Failed to preload PNG ${layerId}:`, error);
+        return { layerId, success: false, uri: null };
       }
     })
   );
 
   const successful = results.filter((r) => r.success).length;
   console.log(
-    `[svgAssets] Preload complete: ${successful}/${results.length} successful`
+    `[svgAssets] PNG preload complete: ${successful}/${results.length} successful`
   );
 
   if (successful < results.length) {
     console.warn(
-      "[svgAssets] Some SVGs failed to preload, but app will still work"
+      "[svgAssets] Some PNGs failed to preload, but app will still work"
     );
   }
+};
+
+/**
+ * SVG preloading disabled to prevent crashes - only PNG preloading
+ */
+export const preloadAllSvgAssets = async (): Promise<void> => {
+  console.log("[svgAssets] SVG preloading disabled to prevent crashes");
+  
+  // Return success for all layers since we're not actually loading SVG
+  const layerIds = Object.keys(SVG_ASSETS);
+  console.log(`[svgAssets] Skipped SVG preload for ${layerIds.length} layers (crash prevention)`);
 };
 
 /**
@@ -283,10 +317,14 @@ export const getSvgComponentFromModule = (
 
   // Guard: if it's already a React element (e.g., <Svg />), it's not a component type
   if (React.isValidElement(candidate)) {
+    console.warn("[svgAssets] Module exports a React element instead of component function, returning null");
     return null;
   }
 
+  // Check if it's a function that can be used as a component
   if (typeof candidate === "function") {
+    // Don't try to test call the function as it might have side effects
+    // Just return it if it's a function - React will handle validation
     return candidate as React.ComponentType<any>;
   }
 
@@ -307,5 +345,6 @@ export const getSvgComponentFromModule = (
     return (candidate as any).component as React.ComponentType<any>;
   }
 
+  console.warn("[svgAssets] No valid component found in module:", typeof candidate);
   return null;
 };
