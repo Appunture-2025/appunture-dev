@@ -13,8 +13,10 @@
 
 Certifique-se que no IntelliJ:
 
-- ✅ Profile ativo: `local` (ou editar Run Configuration para usar `-Dspring.profiles.active=local`)
-- ✅ serviceAccount.json: Na raiz do projeto ou variável `SERVICE_ACCOUNT_PATH` definida
+- ✅ Profile ativo: `local` (ou editar Run Configuration para usar
+  `-Dspring.profiles.active=local`)
+- ✅ serviceAccount.json: Na raiz do projeto ou variável `SERVICE_ACCOUNT_PATH`
+  definida
 - ✅ Console mostra: "Started AppuntureBackendApplication"
 - ✅ Porta 8080 está livre
 
@@ -64,20 +66,23 @@ O terminal deve mostrar algo como:
 
 ## 🐛 Testes Específicos
 
-### Teste 1: SVG Body Map
+### Teste 1: Atlas (PNG visual + SVG overlay)
 
 1. Login no app
 2. Aba "Explorar" → Selecionar ponto (ex: ST-1)
 3. **Verificar:**
-   - Imagens SVG aparecem na galeria?
+   - A imagem visual (PNG) aparece na galeria e a interação (hotspot) responde
+     ao toque?
    - Console do IntelliJ mostra GET /points/ST-1?
    - Response tem `image_refs`?
 
 **Se falhar:**
 
-- Backend logs: Ver se Firebase Storage foi inicializado
+- Backend logs: Ver se Firebase Storage foi inicializado (quando o SVG overlay é
+  carregado remotamente)
 - Frontend: F12 → Network tab → Ver erro nas requisições
-- Testar URL direta: https://firebasestorage.googleapis.com/v0/b/appunture-tcc.firebasestorage.app/o/body-map%2FST.svg?alt=media
+- Testar URL direta do SVG overlay:
+  https://firebasestorage.googleapis.com/v0/b/appunture-tcc.firebasestorage.app/o/body-map%2FST.svg?alt=media
 
 ### Teste 2: Chat IA
 

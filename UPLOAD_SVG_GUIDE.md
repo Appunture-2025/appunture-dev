@@ -2,11 +2,15 @@
 
 ## Overview
 
-You have 3 layers of SVG delivery:
+You have 3 delivery/artifact layers for the atlas assets:
 
-1. **Bundled** - SVGs in `static/body-map/` (included in app bundle)
-2. **Firebase Remote** - SVGs uploaded to Cloud Storage (fast CDN)
-3. **FileSystem Cache** - Local cache on device (offline fallback)
+1. **Bundled (PNG + SVG)** - each atlas layer in `static/body-map/` is packaged
+   as a PNG (visual) and an SVG (interaction) included in the app bundle;
+2. **Firebase Remote (SVG)** - the SVG interaction files may be uploaded to
+   Cloud Storage to serve as a remote source or CDN fallback (the upload script
+   handles SVG files);
+3. **FileSystem Cache** - local cache on device (offline fallback) used to speed
+   up loading when needed.
 
 This guide covers uploading to Firebase Storage and syncing database references.
 
@@ -34,10 +38,12 @@ node ../../scripts/upload-body-map-svgs.js
 
 **What it does:**
 
-- Reads all SVG files from `static/body-map/`
-- Uploads each to Firebase Storage at `gs://appunture-tcc.appspot.com/body-map/{filename}.svg`
-- Sets cache headers to 1 year (immutable CDN)
-- Sets MIME type to `image/svg+xml`
+- Reads the atlas interaction SVG files from `static/body-map/` (the PNG visuals
+  remain bundled);
+- Uploads each SVG to Firebase Storage at
+  `gs://appunture-tcc.appspot.com/body-map/{filename}.svg` (if configured);
+- Sets cache headers to 1 year (immutable CDN);
+- Sets MIME type to `image/svg+xml`.
 
 **Expected output:**
 
@@ -91,7 +97,9 @@ gs://appunture-tcc.appspot.com/body-map/GB.svg
 
 ## Step 2: Enrich Points Database with Atlas References
 
-Your `points_seed.ndjson` currently has empty `imageRefs: []`. We need to populate them with atlas layer IDs so the app knows which SVG to load for each point.
+Your `points_seed.ndjson` currently has empty `imageRefs: []`. We need to
+populate them with atlas layer IDs so the app knows which SVG to load for each
+point.
 
 ### Run Enrichment Script
 
@@ -140,7 +148,8 @@ head -1 data/processed/2025-11-28/points_seed.ndjson | jq '.imageRefs'
 
 ## Step 3: Sync Database
 
-The SQLite database will be repopulated via the backend seed endpoint or app startup.
+The SQLite database will be repopulated via the backend seed endpoint or app
+startup.
 
 ### Option A: Backend Seed Endpoint (Java)
 
@@ -162,9 +171,12 @@ curl -X POST http://localhost:8080/api/seed/points \
 
 ### Option B: App Startup Seed
 
-The React Native app will automatically re-seed on startup if it detects version changes:
+The React Native app will automatically re-seed on startup if it detects version
+changes:
 
-1. Update `BODY_ATLAS_ASSET_VERSION` in [static/body-map/manifest.ts](frontend-mobile/appunture/static/body-map/manifest.ts#L8) if you changed atlas SVG content
+1. Update `BODY_ATLAS_ASSET_VERSION` in
+   [static/body-map/manifest.ts](frontend-mobile/appunture/static/body-map/manifest.ts#L8)
+   if you changed atlas SVG content
 2. Increment the version number in the manifest
 3. On next app start, the seed sync will:
    - Detect version mismatch
@@ -219,7 +231,8 @@ ls -lh static/body-map/*.svg
 2. **With Firebase Remote** (network required):
 
    - App will check Firebase Storage
-   - URL pattern: `https://firebasestorage.googleapis.com/v0/b/appunture-tcc.appspot.com/o/body-map%2F{LAYER}.svg?alt=media`
+   - URL pattern:
+     `https://firebasestorage.googleapis.com/v0/b/appunture-tcc.appspot.com/o/body-map%2F{LAYER}.svg?alt=media`
    - Falls back to bundled if fetch fails
 
 3. **With FileSystem Cache**:
@@ -257,7 +270,8 @@ npm install firebase-admin --save-dev
 **Error: "Permission denied"**
 
 - Check service account permissions in Firebase Console
-- Ensure GOOGLE_APPLICATION_CREDENTIALS is set (script auto-detects from serviceAccount.json)
+- Ensure GOOGLE_APPLICATION_CREDENTIALS is set (script auto-detects from
+  serviceAccount.json)
 
 **Error: "Bucket not found"**
 
@@ -297,7 +311,8 @@ ls data/processed/2025-11-28/points_seed.ndjson
 
 4. **Check Firebase URL**:
    - Inspect network requests in DevTools
-   - URL should be: `https://firebasestorage.googleapis.com/v0/b/appunture-tcc.appspot.com/o/body-map%2F{LAYER}.svg`
+   - URL should be:
+     `https://firebasestorage.googleapis.com/v0/b/appunture-tcc.appspot.com/o/body-map%2F{LAYER}.svg`
 
 ---
 
@@ -368,10 +383,13 @@ Week 2+:
 ## Notes
 
 - **Bundled Assets**: Always available, included in app binary (~15 MB impact)
-- **Firebase Remote**: Fast CDN, requires internet, cached locally after first fetch
-- **FileSystem Cache**: Persists between app restarts, version-based invalidation
+- **Firebase Remote**: Fast CDN, requires internet, cached locally after first
+  fetch
+- **FileSystem Cache**: Persists between app restarts, version-based
+  invalidation
 - **Database**: Stores references only, not SVG content (reduces SQLite size)
-- **Version Pinning**: Bump BODY_ATLAS_ASSET_VERSION to invalidate cache, force re-download
+- **Version Pinning**: Bump BODY_ATLAS_ASSET_VERSION to invalidate cache, force
+  re-download
 
 ---
 

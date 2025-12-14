@@ -36,3 +36,21 @@ Diferentemente da medicina ocidental, não se trata apenas de associar um sintom
 Nesse sentido, o aplicativo \textit{Appunture} atua como um apoio ao estudo e à compreensão dos padrões da MTC, fornecendo descrições de padrões, relações entre sintomas e síndromes e, inclusive, oferecendo um sistema de busca inteligente por sintomas com suporte de NLP (Processamento de Linguagem Natural), que interpreta a linguagem do usuário e apresenta os pontos relacionados ao caso apresentado.
 
 Diante dos desafios regulatórios, formativos e conceituais que permeiam o estudo da acupuntura no Brasil, torna-se essencial o desenvolvimento de ferramentas tecnológicas que aliem conhecimento técnico e acessibilidade. O \textit{Appunture} surge como resposta a essas motivações, buscando oferecer um recurso digital estratégico para apoiar o estudo da acupuntura com qualidade e base científica.
+
+\section{ABORDAGEM TÉCNICA E DECISÕES DE ARQUITETURA} \label{sec:arquitetura_decisoes}
+
+Com base no código-fonte atual do projeto, a arquitetura do \textit{Appunture} deve ser entendida como híbrida e centrada em um backend na nuvem, com persistência local usada para resiliência e melhor experiência do usuário — e não como uma aplicação classificada estritamente como ``offline-first''. Pontos observados no código e que fundamentam essa afirmação:
+
+\begin{itemize}
+	\item \textbf{Fonte de verdade na nuvem:} o backend utiliza o Google Cloud Firestore como repositório central de dados (pontos, sintomas, relações), conforme dependências e configurações encontradas no projeto. Isso indica que a versão oficial dos dados é mantida na nuvem e as atualizações primárias ocorrem a partir do backend.
+
+	\item \textbf{Persistência local para resiliência:} o aplicativo mantém um banco local (SQLite via \texttt{expo-sqlite} / \texttt{wa-sqlite}) com esquema para pontos, sintomas, favoritos, notas e filas de sincronização. Esse armazenamento local tem o objetivo de melhorar a experiência em cenários de conectividade intermitente, armazenando seeds, cache e operações pendentes.
+
+	\item \textbf{Sincronização controlada:} existem filas locais de sincronização (\texttt{sync_queue} e \texttt{image_sync_queue}) que orquestram operações ascendentes (uploads de favoritos, imagens, etc.) e tratam retries, marcação de erros e controle de conflitos. Esse mecanismo é compatível com um design híbrido onde o cliente pode operar com dados locais, mas a coordenação e a verdade final dependem do backend.
+
+	\item \textbf{Funcionalidades dependentes da nuvem:} recursos que exigem processamento externo — como o assistente de IA (RAG com Vertex AI / Gemini) — dependem de conectividade e execução no \textit{backend}. A busca inteligente por sintomas e a geração de respostas contextualizadas requerem chamadas servidores remotas.
+
+	\item \textbf{Assets incorporados:} as imagens SVG do atlas são entregues como assets embutidos no bundle do app para garantir renderização confiável; porém, o conteúdo e atualizações do atlas são sincronizados a partir do backend quando necessário.
+\end{itemize}
+
+Em resumo, o \textit{Appunture} adota uma abordagem prática: usa a nuvem como fonte de verdade e oferece persistência local como mecanismo de tolerância a falhas e melhoria de desempenho. O texto do TCC foi ajustado para evitar caracterizações simplistas do tipo ``offline-first'', prezando por refletir que o projeto é híbrido com ênfase em uma plataforma cloud-backed.

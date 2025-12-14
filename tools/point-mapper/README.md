@@ -1,6 +1,8 @@
 # 🎯 Appunture Point Mapper
 
-Ferramenta para mapeamento manual de coordenadas dos pontos de acupuntura nos SVGs.
+Ferramenta para mapeamento manual de coordenadas dos pontos de acupuntura sobre
+o atlas: a ferramenta carrega o SVG de interação (overlay) usado para definir os
+hotspots, que correspondem à representação visual empacotada como PNG.
 
 ## 🚀 Como Usar
 
@@ -86,7 +88,8 @@ As coordenadas são salvas como **porcentagem** (0-100) relativa ao SVG:
 
 ## 🎨 Vistas Disponíveis (Atlas Corporal)
 
-O atlas contém **15 SVGs** em `frontend-mobile/appunture/assets/body-map/`:
+O atlas contém **15 layers** em `frontend-mobile/appunture/assets/body-map/`,
+cada um composto por PNG (visual) e SVG (overlay de interação):
 
 ### Frontal (8 imagens)
 

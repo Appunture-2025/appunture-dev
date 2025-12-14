@@ -59,3 +59,39 @@ O Projeto de Lei 5983/2019, em tramitação no Senado Federal, propõe a regulam
     \item Estabelecimento de código de ética;
     \item Fiscalização do exercício profissional.
 \end{itemize}
+
+% -----------------------------------------------------------------------------
+\section{IMPLEMENTAÇÃO E ARTEFATOS DO CÓDIGO}
+\label{ax:artefatos}
+
+As informações abaixo foram extraídas diretamente do código-fonte do repositório e descrevem os artefatos e decisões de implementação observadas na base de código atual (frontend e backend). O objetivo é apresentar evidências técnicas para os capítulos do trabalho, sem extrapolar além do que o código revela.
+
+\subsection{Frontend móvel}
+
+\begin{itemize}
+    \item Os assets do atlas anatômico estão inclusos no bundle do aplicativo em `static/body-map/` e são empacotados como pares (PNG visual + SVG de interação). O utilitário em `utils/svgAssets.ts` (funções como `preloadAllSvgAssets`) gerencia o carregamento e cache desses artefatos, garantindo coerência de `viewBox` e escala entre PNG e SVG;
+    \item A renderização do mapa e dos layers é controlada por utilitários em `utils/bodyMap.ts` e por componentes como `BodyMap` e `BodyMapInteractive`: o PNG é usado para renderização visual e o SVG sobreposto é usado apenas para interpretar interações (hotspots);
+    \item Persistência local é implementada em `services/database.ts`, que contém migrações e definições de tabelas: por exemplo, tabelas para pontos, sintomas, favoritos, notas e tabelas de controle de sincronização (`\texttt{sync\_queue}` e `\texttt{image\_sync\_queue}`);
+    \item A aplicação usa SQLite (via `expo-sqlite` ou `wa-sqlite`) para leitura local e armazenamento de cache; escritas do usuário são registradas localmente e posteriormente consumidas por um processo de sincronização (enqueue/worker);
+    \item Armazenamento seguro para credenciais é feito com `expo-secure-store` e o restante das configurações/estado com `@react-native-async-storage/async-storage`. O estado global usa `zustand` com middleware de persistência;
+    \item Chamadas ao backend usam `axios` e há tratamento de retry/timeout no serviço de API conforme implementação encontrada no diretório de serviços;
+    \item Testes unitários e de integração usam `jest`/`jest-expo` e existem configurações para testes E2E com `detox` (scripts no `package.json`).
+\end{itemize}
+
+\subsection{Sincronização e comportamento offline}
+
+\begin{itemize}
+    \item O código mantém um mecanismo de enfileiramento local (`sync_queue` / `image_sync_queue`) para operações que precisam ser enviadas ao backend; isso permite que gravações sejam registradas localmente e processadas quando houver conectividade;
+    \item O cliente aplica atualizações otimistas na interface (\textit{optimistic update}) e registra tentativas/retries; a lógica de resolução de conflitos observada no repositório utiliza marcações temporais (timestamps) e contagens de tentativa como critério primário;
+    \item Nem todas as funcionalidades estão projetadas para operar sem conexão — por exemplo, o assistente de IA, uploads de mídia e certas operações de conta dependem de serviços em nuvem; portanto, o termo "offline-first" não descreve corretamente a totalidade do comportamento do aplicativo.
+\end{itemize}
+
+\subsection{Backend e implantação}
+
+\begin{itemize}
+    \item O backend está implementado em Java (Spring Boot) conforme `backend-java/pom.xml` e depende de bibliotecas como `google-cloud-firestore` e `firebase-admin` para persistência e integrações com Firebase;
+    \item O repositório contém um pipeline de build e deploy (por exemplo, `backend-java/cloudbuild.yaml` e `backend-java/deploy.sh`) que realiza build da imagem Docker, push para o registry e deploy no Google Cloud Run com parâmetros de recursos e variáveis de ambiente configuradas;
+    \item A classe de configuração `FirebaseConfig.java` documenta a ordem de resolução das credenciais: valores providos por configuração direta, caminhos para ficheiros de conta de serviço, conteúdo via variável de ambiente `GOOGLE_APPLICATION_CREDENTIALS` (ou path), e por fim as credenciais de aplicação padrão (ADC). Recomenda-se, em produção, uso de Secret Manager ou Workload Identity para evitar expor ficheiros de chave diretamente.
+\end{itemize}
+
+

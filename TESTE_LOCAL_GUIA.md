@@ -75,18 +75,20 @@ Metro waiting on exp://192.168.X.X:8081
 
 ## 🧪 Cenários de Teste
 
-### Teste 1: SVG Body Map
+### Teste 1: Atlas (PNG visual + SVG overlay)
 
 1. Fazer login no app
 2. Ir para aba "Explorar"
 3. Selecionar um ponto (ex: ST-1)
-4. Verificar se as imagens SVG aparecem na galeria
+4. Verificar se a imagem visual (PNG) aparece na galeria e se a interação
+   (hotspot) responde ao toque (SVG overlay)
 
 **Debug:**
 
 - Backend logs devem mostrar: `GET /points/ST-1`
-- Verificar `image_refs` no response
-- URLs devem ser: `gs://appunture-tcc.firebasestorage.app/body-map/ST.svg`
+- Verificar `image_refs` no response (referências ao layer)
+- URLs do SVG overlay, quando usado como fallback remoto, devem ser:
+  `gs://appunture-tcc.firebasestorage.app/body-map/ST.svg`
 
 ### Teste 2: Chat com IA
 
