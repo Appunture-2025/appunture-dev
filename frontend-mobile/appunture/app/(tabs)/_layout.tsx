@@ -28,7 +28,7 @@ export default function TabLayout() {
   const colors = useThemeColors();
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <SyncBanner />
       <Tabs
         screenOptions={{
@@ -118,7 +118,7 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
-    </>
+    </View>
   );
 }
 
