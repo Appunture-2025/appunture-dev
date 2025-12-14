@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -11,8 +11,9 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "../../stores/authStore";
-import { useSyncStore } from "../../stores/syncStore";
 import { useThemeStore, useThemeColors } from "../../stores/themeStore";
+import { SyncStatusIndicator } from "../../components/SyncStatusIndicator";
+import { useOfflineMode } from "../../hooks/useOfflineMode";
 
 interface SettingsOption {
   id: string;
@@ -28,11 +29,9 @@ interface SettingsOption {
 export default function ProfileScreen() {
   const router = useRouter();
   const { user, logout, isAuthenticated } = useAuthStore();
-  const { isOnline, lastSync } = useSyncStore();
   const { mode, setMode, isDark } = useThemeStore();
   const colors = useThemeColors();
-  const [notifications, setNotifications] = useState(true);
-  const [offlineMode, setOfflineMode] = useState(false);
+  const { isOffline, toggleOfflineMode } = useOfflineMode();
 
   const handleLogout = () => {
     Alert.alert("Sair", "Tem certeza que deseja sair da sua conta?", [
@@ -68,11 +67,11 @@ export default function ProfileScreen() {
     {
       id: "offline",
       title: "Modo offline",
-      subtitle: "Usar apenas dados locais",
+      subtitle: "Desabilitar sincronização automática",
       type: "toggle",
       icon: "cloud-offline-outline",
-      value: offlineMode,
-      onToggle: setOfflineMode,
+      value: isOffline,
+      onToggle: () => toggleOfflineMode(),
     },
     {
       id: "theme",
@@ -89,7 +88,7 @@ export default function ProfileScreen() {
       type: "navigation",
       icon: "heart-outline",
       onPress: () => {
-        console.log("Navigate to favorites");
+        router.push("/favorites");
       },
     },
     {
@@ -271,34 +270,11 @@ export default function ProfileScreen() {
             )}
 
             {/* Sync Status */}
-            <View
-              style={styles.syncStatus}
-              accessibilityLabel={`Status de sincronização: ${
-                isOnline ? "Online" : "Offline"
-              }${
-                lastSync
-                  ? `, última sincronização em ${new Date(lastSync).toLocaleString(
-                      "pt-BR"
-                    )}`
-                  : ""
-              }`}
-            >
-              <View
-                style={[
-                  styles.statusIndicator,
-                  { backgroundColor: isOnline ? colors.success : colors.warning },
-                ]}
-              />
-              <Text style={[styles.syncText, { color: colors.textSecondary }]}>
-                {isOnline ? "Online" : "Offline"}
-                {lastSync && (
-                  <Text style={styles.lastSync}>
-                    {" • Última sincronização: "}
-                    {new Date(lastSync).toLocaleString("pt-BR")}
-                  </Text>
-                )}
-              </Text>
-            </View>
+            <SyncStatusIndicator 
+              variant="detailed" 
+              showLastSync={true}
+              style={{ marginTop: 12 }}
+            />
           </>
         ) : (
           <>
@@ -396,23 +372,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "500",
   },
-  syncStatus: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  statusIndicator: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginRight: 8,
-  },
-  syncText: {
-    fontSize: 14,
-    textAlign: "center",
-  },
-  lastSync: {
-    fontSize: 12,
-  },
+
   loginButton: {
     flexDirection: "row",
     alignItems: "center",
