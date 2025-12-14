@@ -23,9 +23,28 @@ import {
 } from "../utils/svgAssets";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const MAP_HEIGHT = 300;
+
+// Default height for the map container (can be made configurable)
+const DEFAULT_MAP_HEIGHT = 300;
+
+/**
+ * Helper component to render SVG transformer components
+ */
+const SvgComponent: React.FC<{
+  Component: React.ComponentType<any>;
+  style?: any;
+}> = ({ Component, style }) => (
+  <Component
+    width="100%"
+    height="100%"
+    preserveAspectRatio="xMidYMid meet"
+    style={style}
+  />
+);
 
 interface PointLocationMapProps {
+  /** Height of the map container in pixels (optional, defaults to 300) */
+  height?: number;
   /** Normalized coordinates (0-1) for the point */
   coordinates: NormalizedCoordinate;
   /** Layer ID (e.g., "LU", "ST", etc.) */
@@ -43,10 +62,11 @@ export function PointLocationMap({
   coordinates,
   layerId,
   label,
+  height = DEFAULT_MAP_HEIGHT,
 }: PointLocationMapProps) {
   const colors = useThemeColors();
   const [svgXml, setSvgXml] = useState<string | null>(null);
-  const [svgModule, setSvgModule] = useState<any | null>(null);
+  const [svgModule, setSvgModule] = useState<React.ComponentType<any> | null>(null);
   const [pngSource, setPngSource] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -116,7 +136,7 @@ export function PointLocationMap({
     if (!absolutePosition) return null;
 
     const containerWidth = SCREEN_WIDTH - 32;
-    const containerHeight = MAP_HEIGHT;
+    const containerHeight = height;
 
     const left =
       (absolutePosition.x / BODY_MAP_VIEWBOX.width) * containerWidth;
@@ -124,7 +144,7 @@ export function PointLocationMap({
       (absolutePosition.y / BODY_MAP_VIEWBOX.height) * containerHeight;
 
     return { left, top };
-  }, [coordinates]);
+  }, [coordinates, height]);
 
   if (!layer) {
     return (
@@ -160,7 +180,11 @@ export function PointLocationMap({
       <View
         style={[
           styles.mapContainer,
-          { backgroundColor: colors.background, borderColor: colors.border },
+          {
+            backgroundColor: colors.background,
+            borderColor: colors.border,
+            height,
+          },
         ]}
       >
         {loading ? (
@@ -191,17 +215,12 @@ export function PointLocationMap({
                 style={[StyleSheet.absoluteFill, { opacity: 0.7 }]}
               />
             )}
-            {svgModule && (() => {
-              const Comp = svgModule as React.ComponentType<any>;
-              return (
-                <Comp
-                  width="100%"
-                  height="100%"
-                  preserveAspectRatio="xMidYMid meet"
-                  style={[StyleSheet.absoluteFill, { opacity: 0.7 }]}
-                />
-              );
-            })()}
+            {svgModule && (
+              <SvgComponent
+                Component={svgModule}
+                style={[StyleSheet.absoluteFill, { opacity: 0.7 }]}
+              />
+            )}
 
             {/* Point Marker */}
             {markerPosition && (
@@ -271,7 +290,7 @@ const styles = StyleSheet.create({
   },
   mapContainer: {
     width: "100%",
-    height: MAP_HEIGHT,
+    // Height is set dynamically via style prop
     borderRadius: 12,
     backgroundColor: COLORS.background,
     borderWidth: 1,
