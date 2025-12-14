@@ -1,6 +1,7 @@
 // SVG Assets - Direct imports for embedded rendering
 // This eliminates the need for dynamic loading and database storage
 
+import React from "react";
 import { Asset } from "expo-asset";
 
 // Import SVG modules directly (they are already bundled)
@@ -131,8 +132,10 @@ export const getEmbeddedSvgXml = async (
       svgXmlCache.set(assetModule, finalXml);
       return finalXml;
     } catch (inner) {
-      console.warn(
-        `[svgAssets] SVG module cannot be read as asset; it may be a React component.`,
+      // Module couldn't be read as raw asset. It may be a transformer-produced React component.
+      // Don't treat this as an error here; caller can use `getSvgComponentForLayer` as fallback.
+      console.debug(
+        `[svgAssets] Module for ${assetModule} is not a raw asset; may be a React component.`,
         inner
       );
       return null;
@@ -154,6 +157,32 @@ export const getEmbeddedSvgModule = (layerId: string): any | null => {
 };
 
 /**
+ * Return the React component exported by the SVG module for a given layer id, if any.
+ */
+export const getSvgComponentForLayer = (
+  layerId: string
+): React.ComponentType<any> | null => {
+  const mod = getEmbeddedSvgModule(layerId);
+  return getSvgComponentFromModule(mod);
+};
+
+/**
+ * Return either XML or a React component for the requested layer.
+ * Caller should prefer component if available (transformer output).
+ */
+export const getSvgRenderableForLayer = async (
+  layerId: string
+): Promise<{
+  xml?: string | null;
+  Component?: React.ComponentType<any> | null;
+}> => {
+  const Component = getSvgComponentForLayer(layerId);
+  if (Component) return { Component, xml: null };
+  const xml = await getEmbeddedSvgXml(layerId);
+  return { xml, Component: null };
+};
+
+/**
  * Preload all SVG assets into memory for instant access
  */
 export const preloadAllSvgAssets = async (): Promise<void> => {
@@ -162,11 +191,15 @@ export const preloadAllSvgAssets = async (): Promise<void> => {
   const results = await Promise.all(
     Object.keys(SVG_ASSETS).map(async (layerId) => {
       try {
+        // Prefer transformer-produced component
+        const Component = getSvgComponentForLayer(layerId);
+        if (Component) return { layerId, success: true, type: "component" };
+
         const xml = await getEmbeddedSvgXml(layerId);
-        return { layerId, success: xml !== null };
+        return { layerId, success: xml !== null, type: xml ? "xml" : "none" };
       } catch (error) {
         console.error(`[svgAssets] Failed to preload ${layerId}:`, error);
-        return { layerId, success: false };
+        return { layerId, success: false, type: "error" };
       }
     })
   );
@@ -203,12 +236,35 @@ export const getSvgComponentFromModule = (
   assetModule: any
 ): React.ComponentType<any> | null => {
   if (!assetModule) return null;
-  // common transformer outputs:
-  // - module is a React component (default export is function/class)
-  // - module.default is the component
+
+  // Normalize common transformer outputs: default export is the component
   const candidate = assetModule.default ?? assetModule;
-  if (typeof candidate === "function" || typeof candidate === "object") {
+
+  // Guard: if it's already a React element (e.g., <Svg />), it's not a component type
+  if (React.isValidElement(candidate)) {
+    return null;
+  }
+
+  if (typeof candidate === "function") {
     return candidate as React.ComponentType<any>;
   }
+
+  // Some bundlers expose a nested component
+  if (
+    candidate &&
+    typeof candidate === "object" &&
+    typeof (candidate as any).ReactComponent === "function"
+  ) {
+    return (candidate as any).ReactComponent as React.ComponentType<any>;
+  }
+
+  if (
+    candidate &&
+    typeof candidate === "object" &&
+    typeof (candidate as any).component === "function"
+  ) {
+    return (candidate as any).component as React.ComponentType<any>;
+  }
+
   return null;
 };

@@ -30,8 +30,8 @@ import {
   prefetchBodyMapLayers,
 } from "../utils/bodyMap";
 import {
-  getEmbeddedSvgXml,
-  getSvgComponentFromModule,
+  getSvgRenderableForLayer,
+  getSvgComponentForLayer,
 } from "../utils/svgAssets";
 import { useThemeColors } from "../stores/themeStore";
 import { COLORS } from "../utils/constants";
@@ -90,44 +90,45 @@ export function BodyMapInteractive({
     let isMounted = true;
     console.log(`[BodyMapInteractive] Loading layer: ${layer.id}`);
     setSvgXml(null);
-
-    getLayerSvgXml(layer)
-      .then((xml) => {
+    (async () => {
+      try {
+        // Try to get either a transformer component or raw XML
+        const renderable = await getSvgRenderableForLayer(layer.id);
         if (!isMounted) return;
+
+        if (renderable.Component) {
+          console.log(
+            `[BodyMapInteractive] ✓ Using transformer component for ${layer.id}`
+          );
+          setSvgModule(renderable.Component);
+          setSvgXml(null);
+          return;
+        }
+
+        const xml = renderable.xml ?? null;
         if (xml) {
-          // Ensure SVG has proper viewBox
-          if (!xml.includes("viewBox=")) {
-            xml = xml.replace(
+          let finalXml = xml;
+          if (!finalXml.includes("viewBox=")) {
+            finalXml = finalXml.replace(
               "<svg",
               `<svg viewBox="0 0 ${BODY_MAP_VIEWBOX.width} ${BODY_MAP_VIEWBOX.height}"`
             );
           }
           console.log(
-            `[BodyMapInteractive] ✓ Loaded ${layer.id}, ${xml.length} bytes`
+            `[BodyMapInteractive] ✓ Loaded ${layer.id}, ${finalXml.length} bytes`
           );
-          setSvgXml(xml);
+          setSvgXml(finalXml);
           setSvgModule(null);
           return;
         }
 
-        // No XML available: try to obtain the imported module to render as component
-        const mod = getEmbeddedSvgXml(layer.id);
-        if (mod && isMounted) {
-          console.log(
-            `[BodyMapInteractive] ✓ Found SVG module fallback for ${layer.id}`
-          );
-          setSvgModule(mod);
-          setSvgXml(null);
-          return;
-        }
-
         console.warn(
-          `[BodyMapInteractive] No SVG XML or module available for ${layer.id}`
+          `[BodyMapInteractive] No SVG XML or transformer component available for ${layer.id}`
         );
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("[BodyMapInteractive] Error loading SVG:", error);
-      });
+      }
+    })();
 
     return () => {
       isMounted = false;
@@ -240,7 +241,7 @@ export function BodyMapInteractive({
     layer: BodyAtlasLayer;
     xml?: string | null;
   }> = ({ layer, xml }) => {
-    const SvgComp = getSvgComponentFromModule(layer.source);
+    const SvgComp = svgModule ?? getSvgComponentForLayer(layer.id);
     if (xml) {
       return (
         <SvgXml

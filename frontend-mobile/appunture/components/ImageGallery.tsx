@@ -31,7 +31,11 @@ import Animated, {
 import { SvgXml } from "react-native-svg";
 import type { GalleryImageSource } from "../types/media";
 import { findAtlasLayer, getLayerSvgXml } from "../utils/bodyMap";
-import { getEmbeddedSvgXmlSync } from "../utils/svgAssets";
+import {
+  getEmbeddedSvgXmlSync,
+  getSvgComponentForLayer,
+  getSvgRenderableForLayer,
+} from "../utils/svgAssets";
 import { useThemeColors } from "../stores/themeStore";
 import { COLORS } from "../utils/constants";
 
@@ -455,29 +459,42 @@ const SvgAssetRenderer = ({
     if (atlasLayer) {
       return getEmbeddedSvgXmlSync(atlasLayer.id);
     }
-    return null; // No longer supporting generic assets
+    return null;
   });
+  const [SvgComponent, setSvgComponent] =
+    useState<React.ComponentType<any> | null>(() => {
+      if (atlasLayer) {
+        return getSvgComponentForLayer(atlasLayer.id);
+      }
+      return null;
+    });
 
   useEffect(() => {
-    const syncXml = atlasLayer ? getEmbeddedSvgXmlSync(atlasLayer.id) : null; // No longer supporting generic assets
+    const syncXml = atlasLayer ? getEmbeddedSvgXmlSync(atlasLayer.id) : null;
+    const syncComp = atlasLayer ? getSvgComponentForLayer(atlasLayer.id) : null;
     setSvgXmlContent((current) => {
       const nextValue = syncXml ?? null;
       return current === nextValue ? current : nextValue;
     });
+    setSvgComponent((current) => (current === syncComp ? current : syncComp));
   }, [asset, atlasLayer]);
 
   useEffect(() => {
     let isMounted = true;
 
-    if (!svgXmlContent) {
+    if (!svgXmlContent && !SvgComponent) {
       const loadPromise = atlasLayer
-        ? getLayerSvgXml(atlasLayer)
-        : Promise.resolve(null); // No longer supporting generic assets
+        ? getSvgRenderableForLayer(atlasLayer.id)
+        : Promise.resolve(null);
 
       loadPromise
-        .then((xml) => {
-          if (isMounted) {
-            setSvgXmlContent(xml);
+        .then((renderable) => {
+          if (!isMounted) return;
+          if (!renderable) return;
+          if (renderable.Component) {
+            setSvgComponent(() => renderable.Component);
+          } else if (renderable.xml) {
+            setSvgXmlContent(renderable.xml);
           }
         })
         .catch((error) => {
@@ -492,7 +509,13 @@ const SvgAssetRenderer = ({
 
   return (
     <View style={[style, styles.svgWrapper]}>
-      {svgXmlContent ? (
+      {SvgComponent ? (
+        <SvgComponent
+          width="100%"
+          height="100%"
+          preserveAspectRatio="xMidYMid meet"
+        />
+      ) : svgXmlContent ? (
         <SvgXml
           xml={svgXmlContent}
           width="100%"

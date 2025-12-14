@@ -18,6 +18,10 @@ import {
   getMarkerPosition,
   prefetchBodyMapLayers,
 } from "../utils/bodyMap";
+import {
+  getSvgRenderableForLayer,
+  getSvgComponentForLayer,
+} from "../utils/svgAssets";
 import { useThemeColors } from "../stores/themeStore";
 import { COLORS } from "../utils/constants";
 
@@ -46,6 +50,8 @@ export function BodyMap({
   const colors = useThemeColors();
   const [mapSize, setMapSize] = useState({ width: 0, height: 0 });
   const [svgXml, setSvgXml] = useState<string | null>(null);
+  const [SvgComponent, setSvgComponent] =
+    useState<React.ComponentType<any> | null>(null);
 
   useEffect(() => {
     console.log("[BodyMap] Prefetching atlas layers");
@@ -59,39 +65,36 @@ export function BodyMap({
     console.log(`[BodyMap] useEffect triggered for layer: ${layer.id}`);
     setSvgXml(null);
 
-    getLayerSvgXml(layer)
-      .then((xml) => {
-        console.log(
-          `[BodyMap] getLayerSvgXml returned for ${layer.id}: ${xml ? xml.length + " bytes" : "null"}`
-        );
+    (async () => {
+      try {
+        const renderable = await getSvgRenderableForLayer(layer.id);
+        if (!isMounted) return;
+
+        if (renderable?.Component) {
+          setSvgXml(null);
+          setSvgComponent(() => renderable.Component);
+          return;
+        }
+
+        let xml = renderable?.xml ?? null;
         if (xml) {
-          console.log(
-            `[BodyMap] SVG preview for ${layer.id}:`,
-            xml.substring(0, 200)
-          );
-
-          // Check if SVG has viewBox
           const hasViewBox = xml.includes("viewBox=");
-          console.log(`[BodyMap] SVG has viewBox: ${hasViewBox}`);
-
           if (!hasViewBox) {
-            console.warn(
-              `[BodyMap] SVG for ${layer.id} missing viewBox, adding default`
-            );
-            // Try to add viewBox if missing
             xml = xml.replace(
               "<svg",
               `<svg viewBox="0 0 ${BODY_MAP_VIEWBOX.width} ${BODY_MAP_VIEWBOX.height}"`
             );
           }
         }
+
         if (isMounted && xml) {
           setSvgXml(xml);
+          setSvgComponent(null);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("[BodyMap] Error loading SVG asset:", error);
-      });
+      }
+    })();
 
     return () => {
       isMounted = false;
@@ -154,7 +157,13 @@ export function BodyMap({
         ]}
         onLayout={handleLayout}
       >
-        {svgXml ? (
+        {SvgComponent ? (
+          <SvgComponent
+            width="100%"
+            height="100%"
+            preserveAspectRatio="xMidYMid meet"
+          />
+        ) : svgXml ? (
           <SvgXml
             xml={svgXml}
             width="100%"

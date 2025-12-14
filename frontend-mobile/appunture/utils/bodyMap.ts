@@ -9,6 +9,8 @@ import {
   getEmbeddedSvgXml,
   preloadAllSvgAssets,
   getEmbeddedSvgXmlSync,
+  getSvgRenderableForLayer,
+  getSvgComponentForLayer,
 } from "./svgAssets";
 
 export const BODY_MAP_VIEWBOX = {
@@ -54,13 +56,21 @@ export const getLayerSvgXml = async (
 
   // Load directly from embedded SVG asset
   console.log(`[bodyMap] Loading ${layer.id} from embedded asset`);
-  const xml = await getEmbeddedSvgXml(layer.id);
+  const renderable = await getSvgRenderableForLayer(layer.id);
+  const xml = renderable?.xml ?? null;
+  const comp = renderable?.Component ?? null;
   if (xml) {
     console.log(
       `[bodyMap] ✓ Successfully loaded ${layer.id}, size: ${xml.length} bytes`
     );
     layerSvgMemoryCache.set(layer.id, xml);
     return xml;
+  }
+
+  // If we have a transformer-produced component, consider this a success
+  if (comp) {
+    console.log(`[bodyMap] ✓ Transformer component available for ${layer.id}`);
+    return null;
   }
 
   console.error(`[bodyMap] ✗ Failed to load SVG for ${layer.id}`);
@@ -79,15 +89,21 @@ export const prefetchBodyMapLayers = async (): Promise<void> => {
   const results = await Promise.all(
     BODY_ATLAS_LAYERS.map(async (layer) => {
       try {
-        const xml = await getEmbeddedSvgXml(layer.id);
+        const renderable = await getSvgRenderableForLayer(layer.id);
+        if (renderable.Component) {
+          console.log(`[bodyMap] ✓ Prefetch found component for ${layer.id}`);
+          return { id: layer.id, status: "component" };
+        }
+
+        const xml = renderable.xml ?? null;
         if (xml) {
           layerSvgMemoryCache.set(layer.id, xml);
           console.log(`[bodyMap] ✓ Prefetch successful for ${layer.id}`);
           return { id: layer.id, status: "success" };
-        } else {
-          console.warn(`[bodyMap] ✗ Prefetch returned null for ${layer.id}`);
-          return { id: layer.id, status: "null" };
         }
+
+        console.warn(`[bodyMap] ✗ Prefetch returned null for ${layer.id}`);
+        return { id: layer.id, status: "null" };
       } catch (error) {
         console.error(`[bodyMap] Prefetch error for ${layer.id}:`, error);
         return { id: layer.id, status: "error", error };
