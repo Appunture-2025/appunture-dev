@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.google.cloud.vertexai.VertexAI;
 import com.google.auth.oauth2.GoogleCredentials;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -121,27 +122,48 @@ public class AiChatService {
         log.info("[AI] Initializing AiChatService");
 
         // Try to get credentials from environment or system property
-        String credentialsPath = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
-        if (credentialsPath == null) {
-            credentialsPath = System.getProperty("GOOGLE_APPLICATION_CREDENTIALS");
-        }
-        if (credentialsPath == null) {
-            // Fallback for local development
-            credentialsPath = "serviceAccount.json";
-        }
+        String credentialsEnv = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
+        String credentialsPath = System.getProperty("GOOGLE_APPLICATION_CREDENTIALS");
         
         System.setProperty("GOOGLE_CLOUD_PROJECT", aiConfiguration.getProjectId());
         System.setProperty("GOOGLE_CLOUD_LOCATION", aiConfiguration.getLocation());
 
         try {
             GoogleCredentials credentials;
-            if (credentialsPath.equals("serviceAccount.json") && !new java.io.File(credentialsPath).exists()) {
-                credentials = GoogleCredentials.getApplicationDefault()
-                    .createScoped("https://www.googleapis.com/auth/cloud-platform");
-            } else {
+            
+            // Check if GOOGLE_APPLICATION_CREDENTIALS contains JSON content directly
+            if (credentialsEnv != null && credentialsEnv.trim().startsWith("{")) {
+                log.info("[AI] Using credentials from environment variable (JSON content)");
+                credentials = GoogleCredentials
+                        .fromStream(new java.io.ByteArrayInputStream(credentialsEnv.getBytes()))
+                        .createScoped("https://www.googleapis.com/auth/cloud-platform");
+            } 
+            // Check if it's a file path
+            else if (credentialsEnv != null && new java.io.File(credentialsEnv).exists()) {
+                log.info("[AI] Using credentials from file path: {}", credentialsEnv);
+                credentials = GoogleCredentials
+                        .fromStream(new java.io.FileInputStream(credentialsEnv))
+                        .createScoped("https://www.googleapis.com/auth/cloud-platform");
+            }
+            // Check system property
+            else if (credentialsPath != null && new java.io.File(credentialsPath).exists()) {
+                log.info("[AI] Using credentials from system property file: {}", credentialsPath);
                 credentials = GoogleCredentials
                         .fromStream(new java.io.FileInputStream(credentialsPath))
                         .createScoped("https://www.googleapis.com/auth/cloud-platform");
+            }
+            // Check local development file
+            else if (new java.io.File("serviceAccount.json").exists()) {
+                log.info("[AI] Using local development credentials file");
+                credentials = GoogleCredentials
+                        .fromStream(new java.io.FileInputStream("serviceAccount.json"))
+                        .createScoped("https://www.googleapis.com/auth/cloud-platform");
+            }
+            // Fallback to application default credentials
+            else {
+                log.info("[AI] Using application default credentials");
+                credentials = GoogleCredentials.getApplicationDefault()
+                    .createScoped("https://www.googleapis.com/auth/cloud-platform");
             }
 
             VertexAI vertexAI = new VertexAI.Builder()
