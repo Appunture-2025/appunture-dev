@@ -104,7 +104,7 @@ O \textit{Appunture} é um atlas digital educativo voltado a estudantes e profis
 
 A plataforma foi desenvolvida para Android, apresentando 15 visualizações vetoriais (SVG) organizadas por meridianos e vistas (frontal e posterior). O sistema oferece funcionalidades de busca, detalhes dos 361 pontos principais, e um assistente baseado em Inteligência Artificial para auxiliar na correlação entre sintomas e pontos.
 
-O desenvolvimento seguiu uma arquitetura ``offline-first'', permitindo o acesso aos dados mesmo sem conexão à internet. Para auxiliar no mapeamento dos pontos sobre as imagens anatômicas, foi desenvolvida uma ferramenta interna de posicionamento de coordenadas.
+O desenvolvimento seguiu uma arquitetura cloud-backed com persistência local, permitindo acesso rápido aos dados através de cache e sincronização controlada com o backend. Para auxiliar no mapeamento dos pontos sobre as imagens anatômicas, foi desenvolvida uma ferramenta interna de posicionamento de coordenadas.
 
 É importante ressaltar que o \textit{Appunture} não substitui a formação profissional adequada nem o acompanhamento de profissionais qualificados. A ferramenta foi concebida exclusivamente como um recurso educativo complementar de apoio ao estudo e à consulta de informações sobre acupuntura, não devendo ser utilizada para fins de diagnóstico, prescrição ou tratamento.
 } 
@@ -116,7 +116,7 @@ O desenvolvimento seguiu uma arquitetura ``offline-first'', permitindo o acesso 
 \newcommand{\AbstractTexto}{
 \textit{Appunture} is an educational digital atlas designed to facilitate access to information about acupuncture points for students and professionals interested in the field. The Android application features a digital anatomical atlas with 15 vector views (SVG), organized by meridians. The system includes search functionalities, details of 361 main points, and an AI-based assistant to help correlate symptoms and points.
 
-Developed with an ``offline-first'' architecture using React Native and Java Spring Boot, the application allows data access even without internet connection. An internal mapping tool was developed to assist in positioning point coordinates on the anatomical images.
+Developed with a cloud-backed architecture with local persistence using React Native and Java Spring Boot, the application provides fast data access through local cache and controlled synchronization with the backend. An internal mapping tool was developed to assist in positioning point coordinates on the anatomical images.
 
 It is important to note that \textit{Appunture} does not replace proper professional training. The tool was designed exclusively as a complementary educational resource to support learning and information lookup about acupuncture, and should not be used for diagnosis, prescription, or treatment purposes.
 }

@@ -11,7 +11,7 @@ Appunture é um sistema desenvolvido como TCC que permite consultar pontos de ac
 - Consulta de pontos de acupuntura por nome, código ou meridiano
 - Assistente de IA para recomendações baseadas em sintomas
 - Sistema de favoritos
-- Funcionamento offline com sincronização automática
+- Persistência local com sincronização controlada (arquitetura cloud-backed)
 
 ## Tecnologias
 

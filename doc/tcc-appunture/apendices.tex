@@ -138,8 +138,6 @@ Os diagramas a seguir representam os fluxos de configuracao e personalizacao do 
 
 \figura{DIAGRAMA DE SEQUENCIA - ALTERNAR TEMA}{0.65}{fig/seq-apptheme.png}{Os autores (2025)}{seq-theme}{}{}
 
-\figura{DIAGRAMA DE SEQUENCIA - NOTIFICACOES}{0.65}{fig/seq-onoffnotifs.png}{Os autores (2025)}{seq-notifs}{}{}
-
 \figura{DIAGRAMA DE SEQUENCIA - MODO OFFLINE}{0.60}{fig/seq-offline.png}{Os autores (2025)}{seq-offline}{}{}
 
 \figura{DIAGRAMA DE SEQUENCIA - LOGOUT}{0.65}{fig/seq-logout.png}{Os autores (2025)}{seq-logout}{}{}
@@ -253,7 +251,6 @@ Este apendice apresenta as historias de usuario detalhadas do sistema Appunture,
     \item O sistema deve sincronizar automaticamente quando conectado a internet
     \item O sistema deve permitir uso com dados em cache para leitura; gravações são enfileiradas localmente e sincronizadas quando houver conectividade (fluxo implementado em \texttt{frontend-mobile/appunture/services/database.ts})
     \item O sistema deve aplicar regras de resolução de conflitos (por exemplo, baseadas em \textit{timestamp} ou versão) conforme implementado no código
-    \item O sistema deve notificar o usuario sobre status da sincronizacao
     \item O sistema deve permitir sincronizacao manual sob demanda
     \item O sistema deve manter historico de sincronizacoes
 \end{enumerate}
@@ -359,7 +356,6 @@ Este apendice apresenta as historias de usuario detalhadas do sistema Appunture,
 \begin{enumerate}
     \item O sistema deve permitir alternar entre tema claro, escuro e automatico
     \item O sistema deve salvar a preferencia de tema do usuario
-    \item O sistema deve permitir ativar ou desativar notificacoes push
     \item O sistema deve exibir informacoes da conta do usuario logado
     \item O sistema deve mostrar status de sincronizacao e ultima atualizacao
     \item O sistema deve permitir ativar um modo de operação com dados em cache para economia de dados (leitura local); funcionalidades que dependem do backend permanecem indisponíveis sem conectividade
