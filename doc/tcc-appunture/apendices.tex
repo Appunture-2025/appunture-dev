@@ -28,11 +28,11 @@ O diagrama de classes representa a estrutura estatica do sistema, mostrando as p
 \chapter{MODELO LOGICO DO BANCO DE DADOS}
 \label{apendice:modelo-logico}
 
-O sistema Appunture utiliza uma arquitetura de dados híbrida, com dois bancos de dados distintos que trabalham em conjunto para fornecer persistência local (cache para leitura) e sincronização eventual com o backend em nuvem. Nem todas as funcionalidades operam sem conectividade: recursos que dependem de serviços remotos (por exemplo, assistente de IA, uploads de mídia e sincronização de conta) exigem conexão para operação completa.
+O sistema Appunture utiliza uma arquitetura cloud-backed com persistência local (cache para leitura) que complementa o backend em nuvem. No código, o Firestore (acessado via \textit{backend} Java) é tratado como fonte de verdade; o cliente mantém uma cópia local para leituras rápidas e enfileiramento de operações que serão sincronizadas quando houver conectividade. Nem todas as funcionalidades operam sem conexão: recursos que dependem de serviços remotos (por exemplo, assistente de IA, uploads de mídia e operações que requerem confirmação do servidor) exigem conexão para funcionamento completo.
 
 \section{Banco de Dados Local (SQLite)}
 
-O banco de dados SQLite é utilizado no aplicativo móvel para armazenamento local de dados e como cache para leitura. O código do cliente mantém tabelas de controle e enfileiramento (por exemplo, \texttt{sync_queue} e \texttt{image_sync_queue}) para operações de escrita que são registradas localmente e consumidas por um processo de sincronização quando houver conectividade. Assim, leituras locais permanecem disponíveis, enquanto gravações dependem da sincronização eventual com o backend.
+O banco de dados SQLite é utilizado no aplicativo móvel para armazenamento local e como cache de leitura. A implementação concreta encontra-se em `frontend-mobile/appunture/services/database.ts`. O código cria tabelas de controle e enfileiramento (por exemplo, \texttt{sync_queue} e \texttt{image_sync_queue}) para operações de escrita que são registradas localmente e consumidas por um processo de sincronização quando houver conectividade. Leituras locais permanecem disponíveis para oferecer responsividade; gravações são enfileiradas e enviadas ao backend (Firestore) conforme a política de sincronização implementada no código.
 
 \figura{MODELO LOGICO - SQLITE (MOBILE)}{0.75}{fig/modelo-logico-sqlite.png}{Os autores (2025)}{modelo-sqlite}{}{}
 
@@ -251,7 +251,7 @@ Este apendice apresenta as historias de usuario detalhadas do sistema Appunture,
 
 \begin{enumerate}
     \item O sistema deve sincronizar automaticamente quando conectado a internet
-    \item O sistema deve permitir uso limitado com dados em cache para leitura; gravações são enfileiradas para sincronização quando houver conectividade
+    \item O sistema deve permitir uso com dados em cache para leitura; gravações são enfileiradas localmente e sincronizadas quando houver conectividade (fluxo implementado em `frontend-mobile/appunture/services/database.ts`)
     \item O sistema deve aplicar regras de resolução de conflitos (por exemplo, baseadas em \textit{timestamp} ou versão) conforme implementado no código
     \item O sistema deve notificar o usuario sobre status da sincronizacao
     \item O sistema deve permitir sincronizacao manual sob demanda
@@ -362,7 +362,7 @@ Este apendice apresenta as historias de usuario detalhadas do sistema Appunture,
     \item O sistema deve permitir ativar ou desativar notificacoes push
     \item O sistema deve exibir informacoes da conta do usuario logado
     \item O sistema deve mostrar status de sincronizacao e ultima atualizacao
-    \item O sistema deve permitir ativar modo offline para economia de dados
+    \item O sistema deve permitir ativar um modo de operação com dados em cache para economia de dados (leitura local); funcionalidades que dependem do backend permanecem indisponíveis sem conectividade
     \item O sistema deve permitir logout com confirmacao
     \item O sistema deve exibir versao do aplicativo e informacoes de suporte
 \end{enumerate}

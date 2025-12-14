@@ -9,12 +9,12 @@ Os principais objetivos propostos no início do projeto foram alcançados:
 
 \begin{itemize}
     \item A implementação do aplicativo Android com React Native 0.79.6 e Expo SDK 53 permite o acesso à ferramenta em dispositivos móveis com alta performance;
-    \item A arquitetura híbrida cloud-backed com persistência local (SQLite) fornece resiliência em redes instáveis: o aplicativo persiste dados localmente e enfileira operações em tabelas como \texttt{sync_queue} e \texttt{image_sync_queue} para sincronização posterior com o backend quando a conectividade é restabelecida;
+    \item A arquitetura adotada é cloud-backed com persistência local (SQLite) para resiliência em redes instáveis: o aplicativo persiste dados localmente e enfileira operações em tabelas como \texttt{sync_queue} e \texttt{image_sync_queue} para sincronização posterior com o backend quando a conectividade é restabelecida. A implementação concreta da persistência local e das filas de sincronização encontra-se em `frontend-mobile/appunture/services/database.ts`.
     \item O atlas anatômico digital com 15 layers (PNG para visual + SVG invisível para interação), organizadas por meridianos, auxilia na visualização precisa dos pontos de acupuntura;
     \item O sistema de busca inteligente e o assistente baseado em IA (arquitetura RAG com Google Gemini) auxiliam na correlação entre sintomas e pontos;
     \item O \textit{backend} Java com Spring Boot 3.2.5 e Google Cloud Firestore fornece APIs REST robustas para gestão de dados e autenticação via Firebase;
     \item O sistema de favoritos com sincronização na nuvem permite que usuários salvem e acessem seus pontos preferidos em múltiplos dispositivos;
-    \item A ferramenta Point Mapper auxiliou no mapeamento preciso das coordenadas dos pontos sobre os artefatos do atlas (PNG visual e SVG de interação).
+    \item A ferramenta Point Mapper auxiliou no mapeamento preciso das coordenadas dos pontos sobre os artefatos do atlas (PNG visual e SVG de interação). Os scripts e ferramentas auxiliares relacionados ao mapeamento estão presentes no diretório `scripts/` do repositório.
 \end{itemize}
 
 A adoção da metodologia Scrum permitiu um desenvolvimento iterativo e incremental, com entregas frequentes e ajustes baseados em \textit{feedback} contínuo. O gerenciamento de estado com Zustand, combinado ao sistema de persistência local (SQLite) e ao uso criterioso de SecureStore/AsyncStorage para credenciais/estado, proporcionou uma experiência fluida e segura para os usuários.

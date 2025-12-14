@@ -12,9 +12,14 @@ Outro desafio relevante é o caráter subjetivo e complexo do diagnóstico energ
 Diante desse contexto, o uso de Tecnologias Digitais de Informação e Comunicação (TDIC) apresenta-se como uma ferramenta estratégica para apoiar a qualificação da prática da acupuntura. Soluções como aplicativos educativos e interativos podem auxiliar na visualização de pontos, organização de informações terapêuticas, revisão diagnóstica e adequação de conteúdos conforme o nível de formação do usuário, promovendo maior segurança, padronização e confiabilidade.
 
 
-Neste cenário, propõe-se o desenvolvimento do \textit{Appunture}, uma plataforma educativa para Android que funciona como um atlas digital de acupuntura, voltada a estudantes e profissionais interessados na área. O aplicativo disponibiliza informações sobre os 361 pontos dos meridianos principais, pontos extras, e um atlas anatômico composto por 15 layers (frontal e posterior). Cada layer é empacotado com um par de artefatos: um PNG para renderização visual e um SVG invisível sobreposto, sincronizados na mesma escala para captura de interações (hotspots). O aplicativo também integra um assistente baseado em Inteligência Artificial para auxiliar na correlação entre sintomas e pontos — funcionalidade essa que requer processamento no \textit{backend} e conectividade de rede.
 
-Com base no código-fonte atual do projeto, a arquitetura adotada é híbrida e cloud-backed: o backend (Google Cloud Firestore / Firebase) funciona como fonte de verdade dos dados e coordena atualizações, enquanto o aplicativo mantém persistência local (SQLite) e mecanismos de cache e filas de sincronização para resiliência e melhor experiência em condições de conectividade intermitente. Os assets do atlas são empacotados como pares (PNG + SVG) no bundle para garantir renderização confiável e mapeamento de interação no dispositivo. A gestão dos conteúdos e operações administrativas é realizada por APIs REST do \textit{backend} e pelos consoles do Firebase / Google Cloud.
+Neste cenário, propõe-se o desenvolvimento do \textit{Appunture}, uma plataforma educativa que implementa um atlas digital de acupuntura voltado a estudantes e profissionais. O aplicativo disponibiliza informações sobre os 361 pontos clássicos e pontos extras, organizados por meridianos, e apresenta 15 visualizações do corpo (camadas frontais e posteriores). Cada camada do atlas é distribuída como um par de artefatos: um arquivo PNG para a renderização visual e um arquivo SVG invisível sobreposto que define hotspots e regiões interativas — ambos sincronizados na mesma escala para garantir mapeamento preciso de interações.
+
+O código-fonte atual revela a pilha tecnológica usada na aplicação: Frontend em React Native (Expo) com TypeScript, usando bibliotecas como `react-native-svg` (renderização e manipulação de SVGs), `zustand` (gerenciamento de estado), `@tanstack/react-query` (cache e sincronização de dados), `axios` (chamadas HTTP) e bibliotecas de persistência (`expo-sqlite` / `wa-sqlite`, `@react-native-async-storage/async-storage`, `expo-secure-store`). Os assets do atlas estão empacotados no bundle do aplicativo (ex.: `frontend-mobile/appunture/static/body-map/`) e são carregados/gerenciados por utilitários JavaScript/TypeScript (`utils/svgAssets.ts`, `utils/bodyMap.ts`) responsáveis pelo pré-carregamento e mapeamento de coordenadas.
+
+Quanto à persistência, o aplicativo mantém uma cópia local dos dados em um banco SQLite (ver `services/database.ts`) com tabelas que representam pontos, sintomas e filas de sincronização (ex.: `points`, `symptoms`, `symptom_points`, `favorites`, `notes`, `sync_queue`, `image_sync_queue`). O backend atua como fonte de verdade e coordena atualizações: no repositório há um backend em Java (JDK 17, Spring Boot) que usa Firebase / Firestore para armazenamento e serviços (autenticação e APIs administrativas). O assistente de IA é executado no \textit{backend} (integração com serviços de IA/Vertex AI) e, por depender de processamento remoto, requer conectividade para respostas completas.
+
+Importante: o sistema não é apresentado no código como "offline-first" estrito; em vez disso, adota um modelo cloud-backed com persistência local e filas de sincronização para oferecer resiliência em condições de conectividade intermitente. Ou seja, o aplicativo funciona localmente com dados em cache e sincroniza com o backend quando possível, mantendo o Cloud (Firestore / APIs) como fonte de verdade.
 
 É importante ressaltar que o \textit{Appunture} não substitui a formação profissional adequada nem o acompanhamento de profissionais qualificados. A ferramenta busca ser um recurso complementar de apoio ao estudo e à consulta de informações sobre acupuntura, facilitando o acesso a informações organizadas e padronizadas.
 
@@ -27,7 +32,7 @@ O principal objetivo deste projeto é desenvolver o \textit{Appunture}, uma plat
 Entre os objetivos específicos, destacam-se:
 
 \begin{itemize}
-    \item \textbf{Visualização dos Pontos de Acupuntura}: Disponibilizar um atlas anatômico digital com 15 layers (PNG para visual + SVG invisível para interação), cobrindo vistas frontais e posteriores dos meridianos principais.
+    \item \textbf{Visualização dos Pontos de Acupuntura}: Disponibilizar um atlas anatômico digital com 15 layers (cada camada empacotada como par PNG visual + SVG invisível para interação), cobrindo vistas frontais e posteriores dos meridianos principais. Os assets são gerenciados no bundle do aplicativo (por exemplo `frontend-mobile/appunture/static/body-map/`) e processados por utilitários do frontend.
     
     \item \textbf{Assistente de Consulta}: Implementar um módulo baseado em IA para auxiliar na busca e correlação entre sintomas e pontos, utilizando os dados cadastrados no sistema.
     
@@ -35,9 +40,9 @@ Entre os objetivos específicos, destacam-se:
     
     \item \textbf{Organização de Informações}: Disponibilizar informações sobre os 361 pontos clássicos e pontos extras, incluindo localização, indicações e funções.
     
-    \item \textbf{Resiliência e Sincronização}: Oferecer acesso imediato a dados por meio de cache e persistência local, com sincronização controlada para garantir a integridade da versão oficial mantida no backend.
+    \item \textbf{Resiliência e Sincronização}: Oferecer acesso imediato a dados por meio de cache e persistência local (SQLite) e implementar filas de sincronização para operações que alteram dados localmente; garantir que a integridade da versão oficial seja mantida pelo backend (Firestore) e que as estratégias de retry/merge estejam alinhadas ao código atual.
     
-    \item \textbf{Ferramenta de Mapeamento}: Desenvolver uma ferramenta auxiliar para posicionamento das coordenadas dos pontos sobre as imagens anatômicas.
+    \item \textbf{Ferramenta de Mapeamento}: Disponibilizar a ferramenta auxiliar de mapeamento de pontos (scripts/utilitários no repositório) usada para posicionar coordenadas dos pontos sobre as imagens anatômicas e gerar/ajustar os overlays SVG.
     
     \item \textbf{Painel de Atualização}: Disponibilizar uma interface para atualização dos conteúdos do sistema.
 \end{itemize}

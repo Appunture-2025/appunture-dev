@@ -29,7 +29,7 @@ O \textit{Appunture} foi desenvolvido seguindo uma arquitetura híbrida e modula
 
 O aplicativo móvel implementa persistência local (SQLite) para garantir performance e resiliência em redes instáveis. O código evidencia uma arquitetura cloud-backed em que o Google Cloud Firestore funciona como fonte de verdade, enquanto o cliente mantém cópias locais para leitura rápida e enfileira gravações para sincronização posterior.
 
-    	extbf{Banco de Dados Local (SQLite):}
+            	extbf{Banco de Dados Local (SQLite):}
 \begin{itemize}
     \item Armazena os pontos do atlas, pontos extras, sintomas e metadados necessários para renderização e consultas rápidas;
     \item Mantém dados do usuário (favoritos, notas) e tabelas de controle de sincronização (\texttt{sync_queue}, \texttt{image_sync_queue});
@@ -51,7 +51,7 @@ O aplicativo móvel implementa persistência local (SQLite) para garantir perfor
 
 Quando conectado à internet, o sistema implementa sincronização bidirecional automática:
 
-	extbf{Sincronização Descendente (Backend $\rightarrow$ Mobile):}
+	extbf{Sincronização Descendente (Backend $\\rightarrow$ Mobile):}
 \begin{itemize}
     \item Atualização automática de dados do atlas;
     \item \textit{Download} incremental baseado em versionamento;
@@ -59,7 +59,7 @@ Quando conectado à internet, o sistema implementa sincronização bidirecional 
     \item Validação de integridade dos dados recebidos.
 \end{itemize}
 
-	extbf{Sincronização Ascendente (Mobile $\rightarrow$ Backend):}
+	extbf{Sincronização Ascendente (Mobile $\\rightarrow$ Backend):}
 \begin{itemize}
     \item \textit{Upload} de favoritos do usuário;
     \item \textit{Backup} automático de preferências;
