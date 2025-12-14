@@ -149,7 +149,7 @@ export const debounce = <T extends (...args: any[]) => any>(
 
   return (...args: Parameters<T>) => {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func(...args), delay) as NodeJS.Timeout;
+    timeoutId = setTimeout(() => func(...args), delay) as unknown as NodeJS.Timeout;
   };
 };
 

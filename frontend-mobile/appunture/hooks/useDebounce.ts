@@ -82,7 +82,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
 
       timeoutRef.current = setTimeout(() => {
         callbackRef.current(...args);
-      }, delay) as NodeJS.Timeout;
+      }, delay) as unknown as NodeJS.Timeout;
     },
     [delay]
   );
