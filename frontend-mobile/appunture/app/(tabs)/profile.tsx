@@ -66,15 +66,6 @@ export default function ProfileScreen() {
   // Build settings list - only show logout if authenticated
   const baseSettings: SettingsOption[] = [
     {
-      id: "notifications",
-      title: "Notificações",
-      subtitle: "Receber notificações push",
-      type: "toggle",
-      icon: "notifications-outline",
-      value: notifications,
-      onToggle: setNotifications,
-    },
-    {
       id: "offline",
       title: "Modo offline",
       subtitle: "Usar apenas dados locais",
@@ -98,24 +89,13 @@ export default function ProfileScreen() {
       type: "navigation",
       icon: "heart-outline",
       onPress: () => {
-        // Navigate to favorites - already implemented in tabs
         console.log("Navigate to favorites");
-      },
-    },
-    {
-      id: "history",
-      title: "Histórico de consultas",
-      subtitle: "Ver pesquisas anteriores",
-      type: "navigation",
-      icon: "time-outline",
-      onPress: () => {
-        console.log("Navigate to history");
       },
     },
     {
       id: "about",
       title: "Sobre o app",
-      subtitle: "Versão 1.0.0",
+      subtitle: "Versão 1.0.1",
       type: "navigation",
       icon: "information-circle-outline",
       onPress: () => {
@@ -127,7 +107,6 @@ export default function ProfileScreen() {
     },
   ];
 
-  // Add login or logout option based on authentication status
   const settings: SettingsOption[] = isAuthenticated
     ? [
         ...baseSettings,
