@@ -10,7 +10,7 @@ Este capítulo apresenta o \textit{stack} tecnológico utilizado no desenvolvime
 O \textit{Appunture} foi desenvolvido seguindo uma arquitetura híbrida distribuída, composta por quatro camadas principais:
 
 \begin{itemize}
-    \item \textbf{Aplicativo Móvel (React Native + Expo)}: Interface principal do usuário com estratégia ``\textit{Offline-First}'';
+    \item \textbf{Aplicativo Móvel (React Native + Expo)}: Interface principal do usuário com persistência local (SQLite) para resiliência em redes instáveis e mecanismo de enfileiramento para sincronização com o backend em nuvem;
     \item \textbf{API Backend (Java + Spring Boot)}: Servidor de aplicação responsável pela lógica de negócio, sincronização e Inteligência Artificial;
     \item \textbf{Ferramentas de Apoio (Python/HTML)}: Scripts de migração de dados e ferramenta de mapeamento de pontos (Point Mapper).
 \end{itemize}
@@ -23,36 +23,35 @@ O \textit{Appunture} foi desenvolvido seguindo uma arquitetura híbrida e modula
 
 \figura{DIAGRAMA DE ARQUITETURA DO SISTEMA}{0.8}{fig/arquitetura.png}{Os autores (2025)}{arquitetura}{}{}
 
-\section{ARQUITETURA HÍBRIDA (OFFLINE + ONLINE)} \label{sec:arquitetura_hibrida}
+\section{ARQUITETURA HÍBRIDA (PERSISTÊNCIA LOCAL E BACKEND EM NUVEM)} \label{sec:arquitetura_hibrida}
 
-\subsection{Funcionamento Offline}
+\subsection{Persistência Local e Enfileiramento de Operações}
 
-O aplicativo móvel foi projetado com estratégia ``\textit{offline-first}'', garantindo que as funcionalidades de navegação e consulta de dados funcionem independentemente da conectividade:
+O aplicativo móvel implementa persistência local (SQLite) para garantir performance e resiliência em redes instáveis. O código evidencia uma arquitetura cloud-backed em que o Google Cloud Firestore funciona como fonte de verdade, enquanto o cliente mantém cópias locais para leitura rápida e enfileira gravações para sincronização posterior.
 
-\textbf{Banco de Dados Local (SQLite):}
+    	extbf{Banco de Dados Local (SQLite):}
 \begin{itemize}
-    \item Armazena todos os 361 pontos de acupuntura dos meridianos principais;
-    \item Contém pontos extras, sintomas e suas relações terapêuticas;
-    \item Mantém favoritos do usuário;
-    \item Estrutura otimizada para consultas rápidas;
-    \item Garantia de performance instantânea e independência de rede.
+    \item Armazena os pontos do atlas, pontos extras, sintomas e metadados necessários para renderização e consultas rápidas;
+    \item Mantém dados do usuário (favoritos, notas) e tabelas de controle de sincronização (\texttt{sync_queue}, \texttt{image_sync_queue});
+    \item Estrutura otimizada com migrações e seeds para inicialização consistente;
+    \item Fornece performance de leitura local e resiliência quando a rede está indisponível; operações de escrita do usuário são enfileiradas para envio ao backend quando houver conectividade.
 \end{itemize}
 
-\textbf{Nota:} A busca inteligente por sintomas utilizando o assistente de IA requer conexão com a internet. Quando \textit{offline}, o usuário pode navegar manualmente pelo atlas anatômico e acessar os detalhes dos pontos já sincronizados.
+    	extbf{Nota:} A busca inteligente por sintomas (assistente de IA) e outras funcionalidades que dependem de chamadas a serviços externos (IA, uploads de mídia) requerem conexão com a internet. Quando não houver conectividade, o usuário pode acessar apenas o conteúdo disponível localmente; gravações e uploads aguardam até que a sincronização ocorra.
 
-\textbf{Sistema de Armazenamento Seguro:}
+    	extbf{Sistema de Armazenamento Seguro:}
 \begin{itemize}
-    \item \textbf{SecureStore}: Armazenamento criptografado para tokens de autenticação JWT;
-    \item \textbf{AsyncStorage}: Persistência de configurações, preferências e dados de sessão;
-    \item \textit{Cache} de imagens e recursos visuais através do sistema de arquivos;
-    \item Persistência de estado via \textit{middleware persist} do Zustand integrado ao AsyncStorage.
+    \item \textbf{SecureStore}: armazenamento criptografado para tokens e credenciais sensíveis;
+    \item \textbf{AsyncStorage}: persistência de configurações e dados não sensíveis;
+    \item Cache de imagens e recursos visuais via sistema de arquivos para melhorar latência de renderização;
+    \item Persistência de estado via \textit{middleware persist} do Zustand integrada ao AsyncStorage para conservar preferências e estado de UI.
 \end{itemize}
 
 \subsection{Sincronização Inteligente}
 
 Quando conectado à internet, o sistema implementa sincronização bidirecional automática:
 
-\textbf{Sincronização Descendente (Backend $\rightarrow$ Mobile):}
+	extbf{Sincronização Descendente (Backend $\rightarrow$ Mobile):}
 \begin{itemize}
     \item Atualização automática de dados do atlas;
     \item \textit{Download} incremental baseado em versionamento;
@@ -60,7 +59,7 @@ Quando conectado à internet, o sistema implementa sincronização bidirecional 
     \item Validação de integridade dos dados recebidos.
 \end{itemize}
 
-\textbf{Sincronização Ascendente (Mobile $\rightarrow$ Backend):}
+	extbf{Sincronização Ascendente (Mobile $\rightarrow$ Backend):}
 \begin{itemize}
     \item \textit{Upload} de favoritos do usuário;
     \item \textit{Backup} automático de preferências;
@@ -72,181 +71,150 @@ Quando conectado à internet, o sistema implementa sincronização bidirecional 
 
 \subsection{Frontend Mobile (React Native + Expo)}
 
-Segundo a documentação oficial \cite{reactnative2023}, ``React Native combina as melhores partes do desenvolvimento nativo com React, uma biblioteca JavaScript de ponta para construção de interfaces de usuário''.
+O aplicativo móvel é implementado com React Native e Expo conforme as dependências presentes no projeto.
 
-\textbf{React Native 0.79.6 com Expo SDK 53:}
+    	extbf{Versões e dependências principais:}
 \begin{itemize}
-    \item \textit{Framework} multiplataforma para desenvolvimento nativo;
-    \item Expo Router 5.1.7 para navegação baseada em arquivos;
-    \item Renderização otimizada de SVGs através do \texttt{react-native-svg} 15.11.2;
-    \item TypeScript 5.8.3 para tipagem estática e maior confiabilidade;
-    \item Nova arquitetura React Native habilitada (\texttt{newArchEnabled}).
+    \item \textbf{React Native}: 0.79.6;
+    \item \textbf{Expo SDK}: ~53 (ex.: 53.0.25);
+    \item \textbf{TypeScript}: ~5.8.3;
+    \item \textbf{React}: 19.0.0;
+    \item \textbf{react-native-svg}: 15.11.2 (utilizado para manipulação dos arquivos SVG de interação);
+    \item \textbf{Zustand}: ^4.4.7 (gerenciamento de estado leve);
+    \item \textbf{@tanstack/react-query}: ^5.0.0 (cache e sincronização de requisições);
+    \item \textbf{expo-sqlite / wa-sqlite}: para banco relacional local;
+    \item \textbf{expo-secure-store} e \textbf{@react-native-async-storage/async-storage}: para persistência segura e configurações locais;
+    \item \textbf{axios}: ^1.10.0 (cliente HTTP com políticas de retry implementadas no serviço API).
 \end{itemize}
 
-\textbf{Atlas Anatômico Digital:}
+    	extbf{Testes e E2E:}
 \begin{itemize}
-    \item 15 visualizações vetoriais (SVG) de alta fidelidade;
-    \item Organizadas por meridianos e vistas (frontal e posterior);
-    \item Zoom sem perda de qualidade;
-    \item Interação precisa (toque) em áreas pequenas;
-    \item Carga sob demanda das imagens para otimizar memória.
+    \item \textbf{Jest / jest-expo}: testes unitários e integração;
+    \item \textbf{Detox}: configurações para testes E2E em Android/iOS (scripts presentes no \texttt{package.json}).
 \end{itemize}
+
+\subsubsection{Atlas Anatômico (PNG + SVG sobreposto)}
+
+Cada layer do atlas empacotado no bundle (\texttt{static/body-map/}) é composto por dois artefatos: um arquivo PNG para renderização visual e um arquivo SVG invisível, sobreposto e sincronizado na mesma escala, responsável apenas pela definição de hotspots e pela captura de interações por toque.
+
+As funções utilitárias em \texttt{utils/svgAssets.ts} e \texttt{utils/bodyMap.ts} gerenciam o pré-carregamento e a coerência entre esses dois artefatos:
+
+\begin{itemize}
+    \item O PNG é usado exclusivamente para renderização visual e otimizado para rápido carregamento;
+    \item O SVG sobreposto contém as formas vetoriais que definem as áreas interativas (hotspots) e permanece invisível ao usuário, servindo apenas para detecção de toques e mapeamento de coordenadas;
+    \item As rotinas sincronizam escala e \texttt{viewBox} entre o PNG e o SVG para garantir que os hotspots estejam sempre alinhados à representação visual;
+    \item Componentes como \texttt{BodyMap} e \texttt{BodyMapInteractive} consomem ambos os arquivos: renderizam o PNG e utilizam o SVG para interpretar interações, mantendo separação clara entre visualização e lógica de entrada.
+\end{itemize}
+
+Essa abordagem separa claramente a camada visual da camada de interação, melhora desempenho e reduz riscos de inconsistência entre visual e zonas de toque.
 
 \subsection{Backend API (Java + Spring Boot)}
 
-Segundo \citeonline{walls2016}, ``Spring Boot muda a forma como desenvolvemos aplicações Spring, oferecendo configuração automática e eliminando a necessidade de configurações XML complexas''.
-
-\textbf{Java 17 LTS e Spring Boot 3.2+:}
-\begin{itemize}
-    \item Linguagem robusta, fortemente tipada e de alta performance;
-    \item \textit{Framework} que simplifica o desenvolvimento de aplicações Java;
-    \item Arquitetura baseada em injeção de dependência e inversão de controle;
-    \item Integração nativa com serviços Google Cloud.
-\end{itemize}
-
-\textbf{Spring AI - Integração com Inteligência Artificial:}
-
-Segundo a documentação oficial \cite{springai2024}, Spring AI é o \textit{framework} oficial do ecossistema Spring para integração com modelos de linguagem de grande escala (LLMs).
+O \textit{backend} do projeto é implementado em Java com Spring Boot conforme o arquivo \texttt{backend-java/pom.xml}:
 
 \begin{itemize}
-    \item \textit{Framework} oficial do Spring para integração com modelos de IA;
-    \item Suporte nativo a múltiplos provedores de LLM;
-    \item Abstração unificada para chamadas de API de IA;
-    \item Gerenciamento de \textit{prompts} e contexto.
+    \item \textbf{Spring Boot}: 3.2.5;
+    \item \textbf{Java}: 17 (LTS);
+    \item \textbf{Spring AI}: versão definida no projeto (ex.: \texttt{spring-ai 1.0.0-M4}) para integração com provedores de LLM;
+    \item \textbf{Google Cloud Firestore}: cliente \texttt{google-cloud-firestore} (3.x) usado como repositório principal;
+    \item \textbf{Firebase Admin SDK}: usado para integrações com Storage e Auth do Firebase;
+    \item \textbf{Bucket4j}: para rate limiting;
+    \item \textbf{Caffeine / Micrometer / Logstash encoder}: para cache, métricas e logs estruturados.
 \end{itemize}
 
-\textbf{Spring Security + Firebase Auth:}
+As classes e dependências mostram que o \textit{backend} está preparado para:
+\begin{itemize}
+    \item expor APIs REST (OpenAPI disponível via springdoc);
+    \item validar tokens Firebase/JWT e aplicar regras de segurança com Spring Security;
+    \item integrar com serviços de IA via Spring AI (ex.: Vertex AI / Gemini);
+    \item armazenar e sincronizar dados de pontos, sintomas e relações no Firestore.
+\end{itemize}
 
-Segundo a documentação do Firebase \cite{firebase2024}, o Firebase Authentication fornece serviços de backend, SDKs fáceis de usar e bibliotecas de UI prontas para autenticar usuários em aplicativos.
+\subsection{Banco de Dados e Persistência Local}
+
+No aplicativo móvel, a persistência local é implementada com \texttt{expo-sqlite} e um conjunto completo de migrações e seeds (implementados em \texttt{services/database.ts} e \texttt{assets/data}). Pontos importantes observados no código:
 
 \begin{itemize}
-    \item Integração com Firebase Authentication para gestão de identidades;
-    \item Validação de \textit{tokens} JWT no \textit{backend};
-    \item Controle de acesso baseado em \textit{roles} (RBAC);
-    \item Suporte a autenticação biométrica no dispositivo móvel.
+    \item Esquema local robusto com tabelas para \texttt{points}, \texttt{symptoms}, \texttt{symptom_points}, \texttt{favorites}, \texttt{notes}, \texttt{sync_queue} e \texttt{image_sync_queue};
+    \item Mecanismo de migração que detecta esquemas legados e realiza migrações automatizadas;
+    \item População inicial (seed) carregada a partir de \texttt{assets/data} se necessário;
+    \item Filas de sincronização locais (\texttt{sync_queue} e \texttt{image_sync_queue}) com retry, contagem de tentativas e marcação de erro para garantir confiabilidade das operações offline→online;
+    \item Suporte a operações idempotentes e controle de conflitos básico por \texttt{timestamp} e operações tipo (UPSERT/DELETE).
 \end{itemize}
 
-\subsection{Banco de Dados}
+No \textit{backend}, a persistência principal é feita no Google Cloud Firestore, que centraliza o conteúdo oficial e permite sincronizações incrementais com os clientes.
 
-\textbf{SQLite (Mobile - Local):}
+\subsection{Deploy e Integração com Google Cloud Run e Firebase} \label{sec:cloudrun_firebase}
+
+O projeto é preparado para deploy containerizado no Google Cloud Run e faz uso dos serviços Firebase (Auth, Storage) e Google Cloud Firestore conforme a configuração presente no repositório. Abaixo estão os pontos observados diretamente no código e scripts:
+
 \begin{itemize}
-    \item Banco relacional embarcado de alta performance;
-    \item Zero configuração e manutenção;
-    \item ACID \textit{compliance} para integridade dos dados;
-    \item Tamanho reduzido ideal para mobile.
+    \item \textbf{Build e deploy automatizados (Cloud Build):} O arquivo \texttt{backend-java/cloudbuild.yaml} constrói a imagem Docker no diretório \texttt{backend-java}, rotula a imagem como \texttt{gcr.io/$PROJECT_ID/appunture-backend:$BUILD_ID} e \texttt{:latest}, envia para o Container Registry e em seguida chama \texttt{gcloud run deploy} apontando para a imagem publicada. O passo de deploy seta variáveis de ambiente essenciais (ex.: \texttt{SPRING_PROFILES_ACTIVE=prod}, \texttt{FIREBASE_PROJECT_ID}) e configura recursos (memória 1Gi, CPU 1, concorrência, \texttt{port=8080}).
+
+    \item \textbf{Script de deploy local/CI:} Existe um script de deploy (\texttt{backend-java/deploy.sh}) que executa \texttt{gcloud builds submit --config cloudbuild.yaml} e recupera a URL do serviço Cloud Run, além de suportar mapeamento de domínio e verificações pós-deploy.
+
+    \item \textbf{Configurações do serviço Cloud Run (backup):} O repositório contém um backup de configuração de serviço (\texttt{cloud-run-config-backup.yaml}) e instruções em \texttt{CLOUD_RUN_BACKUP_README.md} para restaurar as configurações com \texttt{gcloud run services replace}.
+
+    \item \textbf{Variáveis e segredos:} O exemplo \texttt{.env.example} documenta variáveis esperadas no ambiente Cloud Run (ex.: \texttt{FIREBASE_SERVICE_ACCOUNT_KEY}, \texttt{FIREBASE_ENABLED}, \texttt{GOOGLE_AI_API_KEY}). O deploy via Cloud Build / gcloud recomenda o uso do Secret Manager ou \texttt{--set-env-vars} para injetar segredos/credenciais em tempo de execução, em vez de armazená-los no código.
+
+    \item \textbf{Inicialização do Firebase no backend:} A classe \texttt{FirebaseConfig.java} implementa uma estratégia robusta para carregar credenciais do Firebase, com prioridade:
+        \begin{enumerate}
+            \item conteúdo JSON do service account passado via variável de configuração (\texttt{firebase.service-account-key});
+            \item caminho para arquivo local (\texttt{firebase.service-account-key-path});
+            \item conteúdo JSON via \texttt{GOOGLE_APPLICATION_CREDENTIALS} (útil em CI/CD/Cloud Run quando o segredo é injetado como valor de ambiente);
+            \item Application Default Credentials (ADC) quando disponível — padrão recomendado para Cloud Run usando Identity and Access Management (IAM) e Workload Identity.
+        \end{enumerate}
+        A inicialização remove prefixos \texttt{gs://} no nome do bucket, configura \texttt{FirebaseOptions} (projectId, storageBucket, credentials) e registra \texttt{FirebaseAuth} como bean para uso nos serviços de autenticação.
+
+    \item \textbf{Integração com Firestore e Storage:} No \texttt{pom.xml} e na configuração são usadas as dependências \texttt{google-cloud-firestore} e \texttt{firebase-admin} — o backend usa Firestore como repositório primário e Firebase Storage para assets (quando habilitado). As chamadas e migrações esperam que as credenciais apropriadas estejam presentes no ambiente do Cloud Run.
+
+    \item \textbf{Vertex AI / Gemini e credenciais:} Existem scripts e utilitários (ex.: \texttt{fix-vertex-ai-credentials.ps1}) que orientam a configuração das credenciais do Vertex AI no Cloud Run. O projeto recomenda evitar a exposição direta de um arquivo de chave no container e, em vez disso, usar ADC ou Secret Manager/Workload Identity para conceder permissões ao serviço.
+
+    \item \textbf{Saúde e observabilidade:} O backend expõe endpoints de health para serviços IA (ex.: \texttt{/api/chat/health} no serviço de chat) e está preparado para integração com métricas/monitoramento (Micrometer/Prometheus) e logs estruturados (Logstash encoder). Cloud Run coleta logs e métricas automaticamente, facilitando a observabilidade.
+    \item \textbf{Recomendação do fluxo de credenciais para Cloud Run:}
+        \begin{itemize}
+            \item Em produção use Workload Identity / ADC para que o serviço Cloud Run tenha permissões IAM adequadas para acessar Firestore, Storage e Vertex AI sem necessidade de arquivos JSON no container;
+            \item Para CI (Cloud Build) injetar o conteúdo do service account via Secret Manager e configurar \texttt{GOOGLE_APPLICATION_CREDENTIALS} como variável de ambiente apontando para o JSON ou para o próprio conteúdo (o código trata ambos os casos);
+            \item Evitar commit de chaves ou colocar arquivos de credencial dentro do repositório.
+        \end{itemize}
+
+    \item \textbf{Recursos e limites:} A configuração padrão de deploy via \texttt{cloudbuild.yaml} define limites conservadores (1Gi RAM, 1 CPU, concurrency 100, max-instances 10) para manter custos baixos (Cloud Run free tier/baixo custo) e comportamento previsível durante picos.
 \end{itemize}
 
-\textbf{Google Cloud Firestore (Backend - Remoto):}
-\begin{itemize}
-    \item Banco de dados NoSQL flexível, escalável e de alta performance;
-    \item Sincronização em tempo real e suporte \textit{offline} nativo;
-    \item Modelo de dados baseado em documentos e coleções;
-    \item Integração perfeita com o ecossistema Firebase e Google Cloud.
-\end{itemize}
+Em suma, o repositório mostra uma integração madura entre Cloud Run e Firebase: o backend é empacotado como container, publicado em Container Registry e implantado no Cloud Run; as credenciais e configurações do Firebase são carregadas dinamicamente (variáveis/Secret Manager/ADC); Firestore é usado como fonte de verdade e Firebase Storage é configurável para armazenar assets (SVGs, thumbnails) quando necessário.
 
 \section{INTELIGÊNCIA ARTIFICIAL E SUPORTE À CONSULTA} \label{sec:ia}
 
-Diferente de abordagens tradicionais baseadas apenas em palavras-chave, o \textit{Appunture} implementa um sistema de RAG (\textit{Retrieval-Augmented Generation}) no \textit{backend}, oferecendo suporte contextualizado para consulta de informações.
-
-\subsection{Arquitetura RAG (Retrieval-Augmented Generation)}
-
-A arquitetura RAG (\textit{Retrieval-Augmented Generation}) foi introduzida por \citeonline{lewis2020} como uma abordagem que combina a recuperação de informações com a geração de texto, melhorando significativamente a precisão e confiabilidade das respostas em tarefas de conhecimento intensivo.
-
-\textbf{Modelo de IA:}
-
-O Google Gemini 1.5 Flash \cite{gemini2024} é um modelo de linguagem multimodal otimizado para respostas rápidas e contextualizadas.
+O projeto utiliza uma abordagem RAG (Retrieval-Augmented Generation) orquestrada no \textit{backend}. As evidências no código-base mostram:
 
 \begin{itemize}
-    \item Google Gemini 1.5 Flash via Spring AI;
-    \item Modelo otimizado para respostas rápidas e contextualizadas;
-    \item Integração nativa com o ecossistema Google Cloud.
+    \item Integração com Spring AI e dependência específica para Vertex AI / Gemini, permitindo chamadas ao modelo de linguagem multimodal (Gemini) via adaptadores Spring AI;
+    \item Serviço \texttt{AiChatService} e controlador \texttt{AiChatController} que expõem endpoints de chat e health-check (ex.: \texttt{/api/chat/health});
+    \item Construção de contexto a partir de pontos e sintomas (recuperação de documentos relevantes) antes de enviar prompts enriquecidos ao modelo;
+    \item Tratamento de logs e health checks para depuração e validação operacional do serviço de IA (conforme implementado no serviço de chat).
 \end{itemize}
 
-\textbf{Funcionamento do Sistema:}
-\begin{enumerate}
-    \item O sistema intercepta a pergunta do usuário;
-    \item Busca contexto relevante na base de dados (pontos e sintomas relacionados);
-    \item Envia um \textit{prompt} enriquecido para o modelo de IA;
-    \item Retorna respostas precisas e contextualizadas, baseadas nos dados validados do sistema.
-\end{enumerate}
-
-\textbf{Benefícios da Abordagem RAG:}
-\begin{itemize}
-    \item Respostas baseadas em dados validados do sistema;
-    \item Redução significativa de alucinações do modelo;
-    \item Maior confiabilidade das informações apresentadas;
-    \item Contextualização específica para acupuntura;
-    \item Rastreabilidade das fontes utilizadas nas respostas.
-\end{itemize}
-
-\subsection{Integração com Spring AI}
-
-O \autoref{qua:springai} apresenta um exemplo simplificado da integração com Spring AI para o assistente de acupuntura:
-
-\begin{quadro}[htb]
-\caption{Exemplo de integração Spring AI}
-\label{qua:springai}
-\centering
-\footnotesize
-\begin{verbatim}
-@Service
-public class AcupunctureAssistantService {
-    
-    private final ChatClient chatClient;
-    private final PointRepository pointRepository;
-    
-    public String getEducationalAssistance(String userQuestion) {
-        // Busca contexto relevante na base de dados
-        List<Point> relevantPoints = 
-            pointRepository.findBySymptoms(userQuestion);
-        
-        // Monta prompt enriquecido com contexto
-        String enrichedPrompt = buildPromptWithContext(
-            userQuestion, relevantPoints);
-        
-        // Chama o modelo de IA via Spring AI
-        return chatClient.prompt()
-            .user(enrichedPrompt)
-            .call()
-            .content();
-    }
-}
-\end{verbatim}
-\fonte{Os autores (2025)}
-\end{quadro}
+Essa arquitetura RAG reduz alucinações ao fornecer contexto verificado ao modelo e oferece rastreabilidade das fontes utilizadas nas respostas.
 
 \section{FERRAMENTAS DE DESENVOLVIMENTO E MAPEAMENTO} \label{sec:ferramentas}
 
-Para garantir a precisão da localização dos pontos de acupuntura sobre o atlas anatômico digital, foi desenvolvida uma ferramenta interna denominada ``\textit{Point Mapper}''.
+Além do app e do \textit{backend}, o projeto conta com ferramentas de suporte observáveis no repositório:
 
-\subsection{Point Mapper - Ferramenta de Mapeamento}
+\subsection{Point Mapper}
 
-\textbf{Características:}
 \begin{itemize}
-    \item Interface Web para visualização dos 15 SVGs do atlas;
-    \item Sistema de coordenadas percentuais para garantir responsividade;
-    \item Funcionalidades de zoom e pan para precisão no posicionamento;
-    \item Exportação de dados em formato JSON para integração com o banco;
-    \item Validação cruzada com descrições anatômicas dos pontos.
+    \item Ferramenta web auxiliar (Point Mapper) usada para posicionar coordenadas sobre os SVGs e gerar o \textit{seed} de pontos;
+    \item Exporta os mapeamentos em JSON que são ingeridos pelos scripts de geração de seed e pela rotina de popula\c{c}\~ao do banco local.
 \end{itemize}
 
-\textbf{Sistema de Coordenadas:}
+\subsection{Scripts e Migrações}
+
 \begin{itemize}
-    \item Utilização de coordenadas percentuais (0-100\%) ao invés de pixels;
-    \item Garantia de responsividade em diferentes tamanhos de tela;
-    \item Precisão milimétrica na localização dos pontos;
-    \item Compatibilidade com diferentes resoluções de dispositivos.
+    \item Scripts de geração de seed (ex.: \texttt{assets/data/generate-seed.js}) e importação são parte do fluxo de dados do aplicativo;
+    \item O \textit{backend} e os scripts de implantação incluem integração com Firebase Admin para operações relacionadas a Storage/Auth.
 \end{itemize}
 
-\subsection{Scripts de Migração e Integração}
-
-\textbf{Scripts Python:}
-\begin{itemize}
-    \item Migração de dados entre formatos (JSON, CSV, SQL);
-    \item Validação de integridade dos dados mapeados;
-    \item Geração automática de \textit{seeds} para o banco de dados;
-    \item Integração com a ferramenta de mapeamento.
-\end{itemize}
+As seções acima foram atualizadas para refletir o estado atual do código-fonte do aplicativo móvel e do \textit{backend} presente no repositório.
 
 \section{TECNOLOGIAS DE SUPORTE} \label{sec:suporte}
 
@@ -254,7 +222,7 @@ Para garantir a precisão da localização dos pontos de acupuntura sobre o atla
 
 O gerenciamento de estado global da aplicação é realizado através de bibliotecas modernas que oferecem alta performance e integração nativa com React.
 
-\textbf{Zustand 4.4.7:}
+	extbf{Zustand 4.4.7:}
 
 Zustand é uma biblioteca de gerenciamento de estado minimalista baseada em \textit{hooks}, escolhida por sua simplicidade e performance superior. O sistema utiliza cinco \textit{stores} principais:
 
@@ -268,7 +236,7 @@ Zustand é uma biblioteca de gerenciamento de estado minimalista baseada em \tex
 
 A persistência do estado é realizada através do \textit{middleware} \texttt{persist} do Zustand, integrado ao AsyncStorage para dados não sensíveis.
 
-\textbf{React Query (@tanstack/react-query) 5.x:}
+	extbf{React Query (@tanstack/react-query) 5.x:}
 \begin{itemize}
     \item \textit{Cache} inteligente de requisições HTTP com invalidação automática;
     \item \textit{Refetch} estratégico baseado em foco da janela e reconexão;
@@ -278,9 +246,9 @@ A persistência do estado é realizada através do \textit{middleware} \texttt{p
 
 \subsection{Ferramenta de Mapeamento de Pontos (Point Mapper)}
 
-O Point Mapper é uma ferramenta web auxiliar desenvolvida em HTML, CSS e JavaScript puro, utilizada para mapear as coordenadas dos pontos de acupuntura sobre as imagens SVG do atlas anatômico.
+O Point Mapper é uma ferramenta web auxiliar desenvolvida em HTML, CSS e JavaScript puro, utilizada para mapear as coordenadas dos pontos de acupuntura sobre os artefatos do atlas (PNG visual e SVG de interação), aproveitando o SVG para captura precisa de coordenadas.
 
-\textbf{Funcionalidades:}
+    extbf{Funcionalidades:}
 \begin{itemize}
     \item Seleção de meridiano e ponto a ser mapeado;
     \item Seleção da vista anatômica (anterior, posterior, lateral, etc.);

@@ -9,17 +9,17 @@ Neste capítulo o \textit{Appunture} é apresentado, pontuando os aspectos técn
 
 O \textit{Appunture} foi desenvolvido seguindo uma arquitetura híbrida e modular que integra funcionalidades \textit{offline} e \textit{online} para garantir alta disponibilidade, desempenho e usabilidade mesmo em ambientes com conexão limitada ou instável. A arquitetura se divide em dois módulos principais: aplicativo móvel (React Native/Expo) e \textit{backend} (Java + Spring Boot).
 
-\subsection{Arquitetura Híbrida (Offline + Online)}
+\subsection{Arquitetura Híbrida (Persistência Local e Backend em Nuvem)}
 
-No núcleo do aplicativo móvel, o \textit{Appunture} utiliza um banco de dados local SQLite para armazenar informações do atlas, incluindo os 361 pontos dos meridianos principais, pontos extras, sintomas, relações terapêuticas e favoritos do usuário. Esta abordagem garante que o aplicativo funcione integralmente em modo \textit{offline}, permitindo consultas rápidas e uso em qualquer lugar, sem depender da conexão com a internet.
+O aplicativo móvel mantém uma camada de persistência local (SQLite) para garantir performance e resiliência em condições de rede instáveis. O código do cliente cria e mantém um esquema local que contém o atlas (pontos, sintomas e metadados) e tabelas auxiliares para operações do usuário e sincronização (por exemplo, \texttt{sync_queue} e \texttt{image_sync_queue}). Essas tabelas permitem que operações do usuário sejam registradas e enfileiradas para envio posterior ao \textit{backend} quando houver conectividade.
 
-Quando a conexão estiver disponível, o sistema realiza sincronizações automáticas e seguras com um \textit{backend} remoto, desenvolvido em Java com Spring Boot, que hospeda o banco de dados Firestore centralizado. Esta sincronização atualiza dados do atlas, envia registros do usuário e mantém o histórico sempre preservado e atualizado.
+O backend, implementado em Java com Spring Boot, utiliza o Firestore como fonte de verdade e provê APIs REST protegidas para consulta e sincronização. Em produção, o backend é empacotado em container e implantado no Google Cloud Run via o pipeline definido em \texttt{backend-java/cloudbuild.yaml}, que constrói a imagem, envia ao Container Registry e executa \texttt{gcloud run deploy} com variáveis de ambiente apropriadas.
 
 \subsection{Comunicação e Sincronização}
 
-A comunicação entre o app e o \textit{backend} é realizada via API RESTful, utilizando autenticação Firebase/JWT para controle seguro de acesso. O \textit{backend} disponibiliza \textit{endpoints} públicos para consulta de dados do atlas e \textit{endpoints} privados para operações que envolvem dados do usuário, como sincronização e autenticação.
+A comunicação entre o cliente e o \textit{backend} ocorre por meio de APIs RESTful protegidas por tokens Firebase (Firebase ID Tokens). O \textit{backend} oferece endpoints públicos para consulta do atlas e endpoints autenticados para operações do usuário (sincronização, favoritos, upload de mídia). A validação dos tokens é realizada pelo \textit{backend} (classe de configuração de Firebase encontrada em \texttt{backend-java/src/main/java/.../config/FirebaseConfig.java}), que suporta carregamento de credenciais por variáveis de ambiente, caminho para arquivo JSON ou Application Default Credentials.
 
-A sincronização implementa um mecanismo de controle de versões dos dados do atlas para evitar \textit{downloads} desnecessários e garantir que o aplicativo trabalhe sempre com as informações mais recentes. O processo ocorre automaticamente em \textit{background} sempre que uma conexão de internet é detectada.
+No cliente, o subsistema de sincronização funciona com base em filas locais: operações do usuário são gravadas na tabela \texttt{sync_queue} (ou \texttt{image_sync_queue} para mídias) e marcadas com estados (pendente, em progresso, concluído, falhado). Um processo de sincronização tenta consumir essas filas quando a aplicação detecta conectividade e quando o \textit{backend} estiver disponível (checado via health-check). A aplicação aplica atualizações locais (optimistic updates) e realiza rollback caso ocorra falha durante a sincronização. Essa estratégia prioriza consistência eventual com o Firestore sem afirmar que o aplicativo opera como um sistema totalmente \textit{offline-first}.
 
 \subsection{Assistente de IA para Busca Inteligente}
 
@@ -28,12 +28,12 @@ Para viabilizar a busca inteligente por sintomas, o aplicativo utiliza um assist
 \textbf{Arquitetura RAG (Retrieval-Augmented Generation):}
 O sistema utiliza a arquitetura RAG integrada ao \textit{backend} Java. O assistente inteligente, alimentado pelo Google Gemini 1.5 Flash via Spring AI, interpreta perguntas do usuário sobre sintomas e pontos de acupuntura, fornecendo respostas contextualizadas com a base de dados técnica do sistema. Esta abordagem reduz alucinações do modelo e aumenta a confiabilidade das informações apresentadas.
 
-\textbf{Navegação Offline:}
-Quando sem conexão, o usuário pode navegar manualmente pelo atlas anatômico e acessar as informações dos pontos já sincronizados no banco de dados local. A busca inteligente por sintomas fica indisponível até que uma conexão seja restabelecida.
+        extbf{Navegação com Persistência Local:}
+O usuário pode navegar pelo atlas e acessar conteúdo previamente carregado a partir do banco local (SQLite). A busca inteligente por sintomas e outras operações que dependem de IA ou do backend permanecem indisponíveis sem conexão. A experiência local prioriza leituras rápidas e gravações locais enfileiradas para sincronização posterior.
 
 \subsection{Interface Interativa e Navegação}
 
-A interface do app é construída para promover uma experiência intuitiva e visualmente rica, com mapas anatômicos interativos baseados em SVG, que possibilitam a interação direta com os pontos de acupuntura. A navegação é estruturada para facilitar o acesso rápido às principais funcionalidades, como busca, visualização detalhada e favoritos, promovendo fluidez e usabilidade.
+A interface do app é construída para promover uma experiência intuitiva e visualmente rica. O atlas anatômico utiliza, para cada layer, um par de artefatos empacotados: um PNG para renderização visual e um SVG invisível sobreposto, sincronizados na mesma escala. O PNG provê a representação visual de alta fidelidade, enquanto o SVG sobreposto define as áreas interativas (hotspots) e é utilizado apenas para interpretar toques e eventos de interação. A navegação é estruturada para facilitar o acesso rápido às principais funcionalidades, como busca, visualização detalhada e favoritos, promovendo fluidez e usabilidade.
 
 \subsection{Backend e Gestão de Dados}
 
@@ -41,24 +41,23 @@ O \textit{backend} centraliza a gestão dos dados oficiais, incluindo o cadastro
 
 \section{AUTENTICAÇÃO E SEGURANÇA} \label{sec:autenticacao}
 
-Para garantir a segurança dos usuários e a integridade dos dados, o sistema implementa autenticação via Firebase Authentication, integrada ao Spring Security no \textit{backend}.
+O sistema utiliza o Firebase Authentication no cliente e validação de tokens no \textit{backend} (integração com Spring Security). O fluxo implementado no código segue os padrões do Firebase SDK:
 
-\textbf{Métodos de Autenticação:}
+	extbf{Métodos de Autenticação:}
 \begin{itemize}
-    \item Login com email e senha;
-    \item Login social via Google (\textit{Google Sign-In});
-    \item Validação de \textit{tokens} JWT (Firebase ID Token) no \textit{backend}.
+    \item Login com email e senha (Firebase SDK);
+    \item Login social via Google (OAuth 2.0 via \textit{expo-auth-session});
+    \item Uso de Firebase ID Tokens para autorização nas APIs do \textit{backend}.
 \end{itemize}
 
-Durante o processo de login, o Firebase Authentication gerencia a validação das credenciais e gera um \textit{token} JWT assinado. Este \textit{token} é utilizado para manter a sessão do usuário e validar o acesso aos recursos protegidos da API.
-
-A sessão é gerenciada pelo aplicativo móvel, que armazena o \textit{token} de forma segura no \textit{storage} local do dispositivo. Desta forma, o usuário permanece logado mesmo após fechar e reabrir o aplicativo. A cada interação que requer comunicação com o \textit{backend}, o \textit{token} é enviado via cabeçalho HTTP para validação e controle de acesso baseado em \textit{roles} (RBAC).
+O \textit{token} JWT (Firebase ID Token) é obtido no cliente e enviado em requisições autenticadas ao backend. O \textit{backend} valida este token usando as bibliotecas do Firebase Admin e configurações que permitem carregar credenciais de diferentes fontes (variáveis de ambiente, arquivo de chave, ou ADC), conforme implementado em \texttt{FirebaseConfig.java}. No cliente, o token é armazenado de forma segura (SecureStore / AsyncStorage com cuidado) para manter a sessão entre reinicializações.
 
 \section{FUNCIONALIDADES DO SISTEMA} \label{sec:funcionalidades}
 
+
 \subsection{Tela Inicial e Onboarding}
 
-Quando o usuário inicia a utilização do aplicativo pela primeira vez, é apresentada uma sequência de telas de apresentação (\textit{onboarding}) que explicam as principais funcionalidades e benefícios do \textit{Appunture}. Esta experiência introdutória inclui informações sobre o uso \textit{offline}, a busca inteligente e os mapas anatômicos interativos.
+Na primeira execução, o aplicativo apresenta telas de onboarding que descrevem as principais funcionalidades: a navegação pelo atlas, a busca inteligente (quando online), a persistência local para resiliência em redes instáveis e os mapas anatômicos interativos.
 
 Na tela inicial, o usuário pode escolher entre realizar o processo de cadastro ou direcionar-se diretamente para a tela de login. O design foi pensado para transmitir profissionalismo e confiança, utilizando a identidade visual do projeto com cores que remetem à medicina tradicional chinesa e à modernidade tecnológica.
 
@@ -90,7 +89,7 @@ A tela principal do aplicativo apresenta as principais funcionalidades de forma 
     \item \textbf{Início}: Tela inicial com acesso rápido às funcionalidades principais;
     \item \textbf{Buscar}: Sistema de busca por nome de ponto ou código;
     \item \textbf{Sintomas}: Lista de sintomas com pontos relacionados;
-    \item \textbf{Meridianos}: Navegação por meridianos com mapas SVG;
+    \item \textbf{Meridianos}: Navegação por meridianos com mapas (imagens PNG para visual + SVG invisível para interação);
     \item \textbf{Assistente}: Chat com IA para consultas contextualizadas;
     \item \textbf{Favoritos}: Lista de pontos favoritados pelo usuário;
     \item \textbf{Perfil}: Configurações do usuário e preferências.
@@ -98,18 +97,11 @@ A tela principal do aplicativo apresenta as principais funcionalidades de forma 
 
 \subsection{Mapa Anatômico Interativo}
 
-Uma das funcionalidades mais destacadas do \textit{Appunture} é o mapa anatômico interativo, implementado com tecnologia SVG (\textit{Scalable Vector Graphics}). Este recurso permite que o usuário visualize o corpo humano de forma detalhada e interaja diretamente com os pontos de acupuntura mapeados.
+O mapa anatômico é apresentado ao usuário como imagens PNG de alta fidelidade para renderização visual, com um SVG invisível sobreposto por layer que define as regiões interativas (hotspots). Essa separação permite que a aplicação ofereça renderização rápida e responsiva enquanto mantém detecção de toque precisa e escalável.
 
-Cada ponto é representado por um marcador visual que, ao ser tocado, exibe informações básicas sobre o ponto em um \textit{tooltip}. O usuário pode então optar por acessar a tela de detalhes completa do ponto selecionado.
+Cada ponto é representado por um marcador cujo comportamento é determinado pelos dados do SVG sobreposto. Ao tocar um hotspot, o sistema exibe um resumo do ponto (tooltip) e possibilita navegar para a tela de detalhes completa.
 
-O mapa oferece 15 visualizações vetoriais de alta fidelidade, organizadas por meridianos:
-
-\begin{itemize}
-    \item 12 meridianos principais: Pulmão (LU), Intestino Grosso (LI), Estômago (ST, ST2), Baço (SP), Coração (HT), Intestino Delgado (SI), Bexiga (BL), Rim (KI), Pericárdio (P), Triplo Aquecedor (TW), Vesícula Biliar (GB) e Fígado (LV);
-    \item 2 vasos extraordinários: Vaso Governador (GV/Du Mai) e Vaso Concepção (CV/Ren Mai).
-\end{itemize}
-
-Cada mapa SVG é carregado sob demanda, permitindo navegação fluida entre as diferentes visualizações de frente e costas do corpo.
+O atlas contém 15 layers que cobrem as vistas frontais e posteriores dos meridianos principais e vasos extraordinários, carregados sob demanda para otimizar uso de memória e tempo de inicialização.
 
 \subsection{Detalhes dos Pontos de Acupuntura}
 

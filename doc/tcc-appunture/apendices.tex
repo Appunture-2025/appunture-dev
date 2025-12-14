@@ -28,11 +28,11 @@ O diagrama de classes representa a estrutura estatica do sistema, mostrando as p
 \chapter{MODELO LOGICO DO BANCO DE DADOS}
 \label{apendice:modelo-logico}
 
-O sistema Appunture utiliza uma arquitetura de dados hibrida, com dois bancos de dados distintos que trabalham em conjunto para garantir o funcionamento \textit{offline-first} do aplicativo.
+O sistema Appunture utiliza uma arquitetura de dados híbrida, com dois bancos de dados distintos que trabalham em conjunto para fornecer persistência local (cache para leitura) e sincronização eventual com o backend em nuvem. Nem todas as funcionalidades operam sem conectividade: recursos que dependem de serviços remotos (por exemplo, assistente de IA, uploads de mídia e sincronização de conta) exigem conexão para operação completa.
 
 \section{Banco de Dados Local (SQLite)}
 
-O banco de dados SQLite e utilizado no aplicativo movel para armazenamento local dos dados, permitindo o funcionamento completo mesmo sem conexao com a internet. A estrutura foi projetada para sincronizacao bidirecional com o Firestore.
+O banco de dados SQLite é utilizado no aplicativo móvel para armazenamento local de dados e como cache para leitura. O código do cliente mantém tabelas de controle e enfileiramento (por exemplo, \texttt{sync_queue} e \texttt{image_sync_queue}) para operações de escrita que são registradas localmente e consumidas por um processo de sincronização quando houver conectividade. Assim, leituras locais permanecem disponíveis, enquanto gravações dependem da sincronização eventual com o backend.
 
 \figura{MODELO LOGICO - SQLITE (MOBILE)}{0.75}{fig/modelo-logico-sqlite.png}{Os autores (2025)}{modelo-sqlite}{}{}
 
@@ -168,7 +168,7 @@ Este apendice apresenta as historias de usuario detalhadas do sistema Appunture,
     \item O sistema deve permitir busca por nome do ponto em portugues
     \item O sistema deve permitir busca por codigo alfanumerico (ex: VG20, E36, IG4)
     \item O sistema deve exibir resultados em tempo real com \textit{debounce} de 300ms
-    \item O sistema deve funcionar offline com dados em cache local (SQLite)
+    \item O sistema deve permitir leitura local de dados em cache (SQLite); alterações do usuário são enfileiradas para sincronização quando houver conectividade
     \item O sistema deve permitir alternar favoritos diretamente nos resultados
     \item O sistema deve exibir mensagem quando nenhum resultado for encontrado
 \end{enumerate}
@@ -208,7 +208,7 @@ Este apendice apresenta as historias de usuario detalhadas do sistema Appunture,
 \subsection*{Criterios de Aceitacao}
 
 \begin{enumerate}
-    \item O sistema deve exibir modelo anatomico SVG interativo do corpo humano
+    \item O sistema deve exibir o atlas anatômico utilizando, para cada layer, um par de artefatos empacotados: um PNG para renderização visual e um SVG invisível sobreposto, sincronizados na mesma escala para captura de interações (hotspots)
     \item O sistema deve permitir navegacao entre multiplas camadas anatomicas
     \item O sistema deve permitir alternar entre visualizacao frontal e dorsal
     \item O sistema deve exibir marcadores nos pontos com coordenadas cadastradas
@@ -233,7 +233,7 @@ Este apendice apresenta as historias de usuario detalhadas do sistema Appunture,
     \item O sistema deve permitir adicionar pontos a lista de favoritos
     \item O sistema deve permitir remover pontos da lista de favoritos
     \item O sistema deve exibir lista de favoritos com contagem total
-    \item O sistema deve sincronizar favoritos com a conta do usuario (\textit{offline-first})
+    \item O sistema deve sincronizar favoritos com a conta do usuário quando houver conectividade; operações locais são enfileiradas para upload
     \item O sistema deve usar \textit{optimistic update} para feedback imediato ao usuario
 \end{enumerate}
 
@@ -251,8 +251,8 @@ Este apendice apresenta as historias de usuario detalhadas do sistema Appunture,
 
 \begin{enumerate}
     \item O sistema deve sincronizar automaticamente quando conectado a internet
-    \item O sistema deve funcionar offline com dados em cache
-    \item O sistema deve resolver conflitos de sincronizacao automaticamente
+    \item O sistema deve permitir uso limitado com dados em cache para leitura; gravações são enfileiradas para sincronização quando houver conectividade
+    \item O sistema deve aplicar regras de resolução de conflitos (por exemplo, baseadas em \textit{timestamp} ou versão) conforme implementado no código
     \item O sistema deve notificar o usuario sobre status da sincronizacao
     \item O sistema deve permitir sincronizacao manual sob demanda
     \item O sistema deve manter historico de sincronizacoes

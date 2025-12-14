@@ -13,7 +13,7 @@ A acessibilidade ao conhecimento e à prática segura em saúde deve ser compree
 
 A inclusão digital torna-se uma aliada crucial nesse processo. Segundo \citeonline{booth2021}, tecnologias bem projetadas são capazes de reduzir barreiras estruturais no acesso à formação em saúde, desde que respeitem os diferentes níveis de letramento digital, necessidades pedagógicas e realidades locais dos usuários. Isso significa que o design de soluções digitais deve ser centrado no usuário e incluir funcionalidades como interfaces intuitivas, conteúdos multimodais (texto, áudio, imagem, vídeo), acessibilidade para pessoas com deficiência e responsividade para dispositivos móveis.
 
-Dados do \textit{TIC Saúde 2023} revelam que mais de 65\% dos profissionais de saúde no Brasil usam \textit{smartphones} como ferramenta principal de acesso a informações clínicas \cite{ticsaude2023}. Isso reforça a urgência de produzir plataformas móveis eficazes, que funcionem bem mesmo em condições técnicas limitadas, como conexões lentas ou dispositivos com pouca capacidade de processamento.
+Dados do \textit{TIC Saúde 2023} revelam que mais de 65\% dos profissionais de saúde no Brasil usam \textit{smartphones} como ferramenta principal de acesso a informações clínicas \cite{ticsaude2023}. Isso reforça a urgência de produzir plataformas móveis eficazes e resilientes, que ofereçam boa experiência em conexões lentas ou em dispositivos de menor capacidade, sem caracterizá-las como soluções que operam exclusivamente em modo offline.
 
 Segundo \citeonline{souza2020}, aplicativos de apoio ao estudo em saúde devem não apenas apresentar informações confiáveis, mas também oferecer recursos de interação e personalização, que favoreçam o aprendizado ativo e a construção de confiança do estudante em sua formação.
 
@@ -61,7 +61,26 @@ Já o \textit{Visual Acupuncture 3D} apresenta um escopo mais próximo ao espera
 
 Outro aplicativo conhecido é o \textit{Acupuncture 3D}, que também disponibiliza visualizações anatômicas tridimensionais focadas em acupuntura. Entretanto, o aplicativo carece de atualizações e apresenta conteúdos desatualizados em relação às nomenclaturas e práticas adotadas no Brasil. Sua interface é rígida e limitada, com dificuldade de navegação e ausência de funcionalidades complementares como busca por sintomas, indicação de protocolos ou explicações detalhadas para aplicação dos pontos.
 
-Em contraste com essas soluções, o aplicativo proposto neste TCC se destaca por adotar uma abordagem centrada no usuário, com interface limpa, navegação fluida e foco no estudo e consulta rápida de informações sobre acupuntura. Ele foi pensado para funcionar bem mesmo em dispositivos mais simples, garantindo acessibilidade digital a um público mais amplo. Além disso, traz conteúdo em português, explicações didáticas e filtros de busca por sintomas, aproximando-se mais das reais necessidades dos estudantes e profissionais brasileiros da área.
+Em contraste com essas soluções, o aplicativo proposto neste TCC se destaca por adotar uma abordagem centrada no usuário, com interface limpa, navegação fluida e foco no estudo e consulta rápida de informações sobre acupuntura. O projeto busca ser resiliente em dispositivos mais simples e em condições de rede variáveis, conciliando armazenamento local para experiência imediata e sincronização com um backend cloud para garantir a versão oficial dos dados. Além disso, traz conteúdo em português, explicações didáticas e filtros de busca por sintomas, aproximando-se mais das reais necessidades dos estudantes e profissionais brasileiros da área.
+
+\section{IMPLICA\c{C}\~OES TÉCNICAS E ARQUITETURA DO SISTEMA} \label{sec:implicacoes_tecnicas}
+
+Com base exclusivamente no código-fonte atual do aplicativo e do backend, as decisões técnicas que orientam o projeto são as seguintes:
+
+\begin{itemize}
+    \item \textbf{Arquitetura híbrida, cloud-backed:} o backend central (Google Cloud Firestore) representa a fonte oficial dos dados; o aplicativo localiza uma cópia dos dados para permitir uso imediato, mas a coordenação e atualizações são realizadas via serviços na nuvem.
+    \item \textbf{Persistência local com SQLite:} o cliente utiliza \texttt{expo-sqlite} (com suporte a \texttt{wa-sqlite}) para armazenar pontos, sintomas, favoritos, notas e filas de sincronização, conforme implementado em \texttt{services/database.ts}.
+    \item \textbf{Filas de sincronização e tolerância a falhas:} existem \texttt{sync_queue} e \texttt{image_sync_queue} para gerenciar operações pendentes, com lógica de retry, contagem de tentativas e marcação de erro; essas filas tornam o cliente resiliente, mas não substituem o backend como fonte de verdade.
+    \item \textbf{Assets de atlas embutidos:} cada layer do atlas é composto por um par de artefatos empacotados no bundle (\texttt{static/body-map/}):
+    \begin{itemize}
+        \item um arquivo PNG destinado exclusivamente à renderização visual; e
+        \item um arquivo SVG invisível, sobreposto e sincronizado na mesma escala, responsável apenas pela definição dos hotspots e pela captura de interações por toque.
+    \end{itemize}
+    As rotinas de carregamento (ex.: \texttt{utils/svgAssets.ts}, \texttt{utils/bodyMap.ts}) gerenciam ambos os arquivos garantindo que a escala, o \texttt{viewBox} e o posicionamento dos pontos permaneçam consistentes entre visualização e camada de interação.
+    \item \textbf{Integração com serviços na nuvem:} o backend é preparado para deploy no Google Cloud Run (build/deploy via \texttt{cloudbuild.yaml} e scripts de deploy) e integra com Firebase (Auth, Storage) e Vertex AI / Gemini via Spring AI para funcionalidades que requerem processamento remoto (ex.: assistente de IA/RAG).
+\end{itemize}
+
+Essas observações substituem descrições simplificadas como "offline-first" no documento, alinhando a fundamentação teórica às evidências implementadas no código-fonte.
 
 Essa comparação evidencia que, embora os aplicativos analisados ofereçam contribuições pontuais, nenhum deles contempla simultaneamente os pilares de acessibilidade, usabilidade, confiabilidade e contexto nacional. O desenvolvimento do aplicativo proposto surge, assim, como uma resposta direta às lacunas existentes no mercado digital de apoio ao estudo da acupuntura, promovendo inclusão e aprimoramento educacional.
 
