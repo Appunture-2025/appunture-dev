@@ -27,7 +27,7 @@ const buildAtlasImage = (ref: string): GalleryImageSource | null => {
 
   return {
     id: `atlas-${atlasId}`,
-    type: "local-atlas",
+    type: "local-svg",
     asset: png ?? layer.source,
     editable: false,
     label: layer.label,

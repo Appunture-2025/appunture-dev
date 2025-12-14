@@ -183,7 +183,7 @@ export default function PointDetailsScreen() {
                 x: resolvedPoint.bodyMapCoords[0].x,
                 y: resolvedPoint.bodyMapCoords[0].y,
               }}
-              layerId={resolvedPoint.bodyMapCoords[0].layerId}
+              layerId={resolvedPoint.bodyMapCoords[0].layerId || "default"}
               label={resolvedPoint.code || resolvedPoint.name}
             />
           </View>

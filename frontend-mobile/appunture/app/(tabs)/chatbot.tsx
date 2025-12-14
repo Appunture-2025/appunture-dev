@@ -84,7 +84,7 @@ export default function ChatBotScreen() {
         "Você precisa estar logado para usar o assistente de IA. Deseja fazer login agora?",
         [
           { text: "Cancelar", style: "cancel" },
-          { text: "Login", onPress: () => router.push("/auth") },
+          { text: "Login", onPress: () => router.push("/login") },
         ]
       );
       return;
