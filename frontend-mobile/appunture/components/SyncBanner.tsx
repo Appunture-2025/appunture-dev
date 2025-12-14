@@ -26,6 +26,19 @@ export function SyncBanner() {
     isOnline,
   } = useSyncStore();
 
+  // Debug logging
+  React.useEffect(() => {
+    console.log('[SyncBanner] State:', {
+      isOnline,
+      syncInProgress,
+      pendingOperations,
+      pendingImages,
+      totalPending: pendingOperations + pendingImages,
+      failedCount: failedOperations.length,
+      notificationMessage
+    });
+  }, [isOnline, syncInProgress, pendingOperations, pendingImages, failedOperations, notificationMessage]);
+
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const totalPending = pendingOperations + pendingImages;
   const failedCount = failedOperations.length;

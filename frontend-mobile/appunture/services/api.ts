@@ -126,6 +126,7 @@ class ApiService {
         if (currentUser) {
           try {
             token = await currentUser.getIdToken();
+            console.log("[API] Got Firebase token:", token ? "✓" : "✗");
           } catch (error) {
             apiLogger.warn("Failed to retrieve Firebase ID token", error);
           }
@@ -133,6 +134,7 @@ class ApiService {
 
         if (!token) {
           token = await getStoredToken();
+          console.log("[API] Got stored token:", token ? "✓" : "✗");
         }
 
         if (token) {
@@ -143,6 +145,9 @@ class ApiService {
             (config.headers as Record<string, string>).Authorization =
               `Bearer ${token}`;
           }
+          console.log("[API] Added Authorization header");
+        } else {
+          console.log("[API] No token available for request");
         }
         return config;
       },
@@ -780,7 +785,7 @@ class ApiService {
       "[API] chatWithAi called with message:",
       message.substring(0, 100) + "..."
     );
-    console.log("[API] API base URL:", this.baseURL);
+    console.log("[API] API base URL:", API_BASE_URL);
 
     try {
       console.log("[API] Making POST request to /chat");
