@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import { Link, useRouter } from "expo-router";
 import { usePointsStore } from "../../stores/pointsStore";
 import { useSyncStore } from "../../stores/syncStore";
 import { useAuthStore } from "../../stores/authStore";
-import { COLORS, SPACING, MERIDIANS } from "../../utils/constants";
+import { COLORS, MERIDIANS } from "../../utils/constants";
 import { styles } from "./styles";
 
 export default function HomeScreen() {

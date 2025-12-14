@@ -22,7 +22,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class FirebaseAuthService {
 
-    private final FirebaseAuth firebaseAuth;
+    @org.springframework.beans.factory.annotation.Autowired(required = false)
+    private FirebaseAuth firebaseAuth;
     private final EmailService emailService;
 
     private static final long VERIFICATION_RETRY_LIMIT = 3;

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Appunture",
     "slug": "appunture",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -14,7 +14,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.appunture.mobile"
+      "bundleIdentifier": "com.appunture.mobile",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Appunture precisa de acesso à câmera para capturar imagens dos pontos de acupuntura.",
+        "NSPhotoLibraryUsageDescription": "Appunture precisa de acesso à galeria para selecionar imagens dos pontos de acupuntura."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +27,14 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.appunture.mobile",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -58,6 +69,13 @@
       "eas": {
         "projectId": "864e35bc-9ecf-4e7a-866b-8507d1163044"
       }
+    },
+    "owner": "voidalzk",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/864e35bc-9ecf-4e7a-866b-8507d1163044"
     }
   }
 }

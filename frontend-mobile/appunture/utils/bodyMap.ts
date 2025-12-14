@@ -8,6 +8,7 @@ import {
 import {
   getEmbeddedSvgXml,
   preloadAllSvgAssets,
+  preloadAllPngAssets,
   getEmbeddedSvgXmlSync,
   getSvgRenderableForLayer,
   getSvgComponentForLayer,
@@ -82,40 +83,20 @@ export const prefetchBodyMapLayers = async (): Promise<void> => {
     `[bodyMap] Starting prefetch of ${BODY_ATLAS_LAYERS.length} layers (embedded assets)`
   );
 
+  // Preload PNG assets first for visual layer
+  await preloadAllPngAssets();
+  
   // Use the new embedded SVG loading
   await preloadAllSvgAssets();
 
-  // Also cache in memory for instant access
-  const results = await Promise.all(
-    BODY_ATLAS_LAYERS.map(async (layer) => {
-      try {
-        const renderable = await getSvgRenderableForLayer(layer.id);
-        if (renderable.Component) {
-          console.log(`[bodyMap] ✓ Prefetch found component for ${layer.id}`);
-          return { id: layer.id, status: "component" };
-        }
+  // Skip SVG prefetch to prevent crashes - only PNG is loaded
+  const results = BODY_ATLAS_LAYERS.map((layer) => {
+    console.log(`[bodyMap] ✓ Skipped SVG prefetch for ${layer.id} (crash prevention)`);
+    return { id: layer.id, status: "skipped" };
+  });
 
-        const xml = renderable.xml ?? null;
-        if (xml) {
-          layerSvgMemoryCache.set(layer.id, xml);
-          console.log(`[bodyMap] ✓ Prefetch successful for ${layer.id}`);
-          return { id: layer.id, status: "success" };
-        }
-
-        console.warn(`[bodyMap] ✗ Prefetch returned null for ${layer.id}`);
-        return { id: layer.id, status: "null" };
-      } catch (error) {
-        console.error(`[bodyMap] Prefetch error for ${layer.id}:`, error);
-        return { id: layer.id, status: "error", error };
-      }
-    })
-  );
-
-  const successful = results.filter(
-    (r) => r.status === "success" || r.status === "component"
-  ).length;
   console.log(
-    `[bodyMap] Prefetch complete: ${successful}/${BODY_ATLAS_LAYERS.length} successful`
+    `[bodyMap] Prefetch complete: ${results.length}/${BODY_ATLAS_LAYERS.length} layers processed (SVG disabled)`
   );
 };
 

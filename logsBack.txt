@@ -1,0 +1,958 @@
+ LOG  [svgAssets] Getting PNG for layer LU: number 25
+ LOG  [svgAssets] PNG asset for LU is numeric ID: 25 
+ WARN  [Appunture][Sync] [WARN] 2025-12-14T16:27:25.813Z: Falha ao atualizar contadores de sincronização [Error: Database not initialized] 
+ WARN  [Appunture][Sync] [WARN] 2025-12-14T16:27:25.826Z: Falha ao atualizar contadores de sincronização [Error: Database not initialized] 
+ WARN  [Appunture][Sync] [WARN] 2025-12-14T16:27:25.831Z: Falha ao atualizar contadores de sincronização [Error: Database not initialized] 
+ WARN  [Appunture][Sync] [WARN] 2025-12-14T16:27:25.832Z: Falha ao atualizar contadores de sincronização [Error: Database not initialized] 
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ INFO  [Appunture][Database] [INFO] 2025-12-14T16:27:26.684Z: Seed data already loaded (version 1), skipping
+ INFO  [Appunture][Database] [INFO] 2025-12-14T16:27:26.685Z: Database initialized successfully
+ INFO  [Appunture][RootLayout] [INFO] 2025-12-14T16:27:26.891Z: Prefetching SVG layers...
+ LOG  [svgAssets] Preloading all SVG assets...
+ INFO  [Appunture][RootLayout] [INFO] 2025-12-14T16:27:26.893Z: Preloading points data...
+ LOG  [svgAssets] Preload complete: 15/15 successful
+ INFO  [Appunture][RootLayout] [INFO] 2025-12-14T16:27:26.998Z: Preloaded 361 points
+ INFO  [Appunture][RootLayout] [INFO] 2025-12-14T16:27:26.998Z: App initialized successfully
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Getting PNG for layer HT: number 30
+ LOG  [svgAssets] PNG asset for HT is numeric ID: 30
+ LOG  [svgAssets] Getting PNG for layer HT: number 30
+ LOG  [svgAssets] PNG asset for HT is numeric ID: 30
+ LOG  [svgAssets] Getting PNG for layer HT: number 30
+ LOG  [svgAssets] PNG asset for HT is numeric ID: 30
+ LOG  [svgAssets] Getting PNG for layer HT: number 30
+ LOG  [svgAssets] PNG asset for HT is numeric ID: 30
+ LOG  [svgAssets] Getting PNG for layer HT: number 30
+ LOG  [svgAssets] PNG asset for HT is numeric ID: 30
+ LOG  [svgAssets] Getting PNG for layer HT: number 30
+ LOG  [svgAssets] PNG asset for HT is numeric ID: 30
+ LOG  [svgAssets] Getting PNG for layer HT: number 30
+ LOG  [svgAssets] PNG asset for HT is numeric ID: 30
+ LOG  [svgAssets] Getting PNG for layer HT: number 30
+ LOG  [svgAssets] PNG asset for HT is numeric ID: 30
+ LOG  [svgAssets] Getting PNG for layer HT: number 30
+ LOG  [svgAssets] PNG asset for HT is numeric ID: 30
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Getting PNG for layer LV: number 37
+ LOG  [svgAssets] PNG asset for LV is numeric ID: 37
+ LOG  [svgAssets] Getting PNG for layer LV: number 37
+ LOG  [svgAssets] PNG asset for LV is numeric ID: 37
+ LOG  [svgAssets] Getting PNG for layer LV: number 37
+ LOG  [svgAssets] PNG asset for LV is numeric ID: 37
+ LOG  [svgAssets] Getting PNG for layer LV: number 37
+ LOG  [svgAssets] PNG asset for LV is numeric ID: 37
+ LOG  [svgAssets] Getting PNG for layer LV: number 37
+ LOG  [svgAssets] PNG asset for LV is numeric ID: 37
+ LOG  [svgAssets] Getting PNG for layer LV: number 37
+ LOG  [svgAssets] PNG asset for LV is numeric ID: 37
+ LOG  [svgAssets] Getting PNG for layer LV: number 37
+ LOG  [svgAssets] PNG asset for LV is numeric ID: 37
+ LOG  [svgAssets] Getting PNG for layer LV: number 37
+ LOG  [svgAssets] PNG asset for LV is numeric ID: 37
+ LOG  [svgAssets] Getting PNG for layer LV: number 37
+ LOG  [svgAssets] PNG asset for LV is numeric ID: 37
+ LOG  [svgAssets] Getting PNG for layer LV: number 37
+ LOG  [svgAssets] PNG asset for LV is numeric ID: 37
+ LOG  [svgAssets] Getting PNG for layer LV: number 37
+ LOG  [svgAssets] PNG asset for LV is numeric ID: 37
+ LOG  [svgAssets] Getting PNG for layer LV: number 37
+ LOG  [svgAssets] PNG asset for LV is numeric ID: 37
+ LOG  [svgAssets] Getting PNG for layer LV: number 37
+ LOG  [svgAssets] PNG asset for LV is numeric ID: 37
+ LOG  [svgAssets] Getting PNG for layer LV: number 37
+ LOG  [svgAssets] PNG asset for LV is numeric ID: 37
+ LOG  [svgAssets] Getting PNG for layer LU: number 25
+ LOG  [svgAssets] PNG asset for LU is numeric ID: 25
+ LOG  [svgAssets] Getting PNG for layer LU: number 25
+ LOG  [svgAssets] PNG asset for LU is numeric ID: 25
+ LOG  [svgAssets] Getting PNG for layer LU: number 25
+ LOG  [svgAssets] PNG asset for LU is numeric ID: 25
+ LOG  [svgAssets] Getting PNG for layer LU: number 25
+ LOG  [svgAssets] PNG asset for LU is numeric ID: 25
+ LOG  [svgAssets] Getting PNG for layer LU: number 25
+ LOG  [svgAssets] PNG asset for LU is numeric ID: 25
+ LOG  [svgAssets] Getting PNG for layer LU: number 25
+ LOG  [svgAssets] PNG asset for LU is numeric ID: 25
+ LOG  [svgAssets] Getting PNG for layer LU: number 25
+ LOG  [svgAssets] PNG asset for LU is numeric ID: 25
+ LOG  [svgAssets] Getting PNG for layer LU: number 25
+ LOG  [svgAssets] PNG asset for LU is numeric ID: 25
+ LOG  [svgAssets] Getting PNG for layer LU: number 25
+ LOG  [svgAssets] PNG asset for LU is numeric ID: 25
+ LOG  [svgAssets] Getting PNG for layer LU: number 25
+ LOG  [svgAssets] PNG asset for LU is numeric ID: 25
+ LOG  [svgAssets] Getting PNG for layer LU: number 25
+ LOG  [svgAssets] PNG asset for LU is numeric ID: 25
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [BodyMapInteractive] Prefetching atlas layers
+ LOG  [bodyMap] Starting prefetch of 15 layers (embedded assets)
+ LOG  [svgAssets] Preloading all PNG assets...
+ LOG  [BodyMapInteractive] Loading layer: LU
+ LOG  [svgAssets] Getting PNG for layer LU: number 25
+ LOG  [svgAssets] PNG asset for LU is numeric ID: 25
+ LOG  [BodyMapInteractive] PNG for LU: number 25
+ LOG  [svgAssets] Getting PNG for layer LU: number 25
+ LOG  [svgAssets] PNG asset for LU is numeric ID: 25
+ LOG  [svgAssets] Loading embedded SVG
+ DEBUG  [svgAssets] Module for LU is not a raw asset; may be a React component. [Error: Module "[object Object]" is missing from the asset 
+registry]
+ LOG  [BodyMapInteractive] markers computed: total=11 positioned=11
+ WARN  [svgAssets] No XML available for layer LU, skipping component fallback to prevent crashes
+ WARN  [BodyMapInteractive] No SVG XML available for LU
+ LOG  [BodyMapInteractive] 🔄 PNG loading started for LU
+ LOG  [BodyMapInteractive] ✅ PNG loaded successfully for LU
+ LOG  [BodyMapInteractive] 🏁 PNG loading ended for LU
+ LOG  [svgAssets] ✓ Preloaded PNG for LU
+ LOG  [svgAssets] ✓ Preloaded PNG for HT
+ LOG  [svgAssets] ✓ Preloaded PNG for SP
+ LOG  [svgAssets] ✓ Preloaded PNG for P
+ LOG  [svgAssets] ✓ Preloaded PNG for ST2
+ LOG  [svgAssets] ✓ Preloaded PNG for SI
+ LOG  [svgAssets] ✓ Preloaded PNG for TW
+ LOG  [svgAssets] ✓ Preloaded PNG for LV
+ LOG  [svgAssets] ✓ Preloaded PNG for KI
+ LOG  [svgAssets] ✓ Preloaded PNG for GB
+ LOG  [svgAssets] ✓ Preloaded PNG for ST
+ LOG  [svgAssets] ✓ Preloaded PNG for CV
+ LOG  [svgAssets] ✓ Preloaded PNG for BL
+ LOG  [svgAssets] ✓ Preloaded PNG for LI
+ LOG  [svgAssets] ✓ Preloaded PNG for GV
+ LOG  [svgAssets] PNG preload complete: 15/15 successful
+ LOG  [svgAssets] Preloading all SVG assets...
+ LOG  [svgAssets] Preload complete: 15/15 successful
+ LOG  [svgAssets] Getting PNG for layer LU: number 25
+ LOG  [svgAssets] PNG asset for LU is numeric ID: 25
+ LOG  [svgAssets] Loading embedded SVG
+ DEBUG  [svgAssets] Module for LU is not a raw asset; may be a React component. [Error: Module "[object Object]" is missing from the asset 
+registry]
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] PNG asset for LI is numeric ID: 26
+ LOG  [svgAssets] Loading embedded SVG
+ DEBUG  [svgAssets] Module for LI is not a raw asset; may be a React component. [Error: Module "[object Object]" is missing from the asset 
+registry]
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] PNG asset for ST is numeric ID: 27
+ LOG  [svgAssets] Loading embedded SVG
+ DEBUG  [svgAssets] Module for ST is not a raw asset; may be a React component. [Error: Module "[object Object]" is missing from the asset 
+registry]
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] PNG asset for ST2 is numeric ID: 28
+ LOG  [svgAssets] Loading embedded SVG
+ DEBUG  [svgAssets] Module for ST2 is not a raw asset; may be a React component. [Error: Module "[object Object]" is missing from the asset registry]
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] PNG asset for SP is numeric ID: 29
+ LOG  [svgAssets] Loading embedded SVG
+ DEBUG  [svgAssets] Module for SP is not a raw asset; may be a React component. [Error: Module "[object Object]" is missing from the asset 
+registry]
+ LOG  [svgAssets] Getting PNG for layer HT: number 30
+ LOG  [svgAssets] PNG asset for HT is numeric ID: 30
+ LOG  [svgAssets] Loading embedded SVG
+ DEBUG  [svgAssets] Module for HT is not a raw asset; may be a React component. [Error: Module "[object Object]" is missing from the asset 
+registry]
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] PNG asset for SI is numeric ID: 31
+ LOG  [svgAssets] Loading embedded SVG
+ DEBUG  [svgAssets] Module for SI is not a raw asset; may be a React component. [Error: Module "[object Object]" is missing from the asset 
+registry]
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] PNG asset for BL is numeric ID: 32
+ LOG  [svgAssets] Loading embedded SVG
+ DEBUG  [svgAssets] Module for BL is not a raw asset; may be a React component. [Error: Module "[object Object]" is missing from the asset 
+registry]
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] PNG asset for KI is numeric ID: 33
+ LOG  [svgAssets] Loading embedded SVG
+ DEBUG  [svgAssets] Module for KI is not a raw asset; may be a React component. [Error: Module "[object Object]" is missing from the asset 
+registry]
+ LOG  [svgAssets] Getting PNG for layer P: number 34
+ LOG  [svgAssets] PNG asset for P is numeric ID: 34
+ LOG  [svgAssets] Loading embedded SVG
+ DEBUG  [svgAssets] Module for P is not a raw asset; may be a React component. [Error: Module "[object Object]" is missing from the asset registry]
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] PNG asset for TW is numeric ID: 35
+ LOG  [svgAssets] Loading embedded SVG
+ DEBUG  [svgAssets] Module for TW is not a raw asset; may be a React component. [Error: Module "[object Object]" is missing from the asset 
+registry]
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] PNG asset for GB is numeric ID: 36
+ LOG  [svgAssets] Loading embedded SVG
+ DEBUG  [svgAssets] Module for GB is not a raw asset; may be a React component. [Error: Module "[object Object]" is missing from the asset 
+registry]
+ LOG  [svgAssets] Getting PNG for layer LV: number 37
+ LOG  [svgAssets] PNG asset for LV is numeric ID: 37
+ LOG  [svgAssets] Loading embedded SVG
+ DEBUG  [svgAssets] Module for LV is not a raw asset; may be a React component. [Error: Module "[object Object]" is missing from the asset 
+registry]
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] PNG asset for GV is numeric ID: 38
+ LOG  [svgAssets] Loading embedded SVG
+ DEBUG  [svgAssets] Module for GV is not a raw asset; may be a React component. [Error: Module "[object Object]" is missing from the asset 
+registry]
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] PNG asset for CV is numeric ID: 39
+ LOG  [svgAssets] Loading embedded SVG
+ DEBUG  [svgAssets] Module for CV is not a raw asset; may be a React component. [Error: Module "[object Object]" is missing from the asset 
+registry]
+ WARN  [svgAssets] No XML available for layer LU, skipping component fallback to prevent crashes
+ WARN  [svgAssets] No XML available for layer LI, skipping component fallback to prevent crashes
+ WARN  [svgAssets] No XML available for layer ST, skipping component fallback to prevent crashes
+ WARN  [svgAssets] No XML available for layer ST2, skipping component fallback to prevent crashes
+ WARN  [svgAssets] No XML available for layer SP, skipping component fallback to prevent crashes
+ WARN  [svgAssets] No XML available for layer HT, skipping component fallback to prevent crashes
+ WARN  [svgAssets] No XML available for layer SI, skipping component fallback to prevent crashes
+ WARN  [svgAssets] No XML available for layer BL, skipping component fallback to prevent crashes
+ WARN  [svgAssets] No XML available for layer KI, skipping component fallback to prevent crashes
+ WARN  [svgAssets] No XML available for layer P, skipping component fallback to prevent crashes
+ WARN  [svgAssets] No XML available for layer TW, skipping component fallback to prevent crashes
+ WARN  [svgAssets] No XML available for layer GB, skipping component fallback to prevent crashes
+ WARN  [svgAssets] No XML available for layer LV, skipping component fallback to prevent crashes
+ WARN  [svgAssets] No XML available for layer GV, skipping component fallback to prevent crashes
+ WARN  [svgAssets] No XML available for layer CV, skipping component fallback to prevent crashes
+ WARN  [bodyMap] ✗ Prefetch returned null for LU
+ WARN  [bodyMap] ✗ Prefetch returned null for LI
+ WARN  [bodyMap] ✗ Prefetch returned null for ST
+ WARN  [bodyMap] ✗ Prefetch returned null for ST2
+ WARN  [bodyMap] ✗ Prefetch returned null for SP
+ WARN  [bodyMap] ✗ Prefetch returned null for HT
+ WARN  [bodyMap] ✗ Prefetch returned null for SI
+ WARN  [bodyMap] ✗ Prefetch returned null for BL
+ WARN  [bodyMap] ✗ Prefetch returned null for KI
+ WARN  [bodyMap] ✗ Prefetch returned null for P
+ WARN  [bodyMap] ✗ Prefetch returned null for TW
+ WARN  [bodyMap] ✗ Prefetch returned null for GB
+ WARN  [bodyMap] ✗ Prefetch returned null for LV
+ WARN  [bodyMap] ✗ Prefetch returned null for GV
+ WARN  [bodyMap] ✗ Prefetch returned null for CV
+ LOG  [bodyMap] Prefetch complete: 0/15 successful

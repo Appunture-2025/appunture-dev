@@ -1,13 +1,13 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState, useRef, useEffect } from "react";
 import {
   StyleSheet,
   View,
   Image,
   Dimensions,
   Text,
-  ActivityIndicator,
+  ScrollView,
+  ImageSourcePropType,
 } from "react-native";
-import { SvgXml } from "react-native-svg";
 import { useThemeColors } from "../stores/themeStore";
 import { COLORS } from "../utils/constants";
 import type { BodyAtlasLayer } from "../static/body-map/manifest";
@@ -17,47 +17,57 @@ import {
   getMarkerPosition,
   type NormalizedCoordinate,
 } from "../utils/bodyMap";
-import {
-  getSvgRenderableForLayer,
-  getPngForLayer,
-} from "../utils/svgAssets";
+
+// Direct PNG imports - same approach as BodyMapInteractive
+import LU_PNG from "../static/body-map/LU.png";
+import LI_PNG from "../static/body-map/LI.png";
+import ST_PNG from "../static/body-map/ST.png";
+import ST2_PNG from "../static/body-map/ST2.png";
+import SP_PNG from "../static/body-map/SP.png";
+import HT_PNG from "../static/body-map/HT.png";
+import SI_PNG from "../static/body-map/SI.png";
+import BL_PNG from "../static/body-map/BL.png";
+import KI_PNG from "../static/body-map/KI.png";
+import P_PNG from "../static/body-map/P.png";
+import TW_PNG from "../static/body-map/TW.png";
+import GB_PNG from "../static/body-map/GB.png";
+import LV_PNG from "../static/body-map/LV.png";
+import GV_PNG from "../static/body-map/GV.png";
+import CV_PNG from "../static/body-map/CV.png";
+
+// Direct mapping of layer IDs to PNG imports
+const PNG_MAP: Record<string, ImageSourcePropType> = {
+  LU: LU_PNG,
+  LI: LI_PNG,
+  ST: ST_PNG,
+  ST2: ST2_PNG,
+  SP: SP_PNG,
+  HT: HT_PNG,
+  SI: SI_PNG,
+  BL: BL_PNG,
+  KI: KI_PNG,
+  P: P_PNG,
+  TW: TW_PNG,
+  GB: GB_PNG,
+  LV: LV_PNG,
+  GV: GV_PNG,
+  CV: CV_PNG,
+};
+
+// SVG original dimensions
+const SVG_WIDTH = 1440;
+const SVG_HEIGHT = 809.999993;
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-
-// Default height for the map container (can be made configurable)
-const DEFAULT_MAP_HEIGHT = 300;
-
-/**
- * Helper component to render SVG transformer components
- */
-const SvgComponent: React.FC<{
-  Component: React.ComponentType<any>;
-  style?: any;
-}> = ({ Component, style }) => (
-  <Component
-    width="100%"
-    height="100%"
-    preserveAspectRatio="xMidYMid meet"
-    style={style}
-  />
-);
+const DEFAULT_MAP_HEIGHT = 350;
 
 interface PointLocationMapProps {
-  /** Height of the map container in pixels (optional, defaults to 300) */
   height?: number;
-  /** Normalized coordinates (0-1) for the point */
   coordinates: NormalizedCoordinate;
-  /** Layer ID (e.g., "LU", "ST", etc.) */
   layerId: string;
-  /** Optional label for the point */
   label?: string;
 }
 
-/**
- * Compact map component that displays a single point on its corresponding body map layer.
- * Shows PNG background + SVG overlay + marker for the specific point.
- * Used in point details screens to show exact anatomical location.
- */
 export function PointLocationMap({
   coordinates,
   layerId,
@@ -65,68 +75,22 @@ export function PointLocationMap({
   height = DEFAULT_MAP_HEIGHT,
 }: PointLocationMapProps) {
   const colors = useThemeColors();
-  const [svgXml, setSvgXml] = useState<string | null>(null);
-  const [svgModule, setSvgModule] = useState<React.ComponentType<any> | null>(null);
-  const [pngSource, setPngSource] = useState<any | null>(null);
-  const [loading, setLoading] = useState(true);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const layer: BodyAtlasLayer | null = useMemo(
     () => BODY_ATLAS_LAYER_MAP[layerId.toUpperCase()] ?? null,
     [layerId]
   );
 
-  // Load layer assets
-  useEffect(() => {
-    let isMounted = true;
+  // Get PNG source directly from map
+  const pngSource = layer ? PNG_MAP[layer.id] : null;
 
-    const loadAssets = async () => {
-      if (!layer) {
-        setLoading(false);
-        return;
-      }
-
-      setLoading(true);
-
-      try {
-        // Load PNG (visual base)
-        const png = getPngForLayer(layer.id);
-        if (isMounted) {
-          setPngSource(png ?? null);
-        }
-
-        // Load SVG (interaction/detail overlay)
-        const renderable = await getSvgRenderableForLayer(layer.id);
-        if (!isMounted) return;
-
-        if (renderable.Component) {
-          setSvgModule(renderable.Component ?? null);
-          setSvgXml(null);
-        } else if (renderable.xml) {
-          let finalXml = renderable.xml;
-          if (!finalXml.includes("viewBox=")) {
-            finalXml = finalXml.replace(
-              "<svg",
-              `<svg viewBox="0 0 ${BODY_MAP_VIEWBOX.width} ${BODY_MAP_VIEWBOX.height}"`
-            );
-          }
-          setSvgXml(finalXml);
-          setSvgModule(null);
-        }
-      } catch (error) {
-        console.error("[PointLocationMap] Error loading assets:", error);
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    loadAssets();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [layer]);
+  // Calculate scaled dimensions maintaining aspect ratio
+  const aspectRatio = SVG_WIDTH / SVG_HEIGHT;
+  const containerWidth = SCREEN_WIDTH - 64;
+  const scaledWidth = containerWidth;
+  const scaledHeight = containerWidth / aspectRatio;
 
   // Calculate marker position
   const markerPosition = useMemo(() => {
@@ -135,25 +99,32 @@ export function PointLocationMap({
     const absolutePosition = getMarkerPosition(coordinates);
     if (!absolutePosition) return null;
 
-    const containerWidth = SCREEN_WIDTH - 32;
-    const containerHeight = height;
-
-    const left =
-      (absolutePosition.x / BODY_MAP_VIEWBOX.width) * containerWidth;
-    const top =
-      (absolutePosition.y / BODY_MAP_VIEWBOX.height) * containerHeight;
+    const left = (absolutePosition.x / SVG_WIDTH) * scaledWidth;
+    const top = (absolutePosition.y / SVG_HEIGHT) * scaledHeight;
 
     return { left, top };
-  }, [coordinates, height]);
+  }, [coordinates, scaledWidth, scaledHeight]);
+
+  // Scroll to center on marker when image loads
+  useEffect(() => {
+    if (imageLoaded && markerPosition && scrollViewRef.current) {
+      // Calculate scroll position to center the marker
+      const scrollX = Math.max(0, markerPosition.left - containerWidth / 2);
+      const scrollY = Math.max(0, markerPosition.top - height / 2);
+      
+      setTimeout(() => {
+        scrollViewRef.current?.scrollTo({
+          x: scrollX,
+          y: scrollY,
+          animated: true,
+        });
+      }, 100);
+    }
+  }, [imageLoaded, markerPosition, containerWidth, height]);
 
   if (!layer) {
     return (
-      <View
-        style={[
-          styles.container,
-          { backgroundColor: colors.surface, borderColor: colors.border },
-        ]}
-      >
+      <View style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.border }]}>
         <Text style={[styles.errorText, { color: colors.textSecondary }]}>
           Mapa não disponível para este ponto
         </Text>
@@ -162,12 +133,7 @@ export function PointLocationMap({
   }
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: colors.surface, borderColor: colors.border },
-      ]}
-    >
+    <View style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.border }]}>
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.text }]}>
           Localização no Mapa
@@ -177,49 +143,49 @@ export function PointLocationMap({
         </Text>
       </View>
 
-      <View
-        style={[
-          styles.mapContainer,
-          {
-            backgroundColor: colors.background,
-            borderColor: colors.border,
-            height,
-          },
-        ]}
-      >
-        {loading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.primary} />
-            <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
-              Carregando mapa...
-            </Text>
-          </View>
-        ) : (
-          <>
-            {/* PNG Visual Base */}
-            {pngSource && (
+      <View style={[styles.mapContainer, { backgroundColor: colors.background, height }]}>
+        <ScrollView
+          ref={scrollViewRef}
+          style={styles.scrollView}
+          contentContainerStyle={{ width: scaledWidth, height: scaledHeight }}
+          horizontal={true}
+          maximumZoomScale={5}
+          minimumZoomScale={0.8}
+          showsHorizontalScrollIndicator={true}
+          showsVerticalScrollIndicator={true}
+          bouncesZoom={true}
+          bounces={true}
+          scrollEnabled={true}
+          pinchGestureEnabled={true}
+          centerContent={false}
+        >
+          <View style={{ width: scaledWidth, height: scaledHeight, position: 'relative' }}>
+            {/* PNG Image */}
+            {pngSource ? (
               <Image
                 source={pngSource}
-                style={StyleSheet.absoluteFill}
+                style={{
+                  width: scaledWidth,
+                  height: scaledHeight,
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                }}
                 resizeMode="stretch"
+                onLoad={() => {
+                  console.log(`[PointLocationMap] ✅ PNG loaded: ${layer.id}`);
+                  setImageLoaded(true);
+                }}
+                onError={(e) => {
+                  console.error(`[PointLocationMap] ❌ PNG error: ${layer.id}`, e.nativeEvent.error);
+                }}
               />
-            )}
-
-            {/* SVG Overlay for precision */}
-            {svgXml && (
-              <SvgXml
-                xml={svgXml}
-                width="100%"
-                height="100%"
-                preserveAspectRatio="xMidYMid meet"
-                style={[StyleSheet.absoluteFill, { opacity: 0.7 }]}
-              />
-            )}
-            {svgModule && (
-              <SvgComponent
-                Component={svgModule}
-                style={[StyleSheet.absoluteFill, { opacity: 0.7 }]}
-              />
+            ) : (
+              <View style={[styles.noImageContainer, { width: scaledWidth, height: scaledHeight }]}>
+                <Text style={[styles.noImageText, { color: colors.textSecondary }]}>
+                  Imagem não disponível
+                </Text>
+              </View>
             )}
 
             {/* Point Marker */}
@@ -233,33 +199,20 @@ export function PointLocationMap({
                   },
                 ]}
               >
-                <View
-                  style={[
-                    styles.markerDot,
-                    {
-                      backgroundColor: colors.error,
-                      borderColor: colors.surface,
-                    },
-                  ]}
-                />
+                <View style={[styles.markerDot, { backgroundColor: colors.error, borderColor: colors.surface }]} />
                 {label && (
-                  <View
-                    style={[
-                      styles.markerLabelContainer,
-                      { backgroundColor: "rgba(0,0,0,0.8)" },
-                    ]}
-                  >
+                  <View style={styles.markerLabelContainer}>
                     <Text style={styles.markerLabel}>{label}</Text>
                   </View>
                 )}
               </View>
             )}
-          </>
-        )}
+          </View>
+        </ScrollView>
       </View>
 
       <Text style={[styles.helpText, { color: colors.textSecondary }]}>
-        💡 O ponto destacado mostra a localização anatômica exata
+        💡 Pinça para zoom, arraste para navegar
       </Text>
     </View>
   );
@@ -289,24 +242,22 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
   },
   mapContainer: {
-    width: "100%",
-    // Height is set dynamically via style prop
     borderRadius: 12,
-    backgroundColor: COLORS.background,
+    overflow: "hidden",
     borderWidth: 1,
     borderColor: COLORS.border,
-    overflow: "hidden",
-    position: "relative",
   },
-  loadingContainer: {
+  scrollView: {
     flex: 1,
+  },
+  noImageContainer: {
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "rgba(200,200,200,0.2)",
   },
-  loadingText: {
-    marginTop: 8,
+  noImageText: {
     fontSize: 14,
-    color: COLORS.textSecondary,
+    textAlign: "center",
   },
   errorText: {
     fontSize: 14,
@@ -318,7 +269,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     alignItems: "center",
     transform: [{ translateX: -12 }, { translateY: -12 }],
-    zIndex: 10,
   },
   markerDot: {
     width: 24,
@@ -334,15 +284,15 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   markerLabelContainer: {
-    marginTop: 6,
+    marginTop: 4,
     paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingVertical: 3,
     borderRadius: 8,
-    backgroundColor: "rgba(0,0,0,0.8)",
+    backgroundColor: "rgba(0,0,0,0.85)",
   },
   markerLabel: {
     fontSize: 12,
-    color: COLORS.surface,
+    color: "#fff",
     fontWeight: "600",
   },
   helpText: {

@@ -2,11 +2,10 @@ package com.appunture.backend.config;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.Firestore;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.cloud.FirestoreClient;
-import com.google.firebase.cloud.StorageClient;
+import com.google.cloud.firestore.FirestoreOptions;
 import com.google.cloud.storage.Bucket;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,52 +25,16 @@ public class FirestoreConfig {
     @Value("${firebase.service-account-key-path:}")
     private String serviceAccountKeyPath;
 
-    @Value("${firebase.project-id}")
+    @Value("${firebase.project-id:appunture-tcc}")
     private String projectId;
 
-    @Value("${firebase.storage.bucket}")
+    @Value("${firebase.storage.bucket:appunture-tcc.appspot.com}")
     private String storageBucket;
 
     @Value("${app.firebase.enabled:true}")
     private boolean firebaseEnabled;
 
-    @PostConstruct
-    public void initializeFirebase() {
-        if (!firebaseEnabled) {
-            log.info("Firebase desabilitado - modo desenvolvimento");
-            return;
-        }
-
-        try {
-            if (FirebaseApp.getApps().isEmpty()) {
-                GoogleCredentials credentials = loadCredentials();
-                
-                if (credentials == null) {
-                    log.warn("No credentials available, Firebase will not be initialized");
-                    return;
-                }
-
-                // Remove 'gs://' prefix if present (Firebase SDK doesn't accept it)
-                String bucket = storageBucket;
-                if (bucket != null && bucket.startsWith("gs://")) {
-                    bucket = bucket.substring(5);
-                    log.info("Removido prefixo 'gs://' do storage bucket");
-                }
-
-                FirebaseOptions options = FirebaseOptions.builder()
-                        .setCredentials(credentials)
-                        .setProjectId(projectId)
-                        .setStorageBucket(bucket)
-                        .build();
-
-                FirebaseApp.initializeApp(options);
-                log.info("Firebase inicializado com sucesso - Projeto: {}", projectId);
-            }
-        } catch (Exception e) {
-            log.error("Erro ao inicializar Firebase: {}", e.getMessage(), e);
-            throw new RuntimeException("Falha na inicialização do Firebase", e);
-        }
-    }
+    // Firebase initialization is handled when creating the Firestore/Storage beans
 
     private GoogleCredentials loadCredentials() throws IOException {
         // Priority 1: GOOGLE_APPLICATION_CREDENTIALS env var
@@ -108,11 +71,22 @@ public class FirestoreConfig {
             log.warn("Firestore desabilitado - retornando null");
             return null;
         }
-        
+
         try {
-            return FirestoreClient.getFirestore();
+            GoogleCredentials credentials = loadCredentials();
+            if (credentials == null) {
+                log.warn("Nenhuma credencial disponível para Firestore");
+                return null;
+            }
+
+            FirestoreOptions options = FirestoreOptions.newBuilder()
+                    .setCredentials(credentials)
+                    .setProjectId(projectId)
+                    .build();
+
+            return options.getService();
         } catch (Exception e) {
-            log.error("Erro ao obter instância do Firestore: {}", e.getMessage(), e);
+            log.error("Erro ao criar instância do Firestore: {}", e.getMessage(), e);
             return null;
         }
     }
@@ -123,9 +97,26 @@ public class FirestoreConfig {
             log.warn("Firebase Storage desabilitado - retornando null");
             return null;
         }
-        
+
         try {
-            return StorageClient.getInstance().bucket();
+            GoogleCredentials credentials = loadCredentials();
+            if (credentials == null) {
+                log.warn("Nenhuma credencial disponível para Firebase Storage");
+                return null;
+            }
+
+            Storage storage = StorageOptions.newBuilder()
+                    .setCredentials(credentials)
+                    .setProjectId(projectId)
+                    .build()
+                    .getService();
+
+            String bucketName = storageBucket;
+            if (bucketName != null && bucketName.startsWith("gs://")) {
+                bucketName = bucketName.substring(5);
+            }
+
+            return storage.get(bucketName);
         } catch (Exception e) {
             log.error("Erro ao obter bucket do Firebase Storage: {}", e.getMessage(), e);
             return null;

@@ -1,0 +1,528 @@
+Android Bundled 204ms node_modules\expo-router\entry.js (1 module)
+ LOG  [svgAssets] Getting PNG for layer LU: number 25
+ LOG  [svgAssets] Returning PNG asset for LU directly: number 25
+ WARN  [Appunture][Sync] [WARN] 2025-12-14T16:56:56.921Z: Falha ao atualizar contadores de sincronização [Error: Database not initialized] 
+ WARN  [Appunture][Sync] [WARN] 2025-12-14T16:56:56.946Z: Falha ao atualizar contadores de sincronização [Error: Database not initialized] 
+ WARN  [Appunture][Sync] [WARN] 2025-12-14T16:56:56.950Z: Falha ao atualizar contadores de sincronização [Error: Database not initialized] 
+ WARN  [Appunture][Sync] [WARN] 2025-12-14T16:56:56.952Z: Falha ao atualizar contadores de sincronização [Error: Database not initialized] 
+ LOG  [svgAssets] Getting PNG for layer BL: number 32
+ LOG  [svgAssets] Returning PNG asset for BL directly: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ INFO  [Appunture][Database] [INFO] 2025-12-14T16:56:58.145Z: Seed data already loaded (version 1), skipping
+ INFO  [Appunture][Database] [INFO] 2025-12-14T16:56:58.146Z: Database initialized successfully
+ INFO  [Appunture][RootLayout] [INFO] 2025-12-14T16:56:58.701Z: Prefetching SVG layers...
+ LOG  [svgAssets] SVG preloading disabled to prevent crashes
+ LOG  [svgAssets] Skipped SVG preload for 15 layers (crash prevention)
+ INFO  [Appunture][RootLayout] [INFO] 2025-12-14T16:56:58.703Z: Preloading points data...
+ INFO  [Appunture][RootLayout] [INFO] 2025-12-14T16:56:59.037Z: Preloaded 361 points
+ INFO  [Appunture][RootLayout] [INFO] 2025-12-14T16:56:59.038Z: App initialized successfully
+ LOG  [BodyMapInteractive] Rendering LU - PNG available: false
+ LOG  [BodyMapInteractive] Prefetching atlas layers
+ LOG  [bodyMap] Starting prefetch of 15 layers (embedded assets)
+ LOG  [svgAssets] Preloading all PNG assets...
+ LOG  [BodyMapInteractive] Loading layer: LU
+ LOG  [svgAssets] PNG for LU from cache: number 25
+ LOG  [BodyMapInteractive] ✅ PNG loaded for LU: number
+ LOG  [BodyMapInteractive] Skipping SVG loading for LU to prevent crashes
+ LOG  [BodyMapInteractive] markers computed: total=0 positioned=0
+ LOG  [BodyMapInteractive] Rendering LU - PNG available: true
+ LOG  [BodyMapInteractive] Rendering LU - PNG available: true
+ LOG  [BodyMapInteractive] 🔄 PNG loading started for LU
+ LOG  [BodyMapInteractive] ✅ PNG loaded successfully for LU
+ LOG  [BodyMapInteractive] 🏁 PNG loading ended for LU
+ LOG  [svgAssets] ✓ Preloaded PNG for LU
+ LOG  [svgAssets] ✓ Preloaded PNG for HT
+ LOG  [svgAssets] ✓ Preloaded PNG for P
+ LOG  [svgAssets] ✓ Preloaded PNG for SP
+ LOG  [svgAssets] ✓ Preloaded PNG for ST2
+ LOG  [svgAssets] ✓ Preloaded PNG for SI
+ LOG  [svgAssets] ✓ Preloaded PNG for KI
+ LOG  [svgAssets] ✓ Preloaded PNG for LV
+ LOG  [svgAssets] ✓ Preloaded PNG for TW
+ LOG  [svgAssets] ✓ Preloaded PNG for GB
+ LOG  [svgAssets] ✓ Preloaded PNG for LI
+ LOG  [svgAssets] ✓ Preloaded PNG for ST
+ LOG  [svgAssets] ✓ Preloaded PNG for CV
+ LOG  [svgAssets] ✓ Preloaded PNG for BL
+ LOG  [svgAssets] ✓ Preloaded PNG for GV
+ LOG  [svgAssets] PNG preload complete: 15/15 successful
+ LOG  [svgAssets] SVG preloading disabled to prevent crashes
+ LOG  [svgAssets] Skipped SVG preload for 15 layers (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for LU (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for LI (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for ST (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for ST2 (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for SP (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for HT (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for SI (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for BL (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for KI (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for P (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for TW (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for GB (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for LV (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for GV (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for CV (crash prevention)
+ LOG  [bodyMap] Prefetch complete: 15/15 layers processed (SVG disabled)
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] PNG for BL from cache: number 32
+ LOG  [svgAssets] Getting PNG for layer CV: number 39
+ LOG  [svgAssets] Returning PNG asset for CV directly: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] PNG for CV from cache: number 39
+ LOG  [svgAssets] Getting PNG for layer GB: number 36
+ LOG  [svgAssets] Returning PNG asset for GB directly: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] PNG for GB from cache: number 36
+ LOG  [svgAssets] Getting PNG for layer GV: number 38
+ LOG  [svgAssets] Returning PNG asset for GV directly: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] PNG for GV from cache: number 38
+ LOG  [svgAssets] Getting PNG for layer HT: number 30
+ LOG  [svgAssets] Returning PNG asset for HT directly: number 30
+ LOG  [svgAssets] PNG for HT from cache: number 30
+ LOG  [svgAssets] PNG for HT from cache: number 30
+ LOG  [svgAssets] PNG for HT from cache: number 30
+ LOG  [svgAssets] PNG for HT from cache: number 30
+ LOG  [svgAssets] PNG for HT from cache: number 30
+ LOG  [svgAssets] PNG for HT from cache: number 30
+ LOG  [svgAssets] PNG for HT from cache: number 30
+ LOG  [svgAssets] PNG for HT from cache: number 30
+ LOG  [svgAssets] Getting PNG for layer KI: number 33
+ LOG  [svgAssets] Returning PNG asset for KI directly: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] PNG for KI from cache: number 33
+ LOG  [svgAssets] Getting PNG for layer LI: number 26
+ LOG  [svgAssets] Returning PNG asset for LI directly: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] PNG for LI from cache: number 26
+ LOG  [svgAssets] Getting PNG for layer LV: number 37
+ LOG  [svgAssets] Returning PNG asset for LV directly: number 37
+ LOG  [svgAssets] PNG for LV from cache: number 37
+ LOG  [svgAssets] PNG for LV from cache: number 37
+ LOG  [svgAssets] PNG for LV from cache: number 37
+ LOG  [svgAssets] PNG for LV from cache: number 37
+ LOG  [svgAssets] PNG for LV from cache: number 37
+ LOG  [svgAssets] PNG for LV from cache: number 37
+ LOG  [svgAssets] PNG for LV from cache: number 37
+ LOG  [svgAssets] PNG for LV from cache: number 37
+ LOG  [svgAssets] PNG for LV from cache: number 37
+ LOG  [svgAssets] PNG for LV from cache: number 37
+ LOG  [svgAssets] PNG for LV from cache: number 37
+ LOG  [svgAssets] PNG for LV from cache: number 37
+ LOG  [svgAssets] PNG for LV from cache: number 37
+ LOG  [svgAssets] PNG for LU from cache: number 25
+ LOG  [svgAssets] PNG for LU from cache: number 25
+ LOG  [svgAssets] PNG for LU from cache: number 25
+ LOG  [svgAssets] PNG for LU from cache: number 25
+ LOG  [svgAssets] PNG for LU from cache: number 25
+ LOG  [svgAssets] PNG for LU from cache: number 25
+ LOG  [svgAssets] PNG for LU from cache: number 25
+ LOG  [svgAssets] PNG for LU from cache: number 25
+ LOG  [svgAssets] PNG for LU from cache: number 25
+ LOG  [svgAssets] PNG for LU from cache: number 25
+ LOG  [svgAssets] PNG for LU from cache: number 25
+ LOG  [svgAssets] Getting PNG for layer SI: number 31
+ LOG  [svgAssets] Returning PNG asset for SI directly: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] PNG for SI from cache: number 31
+ LOG  [svgAssets] Getting PNG for layer SP: number 29
+ LOG  [svgAssets] Returning PNG asset for SP directly: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] PNG for SP from cache: number 29
+ LOG  [svgAssets] Getting PNG for layer ST: number 27
+ LOG  [svgAssets] Returning PNG asset for ST directly: number 27
+ LOG  [svgAssets] Getting PNG for layer ST2: number 28
+ LOG  [svgAssets] Returning PNG asset for ST2 directly: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] PNG for ST from cache: number 27
+ LOG  [svgAssets] PNG for ST2 from cache: number 28
+ LOG  [svgAssets] Getting PNG for layer TW: number 35
+ LOG  [svgAssets] Returning PNG asset for TW directly: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [svgAssets] PNG for TW from cache: number 35
+ LOG  [BodyMapInteractive] Rendering LU - PNG available: false
+ LOG  [BodyMapInteractive] Prefetching atlas layers
+ LOG  [bodyMap] Starting prefetch of 15 layers (embedded assets)
+ LOG  [svgAssets] Preloading all PNG assets...
+ LOG  [svgAssets] ✓ Preloaded PNG for LU
+ LOG  [svgAssets] ✓ Preloaded PNG for LI
+ LOG  [svgAssets] ✓ Preloaded PNG for ST
+ LOG  [svgAssets] ✓ Preloaded PNG for ST2
+ LOG  [svgAssets] ✓ Preloaded PNG for SP
+ LOG  [svgAssets] ✓ Preloaded PNG for HT
+ LOG  [svgAssets] ✓ Preloaded PNG for SI
+ LOG  [svgAssets] ✓ Preloaded PNG for BL
+ LOG  [svgAssets] ✓ Preloaded PNG for KI
+ LOG  [svgAssets] ✓ Preloaded PNG for P
+ LOG  [svgAssets] ✓ Preloaded PNG for TW
+ LOG  [svgAssets] ✓ Preloaded PNG for GB
+ LOG  [svgAssets] ✓ Preloaded PNG for LV
+ LOG  [svgAssets] ✓ Preloaded PNG for GV
+ LOG  [svgAssets] ✓ Preloaded PNG for CV
+ LOG  [BodyMapInteractive] Loading layer: LU
+ LOG  [svgAssets] PNG for LU from cache: number 25
+ LOG  [BodyMapInteractive] ✅ PNG loaded for LU: number
+ LOG  [BodyMapInteractive] Skipping SVG loading for LU to prevent crashes
+ LOG  [BodyMapInteractive] markers computed: total=11 positioned=11
+ LOG  [BodyMapInteractive] Rendering LU - PNG available: true
+ LOG  [svgAssets] PNG preload complete: 15/15 successful
+ LOG  [svgAssets] SVG preloading disabled to prevent crashes
+ LOG  [svgAssets] Skipped SVG preload for 15 layers (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for LU (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for LI (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for ST (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for ST2 (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for SP (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for HT (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for SI (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for BL (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for KI (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for P (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for TW (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for GB (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for LV (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for GV (crash prevention)
+ LOG  [bodyMap] ✓ Skipped SVG prefetch for CV (crash prevention)
+ LOG  [bodyMap] Prefetch complete: 15/15 layers processed (SVG disabled)
+ LOG  [BodyMapInteractive] Rendering LU - PNG available: true
+ LOG  [BodyMapInteractive] 🔄 PNG loading started for LU
+ LOG  [BodyMapInteractive] ✅ PNG loaded successfully for LU
+ LOG  [BodyMapInteractive] 🏁 PNG loading ended for LU
+› Stopped server
+PS D:\_repos\appunture-dev\frontend-mobile\appunture> 

@@ -110,8 +110,25 @@ public class SecurityConfig {
                                 .policy("geolocation=(), microphone=(), camera=()"))
                 )
                 .authorizeHttpRequests(auth -> auth
-                        // TEMPORÁRIO: Permitir tudo para debug
-                        .anyRequest().permitAll()
+                        // Endpoints públicos (sem autenticação)
+                        .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/health/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
+                        // Endpoints de autenticação
+                        .requestMatchers("/auth/**").permitAll()
+                        // Endpoints de pontos (leitura pública, escrita autenticada)
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/points/**").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/meridians/**").permitAll()
+                        // Chat com IA requer autenticação
+                        .requestMatchers("/chat/**").authenticated()
+                        // Favoritos requerem autenticação
+                        .requestMatchers("/favorites/**").authenticated()
+                        // Upload de imagens requer autenticação
+                        .requestMatchers("/images/**").authenticated()
+                        // Qualquer outra requisição requer autenticação
+                        .anyRequest().authenticated()
                 );
 
         // Adiciona o filtro de autenticação Firebase
