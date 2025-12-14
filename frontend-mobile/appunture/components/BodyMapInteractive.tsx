@@ -207,7 +207,7 @@ export function BodyMapInteractive({
             ) : (
               <View style={[styles.noImageContainer, { width: scaledWidth, height: scaledHeight }]}>
                 <Text style={[styles.noImageText, { color: colors.textSecondary }]}>
-                  Imagem não disponível{"\n"}{layer.label}
+                  {`Imagem não disponível\n${layer.label}`}
                 </Text>
               </View>
             )}

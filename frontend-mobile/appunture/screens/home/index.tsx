@@ -14,7 +14,7 @@ import { Link, useRouter } from "expo-router";
 import { usePointsStore } from "../../stores/pointsStore";
 import { useAuthStore } from "../../stores/authStore";
 import { SyncStatusIndicator } from "../../components/SyncStatusIndicator";
-import { OfflineBanner } from "../../components/OfflineBanner";
+
 import { useOfflineMode } from "../../hooks/useOfflineMode";
 import { COLORS, MERIDIANS } from "../../utils/constants";
 import { styles } from "./styles";
@@ -210,9 +210,6 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
         </View>
-
-        {/* Offline Banner */}
-        <OfflineBanner onRetry={handleSync} />
 
         {/* Statistics */}
         <View style={styles.section} accessibilityLabel="Estatísticas">
