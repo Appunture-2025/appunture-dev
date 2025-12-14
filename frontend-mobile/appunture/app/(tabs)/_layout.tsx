@@ -2,7 +2,6 @@ import { Tabs } from "expo-router";
 import { View, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useThemeColors } from "../../stores/themeStore";
-import { SyncBanner } from "../../components/SyncBanner";
 import { useSyncStore } from "../../stores/syncStore";
 
 function ProfileTabIcon({ color, size }: { color: string; size: number }) {
@@ -28,9 +27,7 @@ export default function TabLayout() {
   const colors = useThemeColors();
 
   return (
-    <View style={{ flex: 1 }}>
-      <SyncBanner />
-      <Tabs
+    <Tabs
         screenOptions={{
           tabBarActiveTintColor: colors.primary,
           tabBarInactiveTintColor: colors.textSecondary,
@@ -118,7 +115,6 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
-    </View>
   );
 }
 

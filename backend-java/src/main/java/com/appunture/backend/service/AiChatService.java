@@ -132,14 +132,19 @@ public class AiChatService {
             GoogleCredentials credentials;
             
             // Check if GOOGLE_APPLICATION_CREDENTIALS contains JSON content directly
-            if (credentialsEnv != null && credentialsEnv.trim().startsWith("{")) {
+            // Handle cases where JSON might have leading/trailing whitespace or newlines
+            String trimmedCredentials = credentialsEnv != null ? credentialsEnv.trim() : null;
+            boolean isJsonContent = trimmedCredentials != null && 
+                (trimmedCredentials.startsWith("{") || trimmedCredentials.contains("\"type\""));
+            
+            if (isJsonContent) {
                 log.info("[AI] Using credentials from environment variable (JSON content)");
                 credentials = GoogleCredentials
-                        .fromStream(new java.io.ByteArrayInputStream(credentialsEnv.getBytes()))
+                        .fromStream(new java.io.ByteArrayInputStream(trimmedCredentials.getBytes(java.nio.charset.StandardCharsets.UTF_8)))
                         .createScoped("https://www.googleapis.com/auth/cloud-platform");
             } 
-            // Check if it's a file path
-            else if (credentialsEnv != null && new java.io.File(credentialsEnv).exists()) {
+            // Check if it's a file path (only if it doesn't look like JSON)
+            else if (credentialsEnv != null && !credentialsEnv.contains("{") && new java.io.File(credentialsEnv).exists()) {
                 log.info("[AI] Using credentials from file path: {}", credentialsEnv);
                 credentials = GoogleCredentials
                         .fromStream(new java.io.FileInputStream(credentialsEnv))

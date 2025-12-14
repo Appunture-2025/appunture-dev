@@ -116,12 +116,7 @@ const normalizeBodyMapCoords = (
   }
 };
 
-const withGalleryMedia = <T extends Point>(point: T | null | undefined): T => {
-  // Guard against null/undefined point
-  if (!point) {
-    return point as T;
-  }
-
+const withGalleryMedia = <T extends Point>(point: T): T => {
   // Normalize bodyMapCoords if present (from API or database)
   const normalizedBodyMapCoords = point.bodyMapCoords
     ? normalizeBodyMapCoords(point.bodyMapCoords as any)

@@ -382,14 +382,16 @@
 		\DTLifdbexists{list}{\DTLcleardb{list}}{\DTLnewdb{list}}%
 	}
 	{
-		\DTLsort{label}{list}%
-		\begin{description}[labelsep=15mm, align=left, 
-		                    labelwidth=25mm,
-		                    leftmargin=40mm, labelindent=0mm]%
-			
+		\DTLifhaskey{list}{label}{%
+			\DTLsort{label}{list}%
+			\begin{description}[labelsep=15mm, align=left, 
+			                    labelwidth=25mm,
+			                    leftmargin=40mm, labelindent=0mm]%
+				
 \DTLforeach*{list}{\theLabel=label,\theDesc=description}{\item[\theLabel] \theDesc}		
-	
-		\end{description}
+		
+			\end{description}
+		}{}%
 	}
 
 	\newcommand\imprimirlistadesiglas{

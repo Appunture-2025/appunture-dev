@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   View,
   Text,
@@ -44,21 +43,23 @@ export default function ProfileScreen() {
     ]);
   };
 
-  const handleThemeCycle = () => {
+  const handleThemeCycle = (): void => {
     // Cycle through: light -> dark -> system -> light
     const nextMode =
       mode === "light" ? "dark" : mode === "dark" ? "system" : "light";
     setMode(nextMode);
   };
 
-  const getThemeLabel = () => {
+  const getThemeLabel = (): string => {
     switch (mode) {
       case "light":
         return "Claro";
       case "dark":
         return "Escuro";
       case "system":
-        return "Automático";
+        return "Automatico";
+      default:
+        return "Claro";
     }
   };
 
@@ -94,13 +95,13 @@ export default function ProfileScreen() {
     {
       id: "about",
       title: "Sobre o app",
-      subtitle: "Versão 1.0.1",
+      subtitle: "Versao 1.0.1",
       type: "navigation",
       icon: "information-circle-outline",
       onPress: () => {
         Alert.alert(
           "Appunture",
-          "Aplicativo de consulta de pontos de acupuntura\nVersão 1.0.0\n\nDesenvolvido para auxiliar profissionais e estudantes de acupuntura."
+          "Aplicativo de consulta de pontos de acupuntura\nVersao 1.0.0\n\nDesenvolvido para auxiliar profissionais e estudantes de acupuntura."
         );
       },
     },
@@ -122,7 +123,7 @@ export default function ProfileScreen() {
         {
           id: "login",
           title: "Entrar na conta",
-          subtitle: "Faça login para sincronizar seus dados",
+          subtitle: "Faca login para sincronizar seus dados",
           type: "action",
           icon: "log-in-outline",
           onPress: () => router.push("/login"),
@@ -222,7 +223,7 @@ export default function ProfileScreen() {
       <View
         style={[styles.userCard, { backgroundColor: colors.surface }]}
         accessibilityRole="header"
-        accessibilityLabel={isAuthenticated ? `Perfil de ${user?.name || "Usuário"}` : "Visitante - não logado"}
+        accessibilityLabel={isAuthenticated ? `Perfil de ${user?.name || "Usuario"}` : "Visitante - nao logado"}
       >
         <View style={[styles.avatar, { backgroundColor: colors.background }]}>
           <Ionicons
@@ -236,7 +237,7 @@ export default function ProfileScreen() {
         {isAuthenticated ? (
           <>
             <Text style={[styles.userName, { color: colors.text }]}>
-              {user?.name || "Usuário"}
+              {user?.name || "Usuario"}
             </Text>
             <Text style={[styles.userEmail, { color: colors.textSecondary }]}>
               {user?.email || "email@exemplo.com"}
@@ -253,9 +254,6 @@ export default function ProfileScreen() {
                       : colors.warning,
                   },
                 ]}
-                accessibilityLabel={
-                  user.emailVerified ? "Email verificado" : "Email não verificado"
-                }
               >
                 <Ionicons
                   name={user.emailVerified ? "checkmark-circle" : "alert-circle"}
@@ -263,9 +261,6 @@ export default function ProfileScreen() {
                   color={colors.surface}
                   importantForAccessibility="no-hide-descendants"
                 />
-                <Text style={[styles.emailBadgeText, { color: colors.surface }]}>
-                  {user.emailVerified ? "Email verificado" : "Email não verificado"}
-                </Text>
               </View>
             )}
 
@@ -282,7 +277,7 @@ export default function ProfileScreen() {
               Visitante
             </Text>
             <Text style={[styles.userEmail, { color: colors.textSecondary }]}>
-              Você está navegando como visitante
+              Voce esta navegando como visitante
             </Text>
             
             <TouchableOpacity
@@ -298,7 +293,7 @@ export default function ProfileScreen() {
             </TouchableOpacity>
             
             <Text style={[styles.guestHint, { color: colors.textSecondary }]}>
-              Faça login para sincronizar dados, salvar favoritos e usar a IA
+              Faca login para sincronizar dados, salvar favoritos e usar a IA
             </Text>
           </>
         )}
@@ -309,7 +304,7 @@ export default function ProfileScreen() {
         style={[styles.settingsSection, { backgroundColor: colors.surface }]}
       >
         <Text style={[styles.sectionTitle, { color: colors.text }]}>
-          Configurações
+          Configuracoes
         </Text>
         {settings.map(renderSettingItem)}
       </View>
@@ -320,7 +315,7 @@ export default function ProfileScreen() {
           Appunture - Acupuntura Digital
         </Text>
         <Text style={[styles.versionText, { color: colors.textSecondary }]}>
-          Versão 1.0.0
+          Versao 1.0.0
         </Text>
       </View>
     </ScrollView>

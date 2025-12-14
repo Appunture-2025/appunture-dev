@@ -61,6 +61,9 @@ const toLocalPoint = (point: Point, timestamp: string): LocalPoint => ({
   coordinates: point.coordinates
     ? JSON.stringify(point.coordinates)
     : undefined,
+  body_map_coords: point.bodyMapCoords
+    ? JSON.stringify(point.bodyMapCoords)
+    : undefined,
   favorite_count: point.favoriteCount,
   synced: true,
   last_sync: timestamp,
@@ -705,6 +708,12 @@ export const useSyncStore = create<SyncStore>((set, get) => {
         return;
       }
 
+      // Check if database is initialized before processing queue
+      if (!databaseService.isInitialized()) {
+        logger.warn("Database not initialized, skipping sync queue processing");
+        return;
+      }
+
       set({ queueProcessing: true, syncInProgress: true });
 
       try {
@@ -765,6 +774,12 @@ export const useSyncStore = create<SyncStore>((set, get) => {
 
     refreshPendingOperations: async () => {
       try {
+        // Check if database is initialized before trying to access it
+        if (!databaseService.isInitialized()) {
+          logger.warn("Database not initialized yet, skipping pending operations refresh");
+          return;
+        }
+
         const [pendingOperations, pendingImages] = await Promise.all([
           databaseService.countPendingOperations(),
           databaseService.countPendingImages(),
@@ -778,8 +793,19 @@ export const useSyncStore = create<SyncStore>((set, get) => {
     },
 
     refreshFailedOperations: async () => {
-      const failedOperations = await databaseService.getFailedOperations();
-      set({ failedOperations });
+      try {
+        // Check if database is initialized before trying to access it
+        if (!databaseService.isInitialized()) {
+          logger.warn("Database not initialized yet, skipping failed operations refresh");
+          return;
+        }
+
+        const failedOperations = await databaseService.getFailedOperations();
+        set({ failedOperations });
+      } catch (error) {
+        logger.warn("Falha ao atualizar operações falhadas", error);
+        set({ failedOperations: [] });
+      }
     },
 
     acknowledgeNotification: () => {
@@ -829,10 +855,20 @@ export const useSyncStore = create<SyncStore>((set, get) => {
     },
 
     loadLastSync: async () => {
-      const lastSync = await getLastSync();
-      set({ lastSync: lastSync ?? undefined });
-      await get().refreshPendingOperations();
-      await get().refreshFailedOperations();
+      try {
+        const lastSync = await getLastSync();
+        set({ lastSync: lastSync ?? undefined });
+        
+        // Only refresh if database is initialized
+        if (databaseService.isInitialized()) {
+          await get().refreshPendingOperations();
+          await get().refreshFailedOperations();
+        } else {
+          logger.warn("Database not initialized during loadLastSync, skipping refresh");
+        }
+      } catch (error) {
+        logger.warn("Error loading last sync", error);
+      }
     },
   };
 });
@@ -840,16 +876,20 @@ export const useSyncStore = create<SyncStore>((set, get) => {
 connectivityService.onChange(async (isOnline) => {
   const store = useSyncStore.getState();
   store.setOnlineStatus(isOnline);
-  await Promise.all([
-    store.refreshPendingOperations(),
-    store.refreshFailedOperations(),
-  ]);
+  
+  // Only try to refresh operations if database is initialized
+  if (databaseService.isInitialized()) {
+    await Promise.all([
+      store.refreshPendingOperations(),
+      store.refreshFailedOperations(),
+    ]);
 
-  if (isOnline) {
-    try {
-      await store.processSyncQueue();
-    } catch (error) {
-      logger.error("Erro ao processar fila após reconexão", error);
+    if (isOnline) {
+      try {
+        await store.processSyncQueue();
+      } catch (error) {
+        logger.error("Erro ao processar fila após reconexão", error);
+      }
     }
   }
 });

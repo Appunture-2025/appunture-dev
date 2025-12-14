@@ -112,8 +112,20 @@ export const getMarkerPosition = (
     return null;
   }
 
-  const x = Math.max(0, Math.min(1, coordinates.x));
-  const y = Math.max(0, Math.min(1, coordinates.y));
+  // Coordinates can be in percentage (0-100) or normalized (0-1)
+  // If values are > 1, assume they are percentages
+  let x = coordinates.x;
+  let y = coordinates.y;
+  
+  // Convert percentage to normalized if needed
+  if (x > 1 || y > 1) {
+    x = x / 100;
+    y = y / 100;
+  }
+  
+  // Clamp to valid range
+  x = Math.max(0, Math.min(1, x));
+  y = Math.max(0, Math.min(1, y));
 
   return {
     x: x * BODY_MAP_VIEWBOX.width,

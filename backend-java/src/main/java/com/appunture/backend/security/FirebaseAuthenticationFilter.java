@@ -36,13 +36,6 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
         log.debug("[FIREBASE_FILTER] Processing request: {} {}", request.getMethod(), requestURI);
         
-        // TEMPORÁRIO: Skip authentication for /api/chat for testing
-        if (requestURI.startsWith("/api/chat")) {
-            log.debug("[FIREBASE_FILTER] TEMP: Skipping authentication for /api/chat: {}", requestURI);
-            filterChain.doFilter(request, response);
-            return;
-        }
-        
         // Skip authentication for public endpoints
         if (isPublicEndpoint(requestURI)) {
             log.debug("[FIREBASE_FILTER] Skipping authentication for public endpoint: {}", requestURI);
@@ -127,7 +120,6 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
                uri.startsWith("/api/health") ||
                uri.startsWith("/api/points") ||    // Modo visitante - leitura de pontos
                uri.startsWith("/api/symptoms") ||  // Modo visitante - leitura de sintomas
-               uri.startsWith("/api/chat") ||      // TEMPORÁRIO: Chat público para testes
                uri.startsWith("/points") ||        // Modo visitante - leitura de pontos (sem /api)
                uri.startsWith("/symptoms") ||      // Modo visitante - leitura de sintomas (sem /api)
                uri.startsWith("/swagger-ui") ||

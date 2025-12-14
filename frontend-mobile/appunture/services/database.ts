@@ -43,6 +43,10 @@ class DatabaseService {
     }
   }
 
+  isInitialized(): boolean {
+    return this.db !== null;
+  }
+
   private getDb(): SQLite.SQLiteDatabase {
     if (!this.db) {
       throw new Error("Database not initialized");

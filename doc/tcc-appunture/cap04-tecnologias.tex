@@ -29,17 +29,17 @@ O \textit{Appunture} foi desenvolvido seguindo uma arquitetura híbrida e modula
 
 O aplicativo móvel implementa persistência local (SQLite) para garantir performance e resiliência em redes instáveis. O código evidencia uma arquitetura cloud-backed em que o Google Cloud Firestore funciona como fonte de verdade, enquanto o cliente mantém cópias locais para leitura rápida e enfileira gravações para sincronização posterior.
 
-            	extbf{Banco de Dados Local (SQLite):}
+            \textbf{Banco de Dados Local (SQLite):}
 \begin{itemize}
     \item Armazena os pontos do atlas, pontos extras, sintomas e metadados necessários para renderização e consultas rápidas;
-    \item Mantém dados do usuário (favoritos, notas) e tabelas de controle de sincronização (\texttt{sync_queue}, \texttt{image_sync_queue});
+    \item Mantém dados do usuário (favoritos, notas) e tabelas de controle de sincronização (\texttt{sync\_queue}, \texttt{image\_sync\_queue});
     \item Estrutura otimizada com migrações e seeds para inicialização consistente;
     \item Fornece performance de leitura local e resiliência quando a rede está indisponível; operações de escrita do usuário são enfileiradas para envio ao backend quando houver conectividade.
 \end{itemize}
 
-    	extbf{Nota:} A busca inteligente por sintomas (assistente de IA) e outras funcionalidades que dependem de chamadas a serviços externos (IA, uploads de mídia) requerem conexão com a internet. Quando não houver conectividade, o usuário pode acessar apenas o conteúdo disponível localmente; gravações e uploads aguardam até que a sincronização ocorra.
+    \textbf{Nota:} A busca inteligente por sintomas (assistente de IA) e outras funcionalidades que dependem de chamadas a serviços externos (IA, uploads de mídia) requerem conexão com a internet. Quando não houver conectividade, o usuário pode acessar apenas o conteúdo disponível localmente; gravações e uploads aguardam até que a sincronização ocorra.
 
-    	extbf{Sistema de Armazenamento Seguro:}
+    \textbf{Sistema de Armazenamento Seguro:}
 \begin{itemize}
     \item \textbf{SecureStore}: armazenamento criptografado para tokens e credenciais sensíveis;
     \item \textbf{AsyncStorage}: persistência de configurações e dados não sensíveis;
@@ -51,7 +51,7 @@ O aplicativo móvel implementa persistência local (SQLite) para garantir perfor
 
 Quando conectado à internet, o sistema implementa sincronização bidirecional automática:
 
-	extbf{Sincronização Descendente (Backend $\\rightarrow$ Mobile):}
+\textbf{Sincronização Descendente (Backend $\rightarrow$ Mobile):}
 \begin{itemize}
     \item Atualização automática de dados do atlas;
     \item \textit{Download} incremental baseado em versionamento;
@@ -59,7 +59,7 @@ Quando conectado à internet, o sistema implementa sincronização bidirecional 
     \item Validação de integridade dos dados recebidos.
 \end{itemize}
 
-	extbf{Sincronização Ascendente (Mobile $\\rightarrow$ Backend):}
+\textbf{Sincronização Ascendente (Mobile $\rightarrow$ Backend):}
 \begin{itemize}
     \item \textit{Upload} de favoritos do usuário;
     \item \textit{Backup} automático de preferências;
@@ -73,7 +73,7 @@ Quando conectado à internet, o sistema implementa sincronização bidirecional 
 
 O aplicativo móvel é implementado com React Native e Expo conforme as dependências presentes no projeto.
 
-    	extbf{Versões e dependências principais:}
+    \textbf{Versões e dependências principais:}
 \begin{itemize}
     \item \textbf{React Native}: 0.79.6;
     \item \textbf{Expo SDK}: ~53 (ex.: 53.0.25);
@@ -87,7 +87,7 @@ O aplicativo móvel é implementado com React Native e Expo conforme as dependê
     \item \textbf{axios}: ^1.10.0 (cliente HTTP com políticas de retry implementadas no serviço API).
 \end{itemize}
 
-    	extbf{Testes e E2E:}
+    \textbf{Testes e E2E:}
 \begin{itemize}
     \item \textbf{Jest / jest-expo}: testes unitários e integração;
     \item \textbf{Detox}: configurações para testes E2E em Android/iOS (scripts presentes no \texttt{package.json}).
@@ -135,10 +135,10 @@ As classes e dependências mostram que o \textit{backend} está preparado para:
 No aplicativo móvel, a persistência local é implementada com \texttt{expo-sqlite} e um conjunto completo de migrações e seeds (implementados em \texttt{services/database.ts} e \texttt{assets/data}). Pontos importantes observados no código:
 
 \begin{itemize}
-    \item Esquema local robusto com tabelas para \texttt{points}, \texttt{symptoms}, \texttt{symptom_points}, \texttt{favorites}, \texttt{notes}, \texttt{sync_queue} e \texttt{image_sync_queue};
+    \item Esquema local robusto com tabelas para \texttt{points}, \texttt{symptoms}, \texttt{symptom\_points}, \texttt{favorites}, \texttt{notes}, \texttt{sync\_queue} e \texttt{image\_sync\_queue};
     \item Mecanismo de migração que detecta esquemas legados e realiza migrações automatizadas;
     \item População inicial (seed) carregada a partir de \texttt{assets/data} se necessário;
-    \item Filas de sincronização locais (\texttt{sync_queue} e \texttt{image_sync_queue}) com retry, contagem de tentativas e marcação de erro para garantir confiabilidade das operações offline→online;
+    \item Filas de sincronização locais (\texttt{sync\_queue} e \texttt{image\_sync\_queue}) com retry, contagem de tentativas e marcação de erro para garantir confiabilidade das operações offline$\rightarrow$online;
     \item Suporte a operações idempotentes e controle de conflitos básico por \texttt{timestamp} e operações tipo (UPSERT/DELETE).
 \end{itemize}
 
@@ -149,19 +149,19 @@ No \textit{backend}, a persistência principal é feita no Google Cloud Firestor
 O projeto é preparado para deploy containerizado no Google Cloud Run e faz uso dos serviços Firebase (Auth, Storage) e Google Cloud Firestore conforme a configuração presente no repositório. Abaixo estão os pontos observados diretamente no código e scripts:
 
 \begin{itemize}
-    \item \textbf{Build e deploy automatizados (Cloud Build):} O arquivo \texttt{backend-java/cloudbuild.yaml} constrói a imagem Docker no diretório \texttt{backend-java}, rotula a imagem como \texttt{gcr.io/$PROJECT_ID/appunture-backend:$BUILD_ID} e \texttt{:latest}, envia para o Container Registry e em seguida chama \texttt{gcloud run deploy} apontando para a imagem publicada. O passo de deploy seta variáveis de ambiente essenciais (ex.: \texttt{SPRING_PROFILES_ACTIVE=prod}, \texttt{FIREBASE_PROJECT_ID}) e configura recursos (memória 1Gi, CPU 1, concorrência, \texttt{port=8080}).
+    \item \textbf{Build e deploy automatizados (Cloud Build):} O arquivo \texttt{backend-java/cloudbuild.yaml} constrói a imagem Docker no diretório \texttt{backend-java}, rotula a imagem como \texttt{gcr.io/\$PROJECT\_ID/appunture-backend:\$BUILD\_ID} e \texttt{:latest}, envia para o Container Registry e em seguida chama \texttt{gcloud run deploy} apontando para a imagem publicada. O passo de deploy seta variáveis de ambiente essenciais (ex.: \texttt{SPRING\_PROFILES\_ACTIVE=prod}, \texttt{FIREBASE\_PROJECT\_ID}) e configura recursos (memória 1Gi, CPU 1, concorrência, \texttt{port=8080}).
 
     \item \textbf{Script de deploy local/CI:} Existe um script de deploy (\texttt{backend-java/deploy.sh}) que executa \texttt{gcloud builds submit --config cloudbuild.yaml} e recupera a URL do serviço Cloud Run, além de suportar mapeamento de domínio e verificações pós-deploy.
 
-    \item \textbf{Configurações do serviço Cloud Run (backup):} O repositório contém um backup de configuração de serviço (\texttt{cloud-run-config-backup.yaml}) e instruções em \texttt{CLOUD_RUN_BACKUP_README.md} para restaurar as configurações com \texttt{gcloud run services replace}.
+    \item \textbf{Configurações do serviço Cloud Run (backup):} O repositório contém um backup de configuração de serviço (\texttt{cloud-run-config-backup.yaml}) e instruções em \texttt{CLOUD\_RUN\_BACKUP\_README.md} para restaurar as configurações com \texttt{gcloud run services replace}.
 
-    \item \textbf{Variáveis e segredos:} O exemplo \texttt{.env.example} documenta variáveis esperadas no ambiente Cloud Run (ex.: \texttt{FIREBASE_SERVICE_ACCOUNT_KEY}, \texttt{FIREBASE_ENABLED}, \texttt{GOOGLE_AI_API_KEY}). O deploy via Cloud Build / gcloud recomenda o uso do Secret Manager ou \texttt{--set-env-vars} para injetar segredos/credenciais em tempo de execução, em vez de armazená-los no código.
+    \item \textbf{Variáveis e segredos:} O exemplo \texttt{.env.example} documenta variáveis esperadas no ambiente Cloud Run (ex.: \texttt{FIREBASE\_SERVICE\_ACCOUNT\_KEY}, \texttt{FIREBASE\_ENABLED}, \texttt{GOOGLE\_AI\_API\_KEY}). O deploy via Cloud Build / gcloud recomenda o uso do Secret Manager ou \texttt{--set-env-vars} para injetar segredos/credenciais em tempo de execução, em vez de armazená-los no código.
 
     \item \textbf{Inicialização do Firebase no backend:} A classe \texttt{FirebaseConfig.java} implementa uma estratégia robusta para carregar credenciais do Firebase, com prioridade:
         \begin{enumerate}
             \item conteúdo JSON do service account passado via variável de configuração (\texttt{firebase.service-account-key});
             \item caminho para arquivo local (\texttt{firebase.service-account-key-path});
-            \item conteúdo JSON via \texttt{GOOGLE_APPLICATION_CREDENTIALS} (útil em CI/CD/Cloud Run quando o segredo é injetado como valor de ambiente);
+            \item conteúdo JSON via \texttt{GOOGLE\_APPLICATION\_CREDENTIALS} (útil em CI/CD/Cloud Run quando o segredo é injetado como valor de ambiente);
             \item Application Default Credentials (ADC) quando disponível — padrão recomendado para Cloud Run usando Identity and Access Management (IAM) e Workload Identity.
         \end{enumerate}
         A inicialização remove prefixos \texttt{gs://} no nome do bucket, configura \texttt{FirebaseOptions} (projectId, storageBucket, credentials) e registra \texttt{FirebaseAuth} como bean para uso nos serviços de autenticação.
@@ -174,7 +174,7 @@ O projeto é preparado para deploy containerizado no Google Cloud Run e faz uso 
     \item \textbf{Recomendação do fluxo de credenciais para Cloud Run:}
         \begin{itemize}
             \item Em produção use Workload Identity / ADC para que o serviço Cloud Run tenha permissões IAM adequadas para acessar Firestore, Storage e Vertex AI sem necessidade de arquivos JSON no container;
-            \item Para CI (Cloud Build) injetar o conteúdo do service account via Secret Manager e configurar \texttt{GOOGLE_APPLICATION_CREDENTIALS} como variável de ambiente apontando para o JSON ou para o próprio conteúdo (o código trata ambos os casos);
+            \item Para CI (Cloud Build) injetar o conteúdo do service account via Secret Manager e configurar \texttt{GOOGLE\_APPLICATION\_CREDENTIALS} como variável de ambiente apontando para o JSON ou para o próprio conteúdo (o código trata ambos os casos);
             \item Evitar commit de chaves ou colocar arquivos de credencial dentro do repositório.
         \end{itemize}
 
@@ -222,7 +222,7 @@ As seções acima foram atualizadas para refletir o estado atual do código-font
 
 O gerenciamento de estado global da aplicação é realizado através de bibliotecas modernas que oferecem alta performance e integração nativa com React.
 
-	extbf{Zustand 4.4.7:}
+\textbf{Zustand 4.4.7:}
 
 Zustand é uma biblioteca de gerenciamento de estado minimalista baseada em \textit{hooks}, escolhida por sua simplicidade e performance superior. O sistema utiliza cinco \textit{stores} principais:
 
@@ -236,7 +236,7 @@ Zustand é uma biblioteca de gerenciamento de estado minimalista baseada em \tex
 
 A persistência do estado é realizada através do \textit{middleware} \texttt{persist} do Zustand, integrado ao AsyncStorage para dados não sensíveis.
 
-	extbf{React Query (@tanstack/react-query) 5.x:}
+\textbf{React Query (@tanstack/react-query) 5.x:}
 \begin{itemize}
     \item \textit{Cache} inteligente de requisições HTTP com invalidação automática;
     \item \textit{Refetch} estratégico baseado em foco da janela e reconexão;
@@ -248,7 +248,7 @@ A persistência do estado é realizada através do \textit{middleware} \texttt{p
 
 O Point Mapper é uma ferramenta web auxiliar desenvolvida em HTML, CSS e JavaScript puro, utilizada para mapear as coordenadas dos pontos de acupuntura sobre os artefatos do atlas (PNG visual e SVG de interação), aproveitando o SVG para captura precisa de coordenadas.
 
-    extbf{Funcionalidades:}
+\textbf{Funcionalidades:}
 \begin{itemize}
     \item Seleção de meridiano e ponto a ser mapeado;
     \item Seleção da vista anatômica (anterior, posterior, lateral, etc.);

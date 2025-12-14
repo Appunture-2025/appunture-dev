@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,18 +14,16 @@ import type {
   BodyAtlasPlane,
 } from "../static/body-map/manifest";
 import type { NormalizedCoordinate } from "../utils/bodyMap";
-import {
-  BODY_MAP_VIEWBOX,
-  getMarkerPosition,
-} from "../utils/bodyMap";
+import { getMarkerPosition } from "../utils/bodyMap";
 import { useThemeColors } from "../stores/themeStore";
 import { COLORS } from "../utils/constants";
 
-// SVG original dimensions - PNG must match these for coordinate sync
+// SVG viewBox dimensions - coordinates are mapped to these values
+// The PNG was exported from SVG with viewBox="0 0 1440 809.999993"
 const SVG_WIDTH = 1440;
 const SVG_HEIGHT = 809.999993;
 
-// Direct PNG imports - same approach as working PngTestComponent
+// Direct PNG imports
 import LU_PNG from "../static/body-map/LU.png";
 import LI_PNG from "../static/body-map/LI.png";
 import ST_PNG from "../static/body-map/ST.png";
@@ -62,8 +60,6 @@ const PNG_MAP: Record<string, ImageSourcePropType> = {
 };
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-
-// Container dimensions - we'll scale the SVG viewbox to fit
 const CONTAINER_HEIGHT = 500;
 
 export interface BodyMapMarker {
@@ -81,6 +77,7 @@ interface BodyMapInteractiveProps {
   onMarkerPress?: (marker: BodyMapMarker) => void;
 }
 
+
 export function BodyMapInteractive({
   layer,
   plane,
@@ -96,7 +93,7 @@ export function BodyMapInteractive({
   const pngSource = PNG_MAP[layer.id] || null;
 
   // Calculate scaled dimensions maintaining aspect ratio
-  // The PNG/SVG has aspect ratio of 1440:810 (roughly 16:9)
+  // Use SVG viewBox dimensions for aspect ratio (1440:810)
   const aspectRatio = SVG_WIDTH / SVG_HEIGHT;
   const containerWidth = SCREEN_WIDTH - 64; // Account for padding
   
@@ -113,7 +110,7 @@ export function BodyMapInteractive({
           return null;
         }
 
-        // Scale from SVG coordinates to our scaled dimensions
+        // Scale from SVG viewBox coordinates to our scaled dimensions
         const left = (absolutePosition.x / SVG_WIDTH) * scaledWidth;
         const top = (absolutePosition.y / SVG_HEIGHT) * scaledHeight;
 
@@ -129,10 +126,8 @@ export function BodyMapInteractive({
   // Center content when image loads
   useEffect(() => {
     if (imageLoaded && scrollViewRef.current) {
-      // Center the content initially
       const scrollX = Math.max(0, (scaledWidth - containerWidth) / 2);
       const scrollY = Math.max(0, (scaledHeight - CONTAINER_HEIGHT) / 2);
-      
       setTimeout(() => {
         scrollViewRef.current?.scrollTo({
           x: scrollX,
@@ -207,12 +202,12 @@ export function BodyMapInteractive({
             ) : (
               <View style={[styles.noImageContainer, { width: scaledWidth, height: scaledHeight }]}>
                 <Text style={[styles.noImageText, { color: colors.textSecondary }]}>
-                  {`Imagem não disponível\n${layer.label}`}
+                  Imagem não disponível{"\n"}{layer.label}
                 </Text>
               </View>
             )}
 
-            {/* Markers overlay - positioned relative to scaled image */}
+            {/* Markers overlay - only dots, no labels */}
             {markersWithPosition.map((marker) => (
               <TouchableOpacity
                 key={marker.id}
@@ -225,7 +220,7 @@ export function BodyMapInteractive({
                 ]}
                 onPress={() => onMarkerPress?.(marker)}
                 activeOpacity={0.7}
-                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
                 <View
                   style={[
@@ -239,9 +234,6 @@ export function BodyMapInteractive({
                     },
                   ]}
                 />
-                <View style={styles.markerLabelContainer}>
-                  <Text style={styles.markerLabel}>{marker.label}</Text>
-                </View>
               </TouchableOpacity>
             ))}
           </View>
@@ -262,6 +254,7 @@ export function BodyMapInteractive({
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -330,19 +323,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 2,
   },
-  markerLabelContainer: {
-    marginTop: 2,
-    backgroundColor: "rgba(0,0,0,0.8)",
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 8,
-  },
-  markerLabel: {
-    fontSize: 10,
-    color: "#fff",
-    fontWeight: "600",
-  },
-
   emptyState: {
     marginTop: 12,
     fontSize: 14,

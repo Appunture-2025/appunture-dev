@@ -13,12 +13,11 @@ import { COLORS } from "../utils/constants";
 import type { BodyAtlasLayer } from "../static/body-map/manifest";
 import { BODY_ATLAS_LAYER_MAP } from "../static/body-map/manifest";
 import {
-  BODY_MAP_VIEWBOX,
   getMarkerPosition,
   type NormalizedCoordinate,
 } from "../utils/bodyMap";
 
-// Direct PNG imports - same approach as BodyMapInteractive
+// Direct PNG imports
 import LU_PNG from "../static/body-map/LU.png";
 import LI_PNG from "../static/body-map/LI.png";
 import ST_PNG from "../static/body-map/ST.png";
@@ -54,7 +53,7 @@ const PNG_MAP: Record<string, ImageSourcePropType> = {
   CV: CV_PNG,
 };
 
-// SVG original dimensions
+// SVG viewBox dimensions - coordinates are mapped to these values
 const SVG_WIDTH = 1440;
 const SVG_HEIGHT = 809.999993;
 
@@ -65,13 +64,12 @@ interface PointLocationMapProps {
   height?: number;
   coordinates: NormalizedCoordinate;
   layerId: string;
-  label?: string;
 }
+
 
 export function PointLocationMap({
   coordinates,
   layerId,
-  label,
   height = DEFAULT_MAP_HEIGHT,
 }: PointLocationMapProps) {
   const colors = useThemeColors();
@@ -108,7 +106,6 @@ export function PointLocationMap({
   // Scroll to center on marker when image loads
   useEffect(() => {
     if (imageLoaded && markerPosition && scrollViewRef.current) {
-      // Calculate scroll position to center the marker
       const scrollX = Math.max(0, markerPosition.left - containerWidth / 2);
       const scrollY = Math.max(0, markerPosition.top - height / 2);
       
@@ -188,7 +185,7 @@ export function PointLocationMap({
               </View>
             )}
 
-            {/* Point Marker */}
+            {/* Point Marker - only dot, no label */}
             {markerPosition && (
               <View
                 style={[
@@ -200,11 +197,6 @@ export function PointLocationMap({
                 ]}
               >
                 <View style={[styles.markerDot, { backgroundColor: colors.error, borderColor: colors.surface }]} />
-                {label && (
-                  <View style={styles.markerLabelContainer}>
-                    <Text style={styles.markerLabel}>{label}</Text>
-                  </View>
-                )}
               </View>
             )}
           </View>
@@ -217,6 +209,7 @@ export function PointLocationMap({
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -282,18 +275,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
-  },
-  markerLabelContainer: {
-    marginTop: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
-    backgroundColor: "rgba(0,0,0,0.85)",
-  },
-  markerLabel: {
-    fontSize: 12,
-    color: "#fff",
-    fontWeight: "600",
   },
   helpText: {
     marginTop: 12,

@@ -14,6 +14,7 @@ import { Link, useRouter } from "expo-router";
 import { usePointsStore } from "../../stores/pointsStore";
 import { useAuthStore } from "../../stores/authStore";
 import { SyncStatusIndicator } from "../../components/SyncStatusIndicator";
+import { SyncBanner } from "../../components/SyncBanner";
 
 import { useOfflineMode } from "../../hooks/useOfflineMode";
 import { COLORS, MERIDIANS } from "../../utils/constants";
@@ -90,6 +91,9 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Sync Banner - appears only on home screen */}
+      <SyncBanner />
+      
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerContent}>

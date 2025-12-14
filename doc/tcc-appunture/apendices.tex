@@ -32,7 +32,7 @@ O sistema Appunture utiliza uma arquitetura cloud-backed com persistência local
 
 \section{Banco de Dados Local (SQLite)}
 
-O banco de dados SQLite é utilizado no aplicativo móvel para armazenamento local e como cache de leitura. A implementação concreta encontra-se em `frontend-mobile/appunture/services/database.ts`. O código cria tabelas de controle e enfileiramento (por exemplo, \texttt{sync_queue} e \texttt{image_sync_queue}) para operações de escrita que são registradas localmente e consumidas por um processo de sincronização quando houver conectividade. Leituras locais permanecem disponíveis para oferecer responsividade; gravações são enfileiradas e enviadas ao backend (Firestore) conforme a política de sincronização implementada no código.
+O banco de dados SQLite é utilizado no aplicativo móvel para armazenamento local e como cache de leitura. A implementação concreta encontra-se em \texttt{frontend-mobile/appunture/services/database.ts}. O código cria tabelas de controle e enfileiramento (por exemplo, \texttt{sync\_queue} e \texttt{image\_sync\_queue}) para operações de escrita que são registradas localmente e consumidas por um processo de sincronização quando houver conectividade. Leituras locais permanecem disponíveis para oferecer responsividade; gravações são enfileiradas e enviadas ao backend (Firestore) conforme a política de sincronização implementada no código.
 
 \figura{MODELO LOGICO - SQLITE (MOBILE)}{0.75}{fig/modelo-logico-sqlite.png}{Os autores (2025)}{modelo-sqlite}{}{}
 
@@ -251,7 +251,7 @@ Este apendice apresenta as historias de usuario detalhadas do sistema Appunture,
 
 \begin{enumerate}
     \item O sistema deve sincronizar automaticamente quando conectado a internet
-    \item O sistema deve permitir uso com dados em cache para leitura; gravações são enfileiradas localmente e sincronizadas quando houver conectividade (fluxo implementado em `frontend-mobile/appunture/services/database.ts`)
+    \item O sistema deve permitir uso com dados em cache para leitura; gravações são enfileiradas localmente e sincronizadas quando houver conectividade (fluxo implementado em \texttt{frontend-mobile/appunture/services/database.ts})
     \item O sistema deve aplicar regras de resolução de conflitos (por exemplo, baseadas em \textit{timestamp} ou versão) conforme implementado no código
     \item O sistema deve notificar o usuario sobre status da sincronizacao
     \item O sistema deve permitir sincronizacao manual sob demanda

@@ -41,8 +41,8 @@ jest.mock("react-native", () => {
 // Mock react-native-svg components used by SvgAssetRenderer
 jest.mock("react-native-svg", () => {
   const React = require("react");
-  const MockSvg = (props) => React.createElement("svg", props);
-  const MockComponent = (name) => (props) => React.createElement(name, props);
+  const MockSvg = (props: any) => React.createElement("svg", props);
+  const MockComponent = (name: string) => (props: any) => React.createElement(name, props);
 
   return {
     __esModule: true,
@@ -52,7 +52,7 @@ jest.mock("react-native-svg", () => {
     Rect: MockComponent("rect"),
     Circle: MockComponent("circle"),
     G: MockComponent("g"),
-    SvgXml: (props) => React.createElement("svg", props),
+    SvgXml: (props: any) => React.createElement("svg", props),
   };
 });
 

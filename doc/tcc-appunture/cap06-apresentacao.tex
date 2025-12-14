@@ -11,15 +11,15 @@ O \textit{Appunture} foi desenvolvido com uma arquitetura modular que combina pe
 
 \subsection{Persistência Local e Backend em Nuvem}
 
-O aplicativo móvel mantém uma camada de persistência local (SQLite) para leitura rápida e resiliência em condições de rede intermitente. O código do cliente cria e mantém um esquema local que contém o atlas (pontos, sintomas e metadados) e tabelas auxiliares para operações do usuário e sincronização — por exemplo, \texttt{sync_queue} e \texttt{image_sync_queue}. Essas tabelas permitem que operações do usuário sejam registradas e enfileiradas para envio ao \textit{backend} quando houver conectividade. A implementação concreta dessa camada está em `frontend-mobile/appunture/services/database.ts`.
+O aplicativo móvel mantém uma camada de persistência local (SQLite) para leitura rápida e resiliência em condições de rede intermitente. O código do cliente cria e mantém um esquema local que contém o atlas (pontos, sintomas e metadados) e tabelas auxiliares para operações do usuário e sincronização — por exemplo, \texttt{sync\_queue} e \texttt{image\_sync\_queue}. Essas tabelas permitem que operações do usuário sejam registradas e enfileiradas para envio ao \textit{backend} quando houver conectividade. A implementação concreta dessa camada está em \texttt{frontend-mobile/appunture/services/database.ts}.
 
-O \textit{backend}, implementado em Java com Spring Boot, utiliza o Firestore como fonte de verdade e provê APIs REST protegidas para consulta e sincronização. Em produção o backend é empacotado em container e implantado no Google Cloud Run através do pipeline definido em `backend-java/cloudbuild.yaml`, que constrói a imagem, envia ao Container Registry e executa `gcloud run deploy` com variáveis de ambiente adequadas.
+O \textit{backend}, implementado em Java com Spring Boot, utiliza o Firestore como fonte de verdade e provê APIs REST protegidas para consulta e sincronização. Em produção o backend é empacotado em container e implantado no Google Cloud Run através do pipeline definido em \texttt{backend-java/cloudbuild.yaml}, que constrói a imagem, envia ao Container Registry e executa \texttt{gcloud run deploy} com variáveis de ambiente adequadas.
 
 \subsection{Comunicação e Sincronização}
 
 A comunicação entre o cliente e o \textit{backend} ocorre por meio de APIs RESTful protegidas por tokens Firebase (Firebase ID Tokens). O \textit{backend} oferece endpoints públicos para consulta do atlas e endpoints autenticados para operações do usuário (sincronização, favoritos, upload de mídia). A validação dos tokens é realizada pelo \textit{backend} (classe de configuração de Firebase encontrada em \texttt{backend-java/src/main/java/.../config/FirebaseConfig.java}), que suporta carregamento de credenciais por variáveis de ambiente, caminho para arquivo JSON ou Application Default Credentials.
 
-No cliente, o subsistema de sincronização funciona com base em filas locais: operações do usuário são gravadas na tabela \texttt{sync_queue} (ou \texttt{image_sync_queue} para mídias) e marcadas com estados (pendente, em progresso, concluído, falhado). Um processo de sincronização consome essas filas quando a aplicação detecta conectividade e quando o \textit{backend} estiver disponível (checado via health-check). A aplicação faz \textit{optimistic updates} e, se necessário, realiza rollback em caso de falha durante a sincronização. Em resumo: o Firestore atua como fonte de verdade e o cliente mantém persistência local para resiliência e enfileiramento — isto é, uma arquitetura cloud-backed com sincronização controlada.
+No cliente, o subsistema de sincronização funciona com base em filas locais: operações do usuário são gravadas na tabela \texttt{sync\_queue} (ou \texttt{image\_sync\_queue} para mídias) e marcadas com estados (pendente, em progresso, concluído, falhado). Um processo de sincronização consome essas filas quando a aplicação detecta conectividade e quando o \textit{backend} estiver disponível (checado via health-check). A aplicação faz \textit{optimistic updates} e, se necessário, realiza rollback em caso de falha durante a sincronização. Em resumo: o Firestore atua como fonte de verdade e o cliente mantém persistência local para resiliência e enfileiramento — isto é, uma arquitetura cloud-backed com sincronização controlada.
 
 \subsection{Assistente de IA para Busca Inteligente}
 
@@ -28,7 +28,7 @@ Para viabilizar a busca inteligente por sintomas, o aplicativo utiliza um assist
 \textbf{Arquitetura RAG (Retrieval-Augmented Generation):}
 O sistema utiliza a arquitetura RAG integrada ao \textit{backend} Java. O assistente inteligente, alimentado pelo Google Gemini 1.5 Flash via Spring AI, interpreta perguntas do usuário sobre sintomas e pontos de acupuntura, fornecendo respostas contextualizadas com a base de dados técnica do sistema. Esta abordagem reduz alucinações do modelo e aumenta a confiabilidade das informações apresentadas.
 
-        extbf{Navegação com Persistência Local:}
+\textbf{Navegação com Persistência Local:}
 O usuário pode navegar pelo atlas e acessar conteúdo previamente carregado a partir do banco local (SQLite). A busca inteligente por sintomas e outras operações que dependem de IA ou do backend permanecem indisponíveis sem conexão. A experiência local prioriza leituras rápidas e gravações locais enfileiradas para sincronização posterior.
 
 \subsection{Interface Interativa e Navegação}
@@ -43,7 +43,7 @@ O \textit{backend} centraliza a gestão dos dados oficiais, incluindo o cadastro
 
 O sistema utiliza o Firebase Authentication no cliente e validação de tokens no \textit{backend} (integração com Spring Security). O fluxo implementado no código segue os padrões do Firebase SDK:
 
-	extbf{Métodos de Autenticação:}
+\textbf{Métodos de Autenticação:}
 \begin{itemize}
     \item Login com email e senha (Firebase SDK);
     \item Login social via Google (OAuth 2.0 via \textit{expo-auth-session});

@@ -39,6 +39,21 @@ export function SyncBanner() {
     });
   }, [isOnline, syncInProgress, pendingOperations, pendingImages, failedOperations, notificationMessage]);
 
+  // Debug what banner will be shown
+  React.useEffect(() => {
+    const totalPending = pendingOperations + pendingImages;
+    const failedCount = failedOperations.length;
+    
+    let bannerType = 'none';
+    if (notificationMessage) bannerType = 'notification';
+    else if (!isOnline) bannerType = 'offline';
+    else if (syncInProgress && totalPending > 0) bannerType = 'syncing';
+    else if (failedCount > 0) bannerType = 'failed';
+    else if (totalPending > 0) bannerType = 'pending';
+    
+    console.log('[SyncBanner] Will show banner type:', bannerType);
+  }, [isOnline, syncInProgress, pendingOperations, pendingImages, failedOperations, notificationMessage]);
+
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const totalPending = pendingOperations + pendingImages;
   const failedCount = failedOperations.length;
