@@ -121,6 +121,7 @@ public class SecurityConfig {
                         // Endpoints de pontos (leitura pública, escrita autenticada)
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/points/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/meridians/**").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/symptoms/**").permitAll()
                         // Chat com IA requer autenticação
                         .requestMatchers("/chat/**").authenticated()
                         // Favoritos requerem autenticação
