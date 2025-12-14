@@ -40,6 +40,41 @@ const SVG_ASSETS = {
   CV: CV_SVG,
 } as const;
 
+// PNG assets mapping (visual layer)
+const LU_PNG = require("../static/body-map/LU.png");
+const LI_PNG = require("../static/body-map/LI.png");
+const ST_PNG = require("../static/body-map/ST.png");
+const ST2_PNG = require("../static/body-map/ST2.png");
+const SP_PNG = require("../static/body-map/SP.png");
+const HT_PNG = require("../static/body-map/HT.png");
+const SI_PNG = require("../static/body-map/SI.png");
+const BL_PNG = require("../static/body-map/BL.png");
+const KI_PNG = require("../static/body-map/KI.png");
+const P_PNG = require("../static/body-map/P.png");
+const TW_PNG = require("../static/body-map/TW.png");
+const GB_PNG = require("../static/body-map/GB.png");
+const LV_PNG = require("../static/body-map/LV.png");
+const GV_PNG = require("../static/body-map/GV.png");
+const CV_PNG = require("../static/body-map/CV.png");
+
+const PNG_ASSETS = {
+  LU: LU_PNG,
+  LI: LI_PNG,
+  ST: ST_PNG,
+  ST2: ST2_PNG,
+  SP: SP_PNG,
+  HT: HT_PNG,
+  SI: SI_PNG,
+  BL: BL_PNG,
+  KI: KI_PNG,
+  P: P_PNG,
+  TW: TW_PNG,
+  GB: GB_PNG,
+  LV: LV_PNG,
+  GV: GV_PNG,
+  CV: CV_PNG,
+} as const;
+
 // Cache for loaded SVG XML strings
 const svgXmlCache = new Map<string, string>();
 
@@ -156,6 +191,10 @@ export const getEmbeddedSvgModule = (layerId: string): any | null => {
   return SVG_ASSETS[layerId as keyof typeof SVG_ASSETS] ?? null;
 };
 
+export const getPngForLayer = (layerId: string): any | null => {
+  return PNG_ASSETS[layerId as keyof typeof PNG_ASSETS] ?? null;
+};
+
 /**
  * Return the React component exported by the SVG module for a given layer id, if any.
  */
@@ -173,13 +212,15 @@ export const getSvgComponentForLayer = (
 export const getSvgRenderableForLayer = async (
   layerId: string
 ): Promise<{
+  pngSource?: any | null;
   xml?: string | null;
   Component?: React.ComponentType<any> | null;
 }> => {
+  const pngSource = getPngForLayer(layerId);
   const Component = getSvgComponentForLayer(layerId);
-  if (Component) return { Component, xml: null };
+  if (Component) return { pngSource, Component, xml: null };
   const xml = await getEmbeddedSvgXml(layerId);
-  return { xml, Component: null };
+  return { pngSource, xml, Component: null };
 };
 
 /**

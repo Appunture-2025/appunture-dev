@@ -111,7 +111,9 @@ export const prefetchBodyMapLayers = async (): Promise<void> => {
     })
   );
 
-  const successful = results.filter((r) => r.status === "success").length;
+  const successful = results.filter(
+    (r) => r.status === "success" || r.status === "component"
+  ).length;
   console.log(
     `[bodyMap] Prefetch complete: ${successful}/${BODY_ATLAS_LAYERS.length} successful`
   );
