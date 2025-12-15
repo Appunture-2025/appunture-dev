@@ -3,6 +3,7 @@ const pendingImagesMock = jest.fn();
 
 export const databaseService = {
   init: jest.fn(),
+  isInitialized: jest.fn().mockReturnValue(true),
   getQueuedOperations: queuedOperationsMock,
   getPendingOperations: queuedOperationsMock,
   getQueuedNotes: jest.fn(),

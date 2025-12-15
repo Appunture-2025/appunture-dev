@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -11,24 +11,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { usePointsStore } from "../../stores/pointsStore";
 import { useThemeColors, useThemeStore } from "../../stores/themeStore";
 import { SPACING } from "../../utils/constants";
+import { filterPoints } from "../../utils/filterPoints";
 import SearchBar from "../../components/SearchBar";
 import PointCard from "../../components/PointCard";
 
 export default function SearchScreen() {
   const colors = useThemeColors();
   const { isDark } = useThemeStore();
-  const {
-    points,
-    searchResults,
-    loading,
-    loadPoints,
-    searchPoints,
-    clearSearch,
-    toggleFavorite,
-  } = usePointsStore();
+  const { points, loading, loadPoints, toggleFavorite } = usePointsStore();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     loadInitialData();
@@ -39,23 +31,6 @@ export default function SearchScreen() {
       await loadPoints();
     } catch (error) {
       Alert.alert("Erro", "Não foi possível carregar os pontos.");
-    }
-  };
-
-  const handleSearch = async (query: string) => {
-    if (!query.trim()) {
-      clearSearch();
-      setIsSearching(false);
-      return;
-    }
-
-    try {
-      setIsSearching(true);
-      await searchPoints(query);
-    } catch (error) {
-      Alert.alert("Erro", "Erro na busca. Tente novamente.");
-    } finally {
-      setIsSearching(false);
     }
   };
 
@@ -71,7 +46,11 @@ export default function SearchScreen() {
     }
   };
 
-  const displayPoints = isSearching || searchQuery ? searchResults : points;
+  // Filter points in-memory based on search query (real-time filtering)
+  const displayPoints = useMemo(
+    () => filterPoints(points, searchQuery),
+    [points, searchQuery]
+  );
 
   const renderPoint = ({ item }: { item: any }) => (
     <PointCard
@@ -111,8 +90,8 @@ export default function SearchScreen() {
         placeholder="Buscar pontos, meridianos..."
         value={searchQuery}
         onChangeText={setSearchQuery}
-        onSubmit={() => handleSearch(searchQuery)}
-        loading={isSearching}
+        onSubmit={() => {}}
+        loading={false}
       />
     </View>
   );
@@ -133,7 +112,7 @@ export default function SearchScreen() {
         onRefresh={loadInitialData}
       />
 
-      {(loading || isSearching) && (
+      {loading && (
         <View
           style={[
             styles.loadingOverlay,

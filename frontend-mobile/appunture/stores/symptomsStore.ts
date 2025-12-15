@@ -157,7 +157,8 @@ export const useSymptomsStore = create<SymptomsState>((set, get) => ({
     try {
       await apiService.incrementSymptomUse(symptomId);
     } catch (error: any) {
-      symptomsLogger.error("Failed to increment symptom use:", error);
+      // Silently ignore errors - this is a non-critical analytics operation
+      symptomsLogger.warn("Failed to increment symptom use:", error);
     }
   },
 

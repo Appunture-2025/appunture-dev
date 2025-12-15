@@ -658,11 +658,15 @@ class DatabaseService {
 
   async searchPoints(query: string): Promise<LocalPoint[]> {
     const db = this.getDb();
-    const searchTerm = `%${query}%`;
+    const searchTerm = `%${query.toLowerCase()}%`;
     const result = (await db.getAllAsync(
       `SELECT * FROM points 
-       WHERE name LIKE ? OR chinese_name LIKE ? OR meridian LIKE ? OR location LIKE ? OR indications LIKE ?
-       ORDER BY name`,
+       WHERE LOWER(name) LIKE ? 
+          OR LOWER(chinese_name) LIKE ? 
+          OR LOWER(meridian) LIKE ? 
+          OR LOWER(location) LIKE ? 
+          OR LOWER(indications) LIKE ?
+       ORDER BY name COLLATE NOCASE`,
       [searchTerm, searchTerm, searchTerm, searchTerm, searchTerm]
     )) as LocalPoint[];
     return result;

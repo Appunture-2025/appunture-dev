@@ -1,11 +1,10 @@
-import React, { useMemo, useState, useRef, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import {
   StyleSheet,
   View,
   Image,
   Dimensions,
   Text,
-  ScrollView,
   ImageSourcePropType,
 } from "react-native";
 import { useThemeColors } from "../stores/themeStore";
@@ -16,6 +15,7 @@ import {
   getMarkerPosition,
   type NormalizedCoordinate,
 } from "../utils/bodyMap";
+import { ZoomableView } from "./ZoomableView";
 
 // Direct PNG imports
 import LU_PNG from "../static/body-map/LU.png";
@@ -67,14 +67,24 @@ interface PointLocationMapProps {
 }
 
 
+// Base marker size at scale 1
+const BASE_MARKER_SIZE = 24;
+const MIN_MARKER_SIZE = 8;
+
+// Calculate marker size based on zoom scale (smaller when zoomed in)
+const getMarkerSize = (scale: number): number => {
+  const size = BASE_MARKER_SIZE / scale;
+  return Math.max(size, MIN_MARKER_SIZE);
+};
+
 export function PointLocationMap({
   coordinates,
   layerId,
   height = DEFAULT_MAP_HEIGHT,
 }: PointLocationMapProps) {
   const colors = useThemeColors();
-  const scrollViewRef = useRef<ScrollView>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [currentScale, setCurrentScale] = useState(1);
 
   const layer: BodyAtlasLayer | null = useMemo(
     () => BODY_ATLAS_LAYER_MAP[layerId.toUpperCase()] ?? null,
@@ -83,6 +93,9 @@ export function PointLocationMap({
 
   // Get PNG source directly from map
   const pngSource = layer ? PNG_MAP[layer.id] : null;
+  
+  // Calculate marker size based on current zoom
+  const markerSize = getMarkerSize(currentScale);
 
   // Calculate scaled dimensions maintaining aspect ratio
   const aspectRatio = SVG_WIDTH / SVG_HEIGHT;
@@ -90,7 +103,7 @@ export function PointLocationMap({
   const scaledWidth = containerWidth;
   const scaledHeight = containerWidth / aspectRatio;
 
-  // Calculate marker position
+  // Calculate marker position - UNCHANGED, preserves coordinate mapping
   const markerPosition = useMemo(() => {
     if (!coordinates) return null;
 
@@ -102,22 +115,6 @@ export function PointLocationMap({
 
     return { left, top };
   }, [coordinates, scaledWidth, scaledHeight]);
-
-  // Scroll to center on marker when image loads
-  useEffect(() => {
-    if (imageLoaded && markerPosition && scrollViewRef.current) {
-      const scrollX = Math.max(0, markerPosition.left - containerWidth / 2);
-      const scrollY = Math.max(0, markerPosition.top - height / 2);
-      
-      setTimeout(() => {
-        scrollViewRef.current?.scrollTo({
-          x: scrollX,
-          y: scrollY,
-          animated: true,
-        });
-      }, 100);
-    }
-  }, [imageLoaded, markerPosition, containerWidth, height]);
 
   if (!layer) {
     return (
@@ -141,23 +138,16 @@ export function PointLocationMap({
       </View>
 
       <View style={[styles.mapContainer, { backgroundColor: colors.background, height }]}>
-        <ScrollView
-          ref={scrollViewRef}
-          style={styles.scrollView}
-          contentContainerStyle={{ width: scaledWidth, height: scaledHeight }}
-          horizontal={true}
-          maximumZoomScale={5}
-          minimumZoomScale={0.5}
-          showsHorizontalScrollIndicator={true}
-          showsVerticalScrollIndicator={true}
-          bouncesZoom={true}
-          bounces={true}
-          scrollEnabled={true}
-          pinchGestureEnabled={true}
-          centerContent={false}
+        <ZoomableView
+          contentWidth={scaledWidth}
+          contentHeight={scaledHeight}
+          containerHeight={height}
+          minScale={0.5}
+          maxScale={4}
+          onScaleChange={setCurrentScale}
         >
           <View style={{ width: scaledWidth, height: scaledHeight, position: 'relative' }}>
-            {/* PNG Image */}
+            {/* PNG Image - dimensions and position UNCHANGED */}
             {pngSource ? (
               <Image
                 source={pngSource}
@@ -185,7 +175,7 @@ export function PointLocationMap({
               </View>
             )}
 
-            {/* Point Marker - only dot, no label */}
+            {/* Point Marker - size adjusts based on zoom level */}
             {markerPosition && (
               <View
                 style={[
@@ -193,14 +183,30 @@ export function PointLocationMap({
                   {
                     left: markerPosition.left,
                     top: markerPosition.top,
+                    transform: [
+                      { translateX: -markerSize / 2 },
+                      { translateY: -markerSize / 2 },
+                    ],
                   },
                 ]}
               >
-                <View style={[styles.markerDot, { backgroundColor: colors.error, borderColor: colors.surface }]} />
+                <View
+                  style={[
+                    styles.markerDot,
+                    {
+                      width: markerSize,
+                      height: markerSize,
+                      borderRadius: markerSize / 2,
+                      borderWidth: Math.max(2, 3 / currentScale),
+                      backgroundColor: colors.error,
+                      borderColor: colors.surface,
+                    },
+                  ]}
+                />
               </View>
             )}
           </View>
-        </ScrollView>
+        </ZoomableView>
       </View>
 
       <Text style={[styles.helpText, { color: colors.textSecondary }]}>
@@ -240,9 +246,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
   },
-  scrollView: {
-    flex: 1,
-  },
+
   noImageContainer: {
     justifyContent: "center",
     alignItems: "center",
@@ -261,13 +265,10 @@ const styles = StyleSheet.create({
   marker: {
     position: "absolute",
     alignItems: "center",
-    transform: [{ translateX: -12 }, { translateY: -12 }],
+    // transform is now set dynamically based on marker size
   },
   markerDot: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 3,
+    // width, height, borderRadius, borderWidth are now set dynamically
     borderColor: COLORS.surface,
     backgroundColor: COLORS.error,
     shadowColor: "#000",

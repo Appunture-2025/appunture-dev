@@ -122,6 +122,8 @@ public class SecurityConfig {
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/points/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/meridians/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/symptoms/**").permitAll()
+                        // Incrementar uso de sintoma é público (analytics anônimo)
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/symptoms/{id}/use").permitAll()
                         // Chat com IA requer autenticação
                         .requestMatchers("/chat/**").authenticated()
                         // Favoritos requerem autenticação

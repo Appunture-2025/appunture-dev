@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,7 +6,6 @@ import {
   View,
   Dimensions,
   Image,
-  ScrollView,
   ImageSourcePropType,
 } from "react-native";
 import type {
@@ -17,6 +16,7 @@ import type { NormalizedCoordinate } from "../utils/bodyMap";
 import { getMarkerPosition } from "../utils/bodyMap";
 import { useThemeColors } from "../stores/themeStore";
 import { COLORS } from "../utils/constants";
+import { ZoomableView } from "./ZoomableView";
 
 // SVG viewBox dimensions - coordinates are mapped to these values
 // The PNG was exported from SVG with viewBox="0 0 1440 809.999993"
@@ -78,6 +78,17 @@ interface BodyMapInteractiveProps {
 }
 
 
+// Base marker size at scale 1
+const BASE_MARKER_SIZE = 20;
+const MIN_MARKER_SIZE = 6;
+
+// Calculate marker size based on zoom scale (smaller when zoomed in)
+const getMarkerSize = (scale: number): number => {
+  // Inverse relationship: as scale increases, marker size decreases
+  const size = BASE_MARKER_SIZE / scale;
+  return Math.max(size, MIN_MARKER_SIZE);
+};
+
 export function BodyMapInteractive({
   layer,
   plane,
@@ -86,11 +97,14 @@ export function BodyMapInteractive({
   onMarkerPress,
 }: BodyMapInteractiveProps) {
   const colors = useThemeColors();
-  const scrollViewRef = useRef<ScrollView>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [currentScale, setCurrentScale] = useState(1);
 
   // Get PNG source directly from map
   const pngSource = PNG_MAP[layer.id] || null;
+  
+  // Calculate marker size based on current zoom
+  const markerSize = getMarkerSize(currentScale);
 
   // Calculate scaled dimensions maintaining aspect ratio
   // Use SVG viewBox dimensions for aspect ratio (1440:810)
@@ -123,21 +137,6 @@ export function BodyMapInteractive({
       .filter(Boolean) as Array<BodyMapMarker & { left: number; top: number }>;
   }, [scaledWidth, scaledHeight, markers]);
 
-  // Center content when image loads
-  useEffect(() => {
-    if (imageLoaded && scrollViewRef.current) {
-      const scrollX = Math.max(0, (scaledWidth - containerWidth) / 2);
-      const scrollY = Math.max(0, (scaledHeight - CONTAINER_HEIGHT) / 2);
-      setTimeout(() => {
-        scrollViewRef.current?.scrollTo({
-          x: scrollX,
-          y: scrollY,
-          animated: false,
-        });
-      }, 100);
-    }
-  }, [imageLoaded, scaledWidth, scaledHeight, containerWidth]);
-
   useEffect(() => {
     console.log(`[BodyMapInteractive] Layer: ${layer.id}, PNG: ${!!pngSource}`);
     console.log(`[BodyMapInteractive] Markers: ${markers.length} -> ${markersWithPosition.length} positioned`);
@@ -157,25 +156,15 @@ export function BodyMapInteractive({
         </View>
       </View>
 
-      {/* Map Container - ScrollView with zoom support */}
+      {/* Map Container - ZoomableView with native pinch-to-zoom */}
       <View style={[styles.mapContainer, { backgroundColor: colors.background, height: CONTAINER_HEIGHT }]}>
-        <ScrollView
-          ref={scrollViewRef}
-          style={styles.scrollView}
-          contentContainerStyle={[
-            styles.scrollContent,
-            { width: scaledWidth, height: scaledHeight }
-          ]}
-          horizontal={true}
-          maximumZoomScale={5}
-          minimumZoomScale={0.5}
-          showsHorizontalScrollIndicator={true}
-          showsVerticalScrollIndicator={true}
-          bouncesZoom={true}
-          bounces={true}
-          scrollEnabled={true}
-          pinchGestureEnabled={true}
-          centerContent={true}
+        <ZoomableView
+          contentWidth={scaledWidth}
+          contentHeight={scaledHeight}
+          containerHeight={CONTAINER_HEIGHT}
+          minScale={0.5}
+          maxScale={4}
+          onScaleChange={setCurrentScale}
         >
           {/* Content wrapper with exact SVG dimensions scaled */}
           <View style={{ width: scaledWidth, height: scaledHeight, position: 'relative' }}>
@@ -207,7 +196,7 @@ export function BodyMapInteractive({
               </View>
             )}
 
-            {/* Markers overlay - only dots, no labels */}
+            {/* Markers overlay - size adjusts based on zoom level */}
             {markersWithPosition.map((marker) => (
               <TouchableOpacity
                 key={marker.id}
@@ -216,6 +205,10 @@ export function BodyMapInteractive({
                   {
                     left: marker.left,
                     top: marker.top,
+                    transform: [
+                      { translateX: -markerSize / 2 },
+                      { translateY: -markerSize / 2 },
+                    ],
                   },
                 ]}
                 onPress={() => onMarkerPress?.(marker)}
@@ -226,6 +219,10 @@ export function BodyMapInteractive({
                   style={[
                     styles.markerDot,
                     {
+                      width: markerSize,
+                      height: markerSize,
+                      borderRadius: markerSize / 2,
+                      borderWidth: Math.max(1, 2 / currentScale),
                       backgroundColor:
                         marker.pointId === selectedPointId
                           ? colors.primary
@@ -237,7 +234,7 @@ export function BodyMapInteractive({
               </TouchableOpacity>
             ))}
           </View>
-        </ScrollView>
+        </ZoomableView>
       </View>
 
       {/* Empty state */}
@@ -291,12 +288,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
   },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    // Dynamic size set inline
-  },
+
   noImageContainer: {
     justifyContent: "center",
     alignItems: "center",
@@ -309,13 +301,10 @@ const styles = StyleSheet.create({
   marker: {
     position: "absolute",
     alignItems: "center",
-    transform: [{ translateX: -10 }, { translateY: -10 }],
+    // transform is now set dynamically based on marker size
   },
   markerDot: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 2,
+    // width, height, borderRadius, borderWidth are now set dynamically
     borderColor: COLORS.surface,
     elevation: 3,
     shadowColor: "#000",

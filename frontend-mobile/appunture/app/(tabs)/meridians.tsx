@@ -22,6 +22,50 @@ interface MeridianCardProps {
   colors: ReturnType<typeof useThemeColors>;
 }
 
+// Get icon name based on element
+const getElementIcon = (element: string): keyof typeof Ionicons.glyphMap => {
+  switch (element) {
+    case "Fire":
+      return "flame-outline";
+    case "Water":
+      return "water-outline";
+    case "Earth":
+      return "earth-outline";
+    case "Metal":
+      return "hardware-chip-outline";
+    case "Wood":
+      return "leaf-outline";
+    case "Yin":
+      return "moon-outline";
+    case "Yang":
+      return "sunny-outline";
+    default:
+      return "ellipse-outline";
+  }
+};
+
+// Get element name in Portuguese
+const getElementName = (element: string): string => {
+  switch (element) {
+    case "Fire":
+      return "Fogo";
+    case "Water":
+      return "Água";
+    case "Earth":
+      return "Terra";
+    case "Metal":
+      return "Metal";
+    case "Wood":
+      return "Madeira";
+    case "Yin":
+      return "Yin";
+    case "Yang":
+      return "Yang";
+    default:
+      return element;
+  }
+};
+
 const MeridianCard: React.FC<MeridianCardProps> = ({
   meridianId,
   pointCount,
@@ -34,18 +78,23 @@ const MeridianCard: React.FC<MeridianCardProps> = ({
     return null;
   }
 
+  const elementIcon = getElementIcon(meridianInfo.element);
+  const elementName = getElementName(meridianInfo.element);
+
+  // Note: Card background uses meridianInfo.color for visual distinction
+  // Text colors use dark colors for readability on light meridian backgrounds
   return (
     <TouchableOpacity
       style={[styles.card, { backgroundColor: meridianInfo.color }]}
       onPress={onPress}
       activeOpacity={0.7}
       accessibilityRole="button"
-      accessibilityLabel={`Meridiano ${meridianInfo.name}. ${meridianInfo.chineseName}. Elemento ${meridianInfo.element}. Horário ${meridianInfo.hours}. ${pointCount} pontos.`}
+      accessibilityLabel={`Meridiano ${meridianInfo.name}. ${meridianInfo.chineseName}. Elemento ${elementName}. Horário ${meridianInfo.hours}. ${pointCount} pontos.`}
       accessibilityHint="Toque para ver detalhes do meridiano"
     >
       <View style={styles.cardHeader}>
         <View style={styles.meridianInfo}>
-          <Text style={[styles.abbreviation, { color: colors.text }]}>
+          <Text style={[styles.abbreviation, { color: "#1A1A1A" }]}>
             {meridianInfo.abbreviation}
           </Text>
           <View style={[styles.badge, { backgroundColor: colors.primary }]}>
@@ -57,44 +106,44 @@ const MeridianCard: React.FC<MeridianCardProps> = ({
         <Ionicons
           name="chevron-forward"
           size={24}
-          color={colors.textSecondary}
+          color="#666666"
           importantForAccessibility="no-hide-descendants"
         />
       </View>
 
-      <Text style={[styles.meridianName, { color: colors.text }]}>
+      <Text style={[styles.meridianName, { color: "#1A1A1A" }]}>
         {meridianInfo.name}
       </Text>
-      <Text style={[styles.chineseName, { color: colors.textSecondary }]}>
+      <Text style={[styles.chineseName, { color: "#666666" }]}>
         {meridianInfo.chineseName}
       </Text>
 
       <View style={styles.detailsRow}>
         <View style={styles.detailItem}>
           <Ionicons
-            name="water-outline"
+            name={elementIcon}
             size={16}
-            color={colors.textSecondary}
+            color="#666666"
             importantForAccessibility="no-hide-descendants"
           />
-          <Text style={[styles.detailText, { color: colors.textSecondary }]}>
-            {meridianInfo.element}
+          <Text style={[styles.detailText, { color: "#666666" }]}>
+            {elementName}
           </Text>
         </View>
         <View style={styles.detailItem}>
           <Ionicons
             name="time-outline"
             size={16}
-            color={colors.textSecondary}
+            color="#666666"
             importantForAccessibility="no-hide-descendants"
           />
-          <Text style={[styles.detailText, { color: colors.textSecondary }]}>
+          <Text style={[styles.detailText, { color: "#666666" }]}>
             {meridianInfo.hours}
           </Text>
         </View>
       </View>
 
-      <Text style={[styles.organ, { color: colors.text }]} numberOfLines={1}>
+      <Text style={[styles.organ, { color: "#1A1A1A" }]} numberOfLines={1}>
         {meridianInfo.organ}
       </Text>
     </TouchableOpacity>
@@ -240,23 +289,44 @@ export default function MeridiansScreen() {
         </View>
 
         {/* Legend */}
-        <View style={styles.legend}>
-          <Text style={styles.legendTitle}>Legenda:</Text>
+        <View style={[styles.legend, { backgroundColor: colors.surface }]}>
+          <Text style={[styles.legendTitle, { color: colors.text }]}>
+            Legenda dos Elementos:
+          </Text>
           <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: "#E8F5E9" }]} />
-            <Text style={styles.legendText}>Metal / Madeira</Text>
-          </View>
-          <View style={styles.legendItem}>
+            <Ionicons name="flame-outline" size={20} color="#E53935" />
             <View style={[styles.legendDot, { backgroundColor: "#FFEBEE" }]} />
-            <Text style={styles.legendText}>Fogo</Text>
+            <Text style={[styles.legendText, { color: colors.textSecondary }]}>
+              Fogo (HT, SI, PC, TE)
+            </Text>
           </View>
           <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: "#FFF9C4" }]} />
-            <Text style={styles.legendText}>Terra</Text>
-          </View>
-          <View style={styles.legendItem}>
+            <Ionicons name="water-outline" size={20} color="#1E88E5" />
             <View style={[styles.legendDot, { backgroundColor: "#E3F2FD" }]} />
-            <Text style={styles.legendText}>Água</Text>
+            <Text style={[styles.legendText, { color: colors.textSecondary }]}>
+              Água (BL, KI)
+            </Text>
+          </View>
+          <View style={styles.legendItem}>
+            <Ionicons name="earth-outline" size={20} color="#8D6E63" />
+            <View style={[styles.legendDot, { backgroundColor: "#FFF9C4" }]} />
+            <Text style={[styles.legendText, { color: colors.textSecondary }]}>
+              Terra (ST, SP)
+            </Text>
+          </View>
+          <View style={styles.legendItem}>
+            <Ionicons name="hardware-chip-outline" size={20} color="#78909C" />
+            <View style={[styles.legendDot, { backgroundColor: "#E8F5E9" }]} />
+            <Text style={[styles.legendText, { color: colors.textSecondary }]}>
+              Metal (LU, LI)
+            </Text>
+          </View>
+          <View style={styles.legendItem}>
+            <Ionicons name="leaf-outline" size={20} color="#43A047" />
+            <View style={[styles.legendDot, { backgroundColor: "#F1F8E9" }]} />
+            <Text style={[styles.legendText, { color: colors.textSecondary }]}>
+              Madeira (GB, LR)
+            </Text>
           </View>
         </View>
       </ScrollView>

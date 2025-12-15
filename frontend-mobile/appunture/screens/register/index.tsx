@@ -14,10 +14,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "../../stores/authStore";
 import { COLORS } from "../../utils/constants";
+import { useThemeColors } from "../../stores/themeStore";
 import { styles } from "./styles";
 
 export default function RegisterScreen() {
   const router = useRouter();
+  const colors = useThemeColors();
   const { register, isLoading } = useAuthStore();
   const [formData, setFormData] = useState({
     name: "",
@@ -88,31 +90,31 @@ export default function RegisterScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[styles.container, { backgroundColor: colors.background }]}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
-          <View style={styles.logoContainer}>
-            <Ionicons name="person-add" size={48} color={COLORS.primary} />
+          <View style={[styles.logoContainer, { backgroundColor: colors.surface }]}>
+            <Ionicons name="person-add" size={48} color={colors.primary} />
           </View>
-          <Text style={styles.title}>Criar Conta</Text>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.title, { color: colors.text }]}>Criar Conta</Text>
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
             Junte-se ao Appunture e tenha acesso completo aos recursos da plataforma
           </Text>
         </View>
 
         <View style={styles.form}>
-          <View style={styles.inputContainer}>
+          <View style={[styles.inputContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <Ionicons
               name="person-outline"
               size={20}
-              color={COLORS.textSecondary}
+              color={colors.textSecondary}
             />
             <TextInput
-              style={styles.input}
+              style={[styles.input, { color: colors.text }]}
               placeholder="Nome completo"
-              placeholderTextColor={COLORS.textSecondary}
+              placeholderTextColor={colors.textSecondary}
               value={formData.name}
               onChangeText={(value) => updateFormData("name", value)}
               autoCapitalize="words"
@@ -121,16 +123,16 @@ export default function RegisterScreen() {
             />
           </View>
 
-          <View style={styles.inputContainer}>
+          <View style={[styles.inputContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <Ionicons
               name="mail-outline"
               size={20}
-              color={COLORS.textSecondary}
+              color={colors.textSecondary}
             />
             <TextInput
-              style={styles.input}
+              style={[styles.input, { color: colors.text }]}
               placeholder="Email"
-              placeholderTextColor={COLORS.textSecondary}
+              placeholderTextColor={colors.textSecondary}
               value={formData.email}
               onChangeText={(value) => updateFormData("email", value)}
               keyboardType="email-address"
@@ -140,16 +142,16 @@ export default function RegisterScreen() {
             />
           </View>
 
-          <View style={styles.inputContainer}>
+          <View style={[styles.inputContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <Ionicons
               name="lock-closed-outline"
               size={20}
-              color={COLORS.textSecondary}
+              color={colors.textSecondary}
             />
             <TextInput
-              style={styles.input}
+              style={[styles.input, { color: colors.text }]}
               placeholder="Senha (mínimo 6 caracteres)"
-              placeholderTextColor={COLORS.textSecondary}
+              placeholderTextColor={colors.textSecondary}
               value={formData.password}
               onChangeText={(value) => updateFormData("password", value)}
               secureTextEntry={!showPassword}
@@ -163,21 +165,21 @@ export default function RegisterScreen() {
               <Ionicons
                 name={showPassword ? "eye-off-outline" : "eye-outline"}
                 size={20}
-                color={COLORS.textSecondary}
+                color={colors.textSecondary}
               />
             </TouchableOpacity>
           </View>
 
-          <View style={styles.inputContainer}>
+          <View style={[styles.inputContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <Ionicons
               name="lock-closed-outline"
               size={20}
-              color={COLORS.textSecondary}
+              color={colors.textSecondary}
             />
             <TextInput
-              style={styles.input}
+              style={[styles.input, { color: colors.text }]}
               placeholder="Confirmar senha"
-              placeholderTextColor={COLORS.textSecondary}
+              placeholderTextColor={colors.textSecondary}
               value={formData.confirmPassword}
               onChangeText={(value) => updateFormData("confirmPassword", value)}
               secureTextEntry={!showConfirmPassword}
@@ -191,34 +193,34 @@ export default function RegisterScreen() {
               <Ionicons
                 name={showConfirmPassword ? "eye-off-outline" : "eye-outline"}
                 size={20}
-                color={COLORS.textSecondary}
+                color={colors.textSecondary}
               />
             </TouchableOpacity>
           </View>
 
           <TouchableOpacity
-            style={[styles.registerButton, isLoading && styles.disabledButton]}
+            style={[styles.registerButton, { backgroundColor: colors.primary }, isLoading && styles.disabledButton]}
             onPress={handleRegister}
             disabled={isLoading}
           >
             {isLoading ? (
-              <ActivityIndicator color={COLORS.surface} size="small" />
+              <ActivityIndicator color={colors.surface} size="small" />
             ) : (
-              <Text style={styles.registerButtonText}>Criar Conta</Text>
+              <Text style={[styles.registerButtonText, { color: colors.surface }]}>Criar Conta</Text>
             )}
           </TouchableOpacity>
 
           <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>ou</Text>
-            <View style={styles.dividerLine} />
+            <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+            <Text style={[styles.dividerText, { color: colors.textSecondary }]}>ou</Text>
+            <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
           </View>
 
           <TouchableOpacity
-            style={styles.loginButton}
+            style={[styles.loginButton, { borderColor: colors.primary }]}
             onPress={() => router.replace("/login")}
           >
-            <Text style={styles.loginButtonText}>Já tenho uma conta</Text>
+            <Text style={[styles.loginButtonText, { color: colors.primary }]}>Já tenho uma conta</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

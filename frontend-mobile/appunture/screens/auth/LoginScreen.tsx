@@ -14,10 +14,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "../../stores/authStore";
 import { COLORS } from "../../utils/constants";
+import { useThemeColors } from "../../stores/themeStore";
 import { loginStyles } from "../../styles/screens/loginStyles";
 
 export default function LoginScreen() {
   const router = useRouter();
+  const colors = useThemeColors();
   const { login, isLoading } = useAuthStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -78,29 +80,29 @@ export default function LoginScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={loginStyles.container}
+      style={[loginStyles.container, { backgroundColor: colors.background }]}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollView contentContainerStyle={loginStyles.scrollContent}>
         <View style={loginStyles.header}>
-          <View style={loginStyles.logoContainer}>
-            <Ionicons name="medical" size={64} color={COLORS.primary} />
+          <View style={[loginStyles.logoContainer, { backgroundColor: colors.surface }]}>
+            <Ionicons name="medical" size={64} color={colors.primary} />
           </View>
-          <Text style={loginStyles.title}>Appunture</Text>
-          <Text style={loginStyles.subtitle}>Acupuntura Digital</Text>
+          <Text style={[loginStyles.title, { color: colors.text }]}>Appunture</Text>
+          <Text style={[loginStyles.subtitle, { color: colors.textSecondary }]}>Acupuntura Digital</Text>
         </View>
 
         <View style={loginStyles.form}>
-          <View style={loginStyles.inputContainer}>
+          <View style={[loginStyles.inputContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <Ionicons
               name="mail-outline"
               size={20}
-              color={COLORS.textSecondary}
+              color={colors.textSecondary}
             />
             <TextInput
-              style={loginStyles.input}
+              style={[loginStyles.input, { color: colors.text }]}
               placeholder="Email"
-              placeholderTextColor={COLORS.textSecondary}
+              placeholderTextColor={colors.textSecondary}
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -110,16 +112,16 @@ export default function LoginScreen() {
             />
           </View>
 
-          <View style={loginStyles.inputContainer}>
+          <View style={[loginStyles.inputContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <Ionicons
               name="lock-closed-outline"
               size={20}
-              color={COLORS.textSecondary}
+              color={colors.textSecondary}
             />
             <TextInput
-              style={loginStyles.input}
+              style={[loginStyles.input, { color: colors.text }]}
               placeholder="Senha"
-              placeholderTextColor={COLORS.textSecondary}
+              placeholderTextColor={colors.textSecondary}
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
@@ -133,7 +135,7 @@ export default function LoginScreen() {
               <Ionicons
                 name={showPassword ? "eye-off-outline" : "eye-outline"}
                 size={20}
-                color={COLORS.textSecondary}
+                color={colors.textSecondary}
               />
             </TouchableOpacity>
           </View>
@@ -142,32 +144,32 @@ export default function LoginScreen() {
             onPress={handleForgotPassword}
             style={loginStyles.forgotPassword}
           >
-            <Text style={loginStyles.forgotPasswordText}>Esqueci minha senha</Text>
+            <Text style={[loginStyles.forgotPasswordText, { color: colors.primary }]}>Esqueci minha senha</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[loginStyles.loginButton, isLoading && loginStyles.disabledButton]}
+            style={[loginStyles.loginButton, { backgroundColor: colors.primary }, isLoading && loginStyles.disabledButton]}
             onPress={handleLogin}
             disabled={isLoading}
           >
             {isLoading ? (
-              <ActivityIndicator color={COLORS.surface} size="small" />
+              <ActivityIndicator color={colors.surface} size="small" />
             ) : (
-              <Text style={loginStyles.loginButtonText}>Entrar</Text>
+              <Text style={[loginStyles.loginButtonText, { color: colors.surface }]}>Entrar</Text>
             )}
           </TouchableOpacity>
 
           <View style={loginStyles.divider}>
-            <View style={loginStyles.dividerLine} />
-            <Text style={loginStyles.dividerText}>ou</Text>
-            <View style={loginStyles.dividerLine} />
+            <View style={[loginStyles.dividerLine, { backgroundColor: colors.border }]} />
+            <Text style={[loginStyles.dividerText, { color: colors.textSecondary }]}>ou</Text>
+            <View style={[loginStyles.dividerLine, { backgroundColor: colors.border }]} />
           </View>
 
           <TouchableOpacity
-            style={loginStyles.registerButton}
+            style={[loginStyles.registerButton, { borderColor: colors.primary }]}
             onPress={() => router.push("/register")}
           >
-            <Text style={loginStyles.registerButtonText}>Criar conta</Text>
+            <Text style={[loginStyles.registerButtonText, { color: colors.primary }]}>Criar conta</Text>
           </TouchableOpacity>
         </View>
 
@@ -176,7 +178,7 @@ export default function LoginScreen() {
             style={loginStyles.guestButton}
             onPress={() => router.replace("/(tabs)")}
           >
-            <Text style={loginStyles.guestButtonText}>Continuar como visitante</Text>
+            <Text style={[loginStyles.guestButtonText, { color: colors.textSecondary }]}>Continuar como visitante</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
