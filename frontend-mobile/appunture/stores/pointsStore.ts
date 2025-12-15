@@ -734,14 +734,16 @@ export const usePointsStore = create<PointsState>((set, get) => {
         console.log(`✅ [SYNC] Added to sync queue`);
 
         const syncStore = useSyncStore.getState();
+        const shouldSync = syncStore.isOnline && syncStore.autoSync;
         console.log(`🌐 [SYNC] Online status: ${syncStore.isOnline ? '✅ Online' : '❌ Offline'}`);
+        console.log(`🌐 [SYNC] Auto sync: ${syncStore.autoSync ? '✅ Enabled' : '❌ Disabled (offline mode)'}`);
         
-        if (syncStore.isOnline) {
+        if (shouldSync) {
           console.log(`☁️ [SYNC] Step 3: Processing sync queue (sending to cloud)...`);
           await syncStore.processSyncQueue();
           console.log(`✅ [SYNC] Sync queue processed!`);
         } else {
-          console.log(`⏳ [SYNC] Offline - operation queued for later sync`);
+          console.log(`⏳ [SYNC] ${!syncStore.isOnline ? 'Offline' : 'Offline mode enabled'} - operation queued for later sync`);
           await syncStore.refreshPendingOperations();
           console.log(`📊 [SYNC] Pending operations: ${syncStore.pendingOperations}`);
         }

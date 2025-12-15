@@ -178,7 +178,9 @@ export default function MeridiansScreen() {
         style={[styles.container, { backgroundColor: colors.background }]}
       >
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.primary} />
+          <View>
+            <ActivityIndicator size="large" color={colors.primary} />
+          </View>
           <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
             Carregando meridianos...
           </Text>

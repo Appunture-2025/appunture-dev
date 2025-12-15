@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import { useRouter } from "expo-router";
 import { useSymptomsStore } from "../../stores/symptomsStore";
 import { SPACING, SYMPTOM_CATEGORIES, COLORS } from "../../utils/constants";
 import { useThemeColors } from "../../stores/themeStore";
+import { filterSymptoms } from "../../utils/filterSymptoms";
 import SearchBar from "../../components/SearchBar";
 import { Symptom } from "../../types/api";
 
@@ -27,15 +28,29 @@ export default function SymptomsScreen() {
     popularSymptoms,
     isLoading,
     fetchSymptoms,
-    searchSymptoms,
     fetchCategories,
     fetchPopularSymptoms,
-    fetchSymptomsByCategory,
   } = useSymptomsStore();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+
+  // All symptoms loaded (use symptoms if available, otherwise popularSymptoms)
+  const allSymptoms = symptoms.length > 0 ? symptoms : popularSymptoms;
+
+  // Filter symptoms in-memory based on search query and category (real-time filtering)
+  const displayedSymptoms = useMemo(() => {
+    let filtered = allSymptoms;
+    
+    // Filter by category first
+    if (selectedCategory) {
+      filtered = filtered.filter(s => s.category === selectedCategory);
+    }
+    
+    // Then filter by search query
+    return filterSymptoms(filtered, searchQuery);
+  }, [allSymptoms, searchQuery, selectedCategory]);
 
   useEffect(() => {
     loadInitialData();
@@ -53,41 +68,24 @@ export default function SymptomsScreen() {
     }
   };
 
-  const handleSearch = async (query: string) => {
+  const handleSearch = (query: string) => {
     setSearchQuery(query);
-    if (!query.trim()) {
-      if (selectedCategory) {
-        await fetchSymptomsByCategory(selectedCategory);
-      } else {
-        await fetchSymptoms();
-      }
-      return;
-    }
-
-    try {
-      await searchSymptoms(query);
-    } catch (error) {
-      Alert.alert("Erro", "Erro ao buscar sintomas.");
-    }
   };
 
-  const handleCategorySelect = async (category: string) => {
+  const handleCategorySelect = (category: string) => {
     if (selectedCategory === category) {
       setSelectedCategory(null);
-      await fetchSymptoms();
     } else {
       setSelectedCategory(category);
-      await fetchSymptomsByCategory(category);
     }
-    setSearchQuery("");
   };
 
   const handleRefresh = async () => {
     setRefreshing(true);
+    setSelectedCategory(null);
+    setSearchQuery("");
     try {
       await loadInitialData();
-      setSelectedCategory(null);
-      setSearchQuery("");
     } catch (error) {
       Alert.alert("Erro", "Erro ao atualizar sintomas.");
     } finally {
@@ -205,8 +203,6 @@ export default function SymptomsScreen() {
     </View>
   );
 
-  const displayedSymptoms = symptoms.length > 0 ? symptoms : popularSymptoms;
-
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
@@ -255,7 +251,9 @@ export default function SymptomsScreen() {
 
       {isLoading && !refreshing && (
         <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color={colors.primary} />
+          <View>
+            <ActivityIndicator size="large" color={colors.primary} />
+          </View>
         </View>
       )}
     </SafeAreaView>

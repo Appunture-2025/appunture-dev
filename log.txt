@@ -1,0 +1,1080 @@
+2025-12-15 13:49:29.630  4891-4911  ReactNativeJS           com.appunture.mobile                 I  [API] No token available for request
+2025-12-15 13:49:29.637  4891-4911  ReactNativeJS           com.appunture.mobile                 I  📤 [QUEUE] ========== PROCESS SYNC QUEUE ==========
+2025-12-15 13:49:29.637  4891-4911  ReactNativeJS           com.appunture.mobile                 I  📤 [QUEUE] Queue processing: false
+2025-12-15 13:49:29.637  4891-4911  ReactNativeJS           com.appunture.mobile                 I  📤 [QUEUE] Is online: true
+2025-12-15 13:49:29.637  4891-4911  ReactNativeJS           com.appunture.mobile                 I  📤 [QUEUE] Fetching queued operations...
+2025-12-15 13:49:29.639  4891-4911  ReactNativeJS           com.appunture.mobile                 I  [svgAssets] SVG preloading disabled to prevent crashes
+2025-12-15 13:49:29.639  4891-4911  ReactNativeJS           com.appunture.mobile                 I  [svgAssets] Skipped SVG preload for 15 layers (crash prevention)
+2025-12-15 13:49:29.659  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[API] Got Firebase token:', '✓'
+2025-12-15 13:49:29.659  4891-4911  ReactNativeJS           com.appunture.mobile                 I  [API] Added Authorization header
+2025-12-15 13:49:29.659  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[API] Got Firebase token:', '✓'
+2025-12-15 13:49:29.659  4891-4911  ReactNativeJS           com.appunture.mobile                 I  [API] Added Authorization header
+2025-12-15 13:49:29.659  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[API] Got Firebase token:', '✓'
+2025-12-15 13:49:29.659  4891-4911  ReactNativeJS           com.appunture.mobile                 I  [API] Added Authorization header
+2025-12-15 13:49:29.659  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[API] Got Firebase token:', '✓'
+2025-12-15 13:49:29.660  4891-4911  ReactNativeJS           com.appunture.mobile                 I  [API] Added Authorization header
+2025-12-15 13:49:29.670  4891-4911  ReactNativeJS           com.appunture.mobile                 I  📤 [QUEUE] Found 0 operations in queue
+2025-12-15 13:49:29.671  4891-4911  ReactNativeJS           com.appunture.mobile                 I  📤 [QUEUE] Queue is empty, nothing to process
+2025-12-15 13:49:30.644  1365-1365  BoundBrokerSvc          com.google.android.gms.persistent    D  onUnbind: Intent { act=com.google.android.gms.libs.gmscorelogger.service.START dat=chimera-action:/... cmp=com.google.android.gms/.chimera.PersistentDirectBootAwareApiService }
+2025-12-15 13:49:30.815  4891-4964  ProfileInstaller        com.appunture.mobile                 D  Skipping profile installation for com.appunture.mobile
+2025-12-15 13:49:30.967  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[svgAssets] ✓ PNG asset loaded for CV:', 'number'
+2025-12-15 13:49:30.967  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[svgAssets] ✓ PNG asset loaded for GB:', 'number'
+2025-12-15 13:49:30.980  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[svgAssets] ✓ PNG asset loaded for GV:', 'number'
+2025-12-15 13:49:30.980  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[svgAssets] ✓ PNG asset loaded for HT:', 'number'
+2025-12-15 13:49:30.980  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[svgAssets] ✓ PNG asset loaded for KI:', 'number'
+2025-12-15 13:49:30.981  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[svgAssets] ✓ PNG asset loaded for LI:', 'number'
+2025-12-15 13:49:30.981  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[svgAssets] ✓ PNG asset loaded for LV:', 'number'
+2025-12-15 13:49:30.981  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[svgAssets] ✓ PNG asset loaded for SI:', 'number'
+2025-12-15 13:49:30.982  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[svgAssets] ✓ PNG asset loaded for SP:', 'number'
+2025-12-15 13:49:30.982  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[svgAssets] ✓ PNG asset loaded for ST:', 'number'
+2025-12-15 13:49:30.982  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[svgAssets] ✓ PNG asset loaded for ST2:', 'number'
+2025-12-15 13:49:30.983  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[svgAssets] ✓ PNG asset loaded for TW:', 'number'
+2025-12-15 13:49:34.629  4891-4895  ppunture.mobile         com.appunture.mobile                 W  Cleared Reference was only reachable from finalizer (only reported once)
+2025-12-15 13:49:34.655  4891-4895  ppunture.mobile         com.appunture.mobile                 I  Background concurrent mark compact GC freed 16MB AllocSpace bytes, 55(5696KB) LOS objects, 49% free, 6942KB/13MB, paused 1.265ms,1.760ms total 126.923ms
+2025-12-15 13:49:35.855  1365-4520  NearbyMediums           com.google.android.gms.persistent    I  No BLE Fast/GATT advertisements found in the latest cycle.
+2025-12-15 13:49:35.949  4891-4911  HWUI                    com.appunture.mobile                 W  Image decoding logging dropped!
+2025-12-15 13:49:35.962  4891-4911  HWUI                    com.appunture.mobile                 W  Image decoding logging dropped!
+2025-12-15 13:49:35.963   713-1934  AS.PlaybackActivityMon  system_server                        W  No piid assigned for invalid/internal port id 16
+2025-12-15 13:49:35.977   503-622   AudioFlinger            audioserver                          D  mixer(0x705e79223770) throttle end: throttle time(30)
+2025-12-15 13:49:35.980  4891-4911  CompatChangeReporter    com.appunture.mobile                 D  Compat change id reported: 303326708; UID 10214; state: ENABLED
+2025-12-15 13:49:36.291  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[API] Got Firebase token:', '✓'
+2025-12-15 13:49:36.291  4891-4911  ReactNativeJS           com.appunture.mobile                 I  [API] Added Authorization header
+2025-12-15 13:49:36.292  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[API] Got Firebase token:', '✓'
+2025-12-15 13:49:36.292  4891-4911  ReactNativeJS           com.appunture.mobile                 I  [API] Added Authorization header
+2025-12-15 13:49:36.292  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[API] Got Firebase token:', '✓'
+2025-12-15 13:49:36.292  4891-4911  ReactNativeJS           com.appunture.mobile                 I  [API] Added Authorization header
+2025-12-15 13:49:36.455  4891-4891  AutofillManager         com.appunture.mobile                 D  view not autofillable - not passing ime action check
+2025-12-15 13:49:36.455  4891-4891  AutofillManager         com.appunture.mobile                 D  view not autofillable - not passing ime action check
+2025-12-15 13:49:36.462  4891-4891  AutofillManager         com.appunture.mobile                 D  view not autofillable - not passing ime action check
+2025-12-15 13:49:36.468  4891-4891  AutofillManager         com.appunture.mobile                 D  view not autofillable - not passing ime action check
+2025-12-15 13:49:36.859  4891-4891  Choreographer           com.appunture.mobile                 I  Skipped 32 frames!  The application may be doing too much work on its main thread.
+2025-12-15 13:49:37.758   223-4931  keystore2               keystore2                            I  system/security/keystore2/watchdog/src/lib.rs:377 - Watchdog thread idle -> terminating. Have a great day.
+2025-12-15 13:49:38.570   713-1934  AS.PlaybackActivityMon  system_server                        W  No piid assigned for invalid/internal port id 16
+2025-12-15 13:49:38.584   503-622   AudioFlinger            audioserver                          D  mixer(0x705e79223770) throttle end: throttle time(38)
+2025-12-15 13:49:38.811  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[API] Got Firebase token:', '✓'
+2025-12-15 13:49:38.811  4891-4911  ReactNativeJS           com.appunture.mobile                 I  [API] Added Authorization header
+2025-12-15 13:49:38.811  4891-4911  ReactNativeJS           com.appunture.mobile                 I  '[API] Got Firebase token:', '✓'
+2025-12-15 13:49:38.811  4891-4911  ReactNativeJS           com.appunture.mobile                 I  [API] Added Authorization header
+2025-12-15 13:49:38.861  4891-4891  [RNScreens]             com.appunture.mobile                 W  backTitle prop is not available on Android
+2025-12-15 13:49:38.861  4891-4891  [RNScreens]             com.appunture.mobile                 W  backTitleFontFamily prop is not available on Android
+2025-12-15 13:49:38.861  4891-4891  [RNScreens]             com.appunture.mobile                 W  disableBackButtonMenu prop is not available on Android
+2025-12-15 13:49:38.861  4891-4891  [RNScreens]             com.appunture.mobile                 W  backTitleVisible prop is not available on Android
+2025-12-15 13:49:38.862  4891-4891  [RNScreens]             com.appunture.mobile                 W  largeTitleHideShadow prop is not available on Android
+2025-12-15 13:49:38.862  4891-4891  [RNScreens]             com.appunture.mobile                 W  largeTitleFontWeight prop is not available on Android
+2025-12-15 13:49:38.862  4891-4891  [RNScreens]             com.appunture.mobile                 W  largeTitleFontFamily prop is not available on Android
+2025-12-15 13:49:38.881  4891-4895  ppunture.mobile         com.appunture.mobile                 I  Background concurrent mark compact GC freed 4197KB AllocSpace bytes, 2(776KB) LOS objects, 49% free, 9772KB/19MB, paused 3.708ms,2.744ms total 404.068ms
+2025-12-15 13:49:39.423  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: caught exception, displaying mount state
+                                                                                                    java.lang.ClassCastException: com.facebook.react.views.progressbar.ReactProgressBarViewManager cannot be cast to com.facebook.react.uimanager.IViewGroupManager
+                                                                                                    	at com.facebook.react.fabric.mounting.SurfaceMountingManager.getViewGroupManager(SurfaceMountingManager.java:1122)
+                                                                                                    	at com.facebook.react.fabric.mounting.SurfaceMountingManager.addViewAt(SurfaceMountingManager.java:408)
+                                                                                                    	at com.facebook.react.fabric.mounting.mountitems.IntBufferBatchMountItem.execute(IntBufferBatchMountItem.java:141)
+                                                                                                    	at com.facebook.react.fabric.mounting.MountItemDispatcher.executeOrEnqueue(MountItemDispatcher.java:370)
+                                                                                                    	at com.facebook.react.fabric.mounting.MountItemDispatcher.dispatchMountItems(MountItemDispatcher.java:265)
+                                                                                                    	at com.facebook.react.fabric.mounting.MountItemDispatcher.tryDispatchMountItems(MountItemDispatcher.java:122)
+                                                                                                    	at com.facebook.react.fabric.FabricUIManager$DispatchUIFrameCallback.doFrameGuarded(FabricUIManager.java:1396)
+                                                                                                    	at com.facebook.react.uimanager.GuardedFrameCallback.doFrame(GuardedFrameCallback.kt:25)
+                                                                                                    	at com.facebook.react.modules.core.ReactChoreographer.frameCallback$lambda$1(ReactChoreographer.kt:59)
+                                                                                                    	at com.facebook.react.modules.core.ReactChoreographer.$r8$lambda$nSkFhrr5T7rop_XKwzlLov4NLLw(Unknown Source:0)
+                                                                                                    	at com.facebook.react.modules.core.ReactChoreographer$$ExternalSyntheticLambda0.doFrame(D8$$SyntheticClass:0)
+                                                                                                    	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1566)
+                                                                                                    	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1577)
+                                                                                                    	at android.view.Choreographer.doCallbacks(Choreographer.java:1177)
+                                                                                                    	at android.view.Choreographer.doFrame(Choreographer.java:1102)
+                                                                                                    	at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java:1551)
+                                                                                                    	at android.os.Handler.handleCallback(Handler.java:995)
+                                                                                                    	at android.os.Handler.dispatchMessage(Handler.java:103)
+                                                                                                    	at android.os.Looper.loopOnce(Looper.java:248)
+                                                                                                    	at android.os.Looper.loop(Looper.java:338)
+                                                                                                    	at android.app.ActivityThread.main(ActivityThread.java:8982)
+                                                                                                    	at java.lang.reflect.Method.invoke(Native Method)
+                                                                                                    	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+                                                                                                    	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+2025-12-15 13:49:39.423  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: next mountItem triggered exception!
+2025-12-15 13:49:39.424  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: IntBufferBatchMountItem [surface:11]:
+2025-12-15 13:49:39.424  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: REMOVE [2574]->[1226] @9
+2025-12-15 13:49:39.424  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: REMOVE [2578]->[1226] @8
+2025-12-15 13:49:39.424  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: REMOVE [2556]->[2566] @1
+2025-12-15 13:49:39.424  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: REMOVE [2580]->[2566] @0
+2025-12-15 13:49:39.424  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2588]->[2590] @0
+2025-12-15 13:49:39.424  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2624]->[2626] @0
+2025-12-15 13:49:39.424  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2664]->[2690] @0
+2025-12-15 13:49:39.424  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2670]->[2690] @1
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2674]->[2690] @2
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2680]->[2690] @3
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2686]->[2690] @4
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2690]->[2692] @0
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2692]->[2712] @0
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2706]->[2712] @1
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2696]->[2712] @2
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2704]->[2712] @3
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2712]->[2714] @0
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2596]->[2736] @0
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2590]->[2736] @1
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2594]->[2736] @2
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2618]->[2736] @3
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2606]->[2736] @4
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2600]->[2736] @5
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2604]->[2736] @6
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2614]->[2736] @7
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2612]->[2736] @8
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2636]->[2736] @9
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2622]->[2736] @10
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2626]->[2736] @11
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2632]->[2736] @12
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2646]->[2736] @13
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2640]->[2736] @14
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2644]->[2736] @15
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2716]->[2736] @16
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2650]->[2736] @17
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2660]->[2736] @18
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2714]->[2736] @19
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2734]->[2736] @20
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2732]->[2736] @21
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2720]->[2736] @22
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2724]->[2736] @23
+2025-12-15 13:49:39.425  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2728]->[2736] @24
+2025-12-15 13:49:39.426  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2736]->[2738] @0
+2025-12-15 13:49:39.426  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2738]->[2740] @0
+2025-12-15 13:49:39.426  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2740]->[2742] @0
+2025-12-15 13:49:39.426  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: INSERT [2742]->[2566] @0
+2025-12-15 13:49:39.426  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2588]: <hidden>
+2025-12-15 13:49:39.426  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2664]: <hidden>
+2025-12-15 13:49:39.426  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2670]: <hidden>
+2025-12-15 13:49:39.426  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2674]: <hidden>
+2025-12-15 13:49:39.426  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2680]: <hidden>
+2025-12-15 13:49:39.426  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2686]: <hidden>
+2025-12-15 13:49:39.426  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2696]: <hidden>
+2025-12-15 13:49:39.426  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2704]: <hidden>
+2025-12-15 13:49:39.426  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2594]: <hidden>
+2025-12-15 13:49:39.427  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2600]: <hidden>
+2025-12-15 13:49:39.427  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2604]: <hidden>
+2025-12-15 13:49:39.427  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2612]: <hidden>
+2025-12-15 13:49:39.427  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2622]: <hidden>
+2025-12-15 13:49:39.427  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2632]: <hidden>
+2025-12-15 13:49:39.427  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2640]: <hidden>
+2025-12-15 13:49:39.427  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2644]: <hidden>
+2025-12-15 13:49:39.427  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2650]: <hidden>
+2025-12-15 13:49:39.427  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2660]: <hidden>
+2025-12-15 13:49:39.427  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2714]: <hidden>
+2025-12-15 13:49:39.427  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2720]: <hidden>
+2025-12-15 13:49:39.427  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2724]: <hidden>
+2025-12-15 13:49:39.427  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2728]: <hidden>
+2025-12-15 13:49:39.428  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE STATE [2738]: <hidden>
+2025-12-15 13:49:39.428  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2590]->[2588]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.428  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2626]->[2624]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.428  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2690]->[2664]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.428  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2690]->[2670]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.428  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2690]->[2674]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.428  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2690]->[2680]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.428  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2690]->[2686]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.428  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2692]->[2690]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.428  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2712]->[2692]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.428  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2712]->[2706]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.428  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2712]->[2696]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2712]->[2704]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2714]->[2712]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2596]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2590]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2594]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2618]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2606]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2600]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2604]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2614]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2612]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2636]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2622]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2626]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2632]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2646]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.429  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2640]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.430  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2644]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.430  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2716]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.430  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2650]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.430  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2660]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.430  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2714]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.430  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2734]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.430  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2732]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.430  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2720]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.430  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2724]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.430  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2736]->[2728]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.430  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2738]->[2736]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.430  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2740]->[2738]: x:0 y:0 w:0 h:0 displayType:1 layoutDirection: 0
+2025-12-15 13:49:39.430  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2742]->[2740]: x:513 y:1005 w:54 h:54 displayType:1 layoutDirection: 1
+2025-12-15 13:49:39.430  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE LAYOUT [2566]->[2742]: x:0 y:63 w:1080 h:2064 displayType:1 layoutDirection: 1
+2025-12-15 13:49:39.431  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2588]
+2025-12-15 13:49:39.431  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2624]
+2025-12-15 13:49:39.431  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2664]
+2025-12-15 13:49:39.431  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2670]
+2025-12-15 13:49:39.431  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2674]
+2025-12-15 13:49:39.431  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2680]
+2025-12-15 13:49:39.431  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2686]
+2025-12-15 13:49:39.431  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2690]
+2025-12-15 13:49:39.431  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2692]
+2025-12-15 13:49:39.431  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2706]
+2025-12-15 13:49:39.431  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2696]
+2025-12-15 13:49:39.431  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2704]
+2025-12-15 13:49:39.431  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2712]
+2025-12-15 13:49:39.431  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2596]
+2025-12-15 13:49:39.431  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2590]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2594]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2618]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2606]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2600]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2604]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2614]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2612]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2636]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2622]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2626]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2632]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2646]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2640]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2644]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2716]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2650]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2660]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2714]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2734]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2732]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2720]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2724]
+2025-12-15 13:49:39.432  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2728]
+2025-12-15 13:49:39.433  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2736]
+2025-12-15 13:49:39.433  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2738]
+2025-12-15 13:49:39.433  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2740]
+2025-12-15 13:49:39.433  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: UPDATE EVENTEMITTER [2742]
+2025-12-15 13:49:39.433  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: DELETE [2574]
+2025-12-15 13:49:39.433  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: DELETE [2578]
+2025-12-15 13:49:39.433  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: DELETE [2556]
+2025-12-15 13:49:39.433  4891-4891  unknown:Mo...Dispatcher com.appunture.mobile                 E  dispatchMountItems: mountItem: DELETE [2580]
+2025-12-15 13:49:39.433  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  Views created for surface {11}:
+2025-12-15 13:49:39.433  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1024 parentTag=1038 isRoot=false />
+2025-12-15 13:49:39.433  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2048 parentTag=2058 isRoot=false />
+2025-12-15 13:49:39.433  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1026 parentTag=1028 isRoot=false />
+2025-12-15 13:49:39.433  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RNCSafeAreaProvider id=4 parentTag=11 isRoot=false />
+2025-12-15 13:49:39.433  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1028 parentTag=1038 isRoot=false />
+2025-12-15 13:49:39.433  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2054 parentTag=2058 isRoot=false />
+2025-12-15 13:49:39.433  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1034 parentTag=1038 isRoot=false />
+2025-12-15 13:49:39.433  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2058 parentTag=null isRoot=false />
+2025-12-15 13:49:39.433  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RootView id=11 parentTag=16908290 isRoot=true />
+2025-12-15 13:49:39.434  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RNSScreenStack id=12 parentTag=16 isRoot=false />
+2025-12-15 13:49:39.434  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1038 parentTag=null isRoot=false />
+2025-12-15 13:49:39.434  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RNGestureHandlerRootView id=16 parentTag=4 isRoot=false />
+2025-12-15 13:49:39.434  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2064 parentTag=2102 isRoot=false />
+2025-12-15 13:49:39.434  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=18 parentTag=4 isRoot=false />
+2025-12-15 13:49:39.434  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=20 parentTag=22 isRoot=false />
+2025-12-15 13:49:39.434  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1044 parentTag=1082 isRoot=false />
+2025-12-15 13:49:39.434  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2068 parentTag=2102 isRoot=false />
+2025-12-15 13:49:39.434  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=22 parentTag=38 isRoot=false />
+2025-12-15 13:49:39.434  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1048 parentTag=1082 isRoot=false />
+2025-12-15 13:49:39.434  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=24 parentTag=38 isRoot=false />
+2025-12-15 13:49:39.434  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2072 parentTag=2102 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=26 parentTag=38 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1052 parentTag=1082 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=30 parentTag=32 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2078 parentTag=2102 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=32 parentTag=38 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=34 parentTag=38 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1058 parentTag=1082 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2084 parentTag=2102 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=38 parentTag=40 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=40 parentTag=56 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1064 parentTag=1082 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2088 parentTag=2102 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2090 parentTag=2092 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1068 parentTag=1082 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2092 parentTag=2102 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1070 parentTag=1072 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1072 parentTag=1082 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2098 parentTag=2102 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RNCSafeAreaView id=52 parentTag=56 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1078 parentTag=1082 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2102 parentTag=null isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=56 parentTag=58 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RNSScreen id=58 parentTag=-1 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1082 parentTag=null isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RNSScreenContainer id=60 parentTag=200 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2108 parentTag=2146 isRoot=false />
+2025-12-15 13:49:39.435  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=62 parentTag=196 isRoot=false />
+2025-12-15 13:49:39.436  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1088 parentTag=1126 isRoot=false />
+2025-12-15 13:49:39.436  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2112 parentTag=2146 isRoot=false />
+2025-12-15 13:49:39.436  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=66 parentTag=78 isRoot=false />
+2025-12-15 13:49:39.436  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1092 parentTag=1126 isRoot=false />
+2025-12-15 13:49:39.436  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2116 parentTag=2146 isRoot=false />
+2025-12-15 13:49:39.436  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1096 parentTag=1126 isRoot=false />
+2025-12-15 13:49:39.436  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2122 parentTag=2146 isRoot=false />
+2025-12-15 13:49:39.436  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=76 parentTag=78 isRoot=false />
+2025-12-15 13:49:39.436  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=78 parentTag=196 isRoot=false />
+2025-12-15 13:49:39.436  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1102 parentTag=1126 isRoot=false />
+2025-12-15 13:49:39.436  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2128 parentTag=2146 isRoot=false />
+2025-12-15 13:49:39.437  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=84 parentTag=96 isRoot=false />
+2025-12-15 13:49:39.437  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1108 parentTag=1126 isRoot=false />
+2025-12-15 13:49:39.437  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2132 parentTag=2146 isRoot=false />
+2025-12-15 13:49:39.437  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2134 parentTag=2136 isRoot=false />
+2025-12-15 13:49:39.437  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1112 parentTag=1126 isRoot=false />
+2025-12-15 13:49:39.437  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2136 parentTag=2146 isRoot=false />
+2025-12-15 13:49:39.438  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1114 parentTag=1116 isRoot=false />
+2025-12-15 13:49:39.438  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1116 parentTag=1126 isRoot=false />
+2025-12-15 13:49:39.438  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=94 parentTag=96 isRoot=false />
+2025-12-15 13:49:39.438  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2142 parentTag=2146 isRoot=false />
+2025-12-15 13:49:39.438  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=96 parentTag=196 isRoot=false />
+2025-12-15 13:49:39.438  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1122 parentTag=1126 isRoot=false />
+2025-12-15 13:49:39.438  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2146 parentTag=null isRoot=false />
+2025-12-15 13:49:39.438  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1126 parentTag=null isRoot=false />
+2025-12-15 13:49:39.438  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2152 parentTag=2190 isRoot=false />
+2025-12-15 13:49:39.438  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=106 parentTag=114 isRoot=false />
+2025-12-15 13:49:39.438  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1132 parentTag=1170 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2156 parentTag=2190 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1136 parentTag=1170 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=112 parentTag=114 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2160 parentTag=2190 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=114 parentTag=196 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1140 parentTag=1170 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2166 parentTag=2190 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=120 parentTag=132 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1146 parentTag=1170 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2172 parentTag=2190 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1152 parentTag=1170 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2176 parentTag=2190 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=130 parentTag=132 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2178 parentTag=2180 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=132 parentTag=196 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1156 parentTag=1170 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2180 parentTag=2190 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1158 parentTag=1160 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1160 parentTag=1170 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=138 parentTag=150 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2186 parentTag=2190 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1166 parentTag=1170 isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2190 parentTag=null isRoot=false />
+2025-12-15 13:49:39.439  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1170 parentTag=null isRoot=false />
+2025-12-15 13:49:39.440  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=148 parentTag=150 isRoot=false />
+2025-12-15 13:49:39.440  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=150 parentTag=196 isRoot=false />
+2025-12-15 13:49:39.441  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2198 parentTag=2236 isRoot=false />
+2025-12-15 13:49:39.441  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1176 parentTag=1214 isRoot=false />
+2025-12-15 13:49:39.441  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2202 parentTag=2236 isRoot=false />
+2025-12-15 13:49:39.442  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1180 parentTag=1214 isRoot=false />
+2025-12-15 13:49:39.442  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=156 parentTag=168 isRoot=false />
+2025-12-15 13:49:39.442  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2206 parentTag=2236 isRoot=false />
+2025-12-15 13:49:39.442  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1184 parentTag=1214 isRoot=false />
+2025-12-15 13:49:39.442  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2212 parentTag=2236 isRoot=false />
+2025-12-15 13:49:39.442  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=166 parentTag=168 isRoot=false />
+2025-12-15 13:49:39.442  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1190 parentTag=1214 isRoot=false />
+2025-12-15 13:49:39.442  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=168 parentTag=196 isRoot=false />
+2025-12-15 13:49:39.442  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2218 parentTag=2236 isRoot=false />
+2025-12-15 13:49:39.442  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1196 parentTag=1214 isRoot=false />
+2025-12-15 13:49:39.443  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2222 parentTag=2236 isRoot=false />
+2025-12-15 13:49:39.443  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=176 parentTag=190 isRoot=false />
+2025-12-15 13:49:39.443  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1200 parentTag=1214 isRoot=false />
+2025-12-15 13:49:39.443  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2224 parentTag=2226 isRoot=false />
+2025-12-15 13:49:39.443  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1202 parentTag=1204 isRoot=false />
+2025-12-15 13:49:39.443  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2226 parentTag=2236 isRoot=false />
+2025-12-15 13:49:39.443  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1204 parentTag=1214 isRoot=false />
+2025-12-15 13:49:39.443  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2232 parentTag=2236 isRoot=false />
+2025-12-15 13:49:39.443  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1210 parentTag=1214 isRoot=false />
+2025-12-15 13:49:39.443  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=188 parentTag=190 isRoot=false />
+2025-12-15 13:49:39.443  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2236 parentTag=null isRoot=false />
+2025-12-15 13:49:39.443  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=190 parentTag=196 isRoot=false />
+2025-12-15 13:49:39.443  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1214 parentTag=null isRoot=false />
+2025-12-15 13:49:39.443  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2242 parentTag=2280 isRoot=false />
+2025-12-15 13:49:39.443  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=196 parentTag=200 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1220 parentTag=1222 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTScrollView id=1222 parentTag=1224 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2246 parentTag=2280 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RNSScreenContentWrapper id=200 parentTag=204 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <AndroidSwipeRefreshLayout id=1224 parentTag=1226 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RNSScreenStackHeaderConfig id=202 parentTag=204 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RNCSafeAreaView id=1226 parentTag=1230 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2250 parentTag=2280 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RNSScreen id=204 parentTag=-1 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1230 parentTag=1232 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=208 parentTag=66 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RNSScreen id=1232 parentTag=-1 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2256 parentTag=2280 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=212 parentTag=78 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2262 parentTag=2280 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=216 parentTag=84 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1242 parentTag=1244 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2266 parentTag=2280 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=220 parentTag=96 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1244 parentTag=772 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2268 parentTag=2270 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2270 parentTag=2280 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=224 parentTag=114 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1248 parentTag=1250 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1250 parentTag=772 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=228 parentTag=106 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2276 parentTag=2280 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1254 parentTag=1256 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=232 parentTag=120 isRoot=false />
+2025-12-15 13:49:39.444  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1256 parentTag=772 isRoot=false />
+2025-12-15 13:49:39.445  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2280 parentTag=null isRoot=false />
+2025-12-15 13:49:39.445  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=236 parentTag=132 isRoot=false />
+2025-12-15 13:49:39.445  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1260 parentTag=1262 isRoot=false />
+2025-12-15 13:49:39.445  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1262 parentTag=772 isRoot=false />
+2025-12-15 13:49:39.445  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2286 parentTag=2324 isRoot=false />
+2025-12-15 13:49:39.445  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=240 parentTag=138 isRoot=false />
+2025-12-15 13:49:39.445  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1266 parentTag=1268 isRoot=false />
+2025-12-15 13:49:39.445  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2290 parentTag=2324 isRoot=false />
+2025-12-15 13:49:39.445  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=244 parentTag=150 isRoot=false />
+2025-12-15 13:49:39.445  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1268 parentTag=772 isRoot=false />
+2025-12-15 13:49:39.445  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2294 parentTag=2324 isRoot=false />
+2025-12-15 13:49:39.445  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=248 parentTag=156 isRoot=false />
+2025-12-15 13:49:39.445  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1272 parentTag=1274 isRoot=false />
+2025-12-15 13:49:39.445  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1274 parentTag=772 isRoot=false />
+2025-12-15 13:49:39.445  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=252 parentTag=168 isRoot=false />
+2025-12-15 13:49:39.445  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2300 parentTag=2324 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1278 parentTag=1280 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=256 parentTag=176 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1280 parentTag=772 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2306 parentTag=2324 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=260 parentTag=190 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1284 parentTag=1286 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1286 parentTag=772 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2310 parentTag=2324 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2312 parentTag=2314 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=266 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1290 parentTag=1292 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2314 parentTag=2324 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1292 parentTag=772 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=270 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=272 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1296 parentTag=1298 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2320 parentTag=2324 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1298 parentTag=772 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=276 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2324 parentTag=null isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1302 parentTag=1304 isRoot=false />
+2025-12-15 13:49:39.446  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=280 parentTag=286 isRoot=false />
+2025-12-15 13:49:39.447  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1304 parentTag=772 isRoot=false />
+2025-12-15 13:49:39.447  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2330 parentTag=2368 isRoot=false />
+2025-12-15 13:49:39.447  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=284 parentTag=286 isRoot=false />
+2025-12-15 13:49:39.447  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1308 parentTag=1310 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=286 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1310 parentTag=772 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2334 parentTag=2368 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=290 parentTag=296 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1314 parentTag=1352 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2338 parentTag=2368 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=294 parentTag=296 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1318 parentTag=1352 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=296 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2344 parentTag=2368 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1322 parentTag=1352 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=300 parentTag=306 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2350 parentTag=2368 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=304 parentTag=306 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1328 parentTag=1352 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=306 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2354 parentTag=2368 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2356 parentTag=2358 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=310 parentTag=316 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1334 parentTag=1352 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2358 parentTag=2368 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=314 parentTag=316 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1338 parentTag=1352 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=316 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1340 parentTag=1342 isRoot=false />
+2025-12-15 13:49:39.448  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2364 parentTag=2368 isRoot=false />
+2025-12-15 13:49:39.449  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1342 parentTag=1352 isRoot=false />
+2025-12-15 13:49:39.449  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=320 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.449  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2368 parentTag=null isRoot=false />
+2025-12-15 13:49:39.449  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=324 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.449  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1348 parentTag=1352 isRoot=false />
+2025-12-15 13:49:39.449  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2374 parentTag=2412 isRoot=false />
+2025-12-15 13:49:39.450  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=328 parentTag=330 isRoot=false />
+2025-12-15 13:49:39.450  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1352 parentTag=null isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=330 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2378 parentTag=2412 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1358 parentTag=1396 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2382 parentTag=2412 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=336 parentTag=362 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1362 parentTag=1396 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2388 parentTag=2412 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=342 parentTag=362 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1366 parentTag=1396 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=346 parentTag=362 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2394 parentTag=2412 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1372 parentTag=1396 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2398 parentTag=2412 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=352 parentTag=362 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2400 parentTag=2402 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1378 parentTag=1396 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2402 parentTag=2412 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=358 parentTag=362 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1382 parentTag=1396 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1384 parentTag=1386 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2408 parentTag=2412 isRoot=false />
+2025-12-15 13:49:39.451  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=362 parentTag=364 isRoot=false />
+2025-12-15 13:49:39.452  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1386 parentTag=1396 isRoot=false />
+2025-12-15 13:49:39.452  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=364 parentTag=514 isRoot=false />
+2025-12-15 13:49:39.452  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2412 parentTag=null isRoot=false />
+2025-12-15 13:49:39.452  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1392 parentTag=1396 isRoot=false />
+2025-12-15 13:49:39.452  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2418 parentTag=2456 isRoot=false />
+2025-12-15 13:49:39.452  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=372 parentTag=398 isRoot=false />
+2025-12-15 13:49:39.452  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1396 parentTag=null isRoot=false />
+2025-12-15 13:49:39.452  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2422 parentTag=2456 isRoot=false />
+2025-12-15 13:49:39.452  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=378 parentTag=398 isRoot=false />
+2025-12-15 13:49:39.452  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1402 parentTag=1440 isRoot=false />
+2025-12-15 13:49:39.452  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2426 parentTag=2456 isRoot=false />
+2025-12-15 13:49:39.452  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=382 parentTag=398 isRoot=false />
+2025-12-15 13:49:39.452  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1406 parentTag=1440 isRoot=false />
+2025-12-15 13:49:39.452  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2432 parentTag=2456 isRoot=false />
+2025-12-15 13:49:39.452  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1410 parentTag=1440 isRoot=false />
+2025-12-15 13:49:39.453  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=388 parentTag=398 isRoot=false />
+2025-12-15 13:49:39.453  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2438 parentTag=2456 isRoot=false />
+2025-12-15 13:49:39.453  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1416 parentTag=1440 isRoot=false />
+2025-12-15 13:49:39.453  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=394 parentTag=398 isRoot=false />
+2025-12-15 13:49:39.453  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2442 parentTag=2456 isRoot=false />
+2025-12-15 13:49:39.453  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2444 parentTag=2446 isRoot=false />
+2025-12-15 13:49:39.453  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=398 parentTag=400 isRoot=false />
+2025-12-15 13:49:39.453  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1422 parentTag=1440 isRoot=false />
+2025-12-15 13:49:39.453  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2446 parentTag=2456 isRoot=false />
+2025-12-15 13:49:39.453  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=400 parentTag=514 isRoot=false />
+2025-12-15 13:49:39.453  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1426 parentTag=1440 isRoot=false />
+2025-12-15 13:49:39.454  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1428 parentTag=1430 isRoot=false />
+2025-12-15 13:49:39.455  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2452 parentTag=2456 isRoot=false />
+2025-12-15 13:49:39.455  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1430 parentTag=1440 isRoot=false />
+2025-12-15 13:49:39.455  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=408 parentTag=434 isRoot=false />
+2025-12-15 13:49:39.455  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2456 parentTag=null isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1436 parentTag=1440 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=414 parentTag=434 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2462 parentTag=2500 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1440 parentTag=null isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=418 parentTag=434 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2466 parentTag=2500 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1446 parentTag=1484 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2470 parentTag=2500 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=424 parentTag=434 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1450 parentTag=1484 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2476 parentTag=2500 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=430 parentTag=434 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1454 parentTag=1484 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=434 parentTag=436 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2482 parentTag=2500 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=436 parentTag=null isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1460 parentTag=1484 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2486 parentTag=2500 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2488 parentTag=2490 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1466 parentTag=1484 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2490 parentTag=2500 isRoot=false />
+2025-12-15 13:49:39.456  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=444 parentTag=470 isRoot=false />
+2025-12-15 13:49:39.457  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1470 parentTag=1484 isRoot=false />
+2025-12-15 13:49:39.457  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1472 parentTag=1474 isRoot=false />
+2025-12-15 13:49:39.457  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2496 parentTag=2500 isRoot=false />
+2025-12-15 13:49:39.457  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=450 parentTag=470 isRoot=false />
+2025-12-15 13:49:39.457  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1474 parentTag=1484 isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2500 parentTag=null isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=454 parentTag=470 isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1480 parentTag=1484 isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2506 parentTag=2544 isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=460 parentTag=470 isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1484 parentTag=null isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2510 parentTag=2544 isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=466 parentTag=470 isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1490 parentTag=1528 isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2514 parentTag=2544 isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=470 parentTag=472 isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1494 parentTag=1528 isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=472 parentTag=null isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2520 parentTag=2544 isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1498 parentTag=1528 isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2526 parentTag=2544 isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=480 parentTag=506 isRoot=false />
+2025-12-15 13:49:39.458  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1504 parentTag=1528 isRoot=false />
+2025-12-15 13:49:39.459  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2530 parentTag=2544 isRoot=false />
+2025-12-15 13:49:39.459  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2532 parentTag=2534 isRoot=false />
+2025-12-15 13:49:39.459  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=486 parentTag=506 isRoot=false />
+2025-12-15 13:49:39.459  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1510 parentTag=1528 isRoot=false />
+2025-12-15 13:49:39.459  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2534 parentTag=2544 isRoot=false />
+2025-12-15 13:49:39.459  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=490 parentTag=506 isRoot=false />
+2025-12-15 13:49:39.459  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1514 parentTag=1528 isRoot=false />
+2025-12-15 13:49:39.459  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1516 parentTag=1518 isRoot=false />
+2025-12-15 13:49:39.460  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2540 parentTag=2544 isRoot=false />
+2025-12-15 13:49:39.460  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1518 parentTag=1528 isRoot=false />
+2025-12-15 13:49:39.460  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=496 parentTag=506 isRoot=false />
+2025-12-15 13:49:39.460  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2544 parentTag=null isRoot=false />
+2025-12-15 13:49:39.460  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1524 parentTag=1528 isRoot=false />
+2025-12-15 13:49:39.460  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=502 parentTag=506 isRoot=false />
+2025-12-15 13:49:39.460  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1528 parentTag=null isRoot=false />
+2025-12-15 13:49:39.460  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=506 parentTag=508 isRoot=false />
+2025-12-15 13:49:39.460  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=508 parentTag=null isRoot=false />
+2025-12-15 13:49:39.460  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2556 parentTag=null isRoot=false />
+2025-12-15 13:49:39.460  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1534 parentTag=1572 isRoot=false />
+2025-12-15 13:49:39.460  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <AndroidHorizontalScrollContentView id=514 parentTag=516 isRoot=false />
+2025-12-15 13:49:39.460  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1538 parentTag=1572 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <AndroidHorizontalScrollView id=516 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=518 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1542 parentTag=1572 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RNCSafeAreaView id=2566 parentTag=2568 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RNSScreenContentWrapper id=2568 parentTag=2572 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=522 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RNSScreenStackHeaderConfig id=2570 parentTag=2572 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1548 parentTag=1572 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RNSScreen id=2572 parentTag=-1 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=526 parentTag=528 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <AndroidProgressBar id=2574 parentTag=null isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=528 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1554 parentTag=1572 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2578 parentTag=null isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <AndroidProgressBar id=2580 parentTag=null isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=534 parentTag=550 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1558 parentTag=1572 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1560 parentTag=1562 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=538 parentTag=550 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1562 parentTag=1572 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2588 parentTag=2590 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=542 parentTag=550 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2590 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1568 parentTag=1572 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2594 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=548 parentTag=550 isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1572 parentTag=null isRoot=false />
+2025-12-15 13:49:39.461  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2596 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=550 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2600 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1578 parentTag=1616 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=556 parentTag=572 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2604 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1582 parentTag=1616 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2606 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=560 parentTag=572 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1586 parentTag=1616 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=564 parentTag=572 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2612 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2614 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1592 parentTag=1616 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=570 parentTag=572 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2618 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=572 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.462  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1598 parentTag=1616 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2622 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2624 parentTag=2626 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=578 parentTag=594 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1602 parentTag=1616 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2626 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1604 parentTag=1606 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=582 parentTag=594 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1606 parentTag=1616 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2632 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=586 parentTag=594 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1612 parentTag=1616 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2636 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=592 parentTag=594 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1616 parentTag=null isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2640 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=594 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2644 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1622 parentTag=1660 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2646 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=600 parentTag=616 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1626 parentTag=1660 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2650 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=604 parentTag=616 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1630 parentTag=1660 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=608 parentTag=616 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1636 parentTag=1660 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2660 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=614 parentTag=616 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=616 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2664 parentTag=2690 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1642 parentTag=1660 isRoot=false />
+2025-12-15 13:49:39.463  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=622 parentTag=638 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1646 parentTag=1660 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2670 parentTag=2690 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1648 parentTag=1650 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=626 parentTag=638 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1650 parentTag=1660 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2674 parentTag=2690 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=630 parentTag=638 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1656 parentTag=1660 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2680 parentTag=2690 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=636 parentTag=638 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1660 parentTag=null isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=638 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2686 parentTag=2690 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1666 parentTag=1704 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2690 parentTag=2692 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=644 parentTag=646 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2692 parentTag=null isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=646 parentTag=648 isRoot=false />
+2025-12-15 13:49:39.464  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1670 parentTag=1704 isRoot=false />
+2025-12-15 13:49:39.465  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTScrollView id=648 parentTag=52 isRoot=false />
+2025-12-15 13:49:39.466  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2696 parentTag=null isRoot=false />
+2025-12-15 13:49:39.466  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=650 parentTag=652 isRoot=false />
+2025-12-15 13:49:39.466  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1674 parentTag=1704 isRoot=false />
+2025-12-15 13:49:39.466  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=652 parentTag=668 isRoot=false />
+2025-12-15 13:49:39.466  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=654 parentTag=668 isRoot=false />
+2025-12-15 13:49:39.466  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=656 parentTag=668 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1680 parentTag=1704 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2704 parentTag=null isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2706 parentTag=null isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=660 parentTag=662 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=662 parentTag=668 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1686 parentTag=1704 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=664 parentTag=668 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2712 parentTag=2714 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1690 parentTag=1704 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTScrollView id=2714 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=668 parentTag=670 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1692 parentTag=1694 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2716 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=670 parentTag=1230 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1694 parentTag=1704 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2720 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=674 parentTag=1226 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1700 parentTag=1704 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2724 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.467  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1704 parentTag=null isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2728 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2732 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=686 parentTag=1226 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1710 parentTag=1748 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2734 parentTag=2736 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2736 parentTag=2738 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1714 parentTag=1748 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTScrollView id=2738 parentTag=null isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=692 parentTag=1226 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <AndroidProgressBar id=2740 parentTag=null isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <AndroidTextInput id=694 parentTag=1226 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1718 parentTag=1748 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2742 parentTag=null isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=696 parentTag=1226 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1724 parentTag=1748 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=704 parentTag=1226 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1730 parentTag=1748 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1734 parentTag=1748 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1736 parentTag=1738 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1738 parentTag=1748 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1744 parentTag=1748 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1748 parentTag=null isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=726 parentTag=728 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=728 parentTag=772 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1756 parentTag=1794 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1760 parentTag=1794 isRoot=false />
+2025-12-15 13:49:39.468  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1764 parentTag=1794 isRoot=false />
+2025-12-15 13:49:39.469  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1770 parentTag=1794 isRoot=false />
+2025-12-15 13:49:39.469  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1776 parentTag=1794 isRoot=false />
+2025-12-15 13:49:39.469  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1780 parentTag=1794 isRoot=false />
+2025-12-15 13:49:39.469  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1782 parentTag=1784 isRoot=false />
+2025-12-15 13:49:39.469  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1784 parentTag=1794 isRoot=false />
+2025-12-15 13:49:39.469  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1790 parentTag=1794 isRoot=false />
+2025-12-15 13:49:39.469  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1794 parentTag=null isRoot=false />
+2025-12-15 13:49:39.469  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <AndroidHorizontalScrollContentView id=772 parentTag=774 isRoot=false />
+2025-12-15 13:49:39.470  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <AndroidHorizontalScrollView id=774 parentTag=1226 isRoot=false />
+2025-12-15 13:49:39.470  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1800 parentTag=1838 isRoot=false />
+2025-12-15 13:49:39.470  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=780 parentTag=818 isRoot=false />
+2025-12-15 13:49:39.470  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1804 parentTag=1838 isRoot=false />
+2025-12-15 13:49:39.470  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=784 parentTag=818 isRoot=false />
+2025-12-15 13:49:39.470  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1808 parentTag=1838 isRoot=false />
+2025-12-15 13:49:39.470  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=788 parentTag=818 isRoot=false />
+2025-12-15 13:49:39.470  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1814 parentTag=1838 isRoot=false />
+2025-12-15 13:49:39.471  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=794 parentTag=818 isRoot=false />
+2025-12-15 13:49:39.471  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1820 parentTag=1838 isRoot=false />
+2025-12-15 13:49:39.471  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=800 parentTag=818 isRoot=false />
+2025-12-15 13:49:39.471  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1824 parentTag=1838 isRoot=false />
+2025-12-15 13:49:39.471  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1826 parentTag=1828 isRoot=false />
+2025-12-15 13:49:39.471  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=804 parentTag=818 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1828 parentTag=1838 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=806 parentTag=808 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=808 parentTag=818 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1834 parentTag=1838 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=814 parentTag=818 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1838 parentTag=null isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=818 parentTag=1220 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1844 parentTag=1882 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=824 parentTag=862 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1848 parentTag=1882 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=828 parentTag=862 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1852 parentTag=1882 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=832 parentTag=862 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1858 parentTag=1882 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=838 parentTag=862 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1864 parentTag=1882 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=844 parentTag=862 isRoot=false />
+2025-12-15 13:49:39.472  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1868 parentTag=1882 isRoot=false />
+2025-12-15 13:49:39.473  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1870 parentTag=1872 isRoot=false />
+2025-12-15 13:49:39.473  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=848 parentTag=862 isRoot=false />
+2025-12-15 13:49:39.473  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1872 parentTag=1882 isRoot=false />
+2025-12-15 13:49:39.473  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=850 parentTag=852 isRoot=false />
+2025-12-15 13:49:39.473  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=852 parentTag=862 isRoot=false />
+2025-12-15 13:49:39.473  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1878 parentTag=1882 isRoot=false />
+2025-12-15 13:49:39.473  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=858 parentTag=862 isRoot=false />
+2025-12-15 13:49:39.473  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1882 parentTag=null isRoot=false />
+2025-12-15 13:49:39.473  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=862 parentTag=1220 isRoot=false />
+2025-12-15 13:49:39.473  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1888 parentTag=1926 isRoot=false />
+2025-12-15 13:49:39.473  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=868 parentTag=906 isRoot=false />
+2025-12-15 13:49:39.474  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1892 parentTag=1926 isRoot=false />
+2025-12-15 13:49:39.474  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=872 parentTag=906 isRoot=false />
+2025-12-15 13:49:39.474  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1896 parentTag=1926 isRoot=false />
+2025-12-15 13:49:39.474  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=876 parentTag=906 isRoot=false />
+2025-12-15 13:49:39.475  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1902 parentTag=1926 isRoot=false />
+2025-12-15 13:49:39.475  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=882 parentTag=906 isRoot=false />
+2025-12-15 13:49:39.475  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1908 parentTag=1926 isRoot=false />
+2025-12-15 13:49:39.475  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=888 parentTag=906 isRoot=false />
+2025-12-15 13:49:39.475  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1912 parentTag=1926 isRoot=false />
+2025-12-15 13:49:39.475  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1914 parentTag=1916 isRoot=false />
+2025-12-15 13:49:39.475  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=892 parentTag=906 isRoot=false />
+2025-12-15 13:49:39.475  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1916 parentTag=1926 isRoot=false />
+2025-12-15 13:49:39.475  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=894 parentTag=896 isRoot=false />
+2025-12-15 13:49:39.475  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=896 parentTag=906 isRoot=false />
+2025-12-15 13:49:39.475  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1922 parentTag=1926 isRoot=false />
+2025-12-15 13:49:39.475  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=902 parentTag=906 isRoot=false />
+2025-12-15 13:49:39.475  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1926 parentTag=null isRoot=false />
+2025-12-15 13:49:39.475  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=906 parentTag=1220 isRoot=false />
+2025-12-15 13:49:39.475  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1932 parentTag=1970 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=912 parentTag=950 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1936 parentTag=1970 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=916 parentTag=950 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1940 parentTag=1970 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=920 parentTag=950 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1946 parentTag=1970 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=926 parentTag=950 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1952 parentTag=1970 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=932 parentTag=950 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1956 parentTag=1970 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1958 parentTag=1960 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=936 parentTag=950 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1960 parentTag=1970 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=938 parentTag=940 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=940 parentTag=950 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1966 parentTag=1970 isRoot=false />
+2025-12-15 13:49:39.476  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=946 parentTag=950 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=1970 parentTag=null isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=950 parentTag=1220 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1976 parentTag=2014 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=956 parentTag=994 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1980 parentTag=2014 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=960 parentTag=994 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1984 parentTag=2014 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=964 parentTag=994 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1990 parentTag=2014 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=970 parentTag=994 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1996 parentTag=2014 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=976 parentTag=994 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2000 parentTag=2014 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2002 parentTag=2004 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=980 parentTag=994 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2004 parentTag=2014 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=982 parentTag=984 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=984 parentTag=994 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2010 parentTag=2014 isRoot=false />
+2025-12-15 13:49:39.477  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=990 parentTag=994 isRoot=false />
+2025-12-15 13:49:39.478  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2014 parentTag=null isRoot=false />
+2025-12-15 13:49:39.478  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=994 parentTag=null isRoot=false />
+2025-12-15 13:49:39.478  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2020 parentTag=2058 isRoot=false />
+2025-12-15 13:49:39.478  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1000 parentTag=1038 isRoot=false />
+2025-12-15 13:49:39.478  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2024 parentTag=2058 isRoot=false />
+2025-12-15 13:49:39.478  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1004 parentTag=1038 isRoot=false />
+2025-12-15 13:49:39.479  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2028 parentTag=2058 isRoot=false />
+2025-12-15 13:49:39.479  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1008 parentTag=1038 isRoot=false />
+2025-12-15 13:49:39.479  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2034 parentTag=2058 isRoot=false />
+2025-12-15 13:49:39.479  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1014 parentTag=1038 isRoot=false />
+2025-12-15 13:49:39.479  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2040 parentTag=2058 isRoot=false />
+2025-12-15 13:49:39.479  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=1020 parentTag=1038 isRoot=false />
+2025-12-15 13:49:39.479  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTText id=2044 parentTag=2058 isRoot=false />
+2025-12-15 13:49:39.479  4891-4891  unknown:Su...ingManager com.appunture.mobile                 E  <RCTView id=2046 parentTag=2048 isRoot=false />
+2025-12-15 13:49:39.479  4891-4891  unknown:FabricUIManager com.appunture.mobile                 E  Exception thrown when executing UIFrameGuarded
+                                                                                                    java.lang.ClassCastException: com.facebook.react.views.progressbar.ReactProgressBarViewManager cannot be cast to com.facebook.react.uimanager.IViewGroupManager
+                                                                                                    	at com.facebook.react.fabric.mounting.SurfaceMountingManager.getViewGroupManager(SurfaceMountingManager.java:1122)
+                                                                                                    	at com.facebook.react.fabric.mounting.SurfaceMountingManager.addViewAt(SurfaceMountingManager.java:408)
+                                                                                                    	at com.facebook.react.fabric.mounting.mountitems.IntBufferBatchMountItem.execute(IntBufferBatchMountItem.java:141)
+                                                                                                    	at com.facebook.react.fabric.mounting.MountItemDispatcher.executeOrEnqueue(MountItemDispatcher.java:370)
+                                                                                                    	at com.facebook.react.fabric.mounting.MountItemDispatcher.dispatchMountItems(MountItemDispatcher.java:265)
+                                                                                                    	at com.facebook.react.fabric.mounting.MountItemDispatcher.tryDispatchMountItems(MountItemDispatcher.java:122)
+                                                                                                    	at com.facebook.react.fabric.FabricUIManager$DispatchUIFrameCallback.doFrameGuarded(FabricUIManager.java:1396)
+                                                                                                    	at com.facebook.react.uimanager.GuardedFrameCallback.doFrame(GuardedFrameCallback.kt:25)
+                                                                                                    	at com.facebook.react.modules.core.ReactChoreographer.frameCallback$lambda$1(ReactChoreographer.kt:59)
+                                                                                                    	at com.facebook.react.modules.core.ReactChoreographer.$r8$lambda$nSkFhrr5T7rop_XKwzlLov4NLLw(Unknown Source:0)
+                                                                                                    	at com.facebook.react.modules.core.ReactChoreographer$$ExternalSyntheticLambda0.doFrame(D8$$SyntheticClass:0)
+                                                                                                    	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1566)
+                                                                                                    	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1577)
+                                                                                                    	at android.view.Choreographer.doCallbacks(Choreographer.java:1177)
+                                                                                                    	at android.view.Choreographer.doFrame(Choreographer.java:1102)
+                                                                                                    	at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java:1551)
+                                                                                                    	at android.os.Handler.handleCallback(Handler.java:995)
+                                                                                                    	at android.os.Handler.dispatchMessage(Handler.java:103)
+                                                                                                    	at android.os.Looper.loopOnce(Looper.java:248)
+                                                                                                    	at android.os.Looper.loop(Looper.java:338)
+                                                                                                    	at android.app.ActivityThread.main(ActivityThread.java:8982)
+                                                                                                    	at java.lang.reflect.Method.invoke(Native Method)
+                                                                                                    	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+                                                                                                    	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+2025-12-15 13:49:39.480  4891-4891  unknown:BridgelessReact com.appunture.mobile                 W  ReactHost{0}.handleHostException(message = "Exception thrown when executing UIFrameGuarded")
+2025-12-15 13:49:39.483  4891-4891  AndroidRuntime          com.appunture.mobile                 D  Shutting down VM
+2025-12-15 13:49:39.484  4891-4891  AndroidRuntime          com.appunture.mobile                 E  FATAL EXCEPTION: main
+                                                                                                    Process: com.appunture.mobile, PID: 4891
+                                                                                                    java.lang.RuntimeException: Exception thrown when executing UIFrameGuarded
+                                                                                                    	at com.facebook.react.fabric.FabricUIManager$DispatchUIFrameCallback.doFrameGuarded(FabricUIManager.java:1400)
+                                                                                                    	at com.facebook.react.uimanager.GuardedFrameCallback.doFrame(GuardedFrameCallback.kt:25)
+                                                                                                    	at com.facebook.react.modules.core.ReactChoreographer.frameCallback$lambda$1(ReactChoreographer.kt:59)
+                                                                                                    	at com.facebook.react.modules.core.ReactChoreographer.$r8$lambda$nSkFhrr5T7rop_XKwzlLov4NLLw(Unknown Source:0)
+                                                                                                    	at com.facebook.react.modules.core.ReactChoreographer$$ExternalSyntheticLambda0.doFrame(D8$$SyntheticClass:0)
+                                                                                                    	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1566)
+                                                                                                    	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1577)
+                                                                                                    	at android.view.Choreographer.doCallbacks(Choreographer.java:1177)
+                                                                                                    	at android.view.Choreographer.doFrame(Choreographer.java:1102)
+                                                                                                    	at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java:1551)
+                                                                                                    	at android.os.Handler.handleCallback(Handler.java:995)
+                                                                                                    	at android.os.Handler.dispatchMessage(Handler.java:103)
+                                                                                                    	at android.os.Looper.loopOnce(Looper.java:248)
+                                                                                                    	at android.os.Looper.loop(Looper.java:338)
+                                                                                                    	at android.app.ActivityThread.main(ActivityThread.java:8982)
+                                                                                                    	at java.lang.reflect.Method.invoke(Native Method)
+                                                                                                    	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+                                                                                                    	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+                                                                                                    Caused by: java.lang.ClassCastException: com.facebook.react.views.progressbar.ReactProgressBarViewManager cannot be cast to com.facebook.react.uimanager.IViewGroupManager
+                                                                                                    	at com.facebook.react.fabric.mounting.SurfaceMountingManager.getViewGroupManager(SurfaceMountingManager.java:1122)
+                                                                                                    	at com.facebook.react.fabric.mounting.SurfaceMountingManager.addViewAt(SurfaceMountingManager.java:408)
+                                                                                                    	at com.facebook.react.fabric.mounting.mountitems.IntBufferBatchMountItem.execute(IntBufferBatchMountItem.java:141)
+                                                                                                    	at com.facebook.react.fabric.mounting.MountItemDispatcher.executeOrEnqueue(MountItemDispatcher.java:370)
+                                                                                                    	at com.facebook.react.fabric.mounting.MountItemDispatcher.dispatchMountItems(MountItemDispatcher.java:265)
+                                                                                                    	at com.facebook.react.fabric.mounting.MountItemDispatcher.tryDispatchMountItems(MountItemDispatcher.java:122)
+                                                                                                    	at com.facebook.react.fabric.FabricUIManager$DispatchUIFrameCallback.doFrameGuarded(FabricUIManager.java:1396)
+                                                                                                    	at com.facebook.react.uimanager.GuardedFrameCallback.doFrame(GuardedFrameCallback.kt:25) 
+                                                                                                    	at com.facebook.react.modules.core.ReactChoreographer.frameCallback$lambda$1(ReactChoreographer.kt:59) 
+                                                                                                    	at com.facebook.react.modules.core.ReactChoreographer.$r8$lambda$nSkFhrr5T7rop_XKwzlLov4NLLw(Unknown Source:0) 
+                                                                                                    	at com.facebook.react.modules.core.ReactChoreographer$$ExternalSyntheticLambda0.doFrame(D8$$SyntheticClass:0) 
+                                                                                                    	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1566) 
+                                                                                                    	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1577) 
+                                                                                                    	at android.view.Choreographer.doCallbacks(Choreographer.java:1177) 
+                                                                                                    	at android.view.Choreographer.doFrame(Choreographer.java:1102) 
+                                                                                                    	at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java:1551) 
+                                                                                                    	at android.os.Handler.handleCallback(Handler.java:995) 
+                                                                                                    	at android.os.Handler.dispatchMessage(Handler.java:103) 
+                                                                                                    	at android.os.Looper.loopOnce(Looper.java:248) 
+                                                                                                    	at android.os.Looper.loop(Looper.java:338) 
+                                                                                                    	at android.app.ActivityThread.main(ActivityThread.java:8982) 
+                                                                                                    	at java.lang.reflect.Method.invoke(Native Method) 
+                                                                                                    	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593) 
+                                                                                                    	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932) 
+2025-12-15 13:49:39.500   713-4968  DropBoxManagerService   system_server                        I  add tag=data_app_crash isTagEnabled=true flags=0x2
+2025-12-15 13:49:39.502   713-1934  ActivityTaskManager     system_server                        W    Force finishing activity com.appunture.mobile/.MainActivity
+2025-12-15 13:49:39.511  1024-1073  WindowManagerShell      com.android.systemui                 V  Transition requested (#16): android.os.BinderProxy@eaa17f9 TransitionRequestInfo { type = CLOSE, triggerTask = TaskInfo{userId=0 taskId=7 effectiveUid=10214 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=com.appunture.mobile/.MainActivity } baseActivity=ComponentInfo{com.appunture.mobile/com.appunture.mobile.MainActivity} topActivity=ComponentInfo{com.appunture.mobile/com.appunture.mobile.MainActivity} origActivity=null realActivity=ComponentInfo{com.appunture.mobile/com.appunture.mobile.MainActivity} numActivities=1 lastActiveTime=769521 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@550433e} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 0 - 0, 0) topActivityInfo=ActivityInfo{79db59f com.appunture.mobile.MainActivity} launchCookies=[android.os.BinderProxy@76580ba] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=true isVisible=true isVisibleRequested=true isTopActivityNoDisplay=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false isActivityStackTransparent=false lastNonFullscreenBounds=Rect(284, 660 - 796, 1740) capturedLink=null capturedLinkTimestamp=0 requestedVisibleTypes=-9 topActivityRequestOpenInBrowserEducationTimestamp=0 appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false eligibleForLetterboxEducation= false isLetterboxEducationEnabled= true isLetterboxDoubleTapEnabled= false eligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 topActivityAppBounds=Rect(0, 0 - 1080, 2400) isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false hasMinAspectRatioOverride=false topActivityLetterboxBounds=null cameraCompatTaskInfo=CameraCompatTaskInfo { freeformCameraCompatMode=inactive}} topActivityMainWindowFrame=null}, pipChange = null, remoteTransition = null, displayChange = null, flags = 16, debugId = 16 }
+2025-12-15 13:49:39.520   512-979   BpBinder                surfaceflinger                       I  onLastStrongRef automatically unlinking death recipients: 
+2025-12-15 13:49:39.533  4891-4891  Process                 com.appunture.mobile                 I  Sending signal. PID: 4891 SIG: 9
+2025-12-15 13:49:39.546   512-512   BpBinder                surfaceflinger                       I  onLastStrongRef automatically unlinking death recipients: 
+2025-12-15 13:49:39.584   713-2054  ActivityManager         system_server                        I  Process com.appunture.mobile (pid 4891) has died: fg  TOP 
+2025-12-15 13:49:39.585   713-1003  WindowManager           system_server                        I  WIN DEATH: Window{5499111 u0 com.appunture.mobile/com.appunture.mobile.MainActivity}
+2025-12-15 13:49:39.587   442-442   Zygote                  app_process64                        I  Process 4891 exited due to signal 9 (Killed)
+2025-12-15 13:49:39.588   713-2145  ImeTracker              system_server                        I  com.appunture.mobile:ae886ab0: onRequestHide at ORIGIN_SERVER reason HIDE_REMOVE_CLIENT fromUser false
+2025-12-15 13:49:39.588   713-2145  ImeTracker              system_server                        I  com.appunture.mobile:ae886ab0: onCancelled at PHASE_SERVER_SHOULD_HIDE
+2025-12-15 13:49:39.588   713-761   libprocessgroup         system_server                        I  Removed cgroup /sys/fs/cgroup/apps/uid_10214/pid_4891
+2025-12-15 13:49:39.590   713-903   ConnectivityService     system_server                        D  releasing NetworkRequest [ REQUEST id=190, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10214 RequestorUid: 10214 RequestorPkg: com.appunture.mobile UnderlyingNetworks: Null] ] (release request)
+2025-12-15 13:49:39.608  1191-1191  ViewRootImpl            com...le.android.apps.nexuslauncher  D  Skipping stats log for color mode
+2025-12-15 13:49:39.608   713-903   InetDiagMessage         system_server                        D  Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+2025-12-15 13:49:39.611   713-903   InetDiagMessage         system_server                        D  Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+2025-12-15 13:49:39.611   713-903   InetDiagMessage         system_server                        D  Destroyed live tcp sockets for uids={10214} in 5ms
+2025-12-15 13:49:39.611   713-747   ActivityManager         system_server                        W  setHasOverlayUi called on unknown pid: 4891
+2025-12-15 13:49:39.615   713-903   InetDiagMessage         system_server                        D  Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+2025-12-15 13:49:39.615  1191-1191  StatsLog                com...le.android.apps.nexuslauncher  D  LAUNCHER_ONRESUME
+2025-12-15 13:49:39.617   713-903   InetDiagMessage         system_server                        D  Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+2025-12-15 13:49:39.618   713-903   InetDiagMessage         system_server                        D  Destroyed live tcp sockets for uids={20214} in 6ms
+2025-12-15 13:49:39.626   713-964   Background...rolService system_server                        D  Package event received: 0
+2025-12-15 13:49:39.627  1191-1191  NexusLaunc...elDelegate com...le.android.apps.nexuslauncher  D  notifySmartspaceEvent: SmartspaceTargetEvent{mSmartspaceTarget=null, mSmartspaceActionId='null', mEventType=6}
+2025-12-15 13:49:39.634   713-1003  ActivityManager         system_server                        W  Unable to start service Intent { act=android.service.smartspace.SmartspaceService cmp=com.google.android.as/com.google.android.apps.miphone.aiai.app.AiAiSmartspaceService } U=0: not found
+2025-12-15 13:49:39.634  1191-1191  BaseDepthController     com...le.android.apps.nexuslauncher  D  mSurface is null and mCurrentBlur is: 23
+2025-12-15 13:49:39.634   713-964   Background...rolService system_server                        D  Package event received: 0
+2025-12-15 13:49:39.634   713-1003  RemoteSmartspaceService system_server                        W  could not bind to Intent { act=android.service.smartspace.SmartspaceService cmp=com.google.android.as/com.google.android.apps.miphone.aiai.app.AiAiSmartspaceService } using flags 67112961
+2025-12-15 13:49:39.634   713-964   Background...rolService system_server                        D  Package event received: 0
+2025-12-15 13:49:39.635   713-713   ActivityManager         system_server                        W  Unbind failed: could not find connection for android.app.LoadedApk$ServiceDispatcher$InnerConnection@6f3b361
+2025-12-15 13:49:39.640  1191-1249  QuickstepModelDelegate  com...le.android.apps.nexuslauncher  D  notifyAppTargetEvent action=1 launchLocation=
+2025-12-15 13:49:39.641   713-2054  ActivityManager         system_server                        W  Unable to start service Intent { act=android.service.smartspace.SmartspaceService cmp=com.google.android.as/com.google.android.apps.miphone.aiai.app.AiAiSmartspaceService } U=0: not found
+2025-12-15 13:49:39.641   713-2054  RemoteSmartspaceService system_server                        W  could not bind to Intent { act=android.service.smartspace.SmartspaceService cmp=com.google.android.as/com.google.android.apps.miphone.aiai.app.AiAiSmartspaceService } using flags 67112961
+2025-12-15 13:49:39.645   713-713   ActivityManager         system_server                        W  Unbind failed: could not find connection for android.app.LoadedApk$ServiceDispatcher$InnerConnection@2ad56e0
+2025-12-15 13:49:39.652  1191-1191  BaseDepthController     com...le.android.apps.nexuslauncher  D  setSurface:
+                                                                                                    	mWaitingOnSurfaceValidity: false
+                                                                                                    	mSurface: Surface(name=com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity)/@0xfbb32a3
+2025-12-15 13:49:39.732  1191-1191  NotificationListener    com...le.android.apps.nexuslauncher  I  Handling notification state refresh for com.android.systemui#0
+2025-12-15 13:49:39.732  1191-1191  NotificationListener    com...le.android.apps.nexuslauncher  I  Handling notification state refresh for android#0
+2025-12-15 13:49:39.743  1024-1035  WindowManagerShell      com.android.systemui                 V  onTransitionReady(transaction=3062311683316)
+2025-12-15 13:49:39.744  1024-1073  WindowManagerShell      com.android.systemui                 V  onTransitionReady (#16) android.os.BinderProxy@eaa17f9: {id=16 t=CLOSE f=0x10 trk=0 r=[0@Point(0, 0)] c=[
+                                                                                                            {m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0x376f6ec sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 taskParent=-1},
+                                                                                                            {m=CLOSE f=NONE leash=Surface(name=Task=7)/@0xf6b3ab5 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 taskParent=-1},
+                                                                                                            {m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{e930bc7 showWhenLocked=false})/@0x989554a sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0}
+                                                                                                        ]}
+2025-12-15 13:49:39.746  1024-1073  WindowManagerShell      com.android.systemui                 V  Playing animation for (#16) android.os.BinderProxy@eaa17f9@0
+2025-12-15 13:49:39.747  1024-1073  ShellRecents            com.android.systemui                 V  RecentsTransitionHandler.startAnimation: no controller found
+2025-12-15 13:49:39.747  1024-1073  WindowManagerShell      com.android.systemui                 V  Transition doesn't have explicit remote, search filters for match for {id=16 t=CLOSE f=0x10 trk=0 r=[0@Point(0, 0)] c=[{m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0x376f6ec sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 taskParent=-1},{m=CLOSE f=NONE leash=Surface(name=Task=7)/@0xf6b3ab5 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 taskParent=-1},{m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{e930bc7 showWhenLocked=false})/@0x989554a sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0}]}
+2025-12-15 13:49:39.748  1024-1073  WindowManagerShell      com.android.systemui                 V   Checking filter Pair{{types=[] flags=0x0] notFlags=0x0 checks=[{atype=undefined independent=true modes=[CLOSE,TO_BACK] flags=IN_TASK_WITH_EMBEDDED_ACTIVITY mustBeTask=false order=ANY topActivity=null launchCookie=null taskFragmentToken=android.os.BinderProxy@7f1b459 windowingMode=undefined}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@cb3181e, appThread = android.app.IApplicationThread$Stub$Proxy@ece98ff, debugName = overlayBackTransition }}
+2025-12-15 13:49:39.749  1024-1073  WindowManagerShell      com.android.systemui                 V   Checking filter Pair{{types=[] flags=0x0] notFlags=0x0 checks=[{atype=dream independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined},{atype=home independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@4cf06cc, appThread = android.app.IApplicationThread$Stub$Proxy@e003d15, debugName = LauncherToDream }}
+2025-12-15 13:49:39.749  1024-1073  WindowManagerShell      com.android.systemui                 V   Checking filter Pair{{types=[] flags=0x0] notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=TOP topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity} launchCookie=null windowingMode=undefined},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined},{NOT atype=undefined independent=true modes=[] flags=NONE mustBeTask=true order=ANY topActivity=null launchCookie=null customAnim=true windowingMode=undefined}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@bf4982a, appThread = android.app.IApplicationThread$Stub$Proxy@7fdc61b, debugName = QuickstepLaunchHome }}
+2025-12-15 13:49:39.749  1024-1073  RemoteTransitionHandler com.android.systemui                 D  Found filterPair{{types=[] flags=0x0] notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=TOP topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity} launchCookie=null windowingMode=undefined},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined},{NOT atype=undefined independent=true modes=[] flags=NONE mustBeTask=true order=ANY topActivity=null launchCookie=null customAnim=true windowingMode=undefined}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@bf4982a, appThread = android.app.IApplicationThread$Stub$Proxy@7fdc61b, debugName = QuickstepLaunchHome }}
+2025-12-15 13:49:39.750  1024-1073  WindowManagerShell      com.android.systemui                 V   Delegate animation for (#16) to RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@bf4982a, appThread = android.app.IApplicationThread$Stub$Proxy@7fdc61b, debugName = QuickstepLaunchHome }
+2025-12-15 13:49:39.771  1191-1249  HWUI                    com...le.android.apps.nexuslauncher  W  Image decoding logging dropped!
+2025-12-15 13:49:39.772  1191-1191  b/311077782             com...le.android.apps.nexuslauncher  D  LauncherAnimationRunner.setAnimation
+2025-12-15 13:49:39.789   713-744   WindowManager           system_server                        V  Sent Transition (#16) createdAt=12-15 16:49:39.502 via request=TransitionRequestInfo { type = CLOSE, triggerTask = TaskInfo{userId=0 taskId=7 effectiveUid=10214 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=com.appunture.mobile/.MainActivity } baseActivity=ComponentInfo{com.appunture.mobile/com.appunture.mobile.MainActivity} topActivity=ComponentInfo{com.appunture.mobile/com.appunture.mobile.MainActivity} origActivity=null realActivity=ComponentInfo{com.appunture.mobile/com.appunture.mobile.MainActivity} numActivities=1 lastActiveTime=769521 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{RemoteToken{a103a97 Task{aa42bc0 #7 type=standard A=10214:com.appunture.mobile}}} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 0 - 0, 0) topActivityInfo=ActivityInfo{28d2484 com.appunture.mobile.MainActivity} launchCookies=[android.os.BinderProxy@950f46d] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=true isVisible=true isVisibleRequested=true isTopActivityNoDisplay=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false isActivityStackTransparent=false lastNonFullscreenBounds=Rect(284, 660 - 796, 1740) capturedLink=null capturedLinkTimestamp=0 requestedVisibleTypes=-9 topActivityRequestOpenInBrowserEducationTimestamp=0 appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false eligibleForLetterboxEducation= false isLetterboxEducationEnabled= true isLetterboxDoubleTapEnabled= false eligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 topActivityAppBounds=Rect(0, 0 - 1080, 2400) isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false hasMinAspectRatioOverride=false topActivityLetterboxBounds=null cameraCompatTaskInfo=CameraCompatTaskInfo { freeformCameraCompatMode=inactive}} topActivityMainWindowFrame=null}, pipChange = null, remoteTransition = null, displayChange = null, flags = 16, debugId = 16 }
+2025-12-15 13:49:39.789   713-744   WindowManager           system_server                        V      startWCT=WindowContainerTransaction { changes= {} hops= [] errorCallbackToken=null taskFragmentOrganizer=null }
+2025-12-15 13:49:39.789   713-744   WindowManager           system_server                        V      info={id=16 t=CLOSE f=0x10 trk=0 r=[0@Point(0, 0)] c=[
+                                                                                                            {WCT{RemoteToken{925f84c Task{c4b797d #1 type=home}}} m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0xb131361 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 taskParent=-1},
+                                                                                                            {WCT{RemoteToken{a103a97 Task{aa42bc0 #7 type=standard A=10214:com.appunture.mobile}}} m=CLOSE f=NONE leash=Surface(name=Task=7)/@0x1c12631 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0 taskParent=-1},
+                                                                                                            {m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{e930bc7 showWhenLocked=false})/@0x2907b6b sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) epz=Point(1080, 2400) d=0}
+                                                                                                        ]}
+2025-12-15 13:49:39.797  1024-1073  WindowManagerShell      com.android.systemui                 V   animated by com.android.wm.shell.transition.RemoteTransitionHandler@7349591
+2025-12-15 13:49:39.809   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.810   713-864   ImeTracker              system_server                        I  com.google.android.apps.nexuslauncher:df6a7cc1: onRequestHide at ORIGIN_SERVER reason HIDE_UNSPECIFIED_WINDOW fromUser false
+2025-12-15 13:49:39.811   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.812   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.812   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.813   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.816  1467-1467  GoogleInpu...hodService com...gle.android.inputmethod.latin  I  GoogleInputMethodService.onFinishInput():2589 
+2025-12-15 13:49:39.819   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.820  1467-1467  Module                  com...gle.android.inputmethod.latin  I  DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 0, locked = false
+2025-12-15 13:49:39.821   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.823   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.824   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.824   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.825   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.825   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.825   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.825   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.826   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.826   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.826   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.826   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.828  1467-1467  GoogleInpu...hodService com...gle.android.inputmethod.latin  I  GoogleInputMethodService.onStartInput():1568 onStartInput(EditorInfo{EditorInfo{packageName=com.google.android.apps.nexuslauncher, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+2025-12-15 13:49:39.828   713-747   IPCThreadState          system_server                        W  Sending oneway calls to frozen process.
+2025-12-15 13:49:39.832  1467-1467  Module                  com...gle.android.inputmethod.latin  I  DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 1, locked = false
+2025-12-15 13:49:39.835   713-2037  PackageConfigPersister  system_server                        W  App-specific configuration not found for packageName: com.google.android.apps.nexuslauncher and userId: 0
+2025-12-15 13:49:39.838  1467-1467  AndroidIME              com...gle.android.inputmethod.latin  I  InputBundleManager.loadActiveInputBundleId():407 loadActiveInputBundleId: und-Latn-x-password, password
+2025-12-15 13:49:39.857  1191-1191  InsetsController        com...le.android.apps.nexuslauncher  D  hide(ime(), fromIme=false)
+2025-12-15 13:49:39.858  1191-1191  ImeTracker              com...le.android.apps.nexuslauncher  I  com.google.android.apps.nexuslauncher:df6a7cc1: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+2025-12-15 13:49:39.864   466-523   RanchuHwc               and...hics.composer3-service.ranchu  I  logCompositionFallbackIfChanged: layer 47 CompositionType fallback from 2 to 1
+2025-12-15 13:49:40.020   713-747   ActivityTaskManager     system_server                        W  Activity top resumed state loss timeout for ActivityRecord{19278147 u0 com.appunture.mobile/.MainActivity t7 f} isExiting}
+2025-12-15 13:49:40.102  1024-1073  WindowManagerShell      com.android.systemui                 V  Transition animation finished (aborted=false), notifying core (#16) android.os.BinderProxy@eaa17f9@0
+2025-12-15 13:49:40.106   713-744   WindowManager           system_server                        V  Finish Transition (#16): created at 12-15 16:49:39.502 collect-started=0.188ms request-sent=1.142ms started=26.666ms ready=102.484ms sent=236.123ms commit=57.106ms finished=602.16ms
+2025-12-15 13:49:40.111   713-1003  IPCThreadState          system_server                        E  Binder transaction failure. id: 292124, BR_*: 29189, error: -22 (Invalid argument)
+2025-12-15 13:49:40.111   713-1003  ActivityManager         system_server                        W  pid 713 system sent binder code 7 with flags 1 to frozen apps and got error -32
+2025-12-15 13:49:40.112   713-1003  WindowManager           system_server                        W  Exception thrown during dispatchAppVisibility Window{5499111 u0 com.appunture.mobile/com.appunture.mobile.MainActivity EXITING}
+                                                                                                    android.os.DeadObjectException
+                                                                                                    	at android.os.BinderProxy.transactNative(Native Method)
+                                                                                                    	at android.os.BinderProxy.transact(BinderProxy.java:592)
+                                                                                                    	at android.view.IWindow$Stub$Proxy.dispatchAppVisibility(IWindow.java:557)
+                                                                                                    	at com.android.server.wm.WindowState.sendAppVisibilityToClients(WindowState.java:3226)
+                                                                                                    	at com.android.server.wm.WindowContainer.sendAppVisibilityToClients(WindowContainer.java:1295)
+                                                                                                    	at com.android.server.wm.WindowToken.setClientVisible(WindowToken.java:437)
+                                                                                                    	at com.android.server.wm.ActivityRecord.setClientVisible(ActivityRecord.java:6727)
+                                                                                                    	at com.android.server.wm.ActivityRecord.commitVisibility(ActivityRecord.java:5583)
+                                                                                                    	at com.android.server.wm.Transition.finishTransition(Transition.java:1372)
+                                                                                                    	at com.android.server.wm.TransitionController.finishTransition(TransitionController.java:1003)
+                                                                                                    	at com.android.server.wm.WindowOrganizerController.finishTransition(WindowOrganizerController.java:533)
+                                                                                                    	at android.window.IWindowOrganizerController$Stub.onTransact(IWindowOrganizerController.java:293)
+                                                                                                    	at com.android.server.wm.WindowOrganizerController.onTransact(WindowOrganizerController.java:222)
+                                                                                                    	at android.os.Binder.execTransactInternal(Binder.java:1414)
+                                                                                                    	at android.os.Binder.execTransact(Binder.java:1353)
+2025-12-15 13:49:40.112   713-1003  Process                 system_server                        W  Unable to open /proc/4891/status
+2025-12-15 13:49:40.127  1024-1073  WindowManagerShell      com.android.systemui                 V  Track 0 became idle
+2025-12-15 13:49:40.130  1024-1073  WindowManagerShell      com.android.systemui                 V  All active transition animations finished
+2025-12-15 13:49:40.151  1191-1191  RecentsView             com...le.android.apps.nexuslauncher  D  onTaskRemoved: 7, not handling task stack changes
+2025-12-15 13:49:40.151  1191-1191  RecentsView             com...le.android.apps.nexuslauncher  D  onTaskRemoved: 7, not handling task stack changes
+2025-12-15 13:49:40.159   512-512   BpTransact...edListener surfaceflinger                       E  Failed to transact (-32)
+2025-12-15 13:49:41.666   450-4393  android.ha...mpl.ranchu android.hardware.audio.service       D  threadLoop: entering standby, frames: 6141760
+2025-12-15 13:49:41.666   450-4393  android.ha...mpl.ranchu android.hardware.audio.service       D  ~TinyalsaSink: stopping PCM stream
+2025-12-15 13:49:41.667   450-4393  android.ha...mpl.ranchu android.hardware.audio.service       D  ~TinyalsaSink: joining consumeThread
+2025-12-15 13:49:41.667   450-4966  android.ha...mpl.ranchu android.hardware.audio.service       W  pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: File descriptor in bad state' (-1)
+2025-12-15 13:49:41.667   450-4966  android.ha...mpl.ranchu android.hardware.audio.service       E  pcmWrite:260 failure: -1
+2025-12-15 13:49:41.667   450-4966  android.ha...mpl.ranchu android.hardware.audio.service       D  consumeThread: exiting
+2025-12-15 13:49:45.866  1365-4520  NearbyMediums           com.google.android.gms.persistent    I  No BLE Fast/GATT advertisements found in the latest cycle.
+2025-12-15 13:49:46.378  1611-1931  bash                    com....android.googlequicksearchbox  I  (REDACTED) getHotwordActive::active query: %s, watch: %s, devices connected: %s
+2025-12-15 13:49:55.869  1365-4520  NearbyMediums           com.google.android.gms.persistent    I  No BLE Fast/GATT advertisements found in the latest cycle.

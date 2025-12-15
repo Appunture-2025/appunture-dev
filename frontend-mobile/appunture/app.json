@@ -70,12 +70,6 @@
         "projectId": "864e35bc-9ecf-4e7a-866b-8507d1163044"
       }
     },
-    "owner": "voidalzk",
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/864e35bc-9ecf-4e7a-866b-8507d1163044"
-    }
+    "owner": "voidalzk"
   }
 }

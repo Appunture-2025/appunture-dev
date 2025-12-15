@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "756244484248",
+    "project_id": "appunture-tcc",
+    "storage_bucket": "appunture-tcc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756244484248:android:db1b0928b076f48d0d40ed",
+        "android_client_info": {
+          "package_name": "com.appunture.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "756244484248-b4lhrprooanhs02loan6upqsjp7hjah5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCd0u_9RKC07kAP9gqe0kKSpmPvln_1ZHc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "756244484248-2g7t8k43pomc5fo9fvh25909fqkhjkue.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

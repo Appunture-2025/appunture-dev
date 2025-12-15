@@ -935,7 +935,8 @@ connectivityService.onChange(async (isOnline) => {
       store.refreshFailedOperations(),
     ]);
 
-    if (isOnline) {
+    // Only process sync queue if online AND autoSync is enabled
+    if (isOnline && store.autoSync) {
       try {
         await store.processSyncQueue();
       } catch (error) {
