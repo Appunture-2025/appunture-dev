@@ -1,9 +1,20 @@
 import { create } from "zustand";
 import { Symptom, SymptomWithPoints } from "../types/api";
 import { apiService } from "../services/api";
+import { databaseService } from "../services/database";
 import { createLogger } from "../utils/logger";
 
 const symptomsLogger = createLogger("Symptoms");
+
+// Helper to convert LocalSymptom to Symptom
+const mapLocalSymptomToSymptom = (local: any): Symptom => ({
+  id: local.id,
+  name: local.name,
+  description: local.description,
+  category: local.category,
+  tags: local.synonyms ? JSON.parse(local.synonyms) : undefined,
+  useCount: local.use_count,
+});
 
 interface SymptomsState {
   symptoms: Symptom[];
@@ -157,7 +168,8 @@ export const useSymptomsStore = create<SymptomsState>((set, get) => ({
     try {
       await apiService.incrementSymptomUse(symptomId);
     } catch (error: any) {
-      symptomsLogger.error("Failed to increment symptom use:", error);
+      // Silently ignore errors - this is a non-critical analytics operation
+      symptomsLogger.warn("Failed to increment symptom use:", error);
     }
   },
 

@@ -213,12 +213,17 @@ export const useAuthStore = create<AuthStore>()(
       loadStoredAuth: async () => {
         try {
           set({ isLoading: true });
+          console.log(`\n🔐 [AUTH] ========== LOADING STORED AUTH ==========`);
 
           const [storedToken, storedUser] = await Promise.all([
             getStoredToken(),
             getStoredUserData(),
           ]);
+          
+          console.log(`🔐 [AUTH] Stored token: ${storedToken ? '✅ Found' : '❌ Not found'}`);
+          console.log(`🔐 [AUTH] Stored user: ${storedUser ? `✅ ${storedUser.email}` : '❌ Not found'}`);
 
+          console.log(`🔐 [AUTH] Checking Firebase Auth state...`);
           const firebaseUser = await new Promise<FirebaseUser | null>(
             (resolve) => {
               const unsubscribe = onAuthStateChanged(
@@ -236,7 +241,10 @@ export const useAuthStore = create<AuthStore>()(
             }
           );
 
+          console.log(`🔐 [AUTH] Firebase user: ${firebaseUser ? `✅ ${firebaseUser.email}` : '❌ Not logged in'}`);
+
           if (!firebaseUser) {
+            console.log(`🔐 [AUTH] No Firebase session, clearing local data`);
             await removeToken();
             await removeUserData();
             set({
@@ -245,18 +253,23 @@ export const useAuthStore = create<AuthStore>()(
               isAuthenticated: false,
               isLoading: false,
             });
+            console.log(`🔐 [AUTH] ========== AUTH CLEARED ==========\n`);
             return;
           }
 
           const token = storedToken ?? (await firebaseUser.getIdToken());
           await storeToken(token);
+          console.log(`🔐 [AUTH] Token refreshed and stored`);
 
           let profile = storedUser ?? null;
 
           if (!profile) {
+            console.log(`🔐 [AUTH] No stored profile, fetching from API...`);
             try {
               profile = await apiService.getProfile();
+              console.log(`🔐 [AUTH] Profile fetched from API`);
             } catch (error) {
+              console.log(`🔐 [AUTH] Profile not found, syncing Firebase user...`);
               profile = await apiService.syncFirebaseUser();
             }
             await storeUserData(profile);
@@ -268,7 +281,9 @@ export const useAuthStore = create<AuthStore>()(
             isAuthenticated: true,
             isLoading: false,
           });
+          console.log(`✅ [AUTH] ========== AUTH RESTORED: ${profile?.email} ==========\n`);
         } catch (error) {
+          console.log(`❌ [AUTH] Load stored auth error:`, error);
           authLogger.error("Load stored auth error:", error);
           set({ isLoading: false });
         }

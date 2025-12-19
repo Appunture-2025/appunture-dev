@@ -18,10 +18,12 @@ import { SyncBanner } from "../../components/SyncBanner";
 
 import { useOfflineMode } from "../../hooks/useOfflineMode";
 import { COLORS, MERIDIANS } from "../../utils/constants";
+import { useThemeColors } from "../../stores/themeStore";
 import { styles } from "./styles";
 
 export default function HomeScreen() {
   const router = useRouter();
+  const colors = useThemeColors();
   const { points, loading, loadPoints } = usePointsStore();
   const { user, isAuthenticated } = useAuthStore();
   const { isOnline, syncInProgress, syncNow, checkConnection } = useOfflineMode();
@@ -80,30 +82,30 @@ export default function HomeScreen() {
 
   if (loading && !refreshing) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.emptyState}>
-          <ActivityIndicator size="large" color={COLORS.primary} />
-          <Text style={styles.emptyStateTitle}>Carregando dados...</Text>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={[styles.emptyStateTitle, { color: colors.textSecondary }]}>Carregando dados...</Text>
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Sync Banner - appears only on home screen */}
       <SyncBanner />
       
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <View style={styles.headerContent}>
           <View>
-            <Text style={styles.greeting}>
+            <Text style={[styles.greeting, { color: colors.text }]}>
               {isAuthenticated
                 ? `Olá, ${user?.name?.split(" ")[0] || "Usuário"}!`
                 : "Bem-vindo ao Appunture"}
             </Text>
-            <Text style={styles.subtitle}>
+            <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
               {isAuthenticated
                 ? "Seus dados estão sincronizados"
                 : "Explore os pontos de acupuntura"}
@@ -121,8 +123,8 @@ export default function HomeScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={handleRefresh}
-            tintColor={COLORS.primary}
-            colors={[COLORS.primary]}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
           />
         }
         showsVerticalScrollIndicator={false}
@@ -130,11 +132,11 @@ export default function HomeScreen() {
         {/* Quick Actions */}
         <View style={styles.section} accessibilityLabel="Acesso Rápido">
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle} accessibilityRole="header">Acesso Rápido</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]} accessibilityRole="header">Acesso Rápido</Text>
           </View>
           <View style={styles.quickActionsGrid} accessibilityRole="list">
             <TouchableOpacity
-              style={styles.quickActionCard}
+              style={[styles.quickActionCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
               onPress={() => router.push("/search")}
               accessibilityRole="button"
               accessibilityLabel="Buscar Pontos. Encontre pontos por nome ou código"
@@ -143,18 +145,18 @@ export default function HomeScreen() {
               <Ionicons
                 name="search"
                 size={32}
-                color={COLORS.primary}
+                color={colors.primary}
                 style={styles.quickActionIcon}
                 accessibilityElementsHidden
               />
-              <Text style={styles.quickActionTitle}>Buscar Pontos</Text>
-              <Text style={styles.quickActionDescription}>
+              <Text style={[styles.quickActionTitle, { color: colors.text }]}>Buscar Pontos</Text>
+              <Text style={[styles.quickActionDescription, { color: colors.textSecondary }]}>
                 Encontre pontos por nome ou código
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.quickActionCard}
+              style={[styles.quickActionCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
               onPress={() => router.push("/body-map")}
               accessibilityRole="button"
               accessibilityLabel="Mapa Corporal. Visualize pontos no corpo humano"
@@ -163,18 +165,18 @@ export default function HomeScreen() {
               <Ionicons
                 name="body"
                 size={32}
-                color={COLORS.primary}
+                color={colors.primary}
                 style={styles.quickActionIcon}
                 accessibilityElementsHidden
               />
-              <Text style={styles.quickActionTitle}>Mapa Corporal</Text>
-              <Text style={styles.quickActionDescription}>
+              <Text style={[styles.quickActionTitle, { color: colors.text }]}>Mapa Corporal</Text>
+              <Text style={[styles.quickActionDescription, { color: colors.textSecondary }]}>
                 Visualize pontos no corpo humano
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.quickActionCard}
+              style={[styles.quickActionCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
               onPress={() => router.push("/chatbot")}
               accessibilityRole="button"
               accessibilityLabel="Assistente. Encontre pontos por sintomas"
@@ -183,18 +185,18 @@ export default function HomeScreen() {
               <Ionicons
                 name="chatbubble-ellipses"
                 size={32}
-                color={COLORS.primary}
+                color={colors.primary}
                 style={styles.quickActionIcon}
                 accessibilityElementsHidden
               />
-              <Text style={styles.quickActionTitle}>Assistente</Text>
-              <Text style={styles.quickActionDescription}>
+              <Text style={[styles.quickActionTitle, { color: colors.text }]}>Assistente</Text>
+              <Text style={[styles.quickActionDescription, { color: colors.textSecondary }]}>
                 Encontre pontos por sintomas
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.quickActionCard}
+              style={[styles.quickActionCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
               onPress={() => router.push("/favorites")}
               accessibilityRole="button"
               accessibilityLabel="Favoritos. Seus pontos salvos"
@@ -203,12 +205,12 @@ export default function HomeScreen() {
               <Ionicons
                 name="heart"
                 size={32}
-                color={COLORS.primary}
+                color={colors.primary}
                 style={styles.quickActionIcon}
                 accessibilityElementsHidden
               />
-              <Text style={styles.quickActionTitle}>Favoritos</Text>
-              <Text style={styles.quickActionDescription}>
+              <Text style={[styles.quickActionTitle, { color: colors.text }]}>Favoritos</Text>
+              <Text style={[styles.quickActionDescription, { color: colors.textSecondary }]}>
                 Seus pontos salvos
               </Text>
             </TouchableOpacity>
@@ -218,22 +220,22 @@ export default function HomeScreen() {
         {/* Statistics */}
         <View style={styles.section} accessibilityLabel="Estatísticas">
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle} accessibilityRole="header">Estatísticas</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]} accessibilityRole="header">Estatísticas</Text>
           </View>
           <View style={styles.statsGrid} accessibilityRole="list">
-            <View style={styles.statCard} accessibilityLabel={`${points.length} Pontos Disponíveis`}>
-              <Text style={styles.statValue}>{points.length}</Text>
-              <Text style={styles.statLabel}>Pontos Disponíveis</Text>
+            <View style={[styles.statCard, { backgroundColor: colors.surface, borderColor: colors.border }]} accessibilityLabel={`${points.length} Pontos Disponíveis`}>
+              <Text style={[styles.statValue, { color: colors.primary }]}>{points.length}</Text>
+              <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Pontos Disponíveis</Text>
             </View>
-            <View style={styles.statCard} accessibilityLabel={`${meridianStats.length} Meridianos`}>
-              <Text style={styles.statValue}>{meridianStats.length}</Text>
-              <Text style={styles.statLabel}>Meridianos</Text>
+            <View style={[styles.statCard, { backgroundColor: colors.surface, borderColor: colors.border }]} accessibilityLabel={`${meridianStats.length} Meridianos`}>
+              <Text style={[styles.statValue, { color: colors.primary }]}>{meridianStats.length}</Text>
+              <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Meridianos</Text>
             </View>
-            <View style={styles.statCard} accessibilityLabel={`${points.filter((p) => p.isFavorite).length} Favoritos`}>
-              <Text style={styles.statValue}>
+            <View style={[styles.statCard, { backgroundColor: colors.surface, borderColor: colors.border }]} accessibilityLabel={`${points.filter((p) => p.isFavorite).length} Favoritos`}>
+              <Text style={[styles.statValue, { color: colors.primary }]}>
                 {points.filter((p) => p.isFavorite).length}
               </Text>
-              <Text style={styles.statLabel}>Favoritos</Text>
+              <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Favoritos</Text>
             </View>
           </View>
         </View>
@@ -242,13 +244,13 @@ export default function HomeScreen() {
         {recentPoints.length > 0 && (
           <View style={styles.section} accessibilityLabel="Pontos Recentes">
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle} accessibilityRole="header">Pontos Recentes</Text>
+              <Text style={[styles.sectionTitle, { color: colors.text }]} accessibilityRole="header">Pontos Recentes</Text>
               <TouchableOpacity 
                 onPress={() => router.push("/search")}
                 accessibilityRole="button"
                 accessibilityLabel="Ver todos os pontos"
               >
-                <Text style={styles.sectionAction}>Ver todos</Text>
+                <Text style={[styles.sectionAction, { color: colors.primary }]}>Ver todos</Text>
               </TouchableOpacity>
             </View>
 
@@ -263,17 +265,17 @@ export default function HomeScreen() {
                   asChild
                 >
                   <TouchableOpacity 
-                    style={styles.pointCard}
+                    style={[styles.pointCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
                     accessibilityRole="button"
                     accessibilityLabel={`${point.name}. Código: ${point.code}. Meridiano: ${point.meridian}`}
                     accessibilityHint="Toque para ver detalhes do ponto"
                   >
                     <View style={styles.pointHeader}>
-                      <Text style={styles.pointName}>{point.name}</Text>
-                      <Text style={styles.pointCode}>{point.code}</Text>
+                      <Text style={[styles.pointName, { color: colors.text }]}>{point.name}</Text>
+                      <Text style={[styles.pointCode, { color: colors.primary, backgroundColor: `${colors.primary}15` }]}>{point.code}</Text>
                     </View>
-                    <Text style={styles.pointMeridian}>{point.meridian}</Text>
-                    <Text style={styles.pointLocation} numberOfLines={2}>
+                    <Text style={[styles.pointMeridian, { color: colors.textSecondary }]}>{point.meridian}</Text>
+                    <Text style={[styles.pointLocation, { color: colors.textSecondary }]} numberOfLines={2}>
                       {point.location}
                     </Text>
                   </TouchableOpacity>
@@ -287,9 +289,9 @@ export default function HomeScreen() {
         {isAuthenticated && (
           <View style={styles.section} accessibilityLabel="Sincronização">
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle} accessibilityRole="header">Sincronização</Text>
+              <Text style={[styles.sectionTitle, { color: colors.text }]} accessibilityRole="header">Sincronização</Text>
             </View>
-            <View style={styles.syncCard}>
+            <View style={[styles.syncCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
               <SyncStatusIndicator 
                 variant="detailed" 
                 showLastSync={true}
@@ -298,6 +300,7 @@ export default function HomeScreen() {
               <TouchableOpacity
                 style={[
                   styles.syncButton,
+                  { backgroundColor: colors.primary },
                   (!isOnline || syncInProgress) && styles.syncButtonDisabled,
                 ]}
                 onPress={handleSync}
@@ -307,9 +310,9 @@ export default function HomeScreen() {
                 accessibilityState={{ disabled: !isOnline || syncInProgress }}
               >
                 {syncInProgress ? (
-                  <ActivityIndicator size="small" color={COLORS.surface} accessibilityLabel="Sincronizando" />
+                  <ActivityIndicator size="small" color={colors.surface} accessibilityLabel="Sincronizando" />
                 ) : (
-                  <Text style={styles.syncButtonText}>
+                  <Text style={[styles.syncButtonText, { color: colors.surface }]}>
                     {isOnline ? "Sincronizar" : "Offline"}
                   </Text>
                 )}
@@ -324,12 +327,12 @@ export default function HomeScreen() {
             <Ionicons
               name="medical"
               size={64}
-              color={COLORS.textSecondary}
+              color={colors.textSecondary}
               style={styles.emptyStateIcon}
               accessibilityElementsHidden
             />
-            <Text style={styles.emptyStateTitle}>Nenhum ponto encontrado</Text>
-            <Text style={styles.emptyStateDescription}>
+            <Text style={[styles.emptyStateTitle, { color: colors.textSecondary }]}>Nenhum ponto encontrado</Text>
+            <Text style={[styles.emptyStateDescription, { color: colors.textSecondary }]}>
               Os dados estão sendo carregados. Verifique sua conexão com a
               internet e tente novamente.
             </Text>

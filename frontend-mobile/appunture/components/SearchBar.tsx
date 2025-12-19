@@ -89,11 +89,13 @@ function SearchBarComponent({
           accessibilityHint="Digite para buscar"
         />
         {loading && (
-          <ActivityIndicator
-            size="small"
-            color={colors.primary}
-            accessibilityLabel="Buscando..."
-          />
+          <View>
+            <ActivityIndicator
+              size="small"
+              color={colors.primary}
+              accessibilityLabel="Buscando..."
+            />
+          </View>
         )}
         {!loading && localValue.length > 0 && (
           <TouchableOpacity

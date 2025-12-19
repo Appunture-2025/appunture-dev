@@ -127,6 +127,10 @@ interface SyncStore extends SyncState {
 
 export const useSyncStore = create<SyncStore>((set, get) => {
   const handleFavoriteOperation = async (operation: SyncOperation) => {
+    console.log(`\n☁️ [CLOUD-SYNC] ========== PROCESSING FAVORITE ==========`);
+    console.log(`☁️ [CLOUD-SYNC] Operation ID: ${operation.id}`);
+    console.log(`☁️ [CLOUD-SYNC] Raw data: ${operation.data}`);
+    
     const payload = safeParse<{
       userId?: string;
       pointId?: string;
@@ -140,7 +144,12 @@ export const useSyncStore = create<SyncStore>((set, get) => {
     const action =
       payload.action ?? (operation.operation === "DELETE" ? "REMOVE" : "ADD");
 
+    console.log(`☁️ [CLOUD-SYNC] User ID: ${userId}`);
+    console.log(`☁️ [CLOUD-SYNC] Point ID: ${pointId}`);
+    console.log(`☁️ [CLOUD-SYNC] Action: ${action}`);
+
     if (!userId || !pointId) {
+      console.log(`❌ [CLOUD-SYNC] Invalid payload - missing userId or pointId`);
       throw new Error(
         "Payload de favorito inválido - userId ou pointId ausente"
       );
@@ -149,48 +158,65 @@ export const useSyncStore = create<SyncStore>((set, get) => {
     const shouldFavorite = action === "ADD";
 
     try {
+      console.log(`☁️ [CLOUD-SYNC] Fetching remote favorites from API...`);
       const remoteFavorites = await apiService.getFavorites();
+      console.log(`☁️ [CLOUD-SYNC] Remote favorites count: ${remoteFavorites.points.length}`);
+      
       const isRemoteFavorite = remoteFavorites.points.some(
         (point) => point.id === pointId
       );
+      console.log(`☁️ [CLOUD-SYNC] Is already favorite on cloud: ${isRemoteFavorite}`);
+      
       const conflictWinner = resolveConflict(
         payload.timestamp,
         payload.remoteTimestamp
       );
+      console.log(`☁️ [CLOUD-SYNC] Conflict resolution: ${conflictWinner} wins`);
 
       if (conflictWinner === "remote") {
+        console.log(`☁️ [CLOUD-SYNC] Using remote state, updating local SQLite`);
         await databaseService.setFavoriteStatus({
           pointId,
           userId,
           isFavorite: isRemoteFavorite,
           synced: true,
         });
+        console.log(`✅ [CLOUD-SYNC] Local updated to match remote`);
         return;
       }
 
       if (isRemoteFavorite === shouldFavorite) {
+        console.log(`☁️ [CLOUD-SYNC] Already in sync, just marking as synced`);
         await databaseService.setFavoriteStatus({
           pointId,
           userId,
           isFavorite: shouldFavorite,
           synced: true,
         });
+        console.log(`✅ [CLOUD-SYNC] Marked as synced`);
         return;
       }
 
       if (shouldFavorite) {
+        console.log(`☁️ [CLOUD-SYNC] Calling API: addFavorite(${pointId})`);
         await apiService.addFavorite(pointId);
+        console.log(`✅ [CLOUD-SYNC] API addFavorite SUCCESS`);
       } else {
+        console.log(`☁️ [CLOUD-SYNC] Calling API: removeFavorite(${pointId})`);
         await apiService.removeFavorite(pointId);
+        console.log(`✅ [CLOUD-SYNC] API removeFavorite SUCCESS`);
       }
 
+      console.log(`☁️ [CLOUD-SYNC] Updating SQLite with synced=true`);
       await databaseService.setFavoriteStatus({
         pointId,
         userId,
         isFavorite: shouldFavorite,
         synced: true,
       });
+      console.log(`✅ [CLOUD-SYNC] ========== FAVORITE SYNCED ==========\n`);
     } catch (error) {
+      console.log(`❌ [CLOUD-SYNC] ERROR:`, error);
       throw error instanceof Error ? error : new Error(String(error));
     }
   };
@@ -704,12 +730,18 @@ export const useSyncStore = create<SyncStore>((set, get) => {
     },
 
     processSyncQueue: async () => {
+      console.log(`\n📤 [QUEUE] ========== PROCESS SYNC QUEUE ==========`);
+      console.log(`📤 [QUEUE] Queue processing: ${get().queueProcessing}`);
+      console.log(`📤 [QUEUE] Is online: ${get().isOnline}`);
+      
       if (get().queueProcessing || !get().isOnline) {
+        console.log(`📤 [QUEUE] Skipping - already processing or offline`);
         return;
       }
 
       // Check if database is initialized before processing queue
       if (!databaseService.isInitialized()) {
+        console.log(`📤 [QUEUE] Skipping - database not initialized`);
         logger.warn("Database not initialized, skipping sync queue processing");
         return;
       }
@@ -717,19 +749,29 @@ export const useSyncStore = create<SyncStore>((set, get) => {
       set({ queueProcessing: true, syncInProgress: true });
 
       try {
+        console.log(`📤 [QUEUE] Fetching queued operations...`);
         const operations = await databaseService.getQueuedOperations(
           undefined,
           QUEUE_FETCH_LIMIT
         );
+        console.log(`📤 [QUEUE] Found ${operations.length} operations in queue`);
+        
         if (operations.length === 0) {
+          console.log(`📤 [QUEUE] Queue is empty, nothing to process`);
           return;
         }
 
         let processedCount = 0;
 
         for (const operation of operations) {
+          console.log(`\n📤 [QUEUE] Processing operation: ${operation.id}`);
+          console.log(`📤 [QUEUE]   Type: ${operation.entity_type}`);
+          console.log(`📤 [QUEUE]   Operation: ${operation.operation}`);
+          console.log(`📤 [QUEUE]   Retry count: ${operation.retry_count}`);
+          
           const handler = handlers[operation.entity_type];
           if (!handler) {
+            console.log(`📤 [QUEUE]   No handler found, marking complete`);
             await databaseService.markOperationCompleted(operation.id);
             continue;
           }
@@ -738,18 +780,24 @@ export const useSyncStore = create<SyncStore>((set, get) => {
             const backoffDelay = calculateBackoffDelay(operation.retry_count);
             const elapsed = Date.now() - operation.last_attempt;
             if (elapsed < backoffDelay) {
+              console.log(`📤 [QUEUE]   Backoff active, skipping (${elapsed}ms < ${backoffDelay}ms)`);
               continue;
             }
           }
 
           try {
+            console.log(`📤 [QUEUE]   Marking as in_progress...`);
             await databaseService.markOperationInProgress(operation.id);
+            console.log(`📤 [QUEUE]   Executing handler...`);
             await handler(operation);
+            console.log(`📤 [QUEUE]   Marking as completed...`);
             await databaseService.markOperationCompleted(operation.id);
             processedCount += 1;
+            console.log(`✅ [QUEUE]   Operation ${operation.id} completed!`);
           } catch (error) {
             const message =
               error instanceof Error ? error.message : String(error);
+            console.log(`❌ [QUEUE]   Operation ${operation.id} FAILED: ${message}`);
             logger.warn(
               `Falha ao processar operação ${operation.id}: ${message}`
             );
@@ -757,6 +805,8 @@ export const useSyncStore = create<SyncStore>((set, get) => {
           }
         }
 
+        console.log(`\n📤 [QUEUE] Processed ${processedCount} operations`);
+        
         if (processedCount > 0) {
           set({
             notificationMessage:
@@ -765,6 +815,7 @@ export const useSyncStore = create<SyncStore>((set, get) => {
                 : `${processedCount} operações sincronizadas`,
           });
         }
+        console.log(`📤 [QUEUE] ========== QUEUE COMPLETE ==========\n`);
       } finally {
         set({ queueProcessing: false, syncInProgress: false });
         await get().refreshPendingOperations();
@@ -884,7 +935,8 @@ connectivityService.onChange(async (isOnline) => {
       store.refreshFailedOperations(),
     ]);
 
-    if (isOnline) {
+    // Only process sync queue if online AND autoSync is enabled
+    if (isOnline && store.autoSync) {
       try {
         await store.processSyncQueue();
       } catch (error) {

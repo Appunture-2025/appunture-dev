@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "756244484248-b4lhrprooanhs02loan6upqsjp7hjah5.apps.googleusercontent.com",
+          "client_id": "756244484248-v0nfhpc402ipbup3phjrn20psvt4532p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.appunture.mobile",
+            "certificate_hash": "4b96cc9e515bb61bcaa4eee3904e15b4d6fd30bb"
+          }
+        },
+        {
+          "client_id": "756244484248-2g7t8k43pomc5fo9fvh25909fqkhjkue.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

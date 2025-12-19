@@ -17,8 +17,13 @@ export const SyncStatusIndicator: React.FC<SyncStatusIndicatorProps> = ({
   onPress,
   style,
 }) => {
-  const { isOnline, lastSync, syncInProgress } = useSyncStore();
+  const { isOnline, lastSync, syncInProgress, autoSync } = useSyncStore();
   const colors = useThemeColors();
+
+  // Offline mode is enabled when autoSync is false (user manually disabled)
+  const isOfflineMode = !autoSync;
+  // Effectively offline if no network OR offline mode is enabled
+  const isEffectivelyOffline = !isOnline || isOfflineMode;
 
   const formatLastSync = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -37,17 +42,20 @@ export const SyncStatusIndicator: React.FC<SyncStatusIndicatorProps> = ({
 
   const getStatusColor = () => {
     if (syncInProgress) return colors.warning;
+    if (isOfflineMode) return colors.warning; // Yellow for manual offline mode
     return isOnline ? colors.success : colors.error;
   };
 
   const getStatusIcon = () => {
     if (syncInProgress) return "sync";
+    if (isOfflineMode) return "cloud-offline";
     return isOnline ? "cloud-done" : "cloud-offline";
   };
 
   const getStatusText = () => {
     if (syncInProgress) return "Sincronizando...";
-    return isOnline ? "Online" : "Offline";
+    if (isOfflineMode) return "Modo Offline";
+    return isOnline ? "Online" : "Sem conexão";
   };
 
   const Container = onPress ? TouchableOpacity : View;

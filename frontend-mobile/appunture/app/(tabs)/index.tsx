@@ -134,7 +134,9 @@ export default function HomeScreen() {
           accessibilityRole="alert"
           accessibilityLabel="Carregando dados da tela inicial"
         >
-          <ActivityIndicator size="large" color={colors.primary} />
+          <View>
+            <ActivityIndicator size="large" color={colors.primary} />
+          </View>
           <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
             Carregando...
           </Text>

@@ -24,6 +24,7 @@ import {
   getAliasesFor,
 } from "../../utils/meridianAliases";
 import { COLORS } from "../../utils/constants";
+import { useThemeColors } from "../../stores/themeStore";
 import { styles } from "./styles";
 
 // Agrupa os meridianos por sigla para fácil acesso
@@ -46,6 +47,7 @@ const MERIDIAN_LIST = BODY_ATLAS_LAYERS.filter(
 
 export default function BodyMapScreen() {
   const router = useRouter();
+  const colors = useThemeColors();
   const { points, loading, loadPoints } = usePointsStore((state) => ({
     points: state.points,
     loading: state.loading,
@@ -143,7 +145,8 @@ export default function BodyMapScreen() {
       <TouchableOpacity
         style={[
           styles.meridianChip,
-          selectedMeridianId === item.id && styles.meridianChipActive,
+          { backgroundColor: colors.surface, borderColor: colors.border },
+          selectedMeridianId === item.id && [styles.meridianChipActive, { backgroundColor: colors.primary, borderColor: colors.primary }],
         ]}
         onPress={() => handleMeridianSelect(item.id)}
         accessibilityRole="button"
@@ -152,32 +155,33 @@ export default function BodyMapScreen() {
         <Text
           style={[
             styles.meridianChipText,
-            selectedMeridianId === item.id && styles.meridianChipTextActive,
+            { color: colors.text },
+            selectedMeridianId === item.id && [styles.meridianChipTextActive, { color: colors.surface }],
           ]}
         >
           {item.id}
         </Text>
       </TouchableOpacity>
     ),
-    [selectedMeridianId, handleMeridianSelect]
+    [selectedMeridianId, handleMeridianSelect, colors]
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
         style={styles.scrollContainer}
         contentContainerStyle={styles.content}
       >
         <View style={styles.header} accessibilityRole="header">
-          <Text style={styles.title}>Mapa dos Meridianos</Text>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.title, { color: colors.text }]}>Mapa dos Meridianos</Text>
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
             Selecione um meridiano para visualizar seus pontos no mapa corporal
           </Text>
         </View>
 
         {/* Seletor de Meridianos */}
         <View style={styles.meridianSelector}>
-          <Text style={styles.sectionLabel}>Meridianos</Text>
+          <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>Meridianos</Text>
           <FlatList
             horizontal
             data={MERIDIAN_LIST}
@@ -189,9 +193,9 @@ export default function BodyMapScreen() {
         </View>
 
         {/* Info do Meridiano Selecionado */}
-        <View style={styles.meridianInfo}>
-          <Text style={styles.meridianTitle}>{activeLayer.label}</Text>
-          <Text style={styles.meridianSubtitle}>
+        <View style={[styles.meridianInfo, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <Text style={[styles.meridianTitle, { color: colors.text }]}>{activeLayer.label}</Text>
+          <Text style={[styles.meridianSubtitle, { color: colors.textSecondary }]}>
             {meridianPoints.length} ponto
             {meridianPoints.length !== 1 ? "s" : ""} •{markers.length} com
             coordenadas
@@ -209,14 +213,14 @@ export default function BodyMapScreen() {
 
         {loading && !meridianPoints.length ? (
           <View style={styles.loadingWrapper}>
-            <ActivityIndicator color={COLORS.primary} />
-            <Text style={styles.loadingText}>Carregando pontos...</Text>
+            <ActivityIndicator color={colors.primary} />
+            <Text style={[styles.loadingText, { color: colors.textSecondary }]}>Carregando pontos...</Text>
           </View>
         ) : null}
 
         {/* Lista de Pontos do Meridiano */}
-        <View style={styles.pointsSection}>
-          <Text style={styles.sectionTitle}>
+        <View style={[styles.pointsSection, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Pontos do Meridiano {selectedMeridianId}
           </Text>
           {meridianPoints.length > 0 ? (
@@ -225,19 +229,20 @@ export default function BodyMapScreen() {
                 key={point.id}
                 style={[
                   styles.pointRow,
-                  point.id === selectedPointId && styles.pointRowActive,
+                  { borderBottomColor: colors.border },
+                  point.id === selectedPointId && [styles.pointRowActive, { backgroundColor: colors.background }],
                 ]}
                 onPress={() => handlePointPress(point.id)}
                 accessibilityRole="button"
               >
                 <View style={styles.pointInfo}>
-                  <Text style={styles.pointCode}>{point.code || "—"}</Text>
+                  <Text style={[styles.pointCode, { color: colors.primary, backgroundColor: `${colors.primary}15` }]}>{point.code || "—"}</Text>
                   <View style={styles.pointDetails}>
-                    <Text style={styles.pointName} numberOfLines={1}>
+                    <Text style={[styles.pointName, { color: colors.text }]} numberOfLines={1}>
                       {point.name}
                     </Text>
                     {point.chineseName && (
-                      <Text style={styles.pointChinese}>
+                      <Text style={[styles.pointChinese, { color: colors.textSecondary }]}>
                         {point.chineseName}
                       </Text>
                     )}
@@ -248,25 +253,25 @@ export default function BodyMapScreen() {
                     <Ionicons
                       name="location"
                       size={16}
-                      color={COLORS.success}
+                      color={colors.success}
                     />
                   ) : (
                     <Ionicons
                       name="location-outline"
                       size={16}
-                      color={COLORS.textSecondary}
+                      color={colors.textSecondary}
                     />
                   )}
                   <Ionicons
                     name="chevron-forward"
                     size={18}
-                    color={COLORS.textSecondary}
+                    color={colors.textSecondary}
                   />
                 </View>
               </TouchableOpacity>
             ))
           ) : (
-            <Text style={styles.emptyListText}>
+            <Text style={[styles.emptyListText, { color: colors.textSecondary }]}>
               {loading
                 ? "Carregando pontos..."
                 : "Nenhum ponto encontrado para este meridiano."}
@@ -275,19 +280,19 @@ export default function BodyMapScreen() {
         </View>
 
         {/* Legenda */}
-        <View style={styles.legendCard}>
-          <Text style={styles.legendTitle}>Legenda</Text>
+        <View style={[styles.legendCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <Text style={[styles.legendTitle, { color: colors.text }]}>Legenda</Text>
           <View style={styles.legendItem}>
-            <Ionicons name="location" size={16} color={COLORS.success} />
-            <Text style={styles.legendText}>Ponto com coordenadas no mapa</Text>
+            <Ionicons name="location" size={16} color={colors.success} />
+            <Text style={[styles.legendText, { color: colors.textSecondary }]}>Ponto com coordenadas no mapa</Text>
           </View>
           <View style={styles.legendItem}>
             <Ionicons
               name="location-outline"
               size={16}
-              color={COLORS.textSecondary}
+              color={colors.textSecondary}
             />
-            <Text style={styles.legendText}>
+            <Text style={[styles.legendText, { color: colors.textSecondary }]}>
               Ponto sem coordenadas cadastradas
             </Text>
           </View>

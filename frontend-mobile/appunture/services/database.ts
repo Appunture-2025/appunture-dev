@@ -21,6 +21,7 @@ type RawRow = Record<string, any>;
 
 class DatabaseService {
   private db: SQLite.SQLiteDatabase | null = null;
+  private initPromise: Promise<void> | null = null;
 
   private generateOperationId(prefix?: string): string {
     const random = Math.random().toString(36).slice(2, 10);
@@ -29,6 +30,29 @@ class DatabaseService {
   }
 
   async init(): Promise<void> {
+    // If already initialized, return immediately
+    if (this.db) {
+      dbLogger.info("Database already initialized, skipping");
+      return;
+    }
+
+    // If initialization is in progress, wait for it
+    if (this.initPromise) {
+      dbLogger.info("Database initialization in progress, waiting...");
+      return this.initPromise;
+    }
+
+    // Start initialization
+    this.initPromise = this.doInit();
+    
+    try {
+      await this.initPromise;
+    } finally {
+      this.initPromise = null;
+    }
+  }
+
+  private async doInit(): Promise<void> {
     try {
       this.db = await SQLite.openDatabaseAsync(DATABASE_NAME);
       await this.db.execAsync("PRAGMA foreign_keys = ON;");
@@ -38,6 +62,7 @@ class DatabaseService {
       await this.populateSeedDataIfNeeded();
       dbLogger.info("Database initialized successfully");
     } catch (error) {
+      this.db = null;
       dbLogger.error("Error initializing database:", error);
       throw error;
     }
@@ -658,11 +683,15 @@ class DatabaseService {
 
   async searchPoints(query: string): Promise<LocalPoint[]> {
     const db = this.getDb();
-    const searchTerm = `%${query}%`;
+    const searchTerm = `%${query.toLowerCase()}%`;
     const result = (await db.getAllAsync(
       `SELECT * FROM points 
-       WHERE name LIKE ? OR chinese_name LIKE ? OR meridian LIKE ? OR location LIKE ? OR indications LIKE ?
-       ORDER BY name`,
+       WHERE LOWER(name) LIKE ? 
+          OR LOWER(chinese_name) LIKE ? 
+          OR LOWER(meridian) LIKE ? 
+          OR LOWER(location) LIKE ? 
+          OR LOWER(indications) LIKE ?
+       ORDER BY name COLLATE NOCASE`,
       [searchTerm, searchTerm, searchTerm, searchTerm, searchTerm]
     )) as LocalPoint[];
     return result;

@@ -8,6 +8,7 @@ import {
   Alert,
   TouchableOpacity,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -92,7 +93,9 @@ export default function SymptomDetailsScreen() {
         style={[styles.container, { backgroundColor: colors.background }]}
       >
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.primary} />
+          <View>
+            <ActivityIndicator size="large" color={colors.primary} />
+          </View>
           <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
             Carregando sintoma...
           </Text>
@@ -137,7 +140,12 @@ export default function SymptomDetailsScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <ActivityIndicator animating={refreshing} color={colors.primary} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            colors={[colors.primary]}
+            tintColor={colors.primary}
+          />
         }
       >
         {/* Header */}

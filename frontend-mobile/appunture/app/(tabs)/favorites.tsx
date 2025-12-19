@@ -164,7 +164,9 @@ export default function FavoritesScreen() {
             { backgroundColor: isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)" },
           ]}
         >
-          <ActivityIndicator size="large" color={colors.primary} />
+          <View>
+            <ActivityIndicator size="large" color={colors.primary} />
+          </View>
         </View>
       )}
     </SafeAreaView>

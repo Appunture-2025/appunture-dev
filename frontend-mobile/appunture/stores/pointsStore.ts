@@ -426,13 +426,30 @@ export const usePointsStore = create<PointsState>((set, get) => {
           loading: false,
         });
       } catch (error) {
-        pointsLogger.error("Search points error:", error);
-        const message =
-          error instanceof Error ? error.message : "Failed to search points";
-        set({
-          error: message,
-          loading: false,
-        });
+        pointsLogger.warn("API search failed, falling back to local database:", error);
+
+        try {
+          // Fallback to local database search
+          const localPoints = await databaseService.searchPoints(query);
+          const favoriteIds = await getActiveFavoriteIds(userId);
+
+          const points = localPoints.map((point) =>
+            mapLocalPointToPoint(point, favoriteIds.has(point.id))
+          );
+
+          set({
+            searchResults: points,
+            loading: false,
+          });
+        } catch (localError) {
+          pointsLogger.error("Local search also failed:", localError);
+          const message =
+            localError instanceof Error ? localError.message : "Failed to search points";
+          set({
+            error: message,
+            loading: false,
+          });
+        }
       }
     },
 
@@ -645,6 +662,11 @@ export const usePointsStore = create<PointsState>((set, get) => {
       );
       const shouldFavorite = !isCurrentlyFavorite;
 
+      console.log(`\n🔄 [SYNC] ========== TOGGLE FAVORITE ==========`);
+      console.log(`🔄 [SYNC] Point ID: ${pointId}`);
+      console.log(`🔄 [SYNC] Current state: ${isCurrentlyFavorite ? '❤️ Favorited' : '🤍 Not favorited'}`);
+      console.log(`🔄 [SYNC] Action: ${shouldFavorite ? '➕ ADD to favorites' : '➖ REMOVE from favorites'}`);
+
       let point =
         state.points.find((item) => item.id === pointId) ??
         state.searchResults.find((item) => item.id === pointId) ??
@@ -658,8 +680,11 @@ export const usePointsStore = create<PointsState>((set, get) => {
       }
 
       if (!point) {
+        console.log(`❌ [SYNC] Point not found!`);
         throw new Error("Point not found");
       }
+
+      console.log(`🔄 [SYNC] Point found: ${point.name} (${point.code})`);
 
       const originalSnapshot: Point = {
         ...point,
@@ -668,6 +693,7 @@ export const usePointsStore = create<PointsState>((set, get) => {
       const updatedPoint: Point = { ...point, isFavorite: shouldFavorite };
 
       updateCollectionsForFavorite(updatedPoint, shouldFavorite);
+      console.log(`🔄 [SYNC] UI updated optimistically`);
 
       try {
         const { user } = useAuthStore.getState();
@@ -676,36 +702,55 @@ export const usePointsStore = create<PointsState>((set, get) => {
         );
         const userId = hasAuthenticatedUser ? String(user!.id) : LOCAL_USER_ID;
 
+        console.log(`🔄 [SYNC] User: ${hasAuthenticatedUser ? userId : 'LOCAL (not authenticated)'}`);
+
         if (!hasAuthenticatedUser) {
+          console.log(`💾 [SYNC] Saving to SQLite (local only, no cloud sync)`);
           await databaseService.setFavoriteStatus({
             pointId,
             userId,
             isFavorite: shouldFavorite,
             synced: true,
           });
+          console.log(`✅ [SYNC] Saved locally (no auth)`);
           return;
         }
 
+        console.log(`💾 [SYNC] Step 1: Saving to SQLite with synced=false`);
         await databaseService.setFavoriteStatus({
           pointId,
           userId,
           isFavorite: shouldFavorite,
           synced: false,
         });
+        console.log(`✅ [SYNC] SQLite updated`);
 
+        console.log(`📝 [SYNC] Step 2: Adding to sync queue`);
         await databaseService.enqueueFavoriteOperation(
           userId,
           pointId,
           shouldFavorite ? "ADD" : "REMOVE"
         );
+        console.log(`✅ [SYNC] Added to sync queue`);
 
         const syncStore = useSyncStore.getState();
-        if (syncStore.isOnline) {
+        const shouldSync = syncStore.isOnline && syncStore.autoSync;
+        console.log(`🌐 [SYNC] Online status: ${syncStore.isOnline ? '✅ Online' : '❌ Offline'}`);
+        console.log(`🌐 [SYNC] Auto sync: ${syncStore.autoSync ? '✅ Enabled' : '❌ Disabled (offline mode)'}`);
+        
+        if (shouldSync) {
+          console.log(`☁️ [SYNC] Step 3: Processing sync queue (sending to cloud)...`);
           await syncStore.processSyncQueue();
+          console.log(`✅ [SYNC] Sync queue processed!`);
         } else {
+          console.log(`⏳ [SYNC] ${!syncStore.isOnline ? 'Offline' : 'Offline mode enabled'} - operation queued for later sync`);
           await syncStore.refreshPendingOperations();
+          console.log(`📊 [SYNC] Pending operations: ${syncStore.pendingOperations}`);
         }
+        
+        console.log(`🔄 [SYNC] ========== COMPLETE ==========\n`);
       } catch (error) {
+        console.log(`❌ [SYNC] ERROR:`, error);
         pointsLogger.error("Toggle favorite error:", error);
         revertCollectionsForFavorite(
           pointId,

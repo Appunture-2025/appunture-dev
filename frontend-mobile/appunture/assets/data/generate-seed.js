@@ -63,7 +63,7 @@ symptomsRaw.forEach((s) => {
 
 // Criar objeto de seed
 const seedData = {
-  version: 1,
+  version: 2,
   generatedAt: new Date().toISOString(),
   points,
   symptoms,

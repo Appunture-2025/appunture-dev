@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import { useRouter } from "expo-router";
 import { useSymptomsStore } from "../../stores/symptomsStore";
 import { SPACING, SYMPTOM_CATEGORIES, COLORS } from "../../utils/constants";
 import { useThemeColors } from "../../stores/themeStore";
+import { filterSymptoms } from "../../utils/filterSymptoms";
 import SearchBar from "../../components/SearchBar";
 import { Symptom } from "../../types/api";
 
@@ -27,15 +28,29 @@ export default function SymptomsScreen() {
     popularSymptoms,
     isLoading,
     fetchSymptoms,
-    searchSymptoms,
     fetchCategories,
     fetchPopularSymptoms,
-    fetchSymptomsByCategory,
   } = useSymptomsStore();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+
+  // All symptoms loaded (use symptoms if available, otherwise popularSymptoms)
+  const allSymptoms = symptoms.length > 0 ? symptoms : popularSymptoms;
+
+  // Filter symptoms in-memory based on search query and category (real-time filtering)
+  const displayedSymptoms = useMemo(() => {
+    let filtered = allSymptoms;
+    
+    // Filter by category first
+    if (selectedCategory) {
+      filtered = filtered.filter(s => s.category === selectedCategory);
+    }
+    
+    // Then filter by search query
+    return filterSymptoms(filtered, searchQuery);
+  }, [allSymptoms, searchQuery, selectedCategory]);
 
   useEffect(() => {
     loadInitialData();
@@ -53,41 +68,24 @@ export default function SymptomsScreen() {
     }
   };
 
-  const handleSearch = async (query: string) => {
+  const handleSearch = (query: string) => {
     setSearchQuery(query);
-    if (!query.trim()) {
-      if (selectedCategory) {
-        await fetchSymptomsByCategory(selectedCategory);
-      } else {
-        await fetchSymptoms();
-      }
-      return;
-    }
-
-    try {
-      await searchSymptoms(query);
-    } catch (error) {
-      Alert.alert("Erro", "Erro ao buscar sintomas.");
-    }
   };
 
-  const handleCategorySelect = async (category: string) => {
+  const handleCategorySelect = (category: string) => {
     if (selectedCategory === category) {
       setSelectedCategory(null);
-      await fetchSymptoms();
     } else {
       setSelectedCategory(category);
-      await fetchSymptomsByCategory(category);
     }
-    setSearchQuery("");
   };
 
   const handleRefresh = async () => {
     setRefreshing(true);
+    setSelectedCategory(null);
+    setSearchQuery("");
     try {
       await loadInitialData();
-      setSelectedCategory(null);
-      setSearchQuery("");
     } catch (error) {
       Alert.alert("Erro", "Erro ao atualizar sintomas.");
     } finally {
@@ -104,7 +102,7 @@ export default function SymptomsScreen() {
 
   const renderSymptom = ({ item }: { item: Symptom }) => (
     <TouchableOpacity
-      style={styles.symptomCard}
+      style={[styles.symptomCard, { backgroundColor: colors.surface }]}
       onPress={() => handleSymptomPress(item)}
       accessibilityRole="button"
       accessibilityLabel={`Sintoma ${item.name}. Categoria ${
@@ -121,9 +119,9 @@ export default function SymptomsScreen() {
           importantForAccessibility="no-hide-descendants"
         />
         <View style={styles.symptomInfo}>
-          <Text style={styles.symptomName}>{item.name}</Text>
+          <Text style={[styles.symptomName, { color: colors.text }]}>{item.name}</Text>
           {item.category && (
-            <Text style={styles.symptomCategory}>{item.category}</Text>
+            <Text style={[styles.symptomCategory, { color: colors.textSecondary }]}>{item.category}</Text>
           )}
         </View>
         <Ionicons
@@ -134,14 +132,14 @@ export default function SymptomsScreen() {
         />
       </View>
       {item.description && (
-        <Text style={styles.symptomDescription} numberOfLines={2}>
+        <Text style={[styles.symptomDescription, { color: colors.textSecondary }]} numberOfLines={2}>
           {item.description}
         </Text>
       )}
       {item.severity !== undefined && (
         <View style={styles.severityContainer}>
-          <Text style={styles.severityLabel}>Severidade:</Text>
-          <View style={styles.severityBar}>
+          <Text style={[styles.severityLabel, { color: colors.textSecondary }]}>Severidade:</Text>
+          <View style={[styles.severityBar, { backgroundColor: colors.border }]}>
             <View
               style={[
                 styles.severityFill,
@@ -149,7 +147,7 @@ export default function SymptomsScreen() {
               ]}
             />
           </View>
-          <Text style={styles.severityValue}>{item.severity}/10</Text>
+          <Text style={[styles.severityValue, { color: colors.text }]}>{item.severity}/10</Text>
         </View>
       )}
     </TouchableOpacity>
@@ -160,7 +158,8 @@ export default function SymptomsScreen() {
       key={category}
       style={[
         styles.categoryChip,
-        selectedCategory === category && styles.categoryChipActive,
+        { backgroundColor: colors.surface, borderColor: colors.border },
+        selectedCategory === category && [styles.categoryChipActive, { backgroundColor: colors.primary, borderColor: colors.primary }],
       ]}
       onPress={() => handleCategorySelect(category)}
       accessibilityRole="button"
@@ -170,7 +169,8 @@ export default function SymptomsScreen() {
       <Text
         style={[
           styles.categoryText,
-          selectedCategory === category && styles.categoryTextActive,
+          { color: colors.text },
+          selectedCategory === category && [styles.categoryTextActive, { color: colors.surface }],
         ]}
       >
         {category}
@@ -194,8 +194,8 @@ export default function SymptomsScreen() {
         color={colors.textSecondary}
         importantForAccessibility="no-hide-descendants"
       />
-      <Text style={styles.emptyTitle}>Nenhum sintoma encontrado</Text>
-      <Text style={styles.emptyText}>
+      <Text style={[styles.emptyTitle, { color: colors.text }]}>Nenhum sintoma encontrado</Text>
+      <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
         {searchQuery
           ? "Tente buscar com outras palavras."
           : "Não há sintomas cadastrados."}
@@ -203,13 +203,11 @@ export default function SymptomsScreen() {
     </View>
   );
 
-  const displayedSymptoms = symptoms.length > 0 ? symptoms : popularSymptoms;
-
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
-        <Text style={styles.title}>Sintomas</Text>
-        <Text style={styles.subtitle}>
+        <Text style={[styles.title, { color: colors.text }]}>Sintomas</Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
           {displayedSymptoms.length} sintoma
           {displayedSymptoms.length !== 1 ? "s" : ""} encontrado
           {displayedSymptoms.length !== 1 ? "s" : ""}
@@ -227,7 +225,7 @@ export default function SymptomsScreen() {
 
       {(categories.length > 0 || SYMPTOM_CATEGORIES.length > 0) && (
         <View style={styles.categoriesContainer}>
-          <Text style={styles.categoriesTitle}>Categorias:</Text>
+          <Text style={[styles.categoriesTitle, { color: colors.text }]}>Categorias:</Text>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -253,7 +251,9 @@ export default function SymptomsScreen() {
 
       {isLoading && !refreshing && (
         <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color={colors.primary} />
+          <View>
+            <ActivityIndicator size="large" color={colors.primary} />
+          </View>
         </View>
       )}
     </SafeAreaView>

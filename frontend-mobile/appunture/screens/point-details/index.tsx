@@ -12,6 +12,7 @@ import { useLocalSearchParams } from "expo-router";
 import { usePointsStore } from "../../stores/pointsStore";
 import { useAuthStore } from "../../stores/authStore";
 import { COLORS } from "../../utils/constants";
+import { useThemeColors } from "../../stores/themeStore";
 import { styles } from "./styles";
 import { Point } from "../../types/api";
 import PointLocationMap from "../../components/PointLocationMap";
@@ -27,6 +28,7 @@ const techniques = [
 
 export default function PointDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const colors = useThemeColors();
   const {
     points,
     favorites,
@@ -123,9 +125,9 @@ export default function PointDetailsScreen() {
 
   if (loading || localLoading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.content}>
-          <Text>Carregando...</Text>
+          <Text style={{ color: colors.text }}>Carregando...</Text>
         </View>
       </SafeAreaView>
     );
@@ -133,16 +135,16 @@ export default function PointDetailsScreen() {
 
   if (!resolvedPoint) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.content}>
-          <Text>Ponto não encontrado</Text>
+          <Text style={{ color: colors.text }}>Ponto não encontrado</Text>
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
         style={styles.scrollContainer}
         contentContainerStyle={styles.content}
@@ -150,26 +152,28 @@ export default function PointDetailsScreen() {
         {/* Removed ImageGallery - using only map location for cleaner design */}
 
         <View style={styles.header}>
-          <Text style={styles.pointName}>{resolvedPoint.name}</Text>
-          <Text style={styles.pointCode}>{resolvedPoint.code}</Text>
-          <Text style={styles.pointMeridian}>{resolvedPoint.meridian}</Text>
+          <Text style={[styles.pointName, { color: colors.text }]}>{resolvedPoint.name}</Text>
+          <Text style={[styles.pointCode, { color: colors.primary, backgroundColor: `${colors.primary}15` }]}>{resolvedPoint.code}</Text>
+          <Text style={[styles.pointMeridian, { color: colors.textSecondary }]}>{resolvedPoint.meridian}</Text>
 
           <TouchableOpacity
             style={[
               styles.favoriteButton,
-              isFavorite && styles.favoriteButtonActive,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+              isFavorite && [styles.favoriteButtonActive, { backgroundColor: `${colors.error}15`, borderColor: colors.error }],
             ]}
             onPress={handleToggleFavorite}
           >
             <Ionicons
               name={isFavorite ? "heart" : "heart-outline"}
               size={20}
-              color={isFavorite ? COLORS.error : COLORS.text}
+              color={isFavorite ? colors.error : colors.text}
             />
             <Text
               style={[
                 styles.favoriteButtonText,
-                isFavorite && styles.favoriteButtonTextActive,
+                { color: colors.text },
+                isFavorite && [styles.favoriteButtonTextActive, { color: colors.error }],
               ]}
             >
               {isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
@@ -180,7 +184,7 @@ export default function PointDetailsScreen() {
         {/* Interactive map section - now prominently placed at the top */}
         {resolvedPoint.bodyMapCoords && resolvedPoint.bodyMapCoords.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Localização no Mapa Corporal</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Localização no Mapa Corporal</Text>
             <PointLocationMap
               coordinates={{
                 x: resolvedPoint.bodyMapCoords[0].x,
@@ -192,39 +196,39 @@ export default function PointDetailsScreen() {
         )}
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Posição Anatômica</Text>
-          <View style={styles.card}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Posição Anatômica</Text>
+          <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <Ionicons
               name="location"
               size={24}
-              color={COLORS.primary}
+              color={colors.primary}
               style={styles.cardIcon}
             />
-            <Text style={styles.cardTitle}>Localização</Text>
-            <Text style={styles.cardContent}>
+            <Text style={[styles.cardTitle, { color: colors.text }]}>Localização</Text>
+            <Text style={[styles.cardContent, { color: colors.textSecondary }]}>
               {resolvedPoint.location || "Localização não disponível"}
             </Text>
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Indicações</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Indicações</Text>
           <View style={styles.indicationsList}>
             {indicationsList.length > 0 ? (
               indicationsList.map((indication, index) => (
-                <View key={index} style={styles.indicationItem}>
+                <View key={index} style={[styles.indicationItem, { backgroundColor: colors.surface, borderColor: colors.border }]}>
                   <Ionicons
                     name="medical"
                     size={16}
-                    color={COLORS.primary}
+                    color={colors.primary}
                     style={styles.indicationIcon}
                   />
-                  <Text style={styles.indicationText}>{indication}</Text>
+                  <Text style={[styles.indicationText, { color: colors.text }]}>{indication}</Text>
                 </View>
               ))
             ) : (
-              <View style={styles.card}>
-                <Text style={styles.cardContent}>
+              <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+                <Text style={[styles.cardContent, { color: colors.textSecondary }]}>
                   Indicações não disponíveis para este ponto.
                 </Text>
               </View>
@@ -233,42 +237,42 @@ export default function PointDetailsScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Técnicas Aplicáveis</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Técnicas Aplicáveis</Text>
           <View style={styles.techniquesGrid}>
             {techniques.map((technique, index) => (
-              <View key={index} style={styles.techniqueChip}>
-                <Text style={styles.techniqueText}>{technique}</Text>
+              <View key={index} style={[styles.techniqueChip, { backgroundColor: `${colors.primary}15` }]}>
+                <Text style={[styles.techniqueText, { color: colors.primary }]}>{technique}</Text>
               </View>
             ))}
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Função</Text>
-          <View style={styles.card}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Função</Text>
+          <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <Ionicons
               name="flash"
               size={24}
-              color={COLORS.primary}
+              color={colors.primary}
               style={styles.cardIcon}
             />
-            <Text style={styles.cardTitle}>Ação Terapêutica</Text>
-            <Text style={styles.cardContent}>
+            <Text style={[styles.cardTitle, { color: colors.text }]}>Ação Terapêutica</Text>
+            <Text style={[styles.cardContent, { color: colors.textSecondary }]}>
               {resolvedPoint.functions || resolvedPoint.function || "Função terapêutica não especificada"}
             </Text>
           </View>
         </View>
 
-        <View style={styles.warningCard}>
+        <View style={[styles.warningCard, { backgroundColor: `${colors.error}10`, borderColor: `${colors.error}30` }]}>
           <Ionicons
             name="warning"
             size={24}
-            color={COLORS.error}
+            color={colors.error}
             style={styles.warningIcon}
           />
           <View style={styles.warningContent}>
-            <Text style={styles.warningTitle}>Aviso Importante</Text>
-            <Text style={styles.warningText}>
+            <Text style={[styles.warningTitle, { color: colors.error }]}>Aviso Importante</Text>
+            <Text style={[styles.warningText, { color: colors.textSecondary }]}>
               Este aplicativo é apenas para fins educacionais. Sempre consulte
               um profissional qualificado antes de aplicar qualquer técnica de
               acupuntura.
