@@ -20,7 +20,7 @@ O diagrama de casos de uso apresenta as principais funcionalidades do sistema Ap
 
 O diagrama de classes representa a estrutura estatica do sistema, mostrando as principais entidades e seus relacionamentos.
 
-\figura{DIAGRAMA DE CLASSES DO SISTEMA APPUNTURE}{0.75}{fig/classes.png}{Os autores (2025)}{classes}{}{}
+\figura{DIAGRAMA DE CLASSES DO SISTEMA APPUNTURE}{0.55}{fig/classes.jpg}{Os autores (2025)}{classes}{}{}
 
 % ==============================================================================
 % APENDICE C - MODELO LOGICO DO BANCO DE DADOS
@@ -34,7 +34,7 @@ O sistema Appunture utiliza uma arquitetura cloud-backed com persistência local
 
 O banco de dados SQLite é utilizado no aplicativo móvel para armazenamento local e como cache de leitura. A implementação concreta encontra-se em \texttt{frontend-mobile/appunture/services/database.ts}. O código cria tabelas de controle e enfileiramento (por exemplo, \texttt{sync\_queue} e \texttt{image\_sync\_queue}) para operações de escrita que são registradas localmente e consumidas por um processo de sincronização quando houver conectividade. Leituras locais permanecem disponíveis para oferecer responsividade; gravações são enfileiradas e enviadas ao backend (Firestore) conforme a política de sincronização implementada no código.
 
-\figura{MODELO LOGICO - SQLITE (MOBILE)}{0.75}{fig/modelo-logico-sqlite.png}{Os autores (2025)}{modelo-sqlite}{}{}
+\figura{MODELO LOGICO - SQLITE (MOBILE)}{0.75}{fig/modelo-logico-sqlite.jpg}{Os autores (2025)}{modelo-sqlite}{}{}
 
 \section{Banco de Dados em Nuvem (Firestore)}
 

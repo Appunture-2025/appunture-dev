@@ -135,7 +135,7 @@ As classes e dependências mostram que o \textit{backend} está preparado para:
 No aplicativo móvel, a persistência local é implementada com \texttt{expo-sqlite} e um conjunto completo de migrações e seeds (implementados em \texttt{services/database.ts} e \texttt{assets/data}). Pontos importantes observados no código:
 
 \begin{itemize}
-    \item Esquema local robusto com tabelas para \texttt{points}, \texttt{symptoms}, \texttt{symptom\_points}, \texttt{favorites}, \texttt{notes}, \texttt{sync\_queue} e \texttt{image\_sync\_queue};
+    \item Esquema local robusto com tabelas para \texttt{points}, \texttt{symptoms}, \texttt{symptom\_points}, \texttt{favorites}, \texttt{sync\_queue} e \texttt{image\_sync\_queue};
     \item Mecanismo de migração que detecta esquemas legados e realiza migrações automatizadas;
     \item População inicial (seed) carregada a partir de \texttt{assets/data} se necessário;
     \item Filas de sincronização locais (\texttt{sync\_queue} e \texttt{image\_sync\_queue}) com retry, contagem de tentativas e marcação de erro para garantir confiabilidade das operações offline$\rightarrow$online;

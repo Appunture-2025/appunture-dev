@@ -26,7 +26,7 @@ No cliente, o subsistema de sincronização funciona com base em filas locais: o
 Para viabilizar a busca inteligente por sintomas, o aplicativo utiliza um assistente de inteligência artificial integrado ao \textit{backend}. Esta funcionalidade requer conexão com a internet para processamento.
 
 \textbf{Arquitetura RAG (Retrieval-Augmented Generation):}
-O sistema utiliza a arquitetura RAG integrada ao \textit{backend} Java. O assistente inteligente, alimentado pelo Google Gemini 1.5 Flash via Spring AI, interpreta perguntas do usuário sobre sintomas e pontos de acupuntura, fornecendo respostas contextualizadas com a base de dados técnica do sistema. Esta abordagem reduz alucinações do modelo e aumenta a confiabilidade das informações apresentadas.
+O sistema utiliza a arquitetura RAG integrada ao \textit{backend} Java. O assistente inteligente, alimentado pelo Google Gemini 2.5 Flash via Spring AI, interpreta perguntas do usuário sobre sintomas e pontos de acupuntura, fornecendo respostas contextualizadas com a base de dados técnica do sistema. Esta abordagem reduz alucinações do modelo e aumenta a confiabilidade das informações apresentadas.
 
 \textbf{Navegação com Persistência Local:}
 O usuário pode navegar pelo atlas e acessar conteúdo previamente carregado a partir do banco local (SQLite). A busca inteligente por sintomas e outras operações que dependem de IA ou do backend permanecem indisponíveis sem conexão. A experiência local prioriza leituras rápidas e gravações locais enfileiradas para sincronização posterior.
@@ -138,7 +138,7 @@ O assistente inteligente integrado ao \textit{Appunture} permite que o usuário 
 \begin{enumerate}
     \item O sistema intercepta a pergunta do usuário;
     \item Busca contexto relevante na base de dados (pontos e sintomas relacionados);
-    \item Envia um \textit{prompt} enriquecido para o modelo Google Gemini 1.5 Flash via Spring AI;
+    \item Envia um \textit{prompt} enriquecido para o modelo Google Gemini 2.5 Flash via Spring AI;
     \item Retorna respostas contextualizadas, baseadas nos dados validados do sistema.
 \end{enumerate}
 
@@ -256,7 +256,7 @@ A funcionalidade de busca permite encontrar pontos de acupuntura através de con
     \item \textbf{Ação de favoritar}: Botão para adicionar/remover dos favoritos diretamente na lista.
 \end{itemize}
 
-A busca utiliza o modelo Gemini 1.5 Flash via RAG (\textit{Retrieval-Augmented Generation}) para encontrar pontos relevantes mesmo quando o usuário descreve sintomas em vez de usar termos técnicos.
+A busca utiliza o modelo Gemini 2.5 Flash via RAG (\textit{Retrieval-Augmented Generation}) para encontrar pontos relevantes mesmo quando o usuário descreve sintomas em vez de usar termos técnicos.
 
 \figura{TELA DE BUSCA}{0.35}{fig/tela-busca.png}{Os autores (2025)}{tela-busca}{}{}
 
@@ -325,7 +325,7 @@ O chatbot com IA é a interface conversacional do sistema, permitindo consultas 
     \item \textbf{Histórico da conversa}: Mantido durante a sessão para contexto.
 \end{itemize}
 
-O assistente utiliza a arquitetura RAG com o modelo Gemini 1.5 Flash, combinando o conhecimento do atlas de pontos com a capacidade de compreensão de linguagem natural para fornecer recomendações precisas baseadas nos sintomas descritos.
+O assistente utiliza a arquitetura RAG com o modelo Gemini 2.5 Flash, combinando o conhecimento do atlas de pontos com a capacidade de compreensão de linguagem natural para fornecer recomendações precisas baseadas nos sintomas descritos.
 
 \figura{ASSISTENTE DE INTELIGÊNCIA ARTIFICIAL}{0.35}{fig/tela-chat.png}{Os autores (2025)}{tela-chat}{}{}
 
